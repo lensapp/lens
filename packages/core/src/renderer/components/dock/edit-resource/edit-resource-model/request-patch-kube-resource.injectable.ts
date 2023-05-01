@@ -9,7 +9,7 @@ import { getErrorMessage } from "../../../../../common/utils/get-error-message";
 import { patchTypeHeaders } from "@k8slens/kube-api";
 import apiKubePatchInjectable from "../../../../k8s/api-kube-patch.injectable";
 
-export type RequestPatchKubeResource = (selfLink: string, patch: JsonPatch) => AsyncResult<{ name: string; kind: string }>;
+export type RequestPatchKubeResource = (selfLink: string, patch: JsonPatch) => AsyncResult<{ name: string; kind: string }, string>;
 
 const requestPatchKubeResourceInjectable = getInjectable({
   id: "request-patch-kube-resource",
@@ -25,12 +25,12 @@ const requestPatchKubeResourceInjectable = getInjectable({
         });
 
         return {
-          callWasSuccessful: true,
-          response: { name: metadata.name, kind },
+          isOk: true,
+          value: { name: metadata.name, kind },
         };
       } catch (e) {
         return {
-          callWasSuccessful: false,
+          isOk: false,
           error: getErrorMessage(e),
         };
       }

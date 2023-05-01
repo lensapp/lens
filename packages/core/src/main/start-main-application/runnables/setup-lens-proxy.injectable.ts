@@ -15,6 +15,7 @@ import fetchInjectable from "../../../common/fetch/fetch.injectable";
 import { Agent } from "https";
 import { buildVersionInitializable } from "../../../features/vars/build-version/common/token";
 import { buildVersionInitializationInjectable } from "../../../features/vars/build-version/main/init.injectable";
+import { hasStringProperty, isObject } from "@k8slens/utilities";
 
 const setupLensProxyInjectable = getInjectable({
   id: "setup-lens-proxy",
@@ -34,8 +35,8 @@ const setupLensProxyInjectable = getInjectable({
       try {
         logger.info("🔌 Starting LensProxy");
         await lensProxy.listen(); // lensProxy.port available
-      } catch (error: any) {
-        showErrorPopup("Lens Error", `Could not start proxy: ${error?.message || "unknown error"}`);
+      } catch (error) {
+        showErrorPopup("Lens Error", `Could not start proxy: ${isObject(error) && hasStringProperty(error, "message") ? error.message : "unknown error"}`);
 
         return forceAppExit();
       }
@@ -59,13 +60,13 @@ const setupLensProxyInjectable = getInjectable({
 
         logger.info("⚡ LensProxy connection OK");
       } catch (error) {
-        logger.error(`🛑 LensProxy: failed connection test: ${error}`);
+        logger.error(`🛑 LensProxy: failed connection test: ${String(error)}`);
 
         const hostsPath = isWindows
           ? "C:\\windows\\system32\\drivers\\etc\\hosts"
           : "/etc/hosts";
         const message = [
-          `Failed connection test: ${error}`,
+          `Failed connection test: ${String(error)}`,
           "Check to make sure that no other versions of Lens are running",
           `Check ${hostsPath} to make sure that it is clean and that the localhost loopback is at the top and set to 127.0.0.1`,
           "If you have HTTP_PROXY or http_proxy set in your environment, make sure that the localhost and the ipv4 loopback address 127.0.0.1 are added to the NO_PROXY environment variable.",

@@ -18,15 +18,12 @@ import { isEmpty } from "lodash";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { loggerInjectionToken } from "@k8slens/logger";
 
-export interface NetworkPolicyDetailsProps extends KubeObjectDetailsProps<NetworkPolicy> {
-}
-
 interface Dependencies {
   logger: Logger;
 }
 
 @observer
-class NonInjectedNetworkPolicyDetails extends React.Component<NetworkPolicyDetailsProps & Dependencies> {
+class NonInjectedNetworkPolicyDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
   renderIPolicyIpBlock(ipBlock: PolicyIpBlock | undefined) {
     if (!ipBlock) {
       return null;
@@ -210,7 +207,7 @@ class NonInjectedNetworkPolicyDetails extends React.Component<NetworkPolicyDetai
   }
 }
 
-export const NetworkPolicyDetails = withInjectables<Dependencies, NetworkPolicyDetailsProps>(NonInjectedNetworkPolicyDetails, {
+export const NetworkPolicyDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedNetworkPolicyDetails, {
   getProps: (di, props) => ({
     ...props,
     logger: di.inject(loggerInjectionToken),

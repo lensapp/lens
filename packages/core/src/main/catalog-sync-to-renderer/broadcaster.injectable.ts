@@ -15,7 +15,7 @@ const catalogSyncBroadcasterInjectable = getInjectable({
 
     return debounce(
       (items: CatalogEntity[]) => {
-        broadcastMessage(catalogItemsChannel, items);
+        void broadcastMessage(catalogItemsChannel, items);
       },
       100,
       {

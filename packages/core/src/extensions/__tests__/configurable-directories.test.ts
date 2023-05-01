@@ -15,7 +15,7 @@ describe("configurable directories for extension files", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.beforeApplicationStart(({ mainDi }) => {
+    await builder.beforeApplicationStart(({ mainDi }) => {
       runInAction(() => {
         mainDi.override(getHashInjectable, () => x => x);
       });
@@ -50,7 +50,7 @@ describe("configurable directories for extension files", () => {
         },
       };
 
-      builder.extensions.enable(testExtensionOptions);
+      await builder.extensions.enable(testExtensionOptions);
     });
 
     it("creates extension directory for specific store name", async () => {
@@ -85,7 +85,7 @@ describe("configurable directories for extension files", () => {
         },
       };
 
-      builder.extensions.enable(testExtensionOptions);
+      await builder.extensions.enable(testExtensionOptions);
     });
 
     it("creates extension directory for package name", async () => {

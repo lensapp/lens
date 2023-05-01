@@ -87,7 +87,8 @@ describe("ipc file logger in main", () => {
       fileId: "some-log-file",
       entry: { level: "irrelevant", message: "some-log-message" },
     });
-    expect(logMock.mock.calls[0][0]).toEqual({
+    expect(logMock).toHaveBeenCalledTimes(1);
+    expect(logMock).toBeCalledWith({
       level: "irrelevant",
       message: "some-log-message",
     });
@@ -95,7 +96,7 @@ describe("ipc file logger in main", () => {
 
   it("logs to correct files", () => {
     const someLogMock = jest.fn();
-    const someOthertLogMock = jest.fn();
+    const someOtherLogMock = jest.fn();
 
     createFileTransportMock.mockImplementation((fileId: string) => {
       if (fileId === "some-log-file") {
@@ -103,7 +104,7 @@ describe("ipc file logger in main", () => {
       }
 
       if (fileId === "some-other-log-file") {
-        return { log: someOthertLogMock };
+        return { log: someOtherLogMock };
       }
 
       return null;
@@ -119,12 +120,12 @@ describe("ipc file logger in main", () => {
     });
 
     expect(someLogMock).toHaveBeenCalledTimes(1);
-    expect(someLogMock.mock.calls[0][0]).toEqual({
+    expect(someLogMock).toBeCalledWith({
       level: "irrelevant",
       message: "some-log-message",
     });
-    expect(someOthertLogMock).toHaveBeenCalledTimes(1);
-    expect(someOthertLogMock.mock.calls[0][0]).toEqual({
+    expect(someOtherLogMock).toHaveBeenCalledTimes(1);
+    expect(someOtherLogMock).toBeCalledWith({
       level: "irrelevant",
       message: "some-other-log-message",
     });

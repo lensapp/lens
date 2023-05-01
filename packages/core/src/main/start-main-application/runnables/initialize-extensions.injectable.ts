@@ -9,6 +9,7 @@ import extensionLoaderInjectable from "../../../extensions/extension-loader/exte
 import showErrorPopupInjectable from "../../electron-app/features/show-error-popup.injectable";
 import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 import setupShellInjectable from "../../../features/shell-sync/main/setup-shell.injectable";
+import { hasStringProperty, isObject } from "@k8slens/utilities";
 
 const initializeExtensionsInjectable = getInjectable({
   id: "initialize-extensions",
@@ -38,14 +39,14 @@ const initializeExtensionsInjectable = getInjectable({
             extensionLoader.addExtension(extension);
           })
           .on("remove", (lensExtensionId) => {
-            extensionLoader.removeExtension(lensExtensionId);
+            void extensionLoader.removeExtension(lensExtensionId);
           });
 
         extensionLoader.initExtensions(extensions);
-      } catch (error: any) {
+      } catch (error) {
         showErrorPopup(
           "Lens Error",
-          `Could not load extensions${error?.message ? `: ${error.message}` : ""}`,
+          `Could not load extensions${isObject(error) && hasStringProperty(error, "message") ? `: ${error.message}` : ""}`,
         );
 
         console.error(error);

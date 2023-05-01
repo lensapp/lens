@@ -106,7 +106,7 @@ export class Chart extends React.Component<ChartProps> {
 
     if (!this.chart) return;
 
-    this.chart.options = ChartJS.helpers.configMerge(this.chart.options, options);
+    this.chart.options = (ChartJS.helpers.configMerge as (...options: (ChartJS.ChartOptions | undefined)[]) => ChartJS.ChartOptions)(this.chart.options, options);
 
     this.memoizeDataProps();
 
@@ -140,6 +140,8 @@ export class Chart extends React.Component<ChartProps> {
 
         // Merge other fields
         const { data: _data, ...props } = next;
+
+        void _data;
 
         datasets[index] = {
           ...datasets[index],

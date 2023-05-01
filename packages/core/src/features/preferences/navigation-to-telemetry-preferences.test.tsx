@@ -24,7 +24,7 @@ describe("preferences - navigation to telemetry preferences", () => {
     let discover: Discover;
 
     beforeEach(async () => {
-      builder.beforeWindowStart(() => {
+      await builder.beforeWindowStart(() => {
         builder.preferences.navigate();
       });
 
@@ -57,7 +57,7 @@ describe("preferences - navigation to telemetry preferences", () => {
 
     describe("when extension with telemetry preference items gets enabled", () => {
       beforeEach(() => {
-        builder.extensions.enable(
+        await builder.extensions.enable(
           extensionStubWithTelemetryPreferenceItems,
         );
       });
@@ -105,7 +105,7 @@ describe("preferences - navigation to telemetry preferences", () => {
     });
 
     it("given extensions but no telemetry preference items, does not show link for telemetry preferences", () => {
-      builder.extensions.enable({
+      await builder.extensions.enable({
         id: "some-test-extension-id",
         name: "some-test-extension-name",
 
@@ -142,7 +142,7 @@ describe("preferences - navigation to telemetry preferences", () => {
     let discover: Discover;
 
     beforeEach(async () => {
-      builder.beforeWindowStart(({ windowDi }) => {
+      await builder.beforeWindowStart(({ windowDi }) => {
         windowDi.override(sentryDataSourceNameInjectable, () => "some-sentry-dns-url");
       });
 
@@ -177,7 +177,7 @@ describe("preferences - navigation to telemetry preferences", () => {
     let discover: Discover;
 
     beforeEach(async () => {
-      builder.beforeWindowStart(({ windowDi }) => {
+      await builder.beforeWindowStart(({ windowDi }) => {
         windowDi.override(sentryDataSourceNameInjectable, () => null);
       });
 

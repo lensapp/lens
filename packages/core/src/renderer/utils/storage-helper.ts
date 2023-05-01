@@ -77,7 +77,7 @@ export class StorageHelper<T> implements StorageLayer<T> {
         this.set(data);
       }
     } catch (error) {
-      this.dependencies.logger.error(`${storageHelperLogPrefix} loading error: ${error}`, this);
+      this.dependencies.logger.error(`${storageHelperLogPrefix} loading error: ${String(error)}`, this);
     }
   }
 
@@ -95,7 +95,7 @@ export class StorageHelper<T> implements StorageLayer<T> {
 
       this.storage.onChange?.({ value, oldValue, key: this.key });
     } catch (error) {
-      this.dependencies.logger.error(`${storageHelperLogPrefix} updating storage: ${error}`, this, { value, oldValue });
+      this.dependencies.logger.error(`${storageHelperLogPrefix} updating storage: ${String(error)}`, this, { value, oldValue });
     }
   }
 

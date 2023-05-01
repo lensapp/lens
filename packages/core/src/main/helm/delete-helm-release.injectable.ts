@@ -25,8 +25,8 @@ const deleteHelmReleaseInjectable = getInjectable({
         "--kubeconfig", kubeconfigPath,
       ]);
 
-      if (result.callWasSuccessful) {
-        return result.response;
+      if (result.isOk) {
+        return result.value;
       }
 
       throw result.error;

@@ -24,8 +24,8 @@ const requestKubeApiResourcesForInjectable = getInjectable({
         const { resources } = await k8sRequest(cluster, path) as V1APIResourceList;
 
         return {
-          callWasSuccessful: true,
-          response: resources.map(resource => ({
+          isOk: true,
+          value: resources.map(resource => ({
             apiName: resource.name,
             kind: resource.kind,
             group,
@@ -34,7 +34,7 @@ const requestKubeApiResourcesForInjectable = getInjectable({
         };
       } catch (error) {
         return {
-          callWasSuccessful: false,
+          isOk: false,
           error: error as Error,
         };
       }

@@ -23,9 +23,6 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 
-export interface VpaDetailsProps extends KubeObjectDetailsProps<VerticalPodAutoscaler> {
-}
-
 interface Dependencies {
   apiManager: ApiManager;
   getDetailsUrl: GetDetailsUrl;
@@ -33,11 +30,8 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedVpaDetails extends React.Component<VpaDetailsProps & Dependencies> {
-  renderStatus(status: VerticalPodAutoscalerStatus) {
-    const { recommendation } = status;
-    const { object: vpa } = this.props;
-
+class NonInjectedVpaDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
+  renderStatus(vpa: VerticalPodAutoscaler, { recommendation }: VerticalPodAutoscalerStatus) {
     return (
       <div>
         <DrawerTitle>Status</DrawerTitle>
@@ -59,7 +53,7 @@ class NonInjectedVpaDetails extends React.Component<VpaDetailsProps & Dependenci
 
         {recommendation?.containerRecommendations && (
           recommendation.containerRecommendations
-            .map( ({ containerName, target, lowerBound, upperBound, uncappedTarget }) => (
+            .map(({ containerName, target, lowerBound, upperBound, uncappedTarget }) => (
               <div key={containerName}>
                 <DrawerTitle>{`Container Recommendation for ${containerName ?? "<unknown>"}`}</DrawerTitle>
                 <DrawerItem name="target">
@@ -198,7 +192,7 @@ class NonInjectedVpaDetails extends React.Component<VpaDetailsProps & Dependenci
           }
         </DrawerItem>
 
-        {vpa.status && this.renderStatus(vpa.status)}
+        {vpa.status && this.renderStatus(vpa, vpa.status)}
         {updatePolicy && this.renderUpdatePolicy(updatePolicy)}
         {resourcePolicy && this.renderResourcePolicy(resourcePolicy)}
 
@@ -208,7 +202,7 @@ class NonInjectedVpaDetails extends React.Component<VpaDetailsProps & Dependenci
   }
 }
 
-export const VpaDetails = withInjectables<Dependencies, VpaDetailsProps>(NonInjectedVpaDetails, {
+export const VpaDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedVpaDetails, {
   getProps: (di, props) => ({
     ...props,
     apiManager: di.inject(apiManagerInjectable),

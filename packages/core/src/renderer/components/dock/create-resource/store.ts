@@ -6,8 +6,7 @@
 import type { DockTabStoreDependencies } from "../dock-tab-store/dock-tab.store";
 import { DockTabStore } from "../dock-tab-store/dock-tab.store";
 
-export interface CreateResourceTabStoreDependencies extends DockTabStoreDependencies {
-}
+export type CreateResourceTabStoreDependencies = DockTabStoreDependencies;
 
 export class CreateResourceTabStore extends DockTabStore<string> {
   constructor(protected readonly dependencies: CreateResourceTabStoreDependencies) {

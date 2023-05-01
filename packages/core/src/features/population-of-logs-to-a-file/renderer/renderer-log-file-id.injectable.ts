@@ -12,11 +12,10 @@ const rendererLogFileIdInjectable = getInjectable({
   instantiate: (di) => {
     let frameId: string;
     const currentlyInClusterFrame = di.inject(currentlyInClusterFrameInjectable);
+    const { host } = di.inject(windowLocationInjectable);
+    const clusterId = getClusterIdFromHost(host);
 
-    if (currentlyInClusterFrame) {
-      const { host } = di.inject(windowLocationInjectable);
-      const clusterId = getClusterIdFromHost(host);
-
+    if (currentlyInClusterFrame && clusterId) {
       frameId = `cluster-${clusterId}`;
     } else {
       frameId = "root";

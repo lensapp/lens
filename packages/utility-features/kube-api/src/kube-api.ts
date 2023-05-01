@@ -184,7 +184,7 @@ export type KubeApiWatchCallback<T extends KubeJsonApiData = KubeJsonApiData> = 
   error: KubeStatus | Response | null | Record<string, unknown>,
 ) => void;
 
-export interface KubeApiWatchOptions<Object extends KubeObject, Data extends KubeJsonApiDataFor<Object>> {
+export interface KubeApiWatchOptions<Kube extends KubeObject, Data extends KubeJsonApiDataFor<Kube>> {
   /**
    * If the resource is namespaced then the default is `"default"`
    */
@@ -248,7 +248,7 @@ export type SpecificResourceDescriptor<Scope extends KubeObjectScope> = {
    */
   name: string;
 } & (Scope extends KubeObjectScope.Cluster
-  ? {}
+  ? { namespace?: undefined }
   : Scope extends KubeObjectScope.Namespace
   ? {
       /**
@@ -278,8 +278,8 @@ export interface KubeApiDependencies {
 }
 
 export class KubeApi<
-  Object extends KubeObject = KubeObject,
-  Data extends KubeJsonApiDataFor<Object> = KubeJsonApiDataFor<Object>,
+  Kube extends KubeObject = KubeObject,
+  Data extends KubeJsonApiDataFor<Kube> = KubeJsonApiDataFor<Kube>,
 > {
   readonly kind: string;
 
@@ -297,7 +297,7 @@ export class KubeApi<
 
   readonly isNamespaced: boolean;
 
-  public readonly objectConstructor: KubeObjectConstructor<Object, Data>;
+  public readonly objectConstructor: KubeObjectConstructor<Kube, Data>;
 
   protected readonly request: KubeJsonApi;
 
@@ -315,7 +315,7 @@ export class KubeApi<
 
   protected readonly allowedUsableVersions: Partial<Record<string, string[]>> | undefined;
 
-  constructor(protected readonly dependencies: KubeApiDependencies, opts: KubeApiOptions<Object, Data>) {
+  constructor(protected readonly dependencies: KubeApiDependencies, opts: KubeApiOptions<Kube, Data>) {
     const {
       objectConstructor,
       request = this.dependencies.maybeKubeApi,
@@ -382,13 +382,15 @@ export class KubeApi<
 
       try {
         const { apiPrefix, apiGroup, resource } = parsedApi;
-        const list = (await this.request.get(`${apiPrefix}/${apiGroup}`)) as KubeApiResourceVersionList;
-        const resourceVersions = getOrderedVersions(list, this.allowedUsableVersions?.[apiGroup]);
+        const list = await this.request.get(`${apiPrefix}/${apiGroup}`);
+        const resourceVersions = getOrderedVersions(
+          list as unknown as KubeApiResourceVersionList,
+          this.allowedUsableVersions?.[apiGroup],
+        );
 
         for (const resourceVersion of resourceVersions) {
-          const { resources } = (await this.request.get(
-            `${apiPrefix}/${resourceVersion.groupVersion}`,
-          )) as KubeApiResourceList;
+          const res = await this.request.get(`${apiPrefix}/${resourceVersion.groupVersion}`);
+          const resources = res.resources as { name: string }[];
 
           if (resources.some(({ name }) => name === resource)) {
             return {
@@ -496,7 +498,7 @@ export class KubeApi<
     return query;
   }
 
-  protected parseResponse(data: unknown, namespace?: string): Object | Object[] | null {
+  protected parseResponse(data: unknown, namespace?: string): Kube | Kube[] | null {
     if (!data) {
       return null;
     }
@@ -559,10 +561,7 @@ export class KubeApi<
     });
   }
 
-  async list(
-    { namespace = "", reqInit }: KubeApiListOptions = {},
-    query?: KubeApiQueryParams,
-  ): Promise<Object[] | null> {
+  async list({ namespace = "", reqInit }: KubeApiListOptions = {}, query?: KubeApiQueryParams): Promise<Kube[] | null> {
     await this.checkPreferredVersion();
 
     const url = this.formatUrlForListing(namespace);
@@ -580,7 +579,7 @@ export class KubeApi<
     throw new Error(`GET multiple request to ${url} returned not an array: ${JSON.stringify(parsed)}`);
   }
 
-  async get(desc: ResourceDescriptor, query?: KubeApiQueryParams): Promise<Object | null> {
+  async get(desc: ResourceDescriptor, query?: KubeApiQueryParams): Promise<Kube | null> {
     await this.checkPreferredVersion();
 
     const url = this.formatUrlForNotListing(desc);
@@ -596,8 +595,8 @@ export class KubeApi<
 
   async create(
     { name, namespace }: Partial<ResourceDescriptor>,
-    partialData?: PartialDeep<Object>,
-  ): Promise<Object | null> {
+    partialData?: PartialDeep<Kube>,
+  ): Promise<Kube | null> {
     await this.checkPreferredVersion();
 
     const apiUrl = this.formatUrlForNotListing({ namespace });
@@ -619,7 +618,7 @@ export class KubeApi<
     return parsed;
   }
 
-  async update({ name, namespace }: ResourceDescriptor, data: PartialDeep<Object>): Promise<Object | null> {
+  async update({ name, namespace }: ResourceDescriptor, data: PartialDeep<Kube>): Promise<Kube | null> {
     await this.checkPreferredVersion();
     const apiUrl = this.formatUrlForNotListing({ namespace, name });
 
@@ -674,23 +673,19 @@ export class KubeApi<
     return res as Scale;
   }
 
-  async patch(desc: ResourceDescriptor, data: PartialDeep<Object>): Promise<Object | null>;
+  async patch(desc: ResourceDescriptor, data: PartialDeep<Kube>): Promise<Kube | null>;
+  async patch(desc: ResourceDescriptor, data: PartialDeep<Kube>, strategy: "strategic" | "merge"): Promise<Kube | null>;
+  async patch(desc: ResourceDescriptor, data: Patch, strategy: "json"): Promise<Kube | null>;
   async patch(
     desc: ResourceDescriptor,
-    data: PartialDeep<Object>,
-    strategy: "strategic" | "merge",
-  ): Promise<Object | null>;
-  async patch(desc: ResourceDescriptor, data: Patch, strategy: "json"): Promise<Object | null>;
-  async patch(
-    desc: ResourceDescriptor,
-    data: PartialDeep<Object> | Patch,
+    data: PartialDeep<Kube> | Patch,
     strategy: KubeApiPatchType,
-  ): Promise<Object | null>;
+  ): Promise<Kube | null>;
   async patch(
     desc: ResourceDescriptor,
-    data: PartialDeep<Object> | Patch,
+    data: PartialDeep<Kube> | Patch,
     strategy: KubeApiPatchType = "strategic",
-  ): Promise<Object | null> {
+  ): Promise<Kube | null> {
     await this.checkPreferredVersion();
     const apiUrl = this.formatUrlForNotListing(desc);
 
@@ -740,7 +735,7 @@ export class KubeApi<
     });
   }
 
-  watch(opts?: KubeApiWatchOptions<Object, Data>): Disposer {
+  watch(opts?: KubeApiWatchOptions<Kube, Data>): Disposer {
     let errorReceived = false;
     let timedRetry: NodeJS.Timeout;
     const {

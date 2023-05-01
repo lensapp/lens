@@ -10,7 +10,7 @@ import type { IObservableValue } from "mobx";
 import { observable, makeObservable, computed } from "mobx";
 import { observer } from "mobx-react";
 import type { StrictReactNode } from "@k8slens/utilities";
-import { cssNames, noop, prevDefault } from "@k8slens/utilities";
+import { cssNames, prevDefault } from "@k8slens/utilities";
 import type { ButtonProps } from "@k8slens/button";
 import { Button } from "@k8slens/button";
 import type { DialogProps } from "../dialog";
@@ -21,12 +21,11 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import confirmDialogStateInjectable from "./state.injectable";
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
 
-export interface ConfirmDialogProps extends Partial<DialogProps> {
-}
+export type ConfirmDialogProps = Partial<DialogProps>;
 
 export interface ConfirmDialogParams extends ConfirmDialogBooleanParams {
-  ok?: () => any | Promise<any>;
-  cancel?: () => any | Promise<any>;
+  ok?: () => unknown | Promise<unknown>;
+  cancel?: () => unknown | Promise<unknown>;
 }
 
 export interface ConfirmDialogBooleanParams {
@@ -44,8 +43,8 @@ interface Dependencies {
 }
 
 const defaultParams = {
-  ok: noop,
-  cancel: noop,
+  ok: (() => {}) as NonNullable<ConfirmDialogParams["ok"]>,
+  cancel: (() => {}) as NonNullable<ConfirmDialogParams["cancel"]>,
   labelOk: "Ok",
   labelCancel: "Cancel",
   icon: <Icon big material="warning"/>,
@@ -68,7 +67,7 @@ class NonInjectedConfirmDialog extends React.Component<ConfirmDialogProps & Depe
   ok = async () => {
     try {
       this.isSaving = true;
-      await (async () => this.params.ok())();
+      await (async () => await this.params.ok())();
     } catch (error) {
       this.props.showErrorNotification(
         <>
@@ -94,28 +93,30 @@ class NonInjectedConfirmDialog extends React.Component<ConfirmDialogProps & Depe
     this.isSaving = false;
   };
 
-  close = async () => {
-    try {
-      await Promise.resolve(this.params.cancel());
-    } catch (error) {
-      this.props.showErrorNotification(
-        <>
-          <p>Cancelling action failed:</p>
-          <p>
-            {(
-              error instanceof Error
-                ? error.message
-                : typeof error === "string"
-                  ? error
-                  : "Unknown error occurred while cancelling"
-            )}
-          </p>
-        </>,
-      );
-    } finally {
-      this.isSaving = false;
-      this.props.state.set(undefined);
-    }
+  close = () => {
+    void (async () => {
+      try {
+        await Promise.resolve(this.params.cancel());
+      } catch (error) {
+        this.props.showErrorNotification((
+          <>
+            <p>Cancelling action failed:</p>
+            <p>
+              {(
+                error instanceof Error
+                  ? error.message
+                  : typeof error === "string"
+                    ? error
+                    : "Unknown error occurred while cancelling"
+              )}
+            </p>
+          </>
+        ));
+      } finally {
+        this.isSaving = false;
+        this.props.state.set(undefined);
+      }
+    })();
   };
 
   render() {

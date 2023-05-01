@@ -31,8 +31,7 @@ import isAddSecretDialogOpenInjectable from "./is-open.injectable";
 import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
 
-export interface AddSecretDialogProps extends Partial<DialogProps> {
-}
+export type AddSecretDialogProps = Partial<DialogProps>;
 
 interface SecretTemplateField {
   key: string;

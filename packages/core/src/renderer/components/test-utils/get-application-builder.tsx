@@ -108,11 +108,11 @@ const createSubNamespace = (namespace: string, parent: Namespace) => new Namespa
 
 export interface ApplicationBuilder {
   mainDi: DiContainer;
-  setEnvironmentToClusterFrame: () => ApplicationBuilder;
+  setEnvironmentToClusterFrame: () => Promise<ApplicationBuilder>;
 
   extensions: {
-    enable: (...extensions: FakeExtensionOptions[]) => void;
-    disable: (...extensions: FakeExtensionOptions[]) => void;
+    enable: (...extensions: FakeExtensionOptions[]) => Promise<void>;
+    disable: (...extensions: FakeExtensionOptions[]) => Promise<void>;
 
     get: (id: string) => {
       main: LensMainExtension;
@@ -132,16 +132,16 @@ export interface ApplicationBuilder {
   };
 
   allowKubeResource: (resource: KubeApiResourceDescriptor) => ApplicationBuilder;
-  beforeApplicationStart: (callback: MainDiCallback) => ApplicationBuilder;
-  afterApplicationStart: (callback: MainDiCallback) => ApplicationBuilder;
-  beforeWindowStart: (callback: WindowDiCallback) => ApplicationBuilder;
-  afterWindowStart: (callback: WindowDiCallback) => ApplicationBuilder;
+  beforeApplicationStart: (callback: MainDiCallback) => Promise<ApplicationBuilder>;
+  afterApplicationStart: (callback: MainDiCallback) => Promise<ApplicationBuilder>;
+  beforeWindowStart: (callback: WindowDiCallback) => Promise<ApplicationBuilder>;
+  afterWindowStart: (callback: WindowDiCallback) => Promise<ApplicationBuilder>;
 
   startHidden: () => Promise<void>;
   render: () => Promise<RenderResult>;
 
   tray: {
-    click: (id: string) => Promise<void>;
+    click: (id: string) => void;
     get: (id: string) => MinimalTrayMenuItem | null;
     getIconPath: () => string;
   };
@@ -153,7 +153,7 @@ export interface ApplicationBuilder {
   preferences: {
     close: () => void;
     navigate: () => void;
-    navigateTo: (route: Route<any>, params: Partial<NavigateToRouteOptions<any>>) => void;
+    navigateTo: <T>(route: Route<T>, params: NavigateToRouteOptions<Route<T>>) => void;
     navigation: {
       click: (id: string) => void;
     };
@@ -166,7 +166,7 @@ export interface ApplicationBuilder {
   helmCharts: {
     navigate: NavigateToHelmCharts;
   };
-  navigateWith: (token: Injectable<() => void, any, void>) => void;
+  navigateWith: (token: Injectable<() => void, unknown, void>) => void;
   select: {
     openMenu: (id: string) => { selectOption: (labelText: string) => void };
     selectOption: (menuId: string, labelText: string) => void;
@@ -230,7 +230,7 @@ export const getApplicationBuilder = () => {
 
   let trayMenuIconPath: string;
 
-  const traySetMenuItemsMock = jest.fn<any, [MinimalTrayMenuItem[]]>();
+  const traySetMenuItemsMock: jest.MockedFunction<(items: MinimalTrayMenuItem[]) => void> = jest.fn();
 
   mainDi.override(electronTrayInjectable, () => ({
     start: () => {},
@@ -438,8 +438,7 @@ export const getApplicationBuilder = () => {
         const clickableMenuItem = findComposite(...path)(composite).value;
 
         if(clickableMenuItem.kind === "clickable-menu-item") {
-          // Todo: prevent leaking of Electron
-          (clickableMenuItem.onClick as any)();
+          clickableMenuItem.onClick(null as never, undefined, null as never);
         } else {
           throw new Error(`Tried to trigger clicking of an application menu item, but item at path '${path.join(" -> ")}' isn't clickable.`);
         }
@@ -457,7 +456,7 @@ export const getApplicationBuilder = () => {
 
       getIconPath: () => trayMenuIconPath,
 
-      click: async (id: string) => {
+      click: (id: string) => {
         const lastCall = last(traySetMenuItemsMock.mock.calls);
 
         assert(lastCall);
@@ -481,7 +480,7 @@ export const getApplicationBuilder = () => {
           throw new Error(`Tried to click tray menu item with ID ${id} which is disabled.`);
         }
 
-        await menuItem.click?.();
+        menuItem.click?.();
       },
     },
 
@@ -504,7 +503,7 @@ export const getApplicationBuilder = () => {
         navigateToPreferences();
       },
 
-      navigateTo: (route: Route<any>, params: Partial<NavigateToRouteOptions<any>>) => {
+      navigateTo: (route, params) => {
         const windowDi = builder.applicationWindow.only.di;
 
         const navigateToRoute = windowDi.inject(navigateToRouteInjectionToken);
@@ -547,16 +546,16 @@ export const getApplicationBuilder = () => {
       navigate();
     },
 
-    setEnvironmentToClusterFrame: () => {
+    setEnvironmentToClusterFrame: async () => {
       environment = environments.clusterFrame;
 
-      const cluster = new Cluster({
+      const cluster = Cluster.createForTestingOnly({
         id: "some-cluster-id",
         contextName: "some-context-name",
         kubeConfigPath: "/some-path-to-kube-config",
       });
 
-      builder.beforeWindowStart(({ windowDi }) => {
+      await builder.beforeWindowStart(({ windowDi }) => {
         windowDi.override(hostedClusterIdInjectable, () => cluster.id);
 
         // TODO: Remove this once we moved catalog to new IPC injectables
@@ -584,7 +583,7 @@ export const getApplicationBuilder = () => {
         } as Partial<NamespaceStore> as NamespaceStore));
       });
 
-      builder.beforeApplicationStart(({ mainDi }) => {
+      await builder.beforeApplicationStart(({ mainDi }) => {
         const writeJsonSync = mainDi.inject(writeJsonSyncInjectable);
 
         writeJsonSync("/some-path-to-kube-config", {
@@ -654,27 +653,27 @@ export const getApplicationBuilder = () => {
         };
       },
 
-      enable: (...extensions) => {
-        builder.afterWindowStart(action(({ windowDi }) => {
+      enable: async (...extensions) => {
+        await builder.afterWindowStart(action(({ windowDi }) => {
           extensions
             .map(getExtensionFakeForRenderer)
             .forEach(enableExtensionFor(windowDi, rendererExtensionsStateInjectable));
         }));
 
-        builder.afterApplicationStart(action(({ mainDi }) => {
+        await builder.afterApplicationStart(action(({ mainDi }) => {
           extensions
             .map(getExtensionFakeForMain)
             .forEach(enableExtensionFor(mainDi, mainExtensionsStateInjectable));
         }));
       },
 
-      disable: (...extensions) => {
-        builder.afterWindowStart(({ windowDi }) => {
+      disable: async (...extensions) => {
+        await builder.afterWindowStart(({ windowDi }) => {
           extensions
             .forEach(disableExtensionFor(windowDi, rendererExtensionsStateInjectable));
         });
 
-        builder.afterApplicationStart(({ mainDi }) => {
+        await builder.afterApplicationStart(({ mainDi }) => {
           extensions
             .forEach(disableExtensionFor(mainDi, mainExtensionsStateInjectable));
         });
@@ -696,9 +695,9 @@ export const getApplicationBuilder = () => {
       return builder;
     },
 
-    beforeApplicationStart(callback) {
+    async beforeApplicationStart(callback) {
       if (applicationHasStarted) {
-        callback({ mainDi });
+        await callback({ mainDi });
       }
 
       beforeApplicationStartCallbacks.push(callback);
@@ -706,9 +705,9 @@ export const getApplicationBuilder = () => {
       return builder;
     },
 
-    afterApplicationStart(callback) {
+    async afterApplicationStart(callback) {
       if (applicationHasStarted) {
-        callback({ mainDi });
+        await callback({ mainDi });
       }
 
       afterApplicationStartCallbacks.push(callback);
@@ -716,24 +715,20 @@ export const getApplicationBuilder = () => {
       return builder;
     },
 
-    beforeWindowStart(callback) {
-      const alreadyRenderedWindows = builder.applicationWindow.getAll();
-
-      alreadyRenderedWindows.forEach((window) => {
-        callback({ windowDi: window.di });
-      });
+    async beforeWindowStart(callback) {
+      for (const window of builder.applicationWindow.getAll()) {
+        await callback({ windowDi: window.di });
+      }
 
       beforeWindowStartCallbacks.push(callback);
 
       return builder;
     },
 
-    afterWindowStart(callback) {
-      const alreadyRenderedWindows = builder.applicationWindow.getAll();
-
-      alreadyRenderedWindows.forEach((window) => {
-        callback({ windowDi: window.di });
-      });
+    async afterWindowStart(callback) {
+      for (const window of builder.applicationWindow.getAll()) {
+        await callback({ windowDi: window.di });
+      }
 
       afterWindowStartCallbacks.push(callback);
 
@@ -803,7 +798,7 @@ const mainExtensionsStateInjectable = getInjectable({
   instantiate: () => observable.map<string, LensMainExtension>(),
 });
 
-const findExtensionInstance = <T extends LensExtension> (di: DiContainer, injectable: Injectable<IComputedValue<T[]>, any, any>, id: string) => {
+const findExtensionInstance = <T extends LensExtension> (di: DiContainer, injectable: Injectable<IComputedValue<T[]>, unknown, void>, id: string) => {
   const instance = di.inject(injectable).get().find(ext => ext.id === id);
 
   if (!instance) {
@@ -869,10 +864,10 @@ const selectOptionFor = (builder: ApplicationBuilder, menuId: string) => (labelT
   userEvent.click(option);
 };
 
-function enableExtensionFor(di: DiContainer, stateInjectable: Injectable<ObservableMap<string, any>, any, any>) {
+function enableExtensionFor<T extends LensExtension>(di: DiContainer, stateInjectable: Injectable<ObservableMap<string, T>, unknown, void>) {
   const extensionState = di.inject(stateInjectable);
 
-  return (instance: LensExtension) => {
+  return (instance: T) => {
     const extension = di.inject(extensionInjectable, instance);
 
     extension.register();
@@ -880,7 +875,7 @@ function enableExtensionFor(di: DiContainer, stateInjectable: Injectable<Observa
   };
 }
 
-function disableExtensionFor(di: DiContainer, stateInjectable: Injectable<ObservableMap<string, any>, unknown, void>) {
+function disableExtensionFor<T extends LensExtension>(di: DiContainer, stateInjectable: Injectable<ObservableMap<string, T>, unknown, void>) {
   return (extension: FakeExtensionOptions) => {
     const extensionsState = di.inject(stateInjectable);
     const instance = extensionsState.get(extension.id);

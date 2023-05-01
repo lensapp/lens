@@ -23,21 +23,17 @@ import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.inj
 import type { PodStore } from "../workloads-pods/store";
 import podStoreInjectable from "../workloads-pods/store.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
-import loadPodsFromAllNamespacesInjectable
-  from "../workloads-pods/load-pods-from-all-namespaces.injectable";
-
-export interface NodeDetailsProps extends KubeObjectDetailsProps<Node> {
-}
+import loadPodsFromAllNamespacesInjectable from "../workloads-pods/load-pods-from-all-namespaces.injectable";
 
 interface Dependencies {
   subscribeStores: SubscribeStores;
   podStore: PodStore;
   logger: Logger;
-  loadPodsFromAllNamespaces: () => void;
+  loadPodsFromAllNamespaces: () => Promise<void>;
 }
 
 @observer
-class NonInjectedNodeDetails extends React.Component<NodeDetailsProps & Dependencies> {
+class NonInjectedNodeDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
   componentDidMount() {
     disposeOnUnmount(this, [
       this.props.subscribeStores([
@@ -45,7 +41,7 @@ class NonInjectedNodeDetails extends React.Component<NodeDetailsProps & Dependen
       ]),
     ]);
 
-    this.props.loadPodsFromAllNamespaces();
+    void this.props.loadPodsFromAllNamespaces();
   }
 
   render() {
@@ -145,7 +141,7 @@ class NonInjectedNodeDetails extends React.Component<NodeDetailsProps & Dependen
   }
 }
 
-export const NodeDetails = withInjectables<Dependencies, NodeDetailsProps>(NonInjectedNodeDetails, {
+export const NodeDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedNodeDetails, {
   getProps: (di, props) => ({
     ...props,
     subscribeStores: di.inject(subscribeStoresInjectable),

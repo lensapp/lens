@@ -20,7 +20,7 @@ import enabledExtensionsStateInjectable from "../../../features/extensions/enabl
 import type { LegacyLensExtension, LensExtensionId } from "@k8slens/legacy-extensions";
 import { LensMainExtension } from "../../../extensions/lens-main-extension";
 
-function throwIfDefined(val: any): void {
+function throwIfDefined(val: unknown): void {
   if (val != null) {
     throw val;
   }
@@ -32,7 +32,7 @@ describe("protocol router tests", () => {
   let enabledExtensions: ObservableMap<LensExtensionId, LensExtensionState>;
   let broadcastMessageMock: jest.Mock;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const di = getDiForUnitTesting();
 
     enabledExtensions = di.inject(enabledExtensionsStateInjectable);
@@ -130,7 +130,7 @@ describe("protocol router tests", () => {
   });
 
   it("should call most exact handler", async () => {
-    let called: any = 0;
+    let called: unknown = 0;
 
     lpr.addInternalHandler("/page", () => { called = 1; });
     lpr.addInternalHandler("/page/:id", params => { called = params.pathname.id; });
@@ -146,7 +146,7 @@ describe("protocol router tests", () => {
   });
 
   it("should call most exact handler for an extension", async () => {
-    let called: any = 0;
+    let called: unknown = 0;
 
     const extId = uuid.v4();
     const ext = new LensMainExtension({
@@ -186,7 +186,7 @@ describe("protocol router tests", () => {
   });
 
   it("should work with non-org extensions", async () => {
-    let called: any = 0;
+    let called: unknown = 0;
 
     {
       const extId = uuid.v4();
@@ -256,7 +256,7 @@ describe("protocol router tests", () => {
   });
 
   it("should call most exact handler with 3 found handlers", async () => {
-    let called: any = 0;
+    let called: unknown = 0;
 
     lpr.addInternalHandler("/", () => { called = 2; });
     lpr.addInternalHandler("/page", () => { called = 1; });
@@ -274,7 +274,7 @@ describe("protocol router tests", () => {
   });
 
   it("should call most exact handler with 2 found handlers", async () => {
-    let called: any = 0;
+    let called: unknown = 0;
 
     lpr.addInternalHandler("/", () => { called = 2; });
     lpr.addInternalHandler("/page", () => { called = 1; });

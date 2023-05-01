@@ -55,6 +55,8 @@ const NonInjectedNamespaceSelect = observer(({
 
   useEffect(() => setBaseOptions(getOptions(context, sort)), [sort]);
 
+  void formatOptionLabel;
+
   return (
     <Select
       className={cssNames("NamespaceSelect", className)}

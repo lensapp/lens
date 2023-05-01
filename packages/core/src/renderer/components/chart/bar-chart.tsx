@@ -41,6 +41,8 @@ const NonInjectedBarChart = observer(({
   options: customOptions,
   ...settings
 }: Dependencies & BarChartProps) => {
+  void name;
+
   const { textColorPrimary, borderFaintColor, chartStripesColor } = activeTheme.get().colors;
   const { datasets: rawDatasets = [], ...rest } = data;
   const datasets = rawDatasets
@@ -99,7 +101,7 @@ const NonInjectedBarChart = observer(({
           displayFormats: {
             minute: "x",
           },
-          parser: timestamp => moment.unix(parseInt(timestamp)),
+          parser: (timestamp: unknown) => moment.unix(parseInt(String(timestamp))),
         },
       }],
       yAxes: [{

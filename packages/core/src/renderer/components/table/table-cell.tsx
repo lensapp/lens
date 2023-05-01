@@ -77,6 +77,10 @@ export class TableCell extends React.Component<TableCellProps> {
       ...cellProps
     } = this.props;
 
+    void isChecked;
+    void _sorting;
+    void showWithColumn;
+
     const classNames = cssNames("TableCell", className, {
       checkbox,
       scrollable,
@@ -89,7 +93,7 @@ export class TableCell extends React.Component<TableCellProps> {
       <div
         {...cellProps}
         className={classNames}
-        onClick={this.onClick}
+        onClick={(...args) => this.onClick(...args)}
       >
         {this.renderCheckbox()}
         {_nowrap ? <div className="content">{content}</div> : content}

@@ -3,45 +3,52 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { IComputedValue } from "mobx";
-import type { PageParamInit, PageParam } from "../navigation/page-param";
+import type { ArrayPageParamDeclaration, DefaultPageParamDeclaration, PageParam, PageParamDeclaration } from "../navigation/page-param";
 
 // Extensions-api -> Custom page registration
 
-export interface PageRegistration {
+export interface PageRegistration<Params = unknown> {
   /**
    * Page ID, part of extension's page url, must be unique within same extension
    * When not provided, first registered page without "id" would be used for page-menus without target.pageId for same extension
    */
   id?: string;
-  params?: PageParams<string | Omit<PageParamInit<any>, "name" | "prefix">>;
-  components: PageComponents;
+  params?: Params extends PageParams<string | PageParamDeclaration<unknown>> ? Params : never;
+  components: PageComponents<Params>;
   enabled?: IComputedValue<boolean>;
 }
 
-export interface PageComponents {
-  Page: React.ComponentType<any>;
+export interface PageComponents<Params> {
+  Page: React.ComponentType<PageComponentProps<Params>>;
 }
 
-export interface PageTarget {
+export interface PageTarget<V> {
   extensionId?: string;
   pageId?: string;
-  params?: PageParams;
+  params?: PageParams<V>;
 }
 
-export interface PageParams<V = any> {
-  [paramName: string]: V;
-}
+export type PageParams<V> = Record<string, V>;
 
-export interface PageComponentProps<P extends PageParams = {}> {
-  params?: {
-    [N in keyof P]: PageParam<P[N]>;
+export type PageComponentProp<Param> =
+  Param extends string
+    ? PageParam<Param>
+    : Param extends DefaultPageParamDeclaration<infer T>
+      ? PageParam<T>
+      : Param extends ArrayPageParamDeclaration<infer T>
+        ? PageParam<T[]>
+        : never;
+
+export interface PageComponentProps<Params> {
+  params: {
+    [N in keyof Params]: PageComponentProp<Params[N]>;
   };
 }
 
-export interface RegisteredPage {
+export interface RegisteredPage<Params> {
   id: string;
   extensionId: string;
   url: string; // registered extension's page URL (without page params)
-  params: PageParams<PageParam<any>>; // normalized params
-  components: PageComponents; // normalized components
+  params: PageParams<Params>; // normalized params
+  components: PageComponents<Params>; // normalized components
 }

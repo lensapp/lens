@@ -10,7 +10,7 @@ import homeDirectoryPathInjectable from "../../../common/os/home-directory-path.
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import { defaultThemeId } from "../../../common/vars";
 import currentTimezoneInjectable from "../../../common/vars/current-timezone.injectable";
-import type { EditorConfiguration, ExtensionRegistry, KubeconfigSyncEntry, KubeconfigSyncValue, TerminalConfig } from "./preferences-helpers";
+import type { EditorConfiguration, ExtensionRegistry, KubeconfigSyncEntry, TerminalConfig } from "./preferences-helpers";
 import { defaultExtensionRegistryUrlLocation, defaultEditorConfig, defaultTerminalConfig, defaultPackageMirror, getPreferenceDescriptor, packageMirrors } from "./preferences-helpers";
 
 export type PreferenceDescriptors = ReturnType<typeof userPreferenceDescriptorsInjectable["instantiate"]>;
@@ -111,7 +111,7 @@ const userPreferenceDescriptorsInjectable = getInjectable({
           return res.length ? res : undefined;
         },
       }),
-      syncKubeconfigEntries: getPreferenceDescriptor<KubeconfigSyncEntry[], ObservableMap<string, KubeconfigSyncValue>>({
+      syncKubeconfigEntries: getPreferenceDescriptor<KubeconfigSyncEntry[], ObservableMap<string, Record<string, never>>>({
         fromStore: val => observable.map(
           val?.map(({ filePath, ...rest }) => [filePath, rest])
           ?? [[mainKubeFolderPath, {}]],

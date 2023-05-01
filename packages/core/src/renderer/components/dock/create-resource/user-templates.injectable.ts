@@ -55,29 +55,31 @@ const userCreateResourceTemplatesInjectable = getInjectable({
      */
     const templates = observable.map<string, string>();
 
-    const onAddOrChange = async (filePath: string) => {
+    const onAddOrChange = (filePath: string) => {
       if (!hasCorrectExtension(filePath)) {
         // ignore non yaml or json files
         return;
       }
 
-      try {
-        const contents = await readFile(filePath, "utf-8");
+      void (async () => {
+        try {
+          const contents = await readFile(filePath, "utf-8");
 
-        templates.set(filePath, contents);
-      } catch (error) {
-        if (isErrnoException(error) && error.code === "ENOENT") {
-        // ignore, file disappeared
-        } else {
-          logger.warn(`encountered error while reading ${filePath}`, error);
+          templates.set(filePath, contents);
+        } catch (error) {
+          if (isErrnoException(error) && error.code === "ENOENT") {
+          // ignore, file disappeared
+          } else {
+            logger.warn(`encountered error while reading ${filePath}`, error);
+          }
         }
-      }
+      })();
     };
     const onUnlink = (filePath: string) => {
       templates.delete(filePath);
     };
 
-    (async () => {
+    void (async () => {
       for (let i = 1;; i *= 2) {
         try {
           await waitForPath(userTemplatesFolder);

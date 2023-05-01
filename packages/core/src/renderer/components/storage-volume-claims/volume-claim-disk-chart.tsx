@@ -15,15 +15,12 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
 import activeThemeInjectable from "../../themes/active.injectable";
 
-export interface VolumeClaimDiskChartProps {}
-
 interface Dependencies {
   activeTheme: IComputedValue<LensTheme>;
 }
 
-const NonInjectedVolumeClaimDiskChart = observer(({
-  activeTheme,
-}: Dependencies & VolumeClaimDiskChartProps) => {
+const NonInjectedVolumeClaimDiskChart = observer((props: Dependencies) => {
+  const { activeTheme } = props;
   const { metrics, tab, object } = useContext(ResourceMetricsContext) ?? {};
 
   if (!metrics || !object || !tab) return null;
@@ -63,7 +60,7 @@ const NonInjectedVolumeClaimDiskChart = observer(({
   );
 });
 
-export const VolumeClaimDiskChart = withInjectables<Dependencies, VolumeClaimDiskChartProps>(NonInjectedVolumeClaimDiskChart, {
+export const VolumeClaimDiskChart = withInjectables<Dependencies>(NonInjectedVolumeClaimDiskChart, {
   getProps: (di, props) => ({
     ...props,
     activeTheme: di.inject(activeThemeInjectable),

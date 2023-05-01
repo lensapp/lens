@@ -10,17 +10,21 @@ import React from "react";
 
 import { DrawerTitle } from "../../drawer";
 import type { KubeObjectDetailsProps } from "../../kube-object-details";
-import type { ClusterRole } from "@k8slens/kube-object";
-
-export interface ClusterRoleDetailsProps extends KubeObjectDetailsProps<ClusterRole> {
-}
+import { ClusterRole } from "@k8slens/kube-object";
 
 @observer
-export class ClusterRoleDetails extends React.Component<ClusterRoleDetailsProps> {
+export class ClusterRoleDetails extends React.Component<KubeObjectDetailsProps> {
   render() {
     const { object: clusterRole } = this.props;
 
-    if (!clusterRole) return null;
+    if (!clusterRole) {
+      return null;
+    }
+
+    if (!(clusterRole instanceof ClusterRole)) {
+      return null;
+    }
+
     const rules = clusterRole.getRules();
 
     return (

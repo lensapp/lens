@@ -21,9 +21,9 @@ describe("cluster - visibility of sidebar items", () => {
   beforeEach(() => {
     builder = getApplicationBuilder();
 
-    builder.setEnvironmentToClusterFrame();
+    await builder.setEnvironmentToClusterFrame();
 
-    builder.beforeWindowStart(({ windowDi }) => {
+    await builder.beforeWindowStart(({ windowDi }) => {
       runInAction(() => {
         windowDi.register(testRouteInjectable);
         windowDi.register(testRouteComponentInjectable);

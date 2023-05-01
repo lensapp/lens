@@ -25,20 +25,20 @@ const requestKubeObjectPatchInjectable = getInjectable({
         },
       })) as Result<string, string>;
 
-      if (!result.callWasSuccessful) {
+      if (!result.isOk) {
         return result;
       }
 
       try {
-        const response = JSON.parse(result.response) as KubeJsonApiData;
+        const response = JSON.parse(result.value) as KubeJsonApiData;
 
         return {
-          callWasSuccessful: true,
+          isOk: true,
           response,
         };
       } catch (error) {
         return {
-          callWasSuccessful: false,
+          isOk: false,
           error: String(error),
         };
       }

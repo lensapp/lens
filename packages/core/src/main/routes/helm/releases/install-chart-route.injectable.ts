@@ -4,27 +4,16 @@
  */
 import { apiPrefix } from "../../../../common/vars";
 import { getRouteInjectable } from "../../../router/router.injectable";
-import Joi from "joi";
-import { payloadValidatedClusterRoute } from "../../../router/route";
-import type { InstallChartArgs } from "../../../helm/helm-service/install-helm-chart.injectable";
+import { payloadWithSchemaClusterRoute } from "../../../router/route";
 import installClusterHelmChartInjectable from "../../../helm/helm-service/install-helm-chart.injectable";
+import { z } from "zod";
 
-const installChartArgsValidator = Joi.object<InstallChartArgs, true, InstallChartArgs>({
-  chart: Joi
-    .string()
-    .required(),
-  values: Joi
-    .object()
-    .required()
-    .unknown(true),
-  name: Joi
-    .string(),
-  namespace: Joi
-    .string()
-    .required(),
-  version: Joi
-    .string()
-    .required(),
+const installChartArgsSchema = z.object({
+  chart: z.string(),
+  values: z.record(z.any()),
+  name: z.string(),
+  namespace: z.string(),
+  version: z.string(),
 });
 
 const installChartRouteInjectable = getRouteInjectable({
@@ -33,10 +22,10 @@ const installChartRouteInjectable = getRouteInjectable({
   instantiate: (di) => {
     const installHelmChart = di.inject(installClusterHelmChartInjectable);
 
-    return payloadValidatedClusterRoute({
+    return payloadWithSchemaClusterRoute({
       method: "post",
       path: `${apiPrefix}/v2/releases`,
-      payloadValidator: installChartArgsValidator,
+      payloadSchema: installChartArgsSchema,
     })(async ({ payload, cluster }) => ({
       response: await installHelmChart(cluster, payload),
       statusCode: 201,

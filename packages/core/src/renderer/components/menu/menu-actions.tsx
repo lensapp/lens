@@ -9,7 +9,7 @@ import React, { isValidElement } from "react";
 import { observable, makeObservable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { StrictReactNode } from "@k8slens/utilities";
-import { cssNames } from "@k8slens/utilities";
+import { cssNames, isFunction } from "@k8slens/utilities";
 import type { IconProps } from "@k8slens/icon";
 import { Icon } from "@k8slens/icon";
 import type { MenuProps } from "./menu";
@@ -82,7 +82,7 @@ class NonInjectedMenuActions extends React.Component<MenuActionsProps & Dependen
     const { removeAction, openConfirmDialog } = this.props;
     let { removeConfirmationMessage } = this.props;
 
-    if (typeof removeConfirmationMessage === "function") {
+    if (isFunction(removeConfirmationMessage)) {
       removeConfirmationMessage = removeConfirmationMessage();
     }
     openConfirmDialog({
@@ -137,6 +137,9 @@ class NonInjectedMenuActions extends React.Component<MenuActionsProps & Dependen
     } = this.props;
     const autoClose = !toolbar;
 
+    void triggerIcon;
+    void removeConfirmationMessage;
+
     return (
       <>
         {this.renderTriggerIcon()}
@@ -159,7 +162,7 @@ class NonInjectedMenuActions extends React.Component<MenuActionsProps & Dependen
         >
           {children}
           {updateAction && (
-            <MenuItem onClick={updateAction}>
+            <MenuItem onClick={() => void updateAction()}>
               <Icon
                 material="edit"
                 interactive={toolbar}
@@ -169,7 +172,7 @@ class NonInjectedMenuActions extends React.Component<MenuActionsProps & Dependen
             </MenuItem>
           )}
           {removeAction && (
-            <MenuItem onClick={this.remove} data-testid="menu-action-remove">
+            <MenuItem onClick={() => void this.remove()} data-testid="menu-action-remove">
               <Icon
                 material="delete"
                 interactive={toolbar}

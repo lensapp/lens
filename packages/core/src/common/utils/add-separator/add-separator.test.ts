@@ -22,6 +22,7 @@ describe("add-separator", () => {
   it("given multiple items including falsy ones, adds separators", () => {
     const items = [false, undefined, null, NaN];
 
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     const actual = addSeparator((left, right) => `separator-between-${left}-and-${right}`, items);
 
     expect(actual).toEqual([
@@ -36,7 +37,7 @@ describe("add-separator", () => {
   });
 
   it("given no items, does not add separator", () => {
-    const items: any[] = [];
+    const items: unknown[] = [];
 
     const actual = addSeparator(() => "separator", items);
 

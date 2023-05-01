@@ -38,7 +38,7 @@ const NonInjectedCatalogEntityDetailsComponent = observer(({
     <CatalogEntityDetails
       entity={entity}
       hideDetails={hideEntityDetails}
-      onRun={() => catalogEntityRegistry.onRun(entity)}
+      onRun={() => void catalogEntityRegistry.onRun(entity)}
     />
   );
 });

@@ -4,7 +4,7 @@
  */
 
 import { chunk } from "lodash/fp";
-import type { DiContainer } from "@ogre-tools/injectable";
+import type { DiContainer, Injectable } from "@ogre-tools/injectable";
 import { createContainer, isInjectable } from "@ogre-tools/injectable";
 import spawnInjectable from "./child-process/spawn.injectable";
 import initializeExtensionsInjectable from "./start-main-application/runnables/initialize-extensions.injectable";
@@ -53,9 +53,10 @@ export function getDiForUnitTesting() {
 
   runInAction(() => {
     const injectables = global.injectablePaths.main.paths
-      .map(path => require(path))
-      .flatMap(Object.values)
-      .filter(isInjectable);
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      .map(path => require(path) as object)
+      .flatMap((value) => Object.values(value) as unknown[])
+      .filter(isInjectable) as Injectable<unknown, unknown, unknown>[];
 
     for (const block of chunk(100)(injectables)) {
       di.register(...block);
@@ -63,6 +64,7 @@ export function getDiForUnitTesting() {
   });
 
   for (const globalOverridePath of global.injectablePaths.main.globalOverridePaths) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
     const globalOverride = require(globalOverridePath).default as GlobalOverride<unknown, unknown, unknown>;
 
     di.override(globalOverride.injectable, globalOverride.overridingInstantiate);

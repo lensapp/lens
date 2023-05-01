@@ -15,8 +15,8 @@ import React from "react";
 import { navigateToRouteInjectionToken } from "../../../../common/front-end-routing/navigate-to-route-injection-token";
 import { routeSpecificComponentInjectionToken } from "../../../../renderer/routes/route-specific-component-injection-token";
 import { KubeObjectStatusIcon } from "../../../../renderer/components/kube-object-status-icon/kube-object-status-icon";
-import { KubeObject } from "@k8slens/kube-object";
 import { KubeObjectStatusLevel } from "../../../../common/k8s-api/kube-object-status";
+import { createKubeObject } from "@k8slens/kube-object";
 
 describe("disable kube object statuses when cluster is not relevant", () => {
   let builder: ApplicationBuilder;
@@ -28,9 +28,9 @@ describe("disable kube object statuses when cluster is not relevant", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.setEnvironmentToClusterFrame();
+    await builder.setEnvironmentToClusterFrame();
 
-    builder.beforeWindowStart(({ windowDi }) => {
+    await builder.beforeWindowStart(({ windowDi }) => {
       runInAction(() => {
         windowDi.register(testRouteInjectable, testRouteComponentInjectable);
       });
@@ -68,7 +68,7 @@ describe("disable kube object statuses when cluster is not relevant", () => {
 
     navigateToRoute(testRoute);
 
-    builder.extensions.enable(testExtension);
+    await builder.extensions.enable(testExtension);
   });
 
   describe("given not yet known if extension should be enabled for the cluster", () => {
@@ -145,7 +145,7 @@ const testRouteComponentInjectable = getInjectable({
 });
 
 const getKubeObjectStub = (kind: string, apiVersion: string) =>
-  KubeObject.create({
+  createKubeObject({
     apiVersion,
     kind,
     metadata: {

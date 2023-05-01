@@ -11,9 +11,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { OpenReplicaSetScaleDialog } from "./scale-dialog/open.injectable";
 import openReplicaSetScaleDialogInjectable from "./scale-dialog/open.injectable";
 
-export interface ReplicaSetMenuProps extends KubeObjectMenuProps<ReplicaSet> {
-
-}
+export type ReplicaSetMenuProps = KubeObjectMenuProps<ReplicaSet>;
 
 interface Dependencies {
   openReplicaSetScaleDialog: OpenReplicaSetScaleDialog;

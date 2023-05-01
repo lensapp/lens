@@ -19,7 +19,7 @@ export class GeneralEntity extends CatalogEntity<CatalogEntityMetadata, CatalogE
   public readonly apiVersion = "entity.k8slens.dev/v1alpha1";
   public readonly kind = "General";
 
-  async onRun(context: CatalogEntityActionContext) {
+  onRun(context: CatalogEntityActionContext) {
     context.navigate(this.spec.path);
   }
 }

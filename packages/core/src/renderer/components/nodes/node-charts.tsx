@@ -17,15 +17,12 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
 import activeThemeInjectable from "../../themes/active.injectable";
 
-export interface NodeChartsProps {}
-
 interface Dependencies {
   activeTheme: IComputedValue<LensTheme>;
 }
 
-const NonInjectedNodeCharts = observer(({
-  activeTheme,
-}: Dependencies & NodeChartsProps) => {
+const NonInjectedNodeCharts = observer((props: Dependencies) => {
+  const { activeTheme } = props;
   const { metrics, tab, object } = useContext(ResourceMetricsContext) ?? {};
 
   if (!metrics || !object || !tab) return null;
@@ -160,7 +157,7 @@ const NonInjectedNodeCharts = observer(({
   );
 });
 
-export const NodeCharts = withInjectables<Dependencies, NodeChartsProps>(NonInjectedNodeCharts, {
+export const NodeCharts = withInjectables<Dependencies>(NonInjectedNodeCharts, {
   getProps: (di, props) => ({
     ...props,
     activeTheme: di.inject(activeThemeInjectable),

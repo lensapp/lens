@@ -23,9 +23,6 @@ import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.inj
 import endpointsStoreInjectable from "../network-endpoints/store.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
 
-export interface ServiceDetailsProps extends KubeObjectDetailsProps<Service> {
-}
-
 interface Dependencies {
   subscribeStores: SubscribeStores;
   portForwardStore: PortForwardStore;
@@ -34,14 +31,14 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedServiceDetails extends React.Component<ServiceDetailsProps & Dependencies> {
+class NonInjectedServiceDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
   componentDidMount() {
     const {
-      object: service,
       subscribeStores,
       endpointsStore,
       portForwardStore,
     } = this.props;
+    const service = this.props.object as Service;
 
     disposeOnUnmount(this, [
       subscribeStores([
@@ -151,7 +148,7 @@ class NonInjectedServiceDetails extends React.Component<ServiceDetailsProps & De
   }
 }
 
-export const ServiceDetails = withInjectables<Dependencies, ServiceDetailsProps>(NonInjectedServiceDetails, {
+export const ServiceDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedServiceDetails, {
   getProps: (di, props) => ({
     ...props,
     subscribeStores: di.inject(subscribeStoresInjectable),

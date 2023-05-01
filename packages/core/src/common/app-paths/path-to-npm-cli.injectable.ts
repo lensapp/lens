@@ -4,6 +4,12 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 
+interface NonWebpackRequire {
+  resolve(name: string): string;
+}
+
+declare const __non_webpack_require__: NonWebpackRequire;
+
 const pathToNpmCliInjectable = getInjectable({
   id: "path-to-npm-cli",
   instantiate: () => __non_webpack_require__.resolve("npm"),

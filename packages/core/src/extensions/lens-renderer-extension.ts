@@ -44,6 +44,7 @@ import getExtensionPageParametersInjectable from "../renderer/routes/get-extensi
 import navigateToRouteInjectable from "../renderer/routes/navigate-to-route.injectable";
 import routesInjectable from "../renderer/routes/routes.injectable";
 import ensureHashedDirectoryForExtensionInjectable from "./extension-loader/file-system-provisioner-store/ensure-hashed-directory-for-extension.injectable";
+import type { PageParamInit } from "./renderer-api/navigation";
 
 interface LensRendererExtensionDependencies extends LensExtensionDependencies {
   navigateToRoute: NavigateToRoute;
@@ -52,6 +53,10 @@ interface LensRendererExtensionDependencies extends LensExtensionDependencies {
   readonly entityRegistry: CatalogEntityRegistry;
   readonly categoryRegistry: CatalogCategoryRegistry;
 }
+
+export const getPageRegistration = <Params>(reg: PageRegistration<Params>): PageRegistration<Params> => reg;
+export const getParamInitRegistration = <T>(reg: Omit<PageParamInit<T>, "name">) => reg;
+export const getParamsRegistration = <P>(reg: P): P => reg;
 
 export class LensRendererExtension extends LensExtension {
   globalPages: PageRegistration[] = [];
@@ -95,7 +100,7 @@ export class LensRendererExtension extends LensExtension {
     super(deps, extension);
   }
 
-  async navigate(pageId?: string, params: object = {}) {
+  navigate(pageId?: string, params: object = {}) {
     const routes = this.dependencies.routes.get();
     const targetRegistration = [...this.globalPages, ...this.clusterPages]
       .find(registration => registration.id === (pageId || undefined));
@@ -127,6 +132,7 @@ export class LensRendererExtension extends LensExtension {
 
     this.dependencies.navigateToRoute(targetRoute, {
       query,
+      parameters: {},
     });
   }
 
@@ -138,8 +144,9 @@ export class LensRendererExtension extends LensExtension {
    *
    * @deprecated Switch to using "enabled" or "visible" properties in each registration together with `activeCluster`
    */
+  // eslint-disable-next-line @typescript-eslint/ban-types
   async isEnabledForCluster(cluster: KubernetesCluster): Promise<Boolean> {
-    return (void cluster) || true;
+    return Promise.resolve((void cluster) || true);
   }
 
   /**

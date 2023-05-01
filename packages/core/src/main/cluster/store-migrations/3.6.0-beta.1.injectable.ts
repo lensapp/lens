@@ -43,35 +43,37 @@ const v360Beta1ClusterStoreMigrationInjectable = getInjectable({
         logger.info("Number of clusters to migrate: ", storedClusters.length);
 
         for (const clusterModel of storedClusters) {
-          /**
-           * migrate kubeconfig
-           */
-          try {
-            const absPath = getCustomKubeConfigDirectory(clusterModel.id);
+          const absPath = getCustomKubeConfigDirectory(clusterModel.id);
 
-            if (!clusterModel.kubeConfig) {
-              continue;
-            }
-
-            // take the embedded kubeconfig and dump it into a file
-            writeFileSync(absPath, clusterModel.kubeConfig);
-
-            clusterModel.kubeConfigPath = absPath;
-            clusterModel.contextName = loadConfigFromString(readFileSync(absPath)).config.getCurrentContext();
-            delete clusterModel.kubeConfig;
-
-          } catch (error) {
-            logger.info(`Failed to migrate Kubeconfig for cluster "${clusterModel.id}", removing clusterModel...`, error);
-
+          if (!clusterModel.kubeConfig) {
             continue;
           }
+
+          try {
+            // take the embedded kubeconfig and dump it into a file
+            writeFileSync(absPath, clusterModel.kubeConfig);
+          } catch (error) {
+            logger.info(`Failed to migrate Kubeconfig to local file for cluster "${clusterModel.id}", removing cluster...`, error);
+            continue;
+          }
+
+          const result = loadConfigFromString(readFileSync(absPath));
+
+          if (!result.isOk) {
+            logger.info(`Failed to migrate Kubeconfig for cluster "${clusterModel.id}", removing cluster...`, result.error);
+            continue;
+          }
+
+          clusterModel.kubeConfigPath = absPath;
+          clusterModel.contextName = result.value.getCurrentContext();
+          delete clusterModel.kubeConfig;
 
           /**
            * migrate cluster icon
            */
           try {
             if (clusterModel.preferences?.icon) {
-              logger.info(`migrating ${clusterModel.preferences.icon} for ${clusterModel.preferences.clusterName}`);
+              logger.info(`migrating ${clusterModel.preferences.icon} for ${clusterModel.preferences.clusterName ?? clusterModel.contextName}`);
               const iconPath = clusterModel.preferences.icon.replace("store://", "");
               const fileData = readFileBufferSync(joinPaths(userDataPath, iconPath));
 

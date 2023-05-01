@@ -25,7 +25,7 @@ describe("preferences - closing-preferences", () => {
   beforeEach(() => {
     builder = getApplicationBuilder();
 
-    builder.beforeWindowStart(({ windowDi }) => {
+    await builder.beforeWindowStart(({ windowDi }) => {
       runInAction(() => {
         windowDi.register(
           testPreferenceTabInjectable,
@@ -53,7 +53,7 @@ describe("preferences - closing-preferences", () => {
     let windowDi: DiContainer;
 
     beforeEach(async () => {
-      builder.beforeWindowStart(({ windowDi }) => {
+      await builder.beforeWindowStart(({ windowDi }) => {
         windowDi.override(observableHistoryInjectionToken, () => {
           const historyFake = createMemoryHistory({
             initialEntries: ["/some-page"],
@@ -134,7 +134,7 @@ describe("preferences - closing-preferences", () => {
     let windowDi: DiContainer;
 
     beforeEach(async () => {
-      builder.beforeWindowStart(({ windowDi }) => {
+      await builder.beforeWindowStart(({ windowDi }) => {
         windowDi.override(observableHistoryInjectionToken, () => {
           const historyFake = createMemoryHistory({
             initialEntries: ["/preferences/app"],

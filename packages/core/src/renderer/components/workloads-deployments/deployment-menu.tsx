@@ -17,7 +17,7 @@ import type { ShowCheckedErrorNotification } from "../notifications/show-checked
 import showCheckedErrorNotificationInjectable from "../notifications/show-checked-error.injectable";
 import type { DeploymentApi } from "@k8slens/kube-api";
 
-export interface DeploymentMenuProps extends KubeObjectMenuProps<Deployment> {}
+export type DeploymentMenuProps = KubeObjectMenuProps<Deployment>;
 
 interface Dependencies {
   openDeploymentScaleDialog: OpenDeploymentScaleDialog;

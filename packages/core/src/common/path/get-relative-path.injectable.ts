@@ -9,7 +9,7 @@ export type GetRelativePath = (from: string, to: string) => string;
 
 const getRelativePathInjectable = getInjectable({
   id: "get-relative-path",
-  instantiate: (): GetRelativePath => path.relative,
+  instantiate: (): GetRelativePath => (...values) => path.relative(...values),
   causesSideEffects: true,
 });
 

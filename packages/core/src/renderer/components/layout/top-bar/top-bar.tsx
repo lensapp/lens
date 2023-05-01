@@ -19,7 +19,7 @@ import topBarItemsOnLeftSideInjectable from "./top-bar-items/top-bar-items-on-le
 interface Dependencies {
   itemsOnLeft: IComputedValue<TopBarItem[]>;
   itemsOnRight: IComputedValue<TopBarItem[]>;
-  toggleMaximizeWindow: () => void;
+  toggleMaximizeWindow: () => Promise<void>;
   watchHistoryState: () => () => void;
 }
 
@@ -33,7 +33,7 @@ const NonInjectedTopBar = observer(
     useEffect(() => watchHistoryState(), []);
 
     return (
-      <div className={styles.topBar} onDoubleClick={toggleMaximizeWindow}>
+      <div className={styles.topBar} onDoubleClick={() => void toggleMaximizeWindow()}>
         <div className={styles.items}>
           <Map
             items={itemsOnLeft.get()}

@@ -8,6 +8,8 @@ import path from "path";
 import { webpackDevServerPort } from "../../../../webpack/vars";
 import type { LensApiRequest, RouteResponse } from "../../router/route";
 
+export const webpackDevServerPort = Number(process.env.WEBPACK_DEV_SERVER_PORT) || 9191;
+
 const devStaticFileRouteHandlerInjectable = getInjectable({
   id: "dev-static-file-route-handler",
   instantiate: () => {
@@ -25,7 +27,7 @@ const devStaticFileRouteHandlerInjectable = getInjectable({
 
       proxy.web(req, res, { target: proxyTarget });
 
-      return { proxy };
+      return Promise.resolve({ proxy });
     };
   },
 });

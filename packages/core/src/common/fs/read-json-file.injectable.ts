@@ -3,10 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { JsonValue } from "type-fest";
 import fsInjectable from "./fs.injectable";
 
-export type ReadJson = (filePath: string) => Promise<JsonValue>;
+export type ReadJson = (filePath: string) => Promise<unknown>;
 
 const readJsonFileInjectable = getInjectable({
   id: "read-json-file",

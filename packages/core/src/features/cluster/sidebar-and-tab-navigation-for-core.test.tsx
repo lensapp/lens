@@ -32,16 +32,16 @@ describe("cluster - sidebar and tab navigation for core", () => {
 
     builder = getApplicationBuilder();
 
-    builder.setEnvironmentToClusterFrame();
+    await builder.setEnvironmentToClusterFrame();
 
-    builder.beforeWindowStart(({ windowDi }) => {
+    await builder.beforeWindowStart(({ windowDi }) => {
       windowDi.override(storageSaveDelayInjectable, () => 250);
     });
   });
 
   describe("given core registrations", () => {
     beforeEach(() => {
-      builder.beforeWindowStart(({ windowDi }) => {
+      await builder.beforeWindowStart(({ windowDi }) => {
         runInAction(() => {
           windowDi.register(
             testRouteInjectable,
@@ -88,7 +88,7 @@ describe("cluster - sidebar and tab navigation for core", () => {
 
     describe("given state for expanded sidebar items already exists, when rendered", () => {
       beforeEach(async () => {
-        builder.beforeWindowStart(async ({ windowDi }) => {
+        await builder.beforeWindowStart(async ({ windowDi }) => {
           const writeJsonFile = windowDi.inject(writeJsonFileInjectable);
 
           await writeJsonFile(
@@ -124,7 +124,7 @@ describe("cluster - sidebar and tab navigation for core", () => {
 
     describe("given state for expanded unknown sidebar items already exists, when rendered", () => {
       beforeEach(async () => {
-        builder.beforeWindowStart(async ({ windowDi }) => {
+        await builder.beforeWindowStart(async ({ windowDi }) => {
           const writeJsonFileFake = windowDi.inject(writeJsonFileInjectable);
 
           await writeJsonFileFake(
@@ -154,7 +154,7 @@ describe("cluster - sidebar and tab navigation for core", () => {
 
     describe("given empty state for expanded sidebar items already exists, when rendered", () => {
       beforeEach(async () => {
-        builder.beforeWindowStart(async ({ windowDi }) => {
+        await builder.beforeWindowStart(async ({ windowDi }) => {
           const writeJsonFileFake = windowDi.inject(writeJsonFileInjectable);
 
           await writeJsonFileFake(

@@ -19,19 +19,19 @@ const darwinRequestSystemCAsInjectable = getInjectable({
       const execFile = di.inject(execFileInjectable);
       const logger = di.inject(loggerInjectionToken);
 
-      const execSecurity = async (...args: string[]): AsyncResult<string[]> => {
+      const execSecurity = async (...args: string[]): AsyncResult<string[], string> => {
         const result = await execFile("/usr/bin/security", args);
 
-        if (!result.callWasSuccessful) {
+        if (!result.isOk) {
           return {
-            callWasSuccessful: false,
+            isOk: false,
             error: result.error.stderr || result.error.message,
           };
         }
 
         return {
-          callWasSuccessful: true,
-          response: result.response.split(certSplitPattern),
+          isOk: true,
+          value: result.value.split(certSplitPattern),
         };
       };
 
@@ -41,12 +41,12 @@ const darwinRequestSystemCAsInjectable = getInjectable({
           execSecurity("find-certificate", "-a", "-p", "/System/Library/Keychains/SystemRootCertificates.keychain"),
         ]);
 
-        if (!trustedResult.callWasSuccessful) {
+        if (!trustedResult.isOk) {
           logger.warn(`[INJECT-CAS]: Error retrieving trusted CAs: ${trustedResult.error}`);
-        } else if (!rootCAResult.callWasSuccessful) {
+        } else if (!rootCAResult.isOk) {
           logger.warn(`[INJECT-CAS]: Error retrieving root CAs: ${rootCAResult.error}`);
         } else {
-          return [...new Set([...trustedResult.response, ...rootCAResult.response])];
+          return [...new Set([...trustedResult.value, ...rootCAResult.value])];
         }
 
         return [];

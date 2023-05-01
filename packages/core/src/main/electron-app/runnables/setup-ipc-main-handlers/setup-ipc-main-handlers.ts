@@ -2,13 +2,13 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { IpcMainInvokeEvent } from "electron";
 import { BrowserWindow, Menu } from "electron";
 import type { ClusterFrameInfo } from "../../../../common/cluster-frames.injectable";
 import { clusterSetFrameIdHandler, clusterStates } from "../../../../common/ipc/cluster";
 import type { ClusterId } from "../../../../common/cluster-types";
 import { broadcastMainChannel, broadcastMessage, ipcMainHandle, ipcMainOn } from "../../../../common/ipc";
 import type { IComputedValue, ObservableMap } from "mobx";
+import type { WindowAction } from "../../../../common/ipc/window";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel } from "../../../../common/ipc/window";
 import { handleWindowAction, onLocationChange } from "../../../ipc/window";
 import type { ApplicationMenuItemTypes } from "../../../../features/application-menu/main/menu-items/application-menu-item-injection-token";
@@ -33,8 +33,8 @@ export const setupIpcMainHandlers = ({
   clusterFrames,
   clusters,
 }: Dependencies) => {
-  ipcMainHandle(clusterSetFrameIdHandler, (event: IpcMainInvokeEvent, clusterId: ClusterId) => {
-    const cluster = getClusterById(clusterId);
+  ipcMainHandle(clusterSetFrameIdHandler, (event, clusterId) => {
+    const cluster = getClusterById(clusterId as ClusterId);
 
     if (cluster) {
       clusterFrames.set(cluster.id, { frameId: event.frameId, processId: event.processId });
@@ -42,13 +42,13 @@ export const setupIpcMainHandlers = ({
     }
   });
 
-  ipcMainHandle(windowActionHandleChannel, (event, action) => handleWindowAction(action));
+  ipcMainHandle(windowActionHandleChannel, (event, action) => handleWindowAction(action as WindowAction));
 
   ipcMainOn(windowLocationChangedChannel, () => onLocationChange());
 
-  ipcMainHandle(broadcastMainChannel, (event, channel, ...args) => broadcastMessage(channel, ...args));
+  ipcMainHandle(broadcastMainChannel, (event, channel, ...args) => broadcastMessage(channel as string, ...args));
 
-  ipcMainOn(windowOpenAppMenuAsContextMenuChannel, async (event) => {
+  ipcMainOn(windowOpenAppMenuAsContextMenuChannel, (event) => {
     const electronTemplate = getApplicationMenuTemplate(applicationMenuItemComposite.get());
     const menu = Menu.buildFromTemplate(electronTemplate);
 

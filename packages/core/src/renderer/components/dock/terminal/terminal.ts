@@ -109,7 +109,7 @@ export class Terminal {
     const linkProvider = new LinkProvider(
       this.xterm,
       /https?:\/\/[^\s]+/i,
-      (event, link) => this.dependencies.openLinkInBrowser(link),
+      (event, link) => void this.dependencies.openLinkInBrowser(link),
       undefined,
       0,
     );

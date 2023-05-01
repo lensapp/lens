@@ -32,7 +32,7 @@ const kubeApiUpgradeRequestInjectable = getInjectable({
     };
 
     const proxySocket = connect(connectOpts, () => {
-      proxySocket.write(`${req.method} ${pUrl.path} HTTP/1.1\r\n`);
+      proxySocket.write(`${req.method} ${pUrl.path ?? ""} HTTP/1.1\r\n`);
       proxySocket.write(`Host: ${clusterApiUrl.host}\r\n`);
 
       for (const [key, value] of chunk(req.rawHeaders, 2)) {
@@ -52,7 +52,7 @@ const kubeApiUpgradeRequestInjectable = getInjectable({
     proxySocket.setTimeout(0);
     socket.setTimeout(0);
 
-    proxySocket.on("data", function (chunk) {
+    proxySocket.on("data", function (chunk: Buffer) {
       socket.write(chunk);
     });
     proxySocket.on("end", function () {

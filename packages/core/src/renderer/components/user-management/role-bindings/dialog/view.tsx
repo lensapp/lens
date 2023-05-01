@@ -40,8 +40,7 @@ import type { ShowCheckedErrorNotification } from "../../../notifications/show-c
 import showCheckedErrorNotificationInjectable from "../../../notifications/show-checked-error.injectable";
 import type { RoleApi } from "@k8slens/kube-api";
 
-export interface RoleBindingDialogProps extends Partial<DialogProps> {
-}
+export type RoleBindingDialogProps = Partial<DialogProps>;
 
 interface Dependencies {
   state: IObservableValue<RoleBindingDialogState>;

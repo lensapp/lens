@@ -30,7 +30,7 @@ const execFileWithInputInjectable = getInjectable({
             maxBuffer: 8 * 1024 * 1024 * 1024, // 8 MiB
           });
         } catch (e) {
-          resolve({ callWasSuccessful: false, error: e });
+          resolve({ isOk: false, error: e });
 
           return;
         }
@@ -51,7 +51,7 @@ const execFileWithInputInjectable = getInjectable({
         });
 
         execution.on("error", (error) =>
-          resolve({ callWasSuccessful: false, error }),
+          resolve({ isOk: false, error }),
         );
 
         execution.on("exit", (code, signal) => {
@@ -65,8 +65,8 @@ const execFileWithInputInjectable = getInjectable({
              * One of the two will always be non-null.
              */
             resolve({
-              callWasSuccessful: false,
-              error: `Exited via ${signal}`,
+              isOk: false,
+              error: `Exited via ${String(signal)}`,
             });
 
             return;
@@ -74,14 +74,14 @@ const execFileWithInputInjectable = getInjectable({
 
           if (code !== 0) {
             resolve({
-              callWasSuccessful: false,
-              error: stderr ? stderr : `Failed with error: ${signal}`,
+              isOk: false,
+              error: stderr ? stderr : `Failed with error: ${String(signal)}`,
             });
 
             return;
           }
 
-          resolve({ callWasSuccessful: true, response: stdout });
+          resolve({ isOk: true, value: stdout });
         });
 
         execution.stdin.end(input);

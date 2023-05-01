@@ -73,7 +73,7 @@ describe("cluster storage technical tests", () => {
   let getClusterById: GetClusterById;
   let clusters: IComputedValue<Cluster[]>;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     di = getDiForUnitTesting();
 
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
@@ -92,7 +92,7 @@ describe("cluster storage technical tests", () => {
   });
 
   describe("empty config", () => {
-    beforeEach(async () => {
+    beforeEach(() => {
       getCustomKubeConfigFilePath = di.inject(getCustomKubeConfigFilePathInjectable);
 
       writeJsonSync("/some-directory-for-user-data/lens-cluster-store.json", {});
@@ -117,7 +117,7 @@ describe("cluster storage technical tests", () => {
         });
       });
 
-      it("adds new cluster to store", async () => {
+      it("adds new cluster to store", () => {
         const storedCluster = getClusterById("foo");
 
         assert(storedCluster);
@@ -216,7 +216,7 @@ describe("cluster storage technical tests", () => {
       expect(storedCluster.preferences.terminalCWD).toBe("/foo");
     });
 
-    it("allows getting all of the clusters", async () => {
+    it("allows getting all of the clusters", () => {
       const storedClusters = clusters.get();
 
       expect(storedClusters.length).toBe(3);
@@ -258,13 +258,13 @@ describe("cluster storage technical tests", () => {
       clustersPersistentStorage.loadAndStartSyncing();
     });
 
-    it("migrates to modern format with kubeconfig in a file", async () => {
+    it("migrates to modern format with kubeconfig in a file", () => {
       const configPath = clusters.get()[0].kubeConfigPath.get();
 
       expect(readFileSync(configPath)).toBe(minimalValidKubeConfig);
     });
 
-    it("migrates to modern format with icon not in file", async () => {
+    it("migrates to modern format with icon not in file", () => {
       expect(clusters.get()[0].preferences.icon).toMatch(/data:;base64,/);
     });
   });

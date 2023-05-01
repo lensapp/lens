@@ -91,7 +91,7 @@ const NonInjectedInstallChart = observer(
                 className="chart-version"
                 value={version.value.get()}
                 options={version.options.get()}
-                onChange={(changed) => version.onChange(changed?.value)}
+                onChange={(changed) => void version.onChange(changed?.value)}
                 menuPlacement="top"
                 id={`install-chart-version-select-for-${tabId}`}
               />

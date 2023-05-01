@@ -23,7 +23,7 @@ describe("add helm repository from list in preferences", () => {
   let showErrorNotificationMock: jest.Mock;
   let rendered: RenderResult;
   let execFileMock: AsyncFnMock<ExecFile>;
-  let getActiveHelmRepositoriesMock: AsyncFnMock<() => AsyncResult<HelmRepo[]>>;
+  let getActiveHelmRepositoriesMock: AsyncFnMock<() => AsyncResult<HelmRepo[], Error>>;
   let callForPublicHelmRepositoriesMock: AsyncFnMock<() => Promise<HelmRepo[]>>;
 
   beforeEach(async () => {
@@ -35,13 +35,13 @@ describe("add helm repository from list in preferences", () => {
     showSuccessNotificationMock = jest.fn();
     showErrorNotificationMock = jest.fn();
 
-    builder.beforeApplicationStart(({ mainDi }) => {
+    await builder.beforeApplicationStart(({ mainDi }) => {
       mainDi.override(getActiveHelmRepositoriesInjectable, () => getActiveHelmRepositoriesMock);
       mainDi.override(execFileInjectable, () => execFileMock);
       mainDi.override(helmBinaryPathInjectable, () => "some-helm-binary-path");
     });
 
-    builder.beforeWindowStart(({ windowDi }) => {
+    await builder.beforeWindowStart(({ windowDi }) => {
       windowDi.override(showSuccessNotificationInjectable, () => showSuccessNotificationMock);
       windowDi.override(showErrorNotificationInjectable, () => showErrorNotificationMock);
       windowDi.override(requestPublicHelmRepositoriesInjectable, () => callForPublicHelmRepositoriesMock);
@@ -85,8 +85,8 @@ describe("add helm repository from list in preferences", () => {
           ]),
 
           getActiveHelmRepositoriesMock.resolve({
-            callWasSuccessful: true,
-            response: [{
+            isOk: true,
+            value: [{
               name: "Some already active repository",
               url: "some-url",
               cacheFilePath: "/some-cache-file-for-active",
@@ -111,7 +111,7 @@ describe("add helm repository from list in preferences", () => {
         });
 
         describe("when deactive public repository is selected", () => {
-          beforeEach(async () => {
+          beforeEach(() => {
             getActiveHelmRepositoriesMock.mockClear();
 
             builder.select.selectOption(
@@ -142,7 +142,7 @@ describe("add helm repository from list in preferences", () => {
           describe("when adding rejects", () => {
             beforeEach(async () => {
               await execFileMock.resolve({
-                callWasSuccessful: false,
+                isOk: false,
                 error: Object.assign(new Error("Some error"), {
                   stderr: "",
                 }),
@@ -180,8 +180,8 @@ describe("add helm repository from list in preferences", () => {
                   ["repo", "add", "Some to be added repository", "some-other-url"],
                 ],
                 {
-                  callWasSuccessful: true,
-                  response: "",
+                  isOk: true,
+                  value: "",
                 },
               );
             });
@@ -203,8 +203,8 @@ describe("add helm repository from list in preferences", () => {
             describe("when active repositories resolve again", () => {
               beforeEach(async () => {
                 await getActiveHelmRepositoriesMock.resolve({
-                  callWasSuccessful: true,
-                  response: [
+                  isOk: true,
+                  value: [
                     {
                       name: "Some already active repository",
                       url: "some-url",
@@ -272,8 +272,8 @@ describe("add helm repository from list in preferences", () => {
                           ["repo", "remove", "Some already active repository"],
                         ],
                         {
-                          callWasSuccessful: true,
-                          response: "",
+                          isOk: true,
+                          value: "",
                         },
                       );
                     });

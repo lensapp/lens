@@ -82,7 +82,7 @@ describe("preferences: extension adding tray items", () => {
         },
       };
 
-      builder.extensions.enable(testExtension);
+      await builder.extensions.enable(testExtension);
     });
 
     describe("given controlled label", () => {
@@ -223,7 +223,7 @@ describe("preferences: extension adding tray items", () => {
         },
       };
 
-      builder.extensions.enable(testExtension);
+      await builder.extensions.enable(testExtension);
     });
 
     it("given item exists, it's shown", () => {
@@ -234,7 +234,7 @@ describe("preferences: extension adding tray items", () => {
       ).not.toBeNull();
     });
 
-    it("given item is added, it's shown", async () => {
+    it("given item is added, it's shown", () => {
       menuItems.push({
         id: "some-added",
         label: "some-added",
@@ -249,7 +249,7 @@ describe("preferences: extension adding tray items", () => {
       ).not.toBeNull();
     });
 
-    it("given item is removed, it's not shown", async () => {
+    it("given item is removed, it's not shown", () => {
       menuItems.replace([]);
 
       expect(
@@ -259,7 +259,7 @@ describe("preferences: extension adding tray items", () => {
       ).toBeNull();
     });
 
-    it("given items are removed and one added, it's shown", async () => {
+    it("given items are removed and one added, it's shown", () => {
       menuItems.replace([]);
       menuItems.push({
         id: "some-added",

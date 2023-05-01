@@ -6,10 +6,10 @@
 import { ipcMain, ipcRenderer } from "electron";
 import { isEqual } from "lodash";
 import type { ObservableMap } from "mobx";
-import { runInAction, action, computed, toJS, observable, reaction, when } from "mobx";
+import { runInAction, computed, toJS, observable, reaction, when } from "mobx";
 import { broadcastMessage, ipcMainOn, ipcRendererOn, ipcMainHandle } from "../../common/ipc";
 import { isDefined, iter } from "@k8slens/utilities";
-import type { ExternalInstalledExtension, InstalledExtension, LensExtensionConstructor, LensExtensionId, BundledExtension, BundledInstalledExtension, LegacyLensExtension } from "@k8slens/legacy-extensions";
+import type { LensExtensionId, ExternalInstalledExtension, InstalledExtension, LensExtensionConstructor, BundledExtension, BundledInstalledExtension, LegacyLensExtension } from "@k8slens/legacy-extensions";
 import type { LensExtension } from "../lens-extension";
 import { extensionLoaderFromMainChannel, extensionLoaderFromRendererChannel } from "../../common/ipc/extension-handling";
 import { requestExtensionLoaderInitialState } from "../../renderer/ipc";
@@ -104,7 +104,7 @@ export class ExtensionLoader {
     if (ipcMain) {
       await this.initMain();
     } else {
-      await this.initRenderer();
+      this.initRenderer();
     }
 
     await when(() => this.isLoaded.get());
@@ -130,8 +130,7 @@ export class ExtensionLoader {
     this.extensions.set(extension.id, extension);
   }
 
-  @action
-  removeInstance(lensExtensionId: LensExtensionId) {
+  async removeInstance(lensExtensionId: LensExtensionId) {
     this.dependencies.logger.info(`${logModule} deleting extension instance ${lensExtensionId}`);
     const instance = this.dependencies.extensionInstances.get(lensExtensionId);
 
@@ -140,22 +139,25 @@ export class ExtensionLoader {
     }
 
     try {
-      instance.disable();
+      await instance.disable();
 
       const extension = this.dependencies.getExtension(instance);
 
       extension.deregister();
 
       this.onRemoveExtensionId.emit(instance.id);
-      this.dependencies.extensionInstances.delete(lensExtensionId);
-      this.nonInstancesByName.delete(instance.name);
+
+      runInAction(() => {
+        this.dependencies.extensionInstances.delete(lensExtensionId);
+        this.nonInstancesByName.delete(instance.name);
+      });
     } catch (error) {
       this.dependencies.logger.error(`${logModule}: deactivation extension error`, { lensExtensionId, error });
     }
   }
 
-  removeExtension(lensExtensionId: LensExtensionId) {
-    this.removeInstance(lensExtensionId);
+  async removeExtension(lensExtensionId: LensExtensionId) {
+    await this.removeInstance(lensExtensionId);
 
     if (!this.extensions.delete(lensExtensionId)) {
       throw new Error(`Can't remove extension ${lensExtensionId}, doesn't exist.`);
@@ -185,7 +187,7 @@ export class ExtensionLoader {
     });
   }
 
-  protected async initRenderer() {
+  protected initRenderer() {
     const extensionListHandler = (extensions: [LensExtensionId, InstalledExtension][]) => {
       runInAction(() => {
         this.isLoaded.set(true);
@@ -197,12 +199,12 @@ export class ExtensionLoader {
       // Remove deleted extensions in renderer side only
       this.extensions.forEach((_, lensExtensionId) => {
         if (!receivedExtensionIds.includes(lensExtensionId)) {
-          this.removeExtension(lensExtensionId);
+          void this.removeExtension(lensExtensionId);
         }
       });
     };
 
-    requestExtensionLoaderInitialState().then(extensionListHandler);
+    void requestExtensionLoaderInitialState().then(extensionListHandler);
     ipcRendererOn(extensionLoaderFromMainChannel, (event, extensions: [LensExtensionId, InstalledExtension][]) => {
       extensionListHandler(extensions);
     });
@@ -213,7 +215,7 @@ export class ExtensionLoader {
       ? extensionLoaderFromRendererChannel
       : extensionLoaderFromMainChannel;
 
-    broadcastMessage(channel, Array.from(this.extensions));
+    void broadcastMessage(channel, Array.from(this.extensions));
   }
 
   syncExtensions(extensions: [LensExtensionId, InstalledExtension][]) {
@@ -269,9 +271,10 @@ export class ExtensionLoader {
     await Promise.all(
       extensions.map(extension =>
         // If extension activation fails, log error
-        extension.activated.catch((error) => {
-          this.dependencies.logger.error(`${logModule}: activation extension error`, { ext: extension.installedExtension, error });
-        }),
+        extension.activated
+          .catch((error: unknown) => {
+            this.dependencies.logger.error(`${logModule}: activation extension error`, { ext: extension.installedExtension, error });
+          }),
       ),
     );
 
@@ -282,9 +285,10 @@ export class ExtensionLoader {
     });
 
     return extensions.map(extension => {
-      const loaded = extension.instance.enable().catch((err) => {
-        this.dependencies.logger.error(`${logModule}: failed to enable`, { ext: extension, err });
-      });
+      const loaded = extension.instance.enable()
+        .catch((error: unknown) => {
+          this.dependencies.logger.error(`${logModule}: failed to enable`, { ext: extension, error });
+        });
 
       return {
         isBundled: extension.installedExtension.isBundled,
@@ -300,9 +304,9 @@ export class ExtensionLoader {
     // 3. Call .enable for each extension
     // 4. Return ExtensionLoading[]
 
-    return [...installedExtensions.entries()]
+    const promises = [...installedExtensions.entries()]
       .filter((entry): entry is [string, ExternalInstalledExtension] => !entry[1].isBundled)
-      .map(([extId, installedExtension]) => {
+      .map(async ([extId, installedExtension]) => {
         const alreadyInit = this.dependencies.extensionInstances.has(extId) || this.nonInstancesByName.has(installedExtension.manifest.name);
 
         if (installedExtension.isCompatible && installedExtension.isEnabled && !alreadyInit) {
@@ -328,11 +332,13 @@ export class ExtensionLoader {
             this.dependencies.logger.error(`${logModule}: error loading extension`, { ext: installedExtension, err });
           }
         } else if (!installedExtension.isEnabled && alreadyInit) {
-          this.removeInstance(extId);
+          await this.removeInstance(extId);
         }
 
         return null;
-      })
+      });
+
+    return (await Promise.all(promises))
       .filter(isDefined);
   }
 
@@ -368,9 +374,10 @@ export class ExtensionLoader {
     const extAbsolutePath = this.dependencies.joinPaths(this.dependencies.getDirnameOfPath(extension.manifestPath), extRelativePath);
 
     try {
-      return require(/* webpackIgnore: true */ extAbsolutePath).default;
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      return (require(/* webpackIgnore: true */ extAbsolutePath) as unknown as { default: LensExtensionConstructor | null }).default;
     } catch (error) {
-      const message = (error instanceof Error ? error.stack : undefined) || error;
+      const message = (error instanceof Error ? error.stack : undefined) || String(error);
 
       this.dependencies.logger.error(`${logModule}: can't load ${this.dependencies.extensionEntryPointName} for "${extension.manifest.name}": ${message}`, { extension });
     }

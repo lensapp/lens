@@ -51,13 +51,13 @@ describe("download logs options in logs dock tab", () => {
 
     builder = getApplicationBuilder();
 
-    builder.setEnvironmentToClusterFrame();
+    await builder.setEnvironmentToClusterFrame();
 
     callForLogsMock = jest.fn();
     getLogsMock = jest.fn();
     getSplitLogsMock = jest.fn();
 
-    builder.beforeWindowStart(({ windowDi }) => {
+    await builder.beforeWindowStart(({ windowDi }) => {
       windowDi.override(callForLogsInjectable, () => callForLogsMock);
 
       // Overriding internals of logsViewModelInjectable

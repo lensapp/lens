@@ -25,7 +25,7 @@ const showAboutInjectable = getInjectable({
     const applicationCopyright = di.inject(applicationCopyrightInjectable);
     const specificVersions = di.inject(specificVersionsInjectable);
 
-    return () => {
+    return async () => {
       const appInfo = [
         `${appName}: ${buildVersion}`,
         `Extension API: ${extensionApiVersion}`,
@@ -43,7 +43,7 @@ const showAboutInjectable = getInjectable({
         );
       }
 
-      showMessagePopup(
+      await showMessagePopup(
         `${isWindows ? " ".repeat(2) : ""}${appName}`,
         productName,
         appInfo.join("\r\n"),

@@ -128,12 +128,12 @@ export class InstallChartModel {
         version,
       );
 
-      if (!chartValuesRequest.callWasSuccessful) {
+      if (!chartValuesRequest.isOk) {
         throw chartValuesRequest.error;
       }
 
       runInAction(() => {
-        this.configuration.onChange(chartValuesRequest.response);
+        this.configuration.onChange(chartValuesRequest.value);
         this.configuration.isLoading.set(false);
       });
     },
@@ -207,7 +207,7 @@ export class InstallChartModel {
     runInAction(() => {
       // TODO: Make "default" not hard-coded
       const namespace = this.chart.namespace || "default";
-      const values = this.chart.values || (defaultConfigurationRequest.callWasSuccessful ? defaultConfigurationRequest.response : "");
+      const values = this.chart.values || (defaultConfigurationRequest.isOk ? defaultConfigurationRequest.value : "");
 
       this.versions.replace(versions);
 

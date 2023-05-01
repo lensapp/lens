@@ -6,11 +6,12 @@
 import type { IComputedValue } from "mobx";
 import { observable } from "mobx";
 import type { PodLogsQuery, Pod } from "@k8slens/kube-object";
-import { waitUntilDefined, getOrInsertWith, interval } from "@k8slens/utilities";
+import { waitUntilDefined, getOrInsertWith, interval, isObject, hasOwnProperty, hasStringProperty, hasTypedProperty, isNumber } from "@k8slens/utilities";
 import type { IntervalFn } from "@k8slens/utilities";
 import type { TabId } from "../dock/store";
 import type { CallForLogs } from "./call-for-logs.injectable";
 import type { LogTabData } from "./tab-store";
+import { inspect } from "util";
 
 type PodLogLine = string;
 
@@ -21,23 +22,35 @@ interface Dependencies {
 }
 
 export class LogStore {
-  protected podLogs = observable.map<TabId, PodLogLine[]>();
-  protected refreshers = new Map<TabId, IntervalFn>();
+  protected readonly podLogs = observable.map<TabId, PodLogLine[]>();
+  protected readonly refreshers = new Map<TabId, IntervalFn>();
 
   constructor(private dependencies: Dependencies) {}
 
-  protected handlerError(tabId: TabId, error: any): void {
-    if (error.error && !(error.message || error.reason || error.code)) {
-      error = error.error;
-    }
+  protected handlerError(tabId: TabId, error: unknown): void {
+    const getErrorMessage = (error: unknown): string[] => {
+      if (!isObject(error)) {
+        return [`Failed to load logs: ${String(error)}`];
+      }
 
-    const message = [
-      `Failed to load logs: ${error.message}`,
-      `Reason: ${error.reason} (${error.code})`,
-    ];
+      if (hasStringProperty(error, "message") && hasStringProperty(error, "reason") && hasTypedProperty(error, "code", isNumber)) {
+        return [
+          `Failed to load logs: ${error.message}`,
+          `Reason: ${error.reason} (${error.code})`,
+        ];
+      }
+
+      if (hasOwnProperty(error, "error")) {
+        return getErrorMessage(error.error);
+      }
+
+      return [`Failed to load logs: ${inspect(error, {
+        colors: false,
+      })}`];
+    };
 
     this.stopLoadingLogs(tabId);
-    this.podLogs.set(tabId, message);
+    this.podLogs.set(tabId, getErrorMessage(error));
   }
 
   /**
@@ -63,7 +76,7 @@ export class LogStore {
     return getOrInsertWith(this.refreshers, tabId, () => (
       interval(10, () => {
         if (this.podLogs.has(tabId)) {
-          this.loadMore(tabId, computedPod, logTabData);
+          void this.loadMore(tabId, computedPod, logTabData);
         }
       })
     ));
@@ -139,15 +152,6 @@ export class LogStore {
     return result.trimEnd().replace(/\r/g, "\n").split("\n");
   }
 
-  /**
-   * @deprecated This depends on dockStore, which should be removed
-   * Converts logs into a string array
-   * @returns Length of log lines
-   */
-  get lines(): number {
-    return this.logs.length;
-  }
-
   getLogLines(tabId: TabId): number{
     return this.getLogs(tabId).length;
   }
@@ -161,28 +165,11 @@ export class LogStore {
   }
 
   getLogsWithoutTimestamps(tabId: TabId): string[]{
-    return this.getLogs(tabId).map(this.removeTimestamps);
+    return this.getLogs(tabId).map(removeTimestamps);
   }
 
   getTimestampSplitLogs(tabId: TabId): [string, string][]{
-    return this.getLogs(tabId).map(this.splitOutTimestamp);
-  }
-
-  /**
-   * @deprecated This now only returns the empty array
-   * Returns logs with timestamps for selected tab
-   */
-  get logs(): string[] {
-    return [];
-  }
-
-  /**
-   * @deprecated This now only returns the empty array
-   * Removes timestamps from each log line and returns changed logs
-   * @returns Logs without timestamps
-   */
-  get logsWithoutTimestamps(): string[] {
-    return this.logs.map(item => this.removeTimestamps(item));
+    return this.getLogs(tabId).map(splitOutTimestamp);
   }
 
   /**
@@ -192,30 +179,12 @@ export class LogStore {
    */
   getLastSinceTime(tabId: TabId): string {
     const logs = this.podLogs.get(tabId) ?? [];
-    const [timestamp] = this.getTimestamps(logs[logs.length - 1]) ?? [];
+    const [timestamp] = getTimestamps(logs[logs.length - 1]) ?? [];
     const stamp = timestamp ? new Date(timestamp) : new Date();
 
     stamp.setSeconds(stamp.getSeconds() + 1); // avoid duplicates from last second
 
     return stamp.toISOString();
-  }
-
-  splitOutTimestamp(logs: string): [string, string] {
-    const extraction = /^(\d+\S+)(.*)/m.exec(logs);
-
-    if (!extraction || extraction.length < 3) {
-      return ["", logs];
-    }
-
-    return [extraction[1], extraction[2]];
-  }
-
-  getTimestamps(logs: string) {
-    return logs.match(/^\d+\S+/gm);
-  }
-
-  removeTimestamps(logs: string): string {
-    return logs.replace(/^\d+.*?\s/gm, "");
   }
 
   clearLogs(tabId: TabId): void {
@@ -228,3 +197,15 @@ export class LogStore {
     return this.load(tabId, computedPod, logTabData);
   }
 }
+
+const removeTimestamps = (logs: string) => logs.replace(/^\d+.*?\s/gm, "");
+const getTimestamps = (logs: string) => logs.match(/^\d+\S+/gm);
+const splitOutTimestamp = (logs: string): [string, string] => {
+  const extraction = /^(\d+\S+)(.*)/m.exec(logs);
+
+  if (!extraction || extraction.length < 3) {
+    return ["", logs];
+  }
+
+  return [extraction[1], extraction[2]];
+};

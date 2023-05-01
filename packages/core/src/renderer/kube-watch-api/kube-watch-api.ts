@@ -17,7 +17,7 @@ interface SubscribeStoreParams {
   store: SubscribableStore;
   parent: AbortController;
   namespaces: string[] | undefined;
-  onLoadFailure?: (err: any) => void;
+  onLoadFailure?: (err: unknown) => void;
 }
 
 interface WatchCountDependencies {
@@ -69,7 +69,7 @@ export interface KubeWatchSubscribeStoreOptions {
    * A function that is called when listing fails. If set then blocks errors
    * from rejecting promises
    */
-  onLoadFailure?: (err: any) => void;
+  onLoadFailure?: (err: unknown) => void;
 }
 
 interface Dependencies {
@@ -178,7 +178,7 @@ export class KubeWatchApi {
     });
   };
 
-  protected log(message: any, meta: any) {
+  protected log(message: unknown, meta: object) {
     const log = message instanceof Error
       ? this.dependencies.logger.error
       : this.dependencies.logger.debug;

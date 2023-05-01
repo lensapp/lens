@@ -8,7 +8,7 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import type { RenderResult } from "@testing-library/react";
 import appEventBusInjectable from "../../common/app-event-bus/app-event-bus.injectable";
 import type { AppEvent } from "../../common/app-event-bus/event-bus";
-import type { CatalogEntityActionContext } from "../../common/catalog";
+import type { CatalogEntityActionContext, CatalogEntityConstructor, CatalogEntityDataFor } from "../../common/catalog";
 import { CatalogCategory, categoryVersion, CatalogEntity } from "../../common/catalog";
 import catalogCategoryRegistryInjectable from "../../common/catalog/category-registry.injectable";
 import navigateToCatalogInjectable from "../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
@@ -18,6 +18,7 @@ import type { CatalogEntityOnBeforeRun, CatalogEntityRegistry } from "../../rend
 import catalogEntityRegistryInjectable from "../../renderer/api/catalog/entity/registry.injectable";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { CatalogRunEvent } from "../../common/catalog/catalog-run-event";
 
 class MockCatalogCategory extends CatalogCategory {
   apiVersion = "catalog.k8slens.dev/v1alpha1";
@@ -33,13 +34,13 @@ class MockCatalogCategory extends CatalogCategory {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const self = this;
 
-        return function (data: any) {
+        return (function (data: CatalogEntityDataFor<CatalogEntity>) {
           const entity = new MockCatalogEntity(data);
 
           entity.onRun = self.onRun;
 
           return entity;
-        } as any;
+        }) as unknown as CatalogEntityConstructor<CatalogEntity>;
       })()),
     ],
     names: {
@@ -84,12 +85,12 @@ describe("entity running technical tests", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.afterWindowStart(({ windowDi }) => {
+    await builder.afterWindowStart(({ windowDi }) => {
       onRun = jest.fn();
 
-      const catalogCategoryRegistery = windowDi.inject(catalogCategoryRegistryInjectable);
+      const catalogCategoryRegistry = windowDi.inject(catalogCategoryRegistryInjectable);
 
-      catalogCategoryRegistery.add(new MockCatalogCategory(onRun));
+      catalogCategoryRegistry.add(new MockCatalogCategory(onRun));
 
       catalogEntityRegistry = windowDi.inject(catalogEntityRegistryInjectable);
 
@@ -160,7 +161,7 @@ describe("entity running technical tests", () => {
       });
 
       it("onBeforeRun prevents event => onRun wont be triggered", async () => {
-        const onBeforeRunMock = jest.fn((event) => event.preventDefault());
+        const onBeforeRunMock = jest.fn((event: CatalogRunEvent) => event.preventDefault());
 
         catalogEntityRegistry.addOnBeforeRun(onBeforeRunMock);
 
@@ -184,7 +185,7 @@ describe("entity running technical tests", () => {
       });
 
       it("addOnRunHook return a promise and does not prevent run event => onRun()", (done) => {
-        onRun.mockImplementation(() => done());
+        onRun.mockImplementation(() => void done());
 
         catalogEntityRegistry.addOnBeforeRun(async () => {});
 
@@ -192,10 +193,13 @@ describe("entity running technical tests", () => {
       });
 
       it("addOnRunHook return a promise and prevents event wont be triggered", async () => {
-        catalogEntityRegistry.addOnBeforeRun(async (event) => event.preventDefault());
+        const mock = asyncFn<CatalogEntityOnBeforeRun>();
 
+        catalogEntityRegistry.addOnBeforeRun(mock);
         rendered.getByTestId("detail-panel-hot-bar-icon").click();
 
+        mock.mockImplementation((event) => event.preventDefault());
+        await mock.resolve();
         expect(onRun).not.toHaveBeenCalled();
       });
 

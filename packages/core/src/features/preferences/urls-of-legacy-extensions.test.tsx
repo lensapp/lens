@@ -73,7 +73,7 @@ describe("preferences: URLs of legacy extensions", () => {
         },
       };
 
-      builder.extensions.enable(testExtension);
+      await builder.extensions.enable(testExtension);
 
       navigate = builder.applicationWindow.only.di.inject(navigateInjectable);
     });
@@ -162,7 +162,7 @@ describe("preferences: URLs of legacy extensions", () => {
         },
       };
 
-      builder.extensions.enable(testExtension);
+      await builder.extensions.enable(testExtension);
 
       navigate = builder.applicationWindow.only.di.inject(navigateInjectable);
     });
@@ -258,7 +258,7 @@ describe("preferences: URLs of legacy extensions", () => {
         },
       };
 
-      builder.extensions.enable(testExtension);
+      await builder.extensions.enable(testExtension);
 
       navigate = builder.applicationWindow.only.di.inject(navigateInjectable);
     });

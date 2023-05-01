@@ -12,8 +12,9 @@ const rootFrameRenderedChannelListenerInjectable = getMessageChannelListenerInje
   channel: rootFrameHasRenderedChannel,
   getHandler: (di) => {
     const runMany = runManyFor(di);
+    const runManyAfterRootFrameIsReady = runMany(afterRootFrameIsReadyInjectionToken);
 
-    return runMany(afterRootFrameIsReadyInjectionToken);
+    return () => void runManyAfterRootFrameIsReady();
   },
 });
 

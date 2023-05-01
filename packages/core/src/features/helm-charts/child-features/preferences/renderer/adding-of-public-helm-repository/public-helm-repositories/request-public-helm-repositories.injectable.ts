@@ -24,13 +24,13 @@ const requestPublicHelmRepositoriesInjectable = getInjectable({
         signal: controller.signal,
       });
 
-      if (!result.callWasSuccessful) {
+      if (!result.isOk) {
         logger.warn(`Failed to download public helm repos: ${result.error}`);
 
         return [];
       }
 
-      return sortBy(repo => repo.name, result.response as HelmRepo[]);
+      return sortBy(repo => repo.name, result.value as HelmRepo[]);
     };
   },
 

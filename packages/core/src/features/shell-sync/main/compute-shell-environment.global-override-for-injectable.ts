@@ -6,6 +6,6 @@
 import { getGlobalOverride } from "@k8slens/test-utils";
 import computeShellEnvironmentInjectable from "./compute-shell-environment.injectable";
 
-export default getGlobalOverride(computeShellEnvironmentInjectable, () => async () => ({
-  callWasSuccessful: true,
-}));
+export default getGlobalOverride(computeShellEnvironmentInjectable, () => () => Promise.resolve(({
+  isOk: true,
+})));

@@ -27,7 +27,7 @@ const rollbackHelmReleaseInjectable = getInjectable({
         "--kubeconfig", kubeconfigPath,
       ]);
 
-      if (!result.callWasSuccessful) {
+      if (!result.isOk) {
         throw result.error;
       }
     };

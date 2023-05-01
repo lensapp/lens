@@ -6,6 +6,6 @@
 import { getGlobalOverride } from "@k8slens/test-utils";
 import saveKubeconfigInjectable from "./save-kubeconfig.injectable";
 
-export default getGlobalOverride(saveKubeconfigInjectable, () => async () => {
-  throw new Error("tried to save a mondified kubeconfig without override");
-});
+export default getGlobalOverride(saveKubeconfigInjectable, () => () => Promise.reject(
+  new Error("tried to save a modified kubeconfig without override"),
+));

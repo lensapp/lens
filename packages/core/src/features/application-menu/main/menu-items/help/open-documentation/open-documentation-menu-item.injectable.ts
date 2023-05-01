@@ -21,10 +21,8 @@ const openDocumentationMenuItemInjectable = getInjectable({
       id: "open-documentation",
       orderNumber: 20,
       label: "Documentation",
-
-      // TODO: Convert to async/await
       onClick: () => {
-        openLinkInBrowser(docsUrl).catch((error) => {
+        openLinkInBrowser(docsUrl).catch((error: unknown) => {
           logger.error("[MENU]: failed to open browser", { error });
         });
       },

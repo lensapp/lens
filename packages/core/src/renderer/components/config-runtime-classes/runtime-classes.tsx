@@ -24,8 +24,7 @@ enum columnId {
   age = "age",
 }
 
-export interface RuntimeClassesProps extends KubeObjectDetailsProps<RuntimeClass> {
-}
+export type RuntimeClassesProps = KubeObjectDetailsProps<RuntimeClass>;
 
 interface Dependencies {
   runtimeClassStore: RuntimeClassStore;

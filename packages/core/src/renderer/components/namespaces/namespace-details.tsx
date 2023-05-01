@@ -30,9 +30,6 @@ import { NamespaceTreeView } from "./namespace-tree-view";
 import namespaceStoreInjectable from "./store.injectable";
 import type { NamespaceStore } from "./store";
 
-export interface NamespaceDetailsProps extends KubeObjectDetailsProps<Namespace> {
-}
-
 interface Dependencies {
   subscribeStores: SubscribeStores;
   getDetailsUrl: GetDetailsUrl;
@@ -43,8 +40,8 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedNamespaceDetails extends React.Component<NamespaceDetailsProps & Dependencies> {
-  constructor(props: NamespaceDetailsProps & Dependencies) {
+class NonInjectedNamespaceDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
+  constructor(props: KubeObjectDetailsProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -64,7 +61,7 @@ class NonInjectedNamespaceDetails extends React.Component<NamespaceDetailsProps 
     return this.props.resourceQuotaStore.getAllByNs(namespace);
   }
 
-  @computed get limitranges() {
+  @computed get limitRanges() {
     const namespace = this.props.object.getName();
 
     return this.props.limitRangeStore.getAllByNs(namespace);
@@ -100,10 +97,10 @@ class NonInjectedNamespaceDetails extends React.Component<NamespaceDetailsProps 
           ))}
         </DrawerItem>
         <DrawerItem name="Limit Ranges">
-          {!this.limitranges && limitRangeStore.isLoading && <Spinner/>}
-          {this.limitranges.map(limitrange => limitrange.selfLink && (
-            <Link key={limitrange.getId()} to={getDetailsUrl(limitrange.selfLink)}>
-              {limitrange.getName()}
+          {!this.limitRanges && limitRangeStore.isLoading && <Spinner/>}
+          {this.limitRanges.map(limitRange => limitRange.selfLink && (
+            <Link key={limitRange.getId()} to={getDetailsUrl(limitRange.selfLink)}>
+              {limitRange.getName()}
             </Link>
           ))}
         </DrawerItem>
@@ -116,7 +113,7 @@ class NonInjectedNamespaceDetails extends React.Component<NamespaceDetailsProps 
   }
 }
 
-export const NamespaceDetails = withInjectables<Dependencies, NamespaceDetailsProps>(NonInjectedNamespaceDetails, {
+export const NamespaceDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedNamespaceDetails, {
   getProps: (di, props) => ({
     ...props,
     subscribeStores: di.inject(subscribeStoresInjectable),

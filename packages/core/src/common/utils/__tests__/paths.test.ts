@@ -21,8 +21,8 @@ describe("isLogicalChildPath", () => {
 
   describe("when using win32 paths", () => {
     beforeEach(() => {
-      di.override(getAbsolutePathInjectable, () => path.win32.resolve);
-      di.override(getDirnameOfPathInjectable, () => path.win32.dirname);
+      di.override(getAbsolutePathInjectable, () => (...values) => path.win32.resolve(...values));
+      di.override(getDirnameOfPathInjectable, () => (...values) => path.win32.dirname(...values));
       isLogicalChildPath = di.inject(isLogicalChildPathInjectable);
     });
 
@@ -59,8 +59,8 @@ describe("isLogicalChildPath", () => {
 
   describe("when using posix paths", () => {
     beforeEach(() => {
-      di.override(getAbsolutePathInjectable, () => path.posix.resolve);
-      di.override(getDirnameOfPathInjectable, () => path.posix.dirname);
+      di.override(getAbsolutePathInjectable, () => (...values) => path.posix.resolve(...values));
+      di.override(getDirnameOfPathInjectable, () => (...values) => path.posix.dirname(...values));
       isLogicalChildPath = di.inject(isLogicalChildPathInjectable);
     });
 

@@ -18,6 +18,7 @@ export interface TooltipDecoratorProps {
   tooltipOverrideDisabled?: boolean;
   id?: string;
   children?: StrictReactNode;
+  "data-testid"?: string;
 }
 
 export function withTooltip<TargetProps>(

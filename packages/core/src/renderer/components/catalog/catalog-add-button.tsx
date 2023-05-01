@@ -8,7 +8,7 @@ import React from "react";
 import { SpeedDial, SpeedDialAction } from "@material-ui/lab";
 import { Icon } from "@k8slens/icon";
 import { observer } from "mobx-react";
-import { observable, makeObservable, action } from "mobx";
+import { observable, action } from "mobx";
 import type { CatalogCategory, CatalogEntityAddMenu } from "../../api/catalog-entity";
 import { EventEmitter } from "events";
 import type { CatalogCategoryRegistry } from "../../../common/catalog";
@@ -16,7 +16,6 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import catalogCategoryRegistryInjectable from "../../../common/catalog/category-registry.injectable";
 import type { Navigate } from "../../navigation/navigate.injectable";
 import navigateInjectable from "../../navigation/navigate.injectable";
-import autoBindReact from "auto-bind/react";
 
 export interface CatalogAddButtonProps {
   category: CatalogCategory;
@@ -31,14 +30,8 @@ interface Dependencies {
 
 @observer
 class NonInjectedCatalogAddButton extends React.Component<CatalogAddButtonProps & Dependencies> {
-  @observable protected isOpen = false;
-  @observable menuItems = new Map<CategoryId, CatalogEntityAddMenu[]>();
-
-  constructor(props: CatalogAddButtonProps & Dependencies) {
-    super(props);
-    makeObservable(this);
-    autoBindReact(this);
-  }
+  protected readonly isOpen = observable.box(false);
+  readonly menuItems = observable.map<CategoryId, CatalogEntityAddMenu[]>();
 
   componentDidMount() {
     this.updateMenuItems();
@@ -54,8 +47,7 @@ class NonInjectedCatalogAddButton extends React.Component<CatalogAddButtonProps 
     return this.props.catalogCategoryRegistry.filteredItems;
   }
 
-  @action
-  updateMenuItems() {
+  updateMenuItems = action(() => {
     this.menuItems.clear();
 
     if (this.props.category) {
@@ -64,7 +56,7 @@ class NonInjectedCatalogAddButton extends React.Component<CatalogAddButtonProps 
       // Show menu items from all categories
       this.categories.forEach(this.updateCategoryItems);
     }
-  }
+  });
 
   updateCategoryItems = action((category: CatalogCategory) => {
     if (category instanceof EventEmitter) {
@@ -82,20 +74,20 @@ class NonInjectedCatalogAddButton extends React.Component<CatalogAddButtonProps 
     return category.filteredItems(this.menuItems.get(category.getId()) || []);
   };
 
-  onOpen() {
-    this.isOpen = true;
-  }
+  onOpen = action(() => {
+    this.isOpen.set(true);
+  });
 
-  onClose() {
-    this.isOpen = false;
-  }
+  onClose = action(() => {
+    this.isOpen.set(false);
+  });
 
-  onButtonClick() {
+  onButtonClick = () => {
     const defaultAction = this.items.find(item => item.defaultAction)?.onClick;
     const clickAction = defaultAction || (this.items.length === 1 ? this.items[0].onClick : null);
 
-    clickAction?.();
-  }
+    void clickAction?.();
+  };
 
   get items() {
     const { category } = this.props;
@@ -113,7 +105,7 @@ class NonInjectedCatalogAddButton extends React.Component<CatalogAddButtonProps 
       <SpeedDial
         className="CatalogAddButton"
         ariaLabel="SpeedDial CatalogAddButton"
-        open={this.isOpen}
+        open={this.isOpen.get()}
         onOpen={this.onOpen}
         onClose={this.onClose}
         icon={<Icon material="add" />}
@@ -128,7 +120,7 @@ class NonInjectedCatalogAddButton extends React.Component<CatalogAddButtonProps 
               tooltipTitle={menuItem.title}
               onClick={(evt) => {
                 evt.stopPropagation();
-                menuItem.onClick();
+                void menuItem.onClick();
               }}
               TooltipClasses={{
                 popper: "catalogSpeedDialPopper",

@@ -8,19 +8,23 @@ import "./details.scss";
 import { observer } from "mobx-react";
 import React from "react";
 
-import type { Role } from "@k8slens/kube-object";
+import { Role } from "@k8slens/kube-object";
 import { DrawerTitle } from "../../drawer";
 import type { KubeObjectDetailsProps } from "../../kube-object-details";
 
-export interface RoleDetailsProps extends KubeObjectDetailsProps<Role> {
-}
-
 @observer
-export class RoleDetails extends React.Component<RoleDetailsProps> {
+export class RoleDetails extends React.Component<KubeObjectDetailsProps> {
   render() {
     const { object: role } = this.props;
 
-    if (!role) return null;
+    if (!role) {
+      return null;
+    }
+
+    if (!(role instanceof Role)) {
+      return null;
+    }
+
     const rules = role.getRules();
 
     return (

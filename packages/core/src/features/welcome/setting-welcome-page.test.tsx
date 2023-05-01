@@ -12,31 +12,30 @@ import welcomeRouteConfigInjectable from "../../common/front-end-routing/routes/
 import welcomeRouteInjectable from "../../common/front-end-routing/routes/welcome/welcome-route.injectable";
 import type { Route } from "../../common/front-end-routing/front-end-route-injection-token";
 
-
 describe("setting-welcome-page", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let rendered : RenderResult;
   let welcomeRoute: Route;
 
   beforeEach(() => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
   });
 
   describe("given configuration of welcome page route is the default", () => {
     beforeEach(async () => {
-      applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+      await builder.beforeApplicationStart(({ mainDi }) => {
         mainDi.override(welcomeRouteConfigInjectable, () => "/welcome");
       });
 
-      applicationBuilder.beforeWindowStart(({ windowDi }) => {
+      await builder.beforeWindowStart(({ windowDi }) => {
         windowDi.override(welcomeRouteConfigInjectable, () => "/welcome");
       });
 
-      // enable the extension even though the welcomeRoute is not overriden
-      applicationBuilder.extensions.enable(extensionWithWelcomePage);
-      rendered = await applicationBuilder.render();
+      // enable the extension even though the welcomeRoute is not overridden
+      await builder.extensions.enable(extensionWithWelcomePage);
+      rendered = await builder.render();
 
-      const windowDi = applicationBuilder.applicationWindow.only.di;
+      const windowDi = builder.applicationWindow.only.di;
 
       welcomeRoute = windowDi.inject(welcomeRouteInjectable);
     });
@@ -54,18 +53,18 @@ describe("setting-welcome-page", () => {
 
   describe("given configuration of welcome page route is set to a custom page", () => {
     beforeEach(async () => {
-      applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+      await builder.beforeApplicationStart(({ mainDi }) => {
         mainDi.override(welcomeRouteConfigInjectable, () => "/extension/some-extension-name/some-welcome-page");
       });
 
-      applicationBuilder.beforeWindowStart(({ windowDi }) => {
+      await builder.beforeWindowStart(({ windowDi }) => {
         windowDi.override(welcomeRouteConfigInjectable, () => "/extension/some-extension-name/some-welcome-page");
       });
 
-      applicationBuilder.extensions.enable(extensionWithWelcomePage);
-      rendered = await applicationBuilder.render();
+      await builder.extensions.enable(extensionWithWelcomePage);
+      rendered = await builder.render();
 
-      const windowDi = applicationBuilder.applicationWindow.only.di;
+      const windowDi = builder.applicationWindow.only.di;
 
       welcomeRoute = windowDi.inject(welcomeRouteInjectable);
     });

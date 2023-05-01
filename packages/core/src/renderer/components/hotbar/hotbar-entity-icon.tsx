@@ -15,6 +15,7 @@ import type { IClassName } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { Icon } from "@k8slens/icon";
 import { HotbarIcon } from "./hotbar-icon";
+import type { KubernetesCluster } from "../../../common/catalog-entities/kubernetes-cluster";
 import { LensKubernetesClusterStatus } from "../../../common/catalog-entities/kubernetes-cluster";
 import type { VisitEntityContextMenu } from "../../../common/catalog/visit-entity-context-menu.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -100,9 +101,9 @@ class NonInjectedHotbarEntityIcon extends React.Component<HotbarEntityIconProps 
         uid={entity.getId()}
         title={entity.getName()}
         source={entity.metadata.source}
-        src={entity.spec.icon?.src}
-        material={entity.spec.icon?.material}
-        background={entity.spec.icon?.background}
+        src={(entity as KubernetesCluster).spec.icon?.src}
+        material={(entity as KubernetesCluster).spec.icon?.material}
+        background={(entity as KubernetesCluster).spec.icon?.background}
         className={className}
         active={this.isActive(entity)}
         onMenuOpen={() => this.onMenuOpen()}

@@ -14,7 +14,7 @@ const visitEntityContextMenuInjectable = getInjectable({
     const categoryRegistry = di.inject(catalogCategoryRegistryInjectable);
 
     return (entity, context) => {
-      entity.onContextMenuOpen?.(context);
+      void entity.onContextMenuOpen(context);
       categoryRegistry.getCategoryForEntity(entity)?.emit("contextMenuOpen", entity, context);
     };
   },

@@ -18,7 +18,7 @@ describe("application-menu-in-legacy-extension-api", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.beforeApplicationStart(({ mainDi }) => {
+    await builder.beforeApplicationStart(({ mainDi }) => {
       runInAction(() => {
         mainDi.register(
           someTopMenuItemInjectable,
@@ -84,7 +84,7 @@ describe("application-menu-in-legacy-extension-api", () => {
         },
       };
 
-      builder.extensions.enable(testExtensionOptions);
+      await builder.extensions.enable(testExtensionOptions);
     });
 
     it("related menu items exist", () => {
@@ -113,7 +113,7 @@ describe("application-menu-in-legacy-extension-api", () => {
 
     describe("when the extension is disabled", () => {
       beforeEach(() => {
-        builder.extensions.disable(testExtensionOptions);
+        await builder.extensions.disable(testExtensionOptions);
       });
 
       it("when related menu items no longer exist", () => {
@@ -126,7 +126,7 @@ describe("application-menu-in-legacy-extension-api", () => {
       });
 
       it("when the extension is enabled again, also related menu items exist again", () => {
-        builder.extensions.enable(testExtensionOptions);
+        await builder.extensions.enable(testExtensionOptions);
 
         const menuItemPathsForExtension = builder.applicationMenu.items.filter(
           (x) =>
@@ -172,7 +172,7 @@ describe("application-menu-in-legacy-extension-api", () => {
         },
       };
 
-      builder.extensions.enable(testExtensionOptions);
+      await builder.extensions.enable(testExtensionOptions);
     });
 
     it("only recognizable menu items from extension exist", () => {

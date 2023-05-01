@@ -4,21 +4,14 @@
  */
 import { apiPrefix } from "../../../../common/vars";
 import { getRouteInjectable } from "../../../router/router.injectable";
-import { payloadValidatedClusterRoute } from "../../../router/route";
-import Joi from "joi";
-import type { UpdateChartArgs } from "../../../helm/helm-service/update-helm-release.injectable";
+import { payloadWithSchemaClusterRoute } from "../../../router/route";
 import updateHelmReleaseInjectable from "../../../helm/helm-service/update-helm-release.injectable";
+import { z } from "zod";
 
-const updateChartArgsValidator = Joi.object<UpdateChartArgs, true, UpdateChartArgs>({
-  chart: Joi
-    .string()
-    .required(),
-  version: Joi
-    .string()
-    .required(),
-  values: Joi
-    .string()
-    .required(),
+const updateChartArgsSchema = z.object({
+  chart: z.string(),
+  version: z.string(),
+  values: z.string(),
 });
 
 const updateReleaseRouteInjectable = getRouteInjectable({
@@ -27,10 +20,10 @@ const updateReleaseRouteInjectable = getRouteInjectable({
   instantiate: (di) => {
     const updateRelease = di.inject(updateHelmReleaseInjectable);
 
-    return payloadValidatedClusterRoute({
+    return payloadWithSchemaClusterRoute({
       method: "put",
       path: `${apiPrefix}/v2/releases/{namespace}/{release}`,
-      payloadValidator: updateChartArgsValidator,
+      payloadSchema: updateChartArgsSchema,
     })(async ({ cluster, params, payload }) => ({
       response: await updateRelease(
         cluster,

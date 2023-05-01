@@ -35,7 +35,7 @@ export class NonInjectedUpgradeChart extends React.Component<UpgradeChartProps &
     const { model } = this.props;
     const result = await model.submit();
 
-    if (result.callWasSuccessful) {
+    if (result.isOk) {
       return (
         <p>
           {"Release "}

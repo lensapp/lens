@@ -5,7 +5,7 @@
 
 import { DockTabStore } from "../dock-tab-store/dock-tab.store";
 import type { TabId } from "../dock/store";
-import { logTabDataValidator } from "./log-tab-data.validator";
+import { logTabDataSchema } from "./log-tab-data.validator";
 import type { DockTabStoreDependencies } from  "../dock-tab-store/dock-tab.store";
 
 export interface LogTabOwnerRef {
@@ -71,7 +71,7 @@ export class LogTabStore extends DockTabStore<LogTabData> {
       return true;
     }
 
-    return !logTabDataValidator.validate(this.getData(tabId)).error;
+    return logTabDataSchema.safeParse(this.getData(tabId)).success;
   }
 }
 

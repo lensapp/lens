@@ -24,7 +24,7 @@ const aboutMenuItemInjectable = getInjectable({
       label: `About ${productName}`,
 
       onClick() {
-        showAbout();
+        void showAbout();
       },
     };
   },

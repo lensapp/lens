@@ -123,7 +123,7 @@ const NonInjectedHotbarMenu = observer((props: Dependencies & HotbarMenuProps) =
                         key={index}
                         index={index}
                         entity={entity}
-                        onClick={() => entityRegistry.onRun(entity)}
+                        onClick={() => void entityRegistry.onRun(entity)}
                         className={cssNames({ isDragging: snapshot.isDragging })}
                         remove={removeItem}
                         add={addItem}
@@ -133,7 +133,7 @@ const NonInjectedHotbarMenu = observer((props: Dependencies & HotbarMenuProps) =
                         uid={`hotbar-icon-${item.entity.uid}`}
                         title={item.entity.name}
                         source={item.entity.source ?? "local"}
-                        tooltip={`${item.entity.name} (${item.entity.source})`}
+                        tooltip={`${item.entity.name} (${item.entity.source ?? ""})`}
                         menuItems={[
                           {
                             title: "Remove from Hotbar",

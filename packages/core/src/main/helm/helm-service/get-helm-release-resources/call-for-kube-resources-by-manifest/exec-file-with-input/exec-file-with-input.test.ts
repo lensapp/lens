@@ -9,13 +9,14 @@ import type { AsyncResult } from "@k8slens/utilities";
 import nonPromiseExecFileInjectable from "./non-promise-exec-file.injectable";
 import { getPromiseStatus } from "@k8slens/test-utils";
 import EventEmitter from "events";
+import type { ChildProcess, execFile } from "child_process";
 
 describe("exec-file-with-input", () => {
   let execFileWithInput: ExecFileWithInput;
-  let execFileMock: jest.Mock;
+  let execFileMock: jest.MockedFunction<() => ChildProcess>;
 
   let executionStub: EventEmitter & {
-    stdin: { end: (chunk: any) => void };
+    stdin: { end: (chunk: unknown) => void };
     stdout: EventEmitter;
     stderr: EventEmitter;
   };
@@ -31,9 +32,9 @@ describe("exec-file-with-input", () => {
       stderr: new EventEmitter(),
     });
 
-    execFileMock = jest.fn(() => executionStub);
+    execFileMock = jest.fn(() => executionStub as ChildProcess);
 
-    di.override(nonPromiseExecFileInjectable, () => execFileMock as any);
+    di.override(nonPromiseExecFileInjectable, () => execFileMock as unknown as typeof execFile);
 
     execFileWithInput = di.inject(execFileWithInputInjectable);
   });
@@ -49,9 +50,9 @@ describe("exec-file-with-input", () => {
       input: "irrelevant",
     });
 
-    expect(actual).toEqual({
-      callWasSuccessful: false,
-      error: expect.any(Error),
+    expect(actual).toMatchInlineSnapshot({
+      isOk: false,
+      error: {},
     });
   });
 
@@ -115,8 +116,8 @@ describe("exec-file-with-input", () => {
           const actual = await actualPromise;
 
           expect(actual).toEqual({
-            callWasSuccessful: true,
-            response: "some-datasome-other-data",
+            isOk: true,
+            value: "some-datasome-other-data",
           });
         });
 
@@ -126,7 +127,7 @@ describe("exec-file-with-input", () => {
           const actual = await actualPromise;
 
           expect(actual).toEqual({
-            callWasSuccessful: false,
+            isOk: false,
             error: "Exited via SIGKILL",
           });
         });
@@ -137,7 +138,7 @@ describe("exec-file-with-input", () => {
           const actual = await actualPromise;
 
           expect(actual).toEqual({
-            callWasSuccessful: false,
+            isOk: false,
             error: "Failed with error: some-signal",
           });
         });
@@ -170,8 +171,8 @@ describe("exec-file-with-input", () => {
               const actual = await actualPromise;
 
               expect(actual).toEqual({
-                callWasSuccessful: true,
-                response: "some-datasome-other-data",
+                isOk: true,
+                value: "some-datasome-other-data",
               });
             });
 
@@ -181,7 +182,7 @@ describe("exec-file-with-input", () => {
               const actual = await actualPromise;
 
               expect(actual).toEqual({
-                callWasSuccessful: false,
+                isOk: false,
                 error: "Exited via some-signal",
               });
             });
@@ -192,7 +193,7 @@ describe("exec-file-with-input", () => {
               const actual = await actualPromise;
 
               expect(actual).toEqual({
-                callWasSuccessful: false,
+                isOk: false,
                 error: "some-errorsome-other-error",
               });
             });
@@ -206,9 +207,9 @@ describe("exec-file-with-input", () => {
 
       const actual = await actualPromise;
 
-      expect(actual).toEqual({
-        callWasSuccessful: false,
-        error: expect.any(Error),
+      expect(actual).toMatchInlineSnapshot({
+        isOk: false,
+        error: {},
       });
     });
   });

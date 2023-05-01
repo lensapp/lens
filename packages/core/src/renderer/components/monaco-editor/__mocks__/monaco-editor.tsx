@@ -13,7 +13,7 @@ class FakeMonacoEditor extends React.Component<MonacoEditorProps> {
 
     return (
       <textarea
-        data-testid={`monaco-editor-for-${id}`}
+        data-testid={`monaco-editor-for-${id ?? ""}`}
 
         onChange={(event) => {
           const newValue = event.target.value;

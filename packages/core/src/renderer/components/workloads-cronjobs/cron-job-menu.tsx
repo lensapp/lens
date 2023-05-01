@@ -17,7 +17,7 @@ import type { ShowCheckedErrorNotification } from "../notifications/show-checked
 import showCheckedErrorNotificationInjectable from "../notifications/show-checked-error.injectable";
 import type { CronJobApi } from "@k8slens/kube-api";
 
-export interface CronJobMenuProps extends KubeObjectMenuProps<CronJob> {}
+export type CronJobMenuProps = KubeObjectMenuProps<CronJob>;
 
 interface Dependencies {
   openConfirmDialog: OpenConfirmDialog;

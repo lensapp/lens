@@ -10,6 +10,7 @@
 import { ipcMain, ipcRenderer, webContents } from "electron";
 import { toJS } from "../utils/toJS";
 import type { Disposer } from "@k8slens/utilities";
+import { isArray } from "@k8slens/utilities";
 import { getLegacyGlobalDiForExtensionApi } from "@k8slens/legacy-global-di";
 import ipcRendererInjectable from "../../renderer/utils/channel/ipc-renderer.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
@@ -18,19 +19,21 @@ import clusterFramesInjectable from "../cluster-frames.injectable";
 
 export const broadcastMainChannel = "ipc:broadcast-main";
 
-export function ipcMainHandle(channel: string, listener: (event: Electron.IpcMainInvokeEvent, ...args: any[]) => any) {
+export function ipcMainHandle(channel: string, listener: (event: Electron.IpcMainInvokeEvent, ...args: unknown[]) => unknown) {
   const di = getLegacyGlobalDiForExtensionApi();
 
   const ipcMain = di.inject(ipcMainInjectionToken);
 
-  ipcMain.handle(channel, async (event, ...args) => {
-    return sanitizePayload(await listener(event, ...args));
+  ipcMain.handle(channel, async (event, ...args: unknown[]) => {
+    return toJS(await listener(event, ...args));
   });
 }
 
-export async function broadcastMessage(channel: string, ...args: any[]): Promise<void> {
+export async function broadcastMessage(channel: string, ...args: unknown[]): Promise<void> {
   if (ipcRenderer) {
-    return ipcRenderer.invoke(broadcastMainChannel, channel, ...args.map(sanitizePayload));
+    await ipcRenderer.invoke(broadcastMainChannel, channel, ...args.map(toJS));
+
+    return;
   }
 
   if (!webContents) {
@@ -41,15 +44,23 @@ export async function broadcastMessage(channel: string, ...args: any[]): Promise
   const logger = di.inject(loggerInjectionToken);
   const clusterFrames = di.inject(clusterFramesInjectable);
 
-  ipcMain.listeners(channel).forEach((func) => func({
-    processId: undefined, frameId: undefined, sender: undefined, senderFrame: undefined,
-  }, ...args));
+  ipcMain.listeners(channel).forEach((func) => {
+    func(
+      {
+        processId: undefined,
+        frameId: undefined,
+        sender: undefined,
+        senderFrame: undefined,
+      },
+      ...args,
+    );
+  });
 
   const views = webContents.getAllWebContents();
 
-  if (!views || !Array.isArray(views) || views.length === 0) return;
+  if (!views || !isArray(views) || views.length === 0) return;
 
-  args = args.map(sanitizePayload);
+  args = args.map(toJS);
 
   for (const view of views) {
     let viewType = "unknown";
@@ -82,7 +93,7 @@ export async function broadcastMessage(channel: string, ...args: any[]): Promise
   }
 }
 
-export function ipcMainOn(channel: string, listener: (event: Electron.IpcMainEvent, ...args: any[]) => any): Disposer {
+export function ipcMainOn(channel: string, listener: (event: Electron.IpcMainEvent, ...args: unknown[]) => unknown): Disposer {
   const di = getLegacyGlobalDiForExtensionApi();
 
   const ipcMain = di.inject(ipcMainInjectionToken);
@@ -92,7 +103,7 @@ export function ipcMainOn(channel: string, listener: (event: Electron.IpcMainEve
   return () => ipcMain.off(channel, listener);
 }
 
-export function ipcRendererOn(channel: string, listener: (event: Electron.IpcRendererEvent, ...args: any[]) => any): Disposer {
+export function ipcRendererOn(channel: string, listener: (event: Electron.IpcRendererEvent, ...args: unknown[]) => unknown): Disposer {
   const di = getLegacyGlobalDiForExtensionApi();
 
   const ipcRenderer = di.inject(ipcRendererInjectable);
@@ -100,12 +111,4 @@ export function ipcRendererOn(channel: string, listener: (event: Electron.IpcRen
   ipcRenderer.on(channel, listener);
 
   return () => ipcRenderer.off(channel, listener);
-}
-
-/**
- * Sanitizing data for IPC-messaging before send.
- * Removes possible observable values to avoid exceptions like "can't clone object".
- */
-function sanitizePayload<T>(data: any): T {
-  return toJS(data);
 }

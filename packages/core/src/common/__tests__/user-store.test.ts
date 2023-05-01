@@ -23,7 +23,7 @@ describe("user store tests", () => {
   let resetTheme: ResetTheme;
   let di: DiContainer;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     di = getDiForUnitTesting();
 
     di.override(writeFileInjectable, () => () => Promise.resolve());
@@ -55,7 +55,7 @@ describe("user store tests", () => {
       expect(state.colorTheme).toBe("light");
     });
 
-    it("correctly resets theme to default value", async () => {
+    it("correctly resets theme to default value", () => {
       state.colorTheme = "some other theme";
       resetTheme();
       expect(state.colorTheme).toBe(defaultThemeId);

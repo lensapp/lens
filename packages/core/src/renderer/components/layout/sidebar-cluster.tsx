@@ -23,6 +23,7 @@ import navigateInjectable from "../../navigation/navigate.injectable";
 import normalizeCatalogEntityContextMenuInjectable from "../../catalog/normalize-menu-item.injectable";
 import type { ActiveHotbarModel } from "../../../features/hotbar/storage/common/toggling.injectable";
 import activeHotbarInjectable from "../../../features/hotbar/storage/common/toggling.injectable";
+import type { KubernetesCluster } from "../../../common/catalog-entities";
 
 export interface SidebarClusterProps {
   clusterEntity: CatalogEntity | null | undefined;
@@ -71,7 +72,7 @@ const NonInjectedSidebarCluster = observer(({
       menuItems,
       navigate: (url, forceMainFrame = true) => {
         if (forceMainFrame) {
-          broadcastMessage(IpcRendererNavigationEvents.NAVIGATE_IN_APP, url);
+          void broadcastMessage(IpcRendererNavigationEvents.NAVIGATE_IN_APP, url);
         } else {
           navigate(url);
         }
@@ -105,10 +106,10 @@ const NonInjectedSidebarCluster = observer(({
     >
       <Avatar
         title={clusterEntity.getName()}
-        colorHash={`${clusterEntity.getName()}-${clusterEntity.metadata.source}`}
+        colorHash={`${clusterEntity.getName()}-${clusterEntity.metadata.source ?? ""}`}
         size={40}
-        src={clusterEntity.spec.icon?.src}
-        background={clusterEntity.spec.icon?.background}
+        src={(clusterEntity as KubernetesCluster).spec.icon?.src}
+        background={(clusterEntity as KubernetesCluster).spec.icon?.background}
         className={styles.avatar}
       />
       <div className={styles.clusterName} id={tooltipId}>

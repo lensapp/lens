@@ -7,7 +7,7 @@ import type { StrictReactNode } from "@k8slens/utilities";
 import React from "react";
 
 interface FormControlLabelProps {
-  control: React.ReactElement<any, any>;
+  control: React.ReactElement;
   label: StrictReactNode;
 }
 

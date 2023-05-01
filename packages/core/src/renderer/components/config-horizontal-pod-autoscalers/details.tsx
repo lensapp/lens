@@ -25,9 +25,6 @@ import { loggerInjectionToken } from "@k8slens/logger";
 import getHorizontalPodAutoscalerMetrics from "./get-metrics.injectable";
 import { getMetricName } from "./get-metric-name";
 
-export interface HpaDetailsProps extends KubeObjectDetailsProps<HorizontalPodAutoscaler> {
-}
-
 interface Dependencies {
   apiManager: ApiManager;
   logger: Logger;
@@ -36,13 +33,13 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedHorizontalPodAutoscalerDetails extends React.Component<HpaDetailsProps & Dependencies> {
-  private renderTargetLink(target: HorizontalPodAutoscalerMetricTarget | undefined) {
+class NonInjectedHorizontalPodAutoscalerDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
+  private renderTargetLink(hpa: HorizontalPodAutoscaler, target: HorizontalPodAutoscalerMetricTarget | undefined) {
     if (!target) {
       return null;
     }
 
-    const { object: hpa, apiManager, getDetailsUrl } = this.props;
+    const { apiManager, getDetailsUrl } = this.props;
     const { kind, name } = target;
     const objectUrl = getDetailsUrl(apiManager.lookupApiLink(target, hpa));
 
@@ -56,9 +53,7 @@ class NonInjectedHorizontalPodAutoscalerDetails extends React.Component<HpaDetai
     );
   }
 
-  renderMetrics() {
-    const { object: hpa } = this.props;
-
+  renderMetrics(hpa: HorizontalPodAutoscaler) {
     const renderName = (metric: HorizontalPodAutoscalerMetricSpec) => {
       const metricName = getMetricName(metric);
 
@@ -79,7 +74,7 @@ class NonInjectedHorizontalPodAutoscalerDetails extends React.Component<HpaDetai
             <>
               {metricName}
               {" "}
-              {this.renderTargetLink(metric.object?.describedObject)}
+              {this.renderTargetLink(hpa, metric.object?.describedObject)}
             </>
           );
         }
@@ -168,7 +163,7 @@ class NonInjectedHorizontalPodAutoscalerDetails extends React.Component<HpaDetai
           <>
             <DrawerTitle>Metrics</DrawerTitle>
             <div className="metrics">
-              {this.renderMetrics()}
+              {this.renderMetrics(hpa)}
             </div>
           </>
         )}
@@ -177,7 +172,7 @@ class NonInjectedHorizontalPodAutoscalerDetails extends React.Component<HpaDetai
   }
 }
 
-export const HorizontalPodAutoscalerDetails = withInjectables<Dependencies, HpaDetailsProps>(NonInjectedHorizontalPodAutoscalerDetails, {
+export const HorizontalPodAutoscalerDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedHorizontalPodAutoscalerDetails, {
   getProps: (di, props) => ({
     ...props,
     apiManager: di.inject(apiManagerInjectable),

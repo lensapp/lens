@@ -16,7 +16,7 @@ describe("order of workload overview details", () => {
   beforeEach(async () => {
     const builder = getApplicationBuilder();
 
-    builder.beforeWindowStart(({ windowDi }) => {
+    await builder.beforeWindowStart(({ windowDi }) => {
       windowDi.unoverride(getRandomIdInjectionToken);
       windowDi.permitSideEffects(getRandomIdInjectionToken);
 
@@ -29,7 +29,7 @@ describe("order of workload overview details", () => {
       });
     });
 
-    builder.setEnvironmentToClusterFrame();
+    await builder.setEnvironmentToClusterFrame();
 
     rendered = await builder.render();
 
@@ -75,7 +75,7 @@ describe("order of workload overview details", () => {
       },
     };
 
-    builder.extensions.enable(testExtension);
+    await builder.extensions.enable(testExtension);
   });
 
   it("shows items in correct order", () => {

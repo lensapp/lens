@@ -6,6 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { KubeObject } from "@k8slens/kube-object";
 import type { KubeObjectOnContextMenuOpenContext } from "../../kube-object/handler";
 import kubeObjectHandlersInjectable from "../../kube-object/handlers.injectable";
+import { noop } from "@k8slens/utilities";
 
 export type OnKubeObjectContextMenuOpen = (obj: KubeObject, ctx: KubeObjectOnContextMenuOpenContext) => void;
 
@@ -17,8 +18,8 @@ const onKubeObjectContextMenuOpenInjectable = getInjectable({
     return (obj, ctx) => {
       const specificHandlers = handlers.get().get(obj.apiVersion)?.get(obj.kind) ?? [];
 
-      for (const { onContextMenuOpen } of specificHandlers) {
-        onContextMenuOpen?.(ctx);
+      for (const { onContextMenuOpen = noop } of specificHandlers) {
+        onContextMenuOpen(ctx);
       }
     };
   },

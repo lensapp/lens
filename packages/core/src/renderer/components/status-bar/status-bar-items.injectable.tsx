@@ -4,13 +4,12 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import type { StatusBarItemProps } from "./status-bar-registration";
 import { statusBarItemInjectionToken } from "./status-bar-item-injection-token";
 import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
 
 export interface StatusItem {
   origin?: string;
-  component: React.ComponentType<StatusBarItemProps>;
+  component: React.ComponentType;
 }
 
 export interface StatusBarItems {

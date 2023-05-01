@@ -15,7 +15,7 @@ import assert from "assert";
 
 export interface SliderProps extends Omit<MaterialSliderProps, "onChange"> {
   className?: string;
-  onChange(evt: React.FormEvent<any>, value: number): void;
+  onChange(evt: React.FormEvent<unknown>, value: number): void;
 }
 
 const defaultProps: Partial<SliderProps> = {

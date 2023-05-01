@@ -44,7 +44,7 @@ export interface PersistentStorageParams<T extends object> extends Omit<Options<
    *
    * @param data the parsed information read from the stored JSON file
    */
-  fromStore(data: Partial<T>): void;
+  fromStore: (data: Partial<T>) => void;
 
   /**
    * toJSON is called when syncing the store to the filesystem. It should
@@ -53,7 +53,7 @@ export interface PersistentStorageParams<T extends object> extends Omit<Options<
    * It is recommended that a round trip is valid. Namely, calling
    * `this.fromStore(this.toJSON())` shouldn't change the state.
    */
-  toJSON(): T;
+  toJSON: () => T;
 }
 
 export type CreatePersistentStorage = <T extends object>(params: PersistentStorageParams<T>) => PersistentStorage;

@@ -29,7 +29,7 @@ export interface TabLayoutProps {
 export interface TabLayoutRoute {
   routePath: string;
   title: StrictReactNode;
-  component: React.ComponentType<any>;
+  component: React.ComponentType<Record<string, never>>;
   url?: string; // page-url, if not provided `routePath` is used (doesn't work when path has some :placeholder(s))
   exact?: boolean; // route-path matching rule
   default?: boolean; // initial tab to open with provided `url, by default tabs[0] is used

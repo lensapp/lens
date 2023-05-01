@@ -70,7 +70,7 @@ const toRouteInjectableFor =
     (clusterFrame: boolean, getIsEnabled: (registration: PageRegistration) => IComputedValue<boolean>) =>
       (registration: PageRegistration) => {
         const routeInjectable = getInjectable({
-          id: `route-${registration.id}-for-extension-${extension.sanitizedExtensionId}`,
+          id: `route-${registration.id ?? ""}-for-extension-${extension.sanitizedExtensionId}`,
 
           instantiate: () => ({
             path: getExtensionRoutePath(extension, registration.id),
@@ -112,7 +112,7 @@ const toRouteInjectableFor =
         };
 
         const routeSpecificComponentInjectable = getInjectable({
-          id: `route-${registration.id}-component-for-extension-${extension.sanitizedExtensionId}`,
+          id: `route-${registration.id ?? ""}-component-for-extension-${extension.sanitizedExtensionId}`,
 
           instantiate: (di) => ({
             route: di.inject(routeInjectable),

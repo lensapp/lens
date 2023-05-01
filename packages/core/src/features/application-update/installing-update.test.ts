@@ -27,12 +27,12 @@ describe("installing update", () => {
   let downloadPlatformUpdateMock: AsyncFnMock<DownloadPlatformUpdate>;
   let setUpdateOnQuitMock: jest.Mock;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     testUsingFakeTime("2015-10-21T07:28:00Z");
 
     builder = getApplicationBuilder();
 
-    builder.beforeApplicationStart(({ mainDi }) => {
+    await builder.beforeApplicationStart(({ mainDi }) => {
       electronQuitAndInstallUpdateMock = jest.fn();
       checkForPlatformUpdatesMock = asyncFn();
       downloadPlatformUpdateMock = asyncFn();
@@ -91,7 +91,7 @@ describe("installing update", () => {
 
     describe("when user checks for updates", () => {
       beforeEach(() => {
-        processCheckingForUpdates("irrelevant");
+        void processCheckingForUpdates("irrelevant");
       });
 
       it("checks for updates", () => {
@@ -204,7 +204,7 @@ describe("installing update", () => {
             beforeEach(() => {
               downloadPlatformUpdateMock.mockClear();
 
-              processCheckingForUpdates("irrelevant");
+              void processCheckingForUpdates("irrelevant");
             });
 
             it("shows tray icon for checking for updates", () => {

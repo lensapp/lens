@@ -1,4 +1,5 @@
 export * from "./src/abort-controller";
+export * from "./src/add-event-listener";
 export * from "./src/array";
 export * from "./src/backoff-caller";
 export * from "./src/base64";

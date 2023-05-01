@@ -40,17 +40,17 @@ const NonInjectedContainerEnvironment = observer((props: Dependencies & Containe
   useEffect( () => autorun(() => {
     for (const { valueFrom } of env ?? []) {
       if (valueFrom?.configMapKeyRef?.name) {
-        configMapStore.load({ name: valueFrom.configMapKeyRef.name, namespace });
+        void configMapStore.load({ name: valueFrom.configMapKeyRef.name, namespace });
       }
     }
 
     for (const { configMapRef, secretRef } of envFrom ?? []) {
       if (secretRef?.name) {
-        secretStore.load({ name: secretRef.name, namespace });
+        void secretStore.load({ name: secretRef.name, namespace });
       }
 
       if (configMapRef?.name) {
-        configMapStore.load({ name: configMapRef.name, namespace });
+        void configMapStore.load({ name: configMapRef.name, namespace });
       }
     }
   }), []);
@@ -70,7 +70,7 @@ const NonInjectedContainerEnvironment = observer((props: Dependencies & Containe
         if (fieldRef) {
           const { apiVersion, fieldPath } = fieldRef;
 
-          secretValue = `fieldRef(${apiVersion}:${fieldPath})`;
+          secretValue = `fieldRef(${apiVersion ?? "v1"}:${fieldPath})`;
         } else if (secretKeyRef?.name) {
           secretValue = (
             <SecretKey

@@ -18,7 +18,7 @@ const dockStoreInjectable = getInjectable({
 
   instantiate: (di) => new DockStore({
     storage: di.inject(dockStorageInjectable),
-    tabDataClearers: {
+    tabDataCleaners: {
       [TabKind.POD_LOGS]: di.inject(clearLogTabDataInjectable),
       [TabKind.UPGRADE_CHART]: di.inject(clearUpgradeChartTabDataInjectable),
       [TabKind.CREATE_RESOURCE]: di.inject(clearCreateResourceTabDataInjectable),

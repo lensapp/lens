@@ -15,7 +15,7 @@ describe("clicking tray menu item originating from extension", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.beforeApplicationStart(({ mainDi }) => {
+    await builder.beforeApplicationStart(({ mainDi }) => {
       logErrorMock = jest.fn();
 
       mainDi.override(logErrorInjectable, () => logErrorMock);
@@ -29,7 +29,7 @@ describe("clicking tray menu item originating from extension", () => {
     let someExtension: FakeExtensionOptions;
     let clickMock: jest.Mock;
 
-    beforeEach(() => {
+    beforeEach(async () => {
       clickMock = jest.fn();
 
       someExtension = {
@@ -40,7 +40,7 @@ describe("clicking tray menu item originating from extension", () => {
         },
       };
 
-      builder.extensions.enable(someExtension);
+      await builder.extensions.enable(someExtension);
     });
 
     it("when item is clicked, triggers the click handler", () => {
@@ -88,8 +88,8 @@ describe("clicking tray menu item originating from extension", () => {
     });
 
     describe("when extension is disabled", () => {
-      beforeEach(() => {
-        builder.extensions.disable(someExtension);
+      beforeEach(async () => {
+        await builder.extensions.disable(someExtension);
       });
 
       it("does not have the tray menu item from extension", () => {

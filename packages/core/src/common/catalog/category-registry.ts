@@ -3,13 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { action, computed, observable, makeObservable } from "mobx";
+import { action, computed, observable, makeObservable, runInAction } from "mobx";
 import { once } from "lodash";
 import { iter, getOrInsertMap, strictSet } from "@k8slens/utilities";
 import type { Disposer } from "@k8slens/utilities";
 import type { CatalogCategory, CatalogEntityData, CatalogEntityKindData } from "./catalog-entity";
 
-export type CategoryFilter = (category: CatalogCategory) => any;
+export type CategoryFilter = (category: CatalogCategory) => unknown;
 
 export class CatalogCategoryRegistry {
   protected readonly categories = observable.set<CatalogCategory>();
@@ -22,16 +22,18 @@ export class CatalogCategoryRegistry {
     makeObservable(this);
   }
 
-  @action add(category: CatalogCategory): Disposer {
-    const byGroup = getOrInsertMap(this.groupKinds, category.spec.group);
+  add(category: CatalogCategory): Disposer {
+    return runInAction(() => {
+      const byGroup = getOrInsertMap(this.groupKinds, category.spec.group);
 
-    this.categories.add(category);
-    strictSet(byGroup, category.spec.names.kind, category);
+      this.categories.add(category);
+      strictSet(byGroup, category.spec.names.kind, category);
 
-    return () => {
-      this.categories.delete(category);
-      byGroup.delete(category.spec.names.kind);
-    };
+      return action(() => {
+        this.categories.delete(category);
+        byGroup.delete(category.spec.names.kind);
+      });
+    });
   }
 
   getById(id: string) {

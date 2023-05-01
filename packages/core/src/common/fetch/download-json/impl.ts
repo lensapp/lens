@@ -19,26 +19,26 @@ export const downloadJsonWith = (fetch: Fetch): DownloadJson => async (url, opts
     result = await fetch(url, opts as RequestInit);
   } catch (error) {
     return {
-      callWasSuccessful: false,
+      isOk: false,
       error: String(error),
     };
   }
 
   if (result.status < 200 || 300 <= result.status) {
     return {
-      callWasSuccessful: false,
+      isOk: false,
       error: result.statusText,
     };
   }
 
   try {
     return {
-      callWasSuccessful: true,
-      response: await result.json(),
+      isOk: true,
+      value: await result.json(),
     };
   } catch (error) {
     return {
-      callWasSuccessful: false,
+      isOk: false,
       error: String(error),
     };
   }

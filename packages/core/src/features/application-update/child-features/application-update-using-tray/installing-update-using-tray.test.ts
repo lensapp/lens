@@ -24,10 +24,10 @@ describe("installing update using tray", () => {
   let downloadPlatformUpdateMock: AsyncFnMock<DownloadPlatformUpdate>;
   let showMessagePopupMock: AsyncFnMock<ShowMessagePopup>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.beforeApplicationStart(({ mainDi }) => {
+    await builder.beforeApplicationStart(({ mainDi }) => {
       checkForPlatformUpdatesMock = asyncFn();
       downloadPlatformUpdateMock = asyncFn();
       showMessagePopupMock = asyncFn();

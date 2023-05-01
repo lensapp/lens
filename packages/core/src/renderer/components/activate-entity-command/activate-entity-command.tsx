@@ -28,7 +28,7 @@ const NonInjectedActivateEntityCommand = observer(({
     menuPortalTarget={null}
     onChange={(option) => {
       if (option) {
-        broadcastMessage(catalogEntityRunListener, option.value.getId());
+        void broadcastMessage(catalogEntityRunListener, option.value.getId());
         closeCommandOverlay();
       }
     }}

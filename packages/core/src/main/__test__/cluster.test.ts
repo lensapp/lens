@@ -37,7 +37,7 @@ describe("create clusters", () => {
     di.override(normalizedPlatformInjectable, () => "darwin");
     di.override(broadcastConnectionUpdateInjectable, () => async () => {});
     di.override(createCanIInjectable, () => () => () => Promise.resolve(true));
-    di.override(createRequestNamespaceListPermissionsInjectable, () => () => async () => () => true);
+    di.override(createRequestNamespaceListPermissionsInjectable, () => () => () => Promise.resolve(() => true));
     di.override(createListNamespacesInjectable, () => () => () => Promise.resolve([ "default" ]));
     di.override(prometheusHandlerInjectable, () => ({
       getPrometheusDetails: jest.fn(),
@@ -68,7 +68,7 @@ describe("create clusters", () => {
     });
 
     di.override(kubeconfigManagerInjectable, () => ({
-      ensurePath: async () => "/some-proxy-kubeconfig-file",
+      ensurePath: () => Promise.resolve("/some-proxy-kubeconfig-file"),
     } as Partial<KubeconfigManager> as KubeconfigManager));
 
     jest.spyOn(Kubectl.prototype, "ensureKubectl").mockReturnValue(Promise.resolve(true));

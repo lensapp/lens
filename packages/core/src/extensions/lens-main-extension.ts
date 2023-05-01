@@ -61,6 +61,7 @@ export class LensMainExtension extends LensExtension {
    */
   terminalShellEnvModifier?: ShellEnvModifier;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async navigate(pageId?: string, params?: Record<string, any>, frameId?: number) {
     await this.dependencies.navigate(this.id, pageId, params, frameId);
   }

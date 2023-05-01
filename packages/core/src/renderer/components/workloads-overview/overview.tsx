@@ -37,7 +37,7 @@ import eventStoreInjectable from "../events/store.injectable";
 import type { ClusterContext } from "../../cluster-frame-context/cluster-frame-context";
 
 interface Dependencies {
-  detailComponents: IComputedValue<React.ElementType<{}>[]>;
+  detailComponents: IComputedValue<React.ElementType<object>[]>;
   clusterFrameContext: ClusterContext;
   subscribeStores: SubscribeStores;
   podStore: PodStore;

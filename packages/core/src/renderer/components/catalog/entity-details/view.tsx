@@ -19,6 +19,7 @@ import isDevelopmentInjectable from "../../../../common/vars/is-development.inje
 import type { IComputedValue } from "mobx";
 import type { CatalogEntityDetailsComponent } from "./token";
 import catalogEntityDetailItemsInjectable from "./detail-items.injectable";
+import type { KubernetesCluster } from "../../../../common/catalog-entities";
 
 export interface CatalogEntityDetailsProps<Entity extends CatalogEntity> {
   entity: Entity;
@@ -54,13 +55,13 @@ class NonInjectedCatalogEntityDetails<Entity extends CatalogEntity> extends Comp
               title={entity.getName()}
               colorHash={`${entity.getName()}-${entity.getSource()}`}
               size={128}
-              src={entity.spec.icon?.src}
+              src={(entity as KubernetesCluster).spec.icon?.src}
               data-testid="detail-panel-hot-bar-icon"
-              background={entity.spec.icon?.background}
+              background={(entity as KubernetesCluster).spec.icon?.background}
               onClick={onRun}
               className={styles.avatar}
             >
-              {entity.spec.icon?.material && <Icon material={entity.spec.icon?.material}/>}
+              {(entity as KubernetesCluster).spec.icon?.material && <Icon material={(entity as KubernetesCluster).spec.icon?.material}/>}
             </Avatar>
             {entity.isEnabled() && (
               <div className={styles.hint}>

@@ -12,7 +12,6 @@ import fetchInjectable from "../../fetch/fetch.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { flushPromises } from "@k8slens/test-utils";
-import setupAutoRegistrationInjectable from "../../../renderer/before-frame-starts/runnables/setup-auto-registration.injectable";
 import { createMockResponseFromString } from "../../../test-utils/mock-responses";
 import storesAndApisCanBeCreatedInjectable from "../../../renderer/stores-apis-can-be-created.injectable";
 import directoryForUserDataInjectable from "../../app-paths/directory-for-user-data/directory-for-user-data.injectable";
@@ -30,7 +29,7 @@ describe("KubeApi", () => {
   let apiManager: ApiManager;
   let di: DiContainer;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     di = getDiForUnitTesting();
 
     fetchMock = asyncFn();
@@ -40,17 +39,13 @@ describe("KubeApi", () => {
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
-    di.override(hostedClusterInjectable, () => new Cluster({
+    di.override(hostedClusterInjectable, () => Cluster.createForTestingOnly({
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some-path-to-a-kubeconfig",
     }));
 
     apiManager = di.inject(apiManagerInjectable);
-
-    const setupAutoRegistration = di.inject(setupAutoRegistrationInjectable);
-
-    setupAutoRegistration.run();
   });
 
   describe("on first call to IngressApi.get()", () => {
@@ -722,7 +717,7 @@ describe("KubeApi", () => {
           ],
         },
       });
-      horizontalPodAutoscalerApi.get({
+      void horizontalPodAutoscalerApi.get({
         name: "foo",
         namespace: "default",
       });

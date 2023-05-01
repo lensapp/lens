@@ -6,16 +6,17 @@ import React from "react";
 import { observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import type { MutatingWebhookConfiguration } from "@k8slens/kube-object";
+import { MutatingWebhookConfiguration } from "@k8slens/kube-object";
 import { WebhookConfig } from "./webhook-config";
 
-export interface MutatingWebhookDetailsProps extends KubeObjectDetailsProps<MutatingWebhookConfiguration> {
-}
-
 @observer
-export class MutatingWebhookDetails extends React.Component<MutatingWebhookDetailsProps> {
+export class MutatingWebhookDetails extends React.Component<KubeObjectDetailsProps> {
   render() {
     const { object: webhookConfig } = this.props;
+
+    if (!(webhookConfig instanceof MutatingWebhookConfiguration)) {
+      return null;
+    }
 
     return (
       <div className="MutatingWebhookDetails">

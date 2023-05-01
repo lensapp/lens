@@ -25,8 +25,7 @@ enum columnId {
   age = "age",
 }
 
-export interface LeaseProps extends KubeObjectDetailsProps<Lease> {
-}
+export type LeaseProps = KubeObjectDetailsProps<Lease>;
 
 interface Dependencies {
   leaseStore: LeaseStore;

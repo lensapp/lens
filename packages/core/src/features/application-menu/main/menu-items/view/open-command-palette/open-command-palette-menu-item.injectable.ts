@@ -28,7 +28,7 @@ const openCommandPaletteMenuItemInjectable = getInjectable({
          * NOTE: this `?` is required because of a bug in playwright. https://github.com/microsoft/playwright/issues/10554
          */
         if (!event?.triggeredByAccelerator) {
-          broadcastMessage("command-palette:open");
+          void broadcastMessage("command-palette:open");
         }
       },
     };

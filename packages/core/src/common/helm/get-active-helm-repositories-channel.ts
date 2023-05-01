@@ -8,5 +8,5 @@ import { getRequestChannel } from "@k8slens/messaging";
 
 export const getActiveHelmRepositoriesChannel = getRequestChannel<
   void,
-  AsyncResult<HelmRepo[]>
+  AsyncResult<HelmRepo[], string>
 >("get-helm-active-list-repositories");

@@ -11,6 +11,7 @@ import type { FakeExtensionOptions } from "../../renderer/components/test-utils/
 import type { Discover } from "@k8slens/react-testing-library-discovery";
 import { discoverFor } from "@k8slens/react-testing-library-discovery";
 import logErrorInjectable from "../../common/log-error.injectable";
+import { anyString } from "jest-mock-extended";
 
 describe("preferences - navigation to extension specific preferences", () => {
   let builder: ApplicationBuilder;
@@ -27,7 +28,7 @@ describe("preferences - navigation to extension specific preferences", () => {
     beforeEach(async () => {
       logErrorMock = jest.fn();
 
-      builder.beforeWindowStart(({ windowDi }) => {
+      await builder.beforeWindowStart(({ windowDi }) => {
         windowDi.override(logErrorInjectable, () => logErrorMock);
 
         builder.preferences.navigate();
@@ -59,8 +60,8 @@ describe("preferences - navigation to extension specific preferences", () => {
     });
 
     describe("given multiple extensions with specific preferences, when navigating to extension specific preferences page", () => {
-      beforeEach(() => {
-        builder.extensions.enable(
+      beforeEach(async () => {
+        await builder.extensions.enable(
           extensionStubWithExtensionSpecificPreferenceItems,
           someOtherExtensionStubWithExtensionSpecificPreferenceItems,
         );
@@ -94,8 +95,8 @@ describe("preferences - navigation to extension specific preferences", () => {
     });
 
     describe("given multiple extensions with and without specific preferences", () => {
-      beforeEach(() => {
-        builder.extensions.enable(
+      beforeEach(async () => {
+        await builder.extensions.enable(
           extensionStubWithExtensionSpecificPreferenceItems,
           extensionStubWithoutPreferences,
           extensionStubWithShowInPreferencesTab,
@@ -116,8 +117,8 @@ describe("preferences - navigation to extension specific preferences", () => {
     });
 
     describe("when extension with specific preferences is enabled", () => {
-      beforeEach(() => {
-        builder.extensions.enable(extensionStubWithExtensionSpecificPreferenceItems);
+      beforeEach(async () => {
+        await builder.extensions.enable(extensionStubWithExtensionSpecificPreferenceItems);
       });
 
       it("renders", () => {
@@ -167,8 +168,8 @@ describe("preferences - navigation to extension specific preferences", () => {
         });
 
         describe("when extension is disabled", () => {
-          beforeEach(() => {
-            builder.extensions.disable(extensionStubWithExtensionSpecificPreferenceItems);
+          beforeEach(async () => {
+            await builder.extensions.disable(extensionStubWithExtensionSpecificPreferenceItems);
           });
 
           it("renders", () => {
@@ -181,8 +182,8 @@ describe("preferences - navigation to extension specific preferences", () => {
             expect(discovered).toBeNull();
           });
 
-          it("when extension is enabled again, shows the preference page", () => {
-            builder.extensions.enable(extensionStubWithExtensionSpecificPreferenceItems);
+          it("when extension is enabled again, shows the preference page", async () => {
+            await builder.extensions.enable(extensionStubWithExtensionSpecificPreferenceItems);
 
             const { discovered } = discover.getSingleElement(
               "preference-page",
@@ -196,16 +197,12 @@ describe("preferences - navigation to extension specific preferences", () => {
     });
 
     describe("given extension with registered tab", () => {
-      beforeEach(() => {
-        builder.extensions.enable(extensionStubWithRegisteredTab);
+      beforeEach(async () => {
+        await builder.extensions.enable(extensionStubWithRegisteredTab);
       });
 
       it("logs error", () => {
-        expect(
-          logErrorMock.mock.calls[0][0].startsWith(
-            "Tried to create preferences, but encountered references to unknown ids",
-          ),
-        ).toBe(true);
+        expect(logErrorMock).toBeCalledWith(anyString("Tried to create preferences, but encountered references to unknown ids"));
       });
 
       it("renders", () => {
@@ -264,8 +261,8 @@ describe("preferences - navigation to extension specific preferences", () => {
     });
 
     describe("given extensions with tabs having same id", () => {
-      beforeEach(() => {
-        builder.extensions.enable(
+      beforeEach(async () => {
+        await builder.extensions.enable(
           extensionStubWithRegisteredTab,
           extensionStubWithSameRegisteredTab,
         );

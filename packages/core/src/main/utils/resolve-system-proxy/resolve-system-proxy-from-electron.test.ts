@@ -32,7 +32,7 @@ describe("technical: resolve-system-proxy-from-electron", () => {
 
       di.override(
         resolveSystemProxyWindowInjectable,
-        async () => ({
+        () => Promise.resolve({
           webContents: {
             session: {
               resolveProxy: resolveSystemProxyMock,
@@ -59,21 +59,21 @@ describe("technical: resolve-system-proxy-from-electron", () => {
     });
 
     it("when call for proxy, resolves with the proxy", async () => {
-      resolveSystemProxyMock.resolve("some-proxy");
+      await resolveSystemProxyMock.resolve("some-proxy");
 
       expect(await actualPromise).toBe("some-proxy");
     });
   });
 
   describe("given there are unexpected issues, when called with URL", () => {
-    let error: any;
+    let error: unknown;
 
     beforeEach(async () => {
       resolveSystemProxyMock = asyncFn();
 
       di.override(
         resolveSystemProxyWindowInjectable,
-        async () => ({
+        () => Promise.resolve({
           webContents: {
             session: {
               resolveProxy: () => {
@@ -98,7 +98,7 @@ describe("technical: resolve-system-proxy-from-electron", () => {
     });
 
     it("throws error", () => {
-      expect(error.message).toBe("unexpected error");
+      expect((error as Error).message).toBe("unexpected error");
     });
 
     it("logs error", () => {

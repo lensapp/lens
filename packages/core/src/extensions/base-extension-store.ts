@@ -21,21 +21,21 @@ export interface ExtensionStoreParams<T extends object> extends Omit<PersistentS
 }
 
 export abstract class BaseExtensionStore<T extends object> {
-  private static readonly instances = new WeakMap<object, any>();
+  private static readonly instances = new WeakMap<object, unknown>();
 
   /**
    * @deprecated This is a form of global shared state. Just call `new Store(...)`
    */
-  static createInstance<T, R extends any[]>(this: StaticThis<T, R>, ...args: R): T {
+  static createInstance<T, R extends unknown[]>(this: StaticThis<T, R>, ...args: R): T {
     return getOrInsertWith(BaseExtensionStore.instances, this, () =>  new this(...args)) as T;
   }
 
   /**
    * @deprecated This is a form of global shared state. Just call `new Store(...)`
    */
-  static getInstance<T, R extends any[]>(this: StaticThis<T, R>, strict?: true): T;
-  static getInstance<T, R extends any[]>(this: StaticThis<T, R>, strict: false): T | undefined;
-  static getInstance<T, R extends any[]>(this: StaticThis<T, R>, strict = true): T | undefined {
+  static getInstance<T, R extends unknown[]>(this: StaticThis<T, R>, strict?: true): T;
+  static getInstance<T, R extends unknown[]>(this: StaticThis<T, R>, strict: false): T | undefined;
+  static getInstance<T, R extends unknown[]>(this: StaticThis<T, R>, strict = true): T | undefined {
     if (!BaseExtensionStore.instances.has(this) && strict) {
       throw new TypeError(`instance of ${this.name} is not created`);
     }
@@ -72,6 +72,8 @@ export abstract class BaseExtensionStore<T extends object> {
       migrations = {},
       ...params
     } = this.rawParams;
+
+    void _cwd;
 
     this.persistentStorage = this.dependencies.createPersistentStorage({
       ...params,

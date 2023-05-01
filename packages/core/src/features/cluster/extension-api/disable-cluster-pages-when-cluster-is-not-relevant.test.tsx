@@ -20,7 +20,7 @@ describe("disable-cluster-pages-when-cluster-is-not-relevant", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.setEnvironmentToClusterFrame();
+    await builder.setEnvironmentToClusterFrame();
 
     isEnabledForClusterMock = asyncFn();
 
@@ -41,7 +41,7 @@ describe("disable-cluster-pages-when-cluster-is-not-relevant", () => {
 
     rendered = await builder.render();
 
-    builder.extensions.enable(testExtension);
+    await builder.extensions.enable(testExtension);
 
     rendererTestExtension =
       builder.extensions.get("test-extension-id").applicationWindows.only;

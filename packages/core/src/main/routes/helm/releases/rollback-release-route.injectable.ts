@@ -4,18 +4,12 @@
  */
 import { apiPrefix } from "../../../../common/vars";
 import { getRouteInjectable } from "../../../router/router.injectable";
-import Joi from "joi";
-import { payloadValidatedClusterRoute } from "../../../router/route";
+import { payloadWithSchemaClusterRoute } from "../../../router/route";
 import rollbackClusterHelmReleaseInjectable from "../../../helm/helm-service/rollback-helm-release.injectable";
+import { z } from "zod";
 
-interface RollbackReleasePayload {
-  revision: number;
-}
-
-const rollbackReleasePayloadValidator = Joi.object<RollbackReleasePayload, true, RollbackReleasePayload>({
-  revision: Joi
-    .number()
-    .required(),
+const rollbackReleasePayloadValidator = z.object({
+  revision: z.number(),
 });
 
 const rollbackReleaseRouteInjectable = getRouteInjectable({
@@ -24,10 +18,10 @@ const rollbackReleaseRouteInjectable = getRouteInjectable({
   instantiate: (di) => {
     const rollbackRelease = di.inject(rollbackClusterHelmReleaseInjectable);
 
-    return payloadValidatedClusterRoute({
+    return payloadWithSchemaClusterRoute({
       method: "put",
       path: `${apiPrefix}/v2/releases/{namespace}/{name}/rollback`,
-      payloadValidator: rollbackReleasePayloadValidator,
+      payloadSchema: rollbackReleasePayloadValidator,
     })(async ({ cluster, params, payload }) => {
       await rollbackRelease(cluster, { ...params, ...payload });
     });

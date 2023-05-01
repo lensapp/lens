@@ -25,8 +25,7 @@ import addRoleDialogStateInjectable from "./state.injectable";
 import type { ShowCheckedErrorNotification } from "../../../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../../../notifications/show-checked-error.injectable";
 
-export interface AddRoleDialogProps extends Partial<DialogProps> {
-}
+export type AddRoleDialogProps = Partial<DialogProps>;
 
 interface Dependencies {
   closeAddRoleDialog: () => void;
@@ -63,6 +62,8 @@ class NonInjectedAddRoleDialog extends React.Component<AddRoleDialogProps & Depe
   render() {
     const { closeAddRoleDialog, roleStore, state, ...dialogProps } = this.props;
     const header = <h5>Create Role</h5>;
+
+    void roleStore;
 
     return (
       <Dialog

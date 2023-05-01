@@ -43,7 +43,7 @@ class NonInjectedSearchInputUrl extends React.Component<SearchInputUrlProps & De
     this.updateUrl.flush();
   };
 
-  onChange = (val: string, evt: React.ChangeEvent<any>) => {
+  onChange = (val: string, evt: React.ChangeEvent<HTMLInputElement>) => {
     this.setValue(val);
     this.props.onChange?.(val, evt);
   };
@@ -55,6 +55,8 @@ class NonInjectedSearchInputUrl extends React.Component<SearchInputUrlProps & De
 
   render() {
     const { searchUrlParam, ...searchInputProps } = this.props;
+
+    void searchUrlParam;
 
     return (
       <SearchInput

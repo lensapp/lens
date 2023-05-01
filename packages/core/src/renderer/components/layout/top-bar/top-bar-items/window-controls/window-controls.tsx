@@ -13,9 +13,9 @@ import maximizeWindowInjectable from "./maximize-window/maximize-window.injectab
 
 interface Dependencies {
   isLinux: boolean;
-  toggleMaximizeWindow: () => void;
-  closeWindow: () => void;
-  minimizeWindow: () => void;
+  toggleMaximizeWindow: () => Promise<void>;
+  closeWindow: () => Promise<void>;
+  minimizeWindow: () => Promise<void>;
 }
 
 const NonInjectedWindowControls = ({
@@ -32,7 +32,7 @@ const NonInjectedWindowControls = ({
     <div
       className={styles.minimize}
       data-testid="window-minimize"
-      onClick={minimizeWindow}
+      onClick={() => void minimizeWindow()}
     >
       <svg shapeRendering="crispEdges" viewBox="0 0 12 12">
         <rect
@@ -47,7 +47,7 @@ const NonInjectedWindowControls = ({
     <div
       className={styles.maximize}
       data-testid="window-maximize"
-      onClick={toggleMaximizeWindow}
+      onClick={() => void toggleMaximizeWindow()}
     >
       <svg shapeRendering="crispEdges" viewBox="0 0 12 12">
         <rect
@@ -64,7 +64,7 @@ const NonInjectedWindowControls = ({
     <div
       className={styles.close}
       data-testid="window-close"
-      onClick={closeWindow}
+      onClick={() => void closeWindow()}
     >
       <svg shapeRendering="crispEdges" viewBox="0 0 12 12">
         <polygon

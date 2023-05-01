@@ -48,19 +48,19 @@ const updateHelmReleaseInjectable = getInjectable({
           "--kubeconfig", proxyKubeconfigPath,
         ]);
 
-        if (result.callWasSuccessful === false) {
+        if (result.isOk === false) {
           throw result.error; // keep the same interface
         }
 
         const releaseResult = await getHelmRelease({ cluster, releaseName, namespace });
 
-        if (!releaseResult.callWasSuccessful) {
+        if (!releaseResult.isOk) {
           throw releaseResult.error; // keep the same interface
         }
 
         return {
-          log: result.response,
-          release: releaseResult.response,
+          log: result.value,
+          release: releaseResult.value,
         };
       } finally {
         await removePath(valuesFilePath);

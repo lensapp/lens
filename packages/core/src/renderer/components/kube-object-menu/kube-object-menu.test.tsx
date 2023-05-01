@@ -6,7 +6,6 @@ import React from "react";
 import type { RenderResult } from "@testing-library/react";
 import { screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { KubeObject } from "@k8slens/kube-object";
 import userEvent from "@testing-library/user-event";
 import { getInjectable } from "@ogre-tools/injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
@@ -30,6 +29,7 @@ import directoryForUserDataInjectable from "../../../common/app-paths/directory-
 import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
 import clustersStateInjectable from "../../../features/cluster/storage/common/state.injectable";
 import activeEntityIdInjectable from "../../api/catalog/entity/active-entity-id.injectable";
+import { createKubeObject } from "@k8slens/kube-object";
 
 // TODO: make `animated={false}` not required to make tests deterministic
 describe("kube-object-menu", () => {
@@ -43,7 +43,7 @@ describe("kube-object-menu", () => {
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
     di.override(directoryForTempInjectable, () => "/some-directory-for-temp");
 
-    di.inject(clustersStateInjectable).set("some-cluster-id", new Cluster({
+    di.inject(clustersStateInjectable).set("some-cluster-id", Cluster.createForTestingOnly({
       id: "some-cluster-id",
       contextName: "some-context-name",
       kubeConfigPath: "/some-path-to-a-kubeconfig",
@@ -64,7 +64,7 @@ describe("kube-object-menu", () => {
       apiManagerInjectable,
       () =>
         ({
-          getStore: (api: any) => void api,
+          getStore: (api: unknown) => void api,
         } as ApiManager),
     );
 
@@ -97,8 +97,8 @@ describe("kube-object-menu", () => {
     let result: RenderResult;
     let removeActionMock: AsyncFnMock<() => void>;
 
-    beforeEach(async () => {
-      const objectStub = KubeObject.create({
+    beforeEach(() => {
+      const objectStub = createKubeObject({
         apiVersion: "some-api-version",
         kind: "some-kind",
         metadata: {
@@ -134,7 +134,7 @@ describe("kube-object-menu", () => {
 
     describe("when rerendered with different kube object", () => {
       beforeEach(() => {
-        const newObjectStub = KubeObject.create({
+        const newObjectStub = createKubeObject({
           apiVersion: "some-other-api-version",
           kind: "some-other-kind",
           metadata: {
@@ -213,8 +213,8 @@ describe("kube-object-menu", () => {
   describe("given kube object with namespace", () => {
     let baseElement: Element;
 
-    beforeEach(async () => {
-      const objectStub = KubeObject.create({
+    beforeEach(() => {
+      const objectStub = createKubeObject({
         apiVersion: "some-api-version",
         kind: "some-kind",
         metadata: {
@@ -251,8 +251,8 @@ describe("kube-object-menu", () => {
   describe("given kube object without namespace", () => {
     let baseElement: Element;
 
-    beforeEach(async () => {
-      const objectStub = KubeObject.create({
+    beforeEach(() => {
+      const objectStub = createKubeObject({
         apiVersion: "some-api-version",
         kind: "some-kind",
         metadata: {

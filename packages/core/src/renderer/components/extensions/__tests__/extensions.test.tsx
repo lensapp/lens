@@ -53,7 +53,7 @@ describe("Extensions", () => {
     deleteFileMock = jest.fn();
     di.override(removePathInjectable, () => deleteFileMock);
 
-    downloadBinary = jest.fn().mockImplementation((url) => { throw new Error(`Unexpected call to downloadJson for url=${url}`); });
+    downloadBinary = jest.fn().mockImplementation((url: string) => { throw new Error(`Unexpected call to downloadJson for url=${url}`); });
     di.override(downloadBinaryInjectable, () => downloadBinary);
 
     extensionLoader = di.inject(extensionLoaderInjectable);
@@ -101,7 +101,7 @@ describe("Extensions", () => {
     // Approve confirm dialog
     fireEvent.click(await screen.findByText("Yes"));
 
-    await waitFor(async () => {
+    await waitFor(() => {
       expect(extensionDiscovery.uninstallExtension).toHaveBeenCalled();
       fireEvent.click(menuTrigger);
       expect(screen.getByText("Disable")).toHaveAttribute("aria-disabled", "true");
@@ -143,7 +143,7 @@ describe("Extensions", () => {
       await when(() => doResolve.get());
 
       return {
-        callWasSuccessful: false,
+        isOk: false,
         error: "unknown location",
       };
     });
@@ -160,7 +160,7 @@ describe("Extensions", () => {
     expect(container.querySelector(".Spinner")).toBeInTheDocument();
   });
 
-  it("does not display the spinner while extensions are not loading", async () => {
+  it("does not display the spinner while extensions are not loading", () => {
     extensionDiscovery.isLoaded = true;
     const { container } = render(<Extensions />);
 

@@ -9,16 +9,17 @@ import React from "react";
 import { observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import type { Lease } from "@k8slens/kube-object";
-
-export interface LeaseDetailsProps extends KubeObjectDetailsProps<Lease> {
-}
+import { Lease } from "@k8slens/kube-object";
 
 @observer
-export class LeaseDetails extends React.Component<LeaseDetailsProps> {
+export class LeaseDetails extends React.Component<KubeObjectDetailsProps> {
 
   render() {
     const { object: lease } = this.props;
+
+    if (!(lease instanceof Lease)) {
+      return null;
+    }
 
     return (
       <div className="LeaseDetails">

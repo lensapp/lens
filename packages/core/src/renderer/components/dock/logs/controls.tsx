@@ -34,7 +34,7 @@ export const LogControls = observer(({ model }: LogControlsProps) => {
 
   const togglePrevious = () => {
     model.updateLogTabData({ showPrevious: !previous });
-    model.reloadLogs();
+    void model.reloadLogs();
   };
 
   return (

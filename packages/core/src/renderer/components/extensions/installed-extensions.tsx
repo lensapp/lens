@@ -11,7 +11,6 @@ import { MenuActions, MenuItem } from "../menu";
 import { Spinner } from "../spinner";
 import { cssNames } from "@k8slens/utilities";
 import { observer } from "mobx-react";
-import type { Row } from "react-table";
 import extensionDiscoveryInjectable from "../../../extensions/extension-discovery/extension-discovery.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
@@ -26,9 +25,6 @@ import type { EnableExtension } from "./enable-extension.injectable";
 import enableExtensionInjectable from "./enable-extension.injectable";
 import userExtensionsInjectable from "./user-extensions/user-extensions.injectable";
 import type { ExtensionDiscovery } from "../../../extensions/extension-discovery/extension-discovery";
-
-export interface InstalledExtensionsProps {
-}
 
 interface Dependencies {
   extensionDiscovery: ExtensionDiscovery;
@@ -54,7 +50,7 @@ const NonInjectedInstalledExtensions = observer(({
   confirmUninstallExtension,
   enableExtension,
   disableExtension,
-}: Dependencies & InstalledExtensionsProps) => {
+}: Dependencies) => {
   if (!extensionDiscovery.isLoaded) {
     return <div><Spinner center /></div>;
   }
@@ -88,7 +84,7 @@ const NonInjectedInstalledExtensions = observer(({
             Header: "Name",
             accessor: "extension",
             width: 200,
-            sortType: (rowA: Row, rowB: Row) => { // Custom sorting for extension name
+            sortType: (rowA, rowB) => { // Custom sorting for extension name
               const nameA = extensions[rowA.index].manifest.name;
               const nameB = extensions[rowB.index].manifest.name;
 
@@ -153,7 +149,7 @@ const NonInjectedInstalledExtensions = observer(({
 
                 <MenuItem
                   disabled={isUninstalling}
-                  onClick={() => confirmUninstallExtension(extension)}
+                  onClick={() => void confirmUninstallExtension(extension)}
                 >
                   <Icon material="delete" />
                   <span className="title" aria-disabled={isUninstalling}>Uninstall</span>
@@ -173,7 +169,7 @@ const NonInjectedInstalledExtensions = observer(({
   );
 });
 
-export const InstalledExtensions = withInjectables<Dependencies, InstalledExtensionsProps>(NonInjectedInstalledExtensions, {
+export const InstalledExtensions = withInjectables<Dependencies>(NonInjectedInstalledExtensions, {
   getProps: (di, props) => ({
     ...props,
     extensionDiscovery: di.inject(extensionDiscoveryInjectable),

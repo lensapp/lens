@@ -9,8 +9,9 @@ import { TextEncoder, TextDecoder as TextDecoderNode } from "util";
 import glob from "glob";
 import path from "path";
 import { enableMapSet, setAutoFreeze } from "immer";
-import type * as K8slensTooltip from "@k8slens/tooltip";
 import React from "react";
+import { isObject } from "@k8slens/utilities";
+import type { TooltipDecoratorProps } from "@k8slens/tooltip";
 
 declare global {
   interface InjectablePaths {
@@ -39,9 +40,9 @@ global.setImmediate = setImmediate;
 
 global.fail = ((error = "Test failed without explicit error") => {
   console.error(error);
-}) as any;
+}) as typeof global.fail;
 
-process.on("unhandledRejection", (err: any) => {
+process.on("unhandledRejection", (err) => {
   global.fail(err);
 });
 
@@ -55,24 +56,30 @@ global.ResizeObserver = class {
 };
 
 jest.mock("./renderer/components/monaco-editor/monaco-editor");
+// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock("@k8slens/tooltip", () => ({
   ...jest.requireActual("@k8slens/tooltip"),
-  withTooltip: (Target => ({ tooltip, tooltipOverrideDisabled, ...props }: any) => {
-    if (tooltip) {
-      const testId = props["data-testid"];
+  withTooltip <TargetProps>(Target: TargetProps extends Pick<TooltipDecoratorProps, "id" | "children"> ? React.FunctionComponent<TargetProps> : never): React.FunctionComponent<TargetProps & TooltipDecoratorProps> {
+    return ({ tooltip, tooltipOverrideDisabled, ...props }) => {
+      void tooltipOverrideDisabled;
+      const ResolvedTarget = Target as React.FunctionComponent<TargetProps>;
 
-      return (
-        <>
-          <Target {...props} />
-          <div data-testid={testId && `tooltip-content-for-${testId}`}>
-            {tooltip.children || tooltip}
-          </div>
-        </>
-      );
-    }
+      if (tooltip) {
+        const testId = props["data-testid"] as string | undefined;
 
-    return <Target {...props} />;
-  }) as typeof K8slensTooltip.withTooltip,
+        return (
+          <>
+            <ResolvedTarget {...props as (TargetProps & { children?: React.ReactNode })} />
+            <div data-testid={testId && `tooltip-content-for-${testId}`}>
+              {isObject(tooltip) ? tooltip.children : tooltip}
+            </div>
+          </>
+        );
+      }
+
+      return <ResolvedTarget {...props as (TargetProps & { children?: React.ReactNode })} />;
+    };
+  },
 }));
 jest.mock("monaco-editor");
 

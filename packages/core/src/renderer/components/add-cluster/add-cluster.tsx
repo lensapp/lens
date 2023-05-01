@@ -49,7 +49,11 @@ function getContexts(config: KubeConfig): Map<string, Option> {
     splitConfig(config)
       .map(({ config, validationResult }) => [config.currentContext, {
         config,
-        error: validationResult.error?.toString(),
+        error: (
+          !validationResult.isOk
+            ? validationResult.error?.toString()
+            : undefined
+        ),
       }]),
   );
 }
@@ -78,36 +82,41 @@ class NonInjectedAddCluster extends React.Component<Dependencies> {
   }
 
   readonly refreshContexts = debounce(action(() => {
-    const { config, error } = loadConfigFromString(this.customConfig.trim() || "{}");
+    const result = loadConfigFromString(this.customConfig.trim() || "{}");
 
-    this.kubeContexts.replace(getContexts(config));
+    if (!result.isOk) {
+      this.errors.push(result.error.toString());
+    } else {
+      const contexts = getContexts(result.value);
 
-    if (error) {
-      this.errors.push(error.toString());
+      this.kubeContexts.replace(contexts);
+
+      if (contexts.size === 0) {
+        this.errors.push('No contexts defined, either missing the "contexts" field, or it is empty.');
+      }
     }
 
-    if (config.contexts.length === 0) {
-      this.errors.push('No contexts defined, either missing the "contexts" field, or it is empty.');
-    }
   }), 500);
 
-  addClusters = action(async () => {
+  addClusters = () => {
     this.isWaiting = true;
     this.props.emitAppEvent({ name: "cluster-add", action: "click" });
 
-    try {
-      const absPath = this.props.getCustomKubeConfigDirectory(uuid.v4());
+    void (async () => {
+      try {
+        const absPath = this.props.getCustomKubeConfigDirectory(uuid.v4());
 
-      await fse.ensureDir(this.props.getDirnameOfPath(absPath));
-      await fse.writeFile(absPath, this.customConfig.trim(), { encoding: "utf-8", mode: 0o600 });
+        await fse.ensureDir(this.props.getDirnameOfPath(absPath));
+        await fse.writeFile(absPath, this.customConfig.trim(), { encoding: "utf-8", mode: 0o600 });
 
-      this.props.showSuccessNotification(`Successfully added ${this.kubeContexts.size} new cluster(s)`);
+        this.props.showSuccessNotification(`Successfully added ${this.kubeContexts.size} new cluster(s)`);
 
-      return this.props.navigateToCatalog();
-    } catch (error) {
-      this.props.showErrorNotification(`Failed to add clusters: ${error}`);
-    }
-  });
+        return this.props.navigateToCatalog();
+      } catch (error) {
+        this.props.showErrorNotification(`Failed to add clusters: ${String(error)}`);
+      }
+    })();
+  };
 
   render() {
     return (

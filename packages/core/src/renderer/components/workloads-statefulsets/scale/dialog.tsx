@@ -23,8 +23,7 @@ import type { ShowCheckedErrorNotification } from "../../notifications/show-chec
 import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
 import type { StatefulSetApi } from "@k8slens/kube-api";
 
-export interface StatefulSetScaleDialogProps extends Partial<DialogProps> {
-}
+export type StatefulSetScaleDialogProps = Partial<DialogProps>;
 
 interface Dependencies {
   statefulSetApi: StatefulSetApi;

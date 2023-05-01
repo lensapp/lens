@@ -158,7 +158,9 @@ export interface BaseIconProps {
   "data-testid"?: string;
 }
 
-export interface IconProps extends React.HTMLAttributes<any>, BaseIconProps {
+export interface IconProps
+  extends React.HTMLAttributes<Element>,
+    BaseIconProps {
   children?: StrictReactNode;
 }
 
@@ -204,7 +206,7 @@ const RawIcon = (props: IconProps & Dependencies) => {
       onClick?.(event);
     }
   };
-  const boundOnKeyDown = (event: React.KeyboardEvent<any>) => {
+  const boundOnKeyDown = (event: React.KeyboardEvent) => {
     switch (event.nativeEvent.code) {
       case "Space":
 
@@ -240,7 +242,7 @@ const RawIcon = (props: IconProps & Dependencies) => {
     tabIndex: isInteractive && focusable && !disabled ? 0 : undefined,
     style: size
       ? ({
-          "--size": size + (isNumber(size) ? "px" : ""),
+          "--size": `${size}${isNumber(size) ? "px" : ""}`,
         } as React.CSSProperties)
       : undefined,
     ...elemProps,

@@ -23,7 +23,7 @@ describe("Showing correct entity settings", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.afterWindowStart(async ({ windowDi }) => {
+    await builder.afterWindowStart(async ({ windowDi }) => {
       clusterEntity = new KubernetesCluster({
         metadata: {
           labels: {},

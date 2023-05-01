@@ -48,7 +48,7 @@ export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps
     model.updateLogTabData({
       selectedContainer: option.value.name,
     });
-    model.reloadLogs();
+    void model.reloadLogs();
   };
 
   const onPodChange = (option: SingleValue<SelectOption<Pod>>) => {
@@ -61,7 +61,7 @@ export const LogResourceSelector = observer(({ model }: LogResourceSelectorProps
       selectedContainer: option.value.getAllContainers()[0]?.name,
     });
     model.renameTab(`Pod ${option.value.getName()}`);
-    model.reloadLogs();
+    void model.reloadLogs();
   };
 
   const containerSelectOptions = [

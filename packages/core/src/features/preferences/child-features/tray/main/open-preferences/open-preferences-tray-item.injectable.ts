@@ -27,12 +27,8 @@ const openPreferencesTrayItemInjectable = getInjectable({
 
       click: pipeline(
         navigateToPreferences,
-
         withErrorLoggingFor(() => "[TRAY]: Opening of preferences failed."),
-
-        // TODO: Find out how to improve typing so that instead of
-        // x => withErrorSuppression(x) there could only be withErrorSuppression
-        (x) => withErrorSuppression(x),
+        withErrorSuppression,
       ),
     };
   },

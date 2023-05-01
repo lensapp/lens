@@ -22,13 +22,13 @@ const getHelmReleaseResourcesInjectable = getInjectable({
     return async (name, namespace, kubeconfigPath) => {
       const result = await requestHelmManifest(name, namespace, kubeconfigPath);
 
-      if (!result.callWasSuccessful) {
+      if (!result.isOk) {
         return result;
       }
 
       return {
-        callWasSuccessful: true,
-        response: result.response.flatMap(item => (
+        isOk: true,
+        value: result.value.flatMap(item => (
           Array.isArray(item.items)
             ? (item as KubeJsonApiDataList).items
             : item as KubeJsonApiData

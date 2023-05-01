@@ -18,7 +18,7 @@ describe("quitting the app using application menu", () => {
 
       builder = getApplicationBuilder();
 
-      builder.beforeApplicationStart(({ mainDi }) => {
+      await builder.beforeApplicationStart(({ mainDi }) => {
         requestQuitOfAppMock = jest.fn();
         mainDi.override(requestQuitOfAppInjectable, () => requestQuitOfAppMock);
       });

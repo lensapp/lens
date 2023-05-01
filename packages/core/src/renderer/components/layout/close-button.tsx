@@ -9,8 +9,7 @@ import type { HTMLAttributes } from "react";
 import React from "react";
 import { Icon } from "@k8slens/icon";
 
-export interface CloseButtonProps extends HTMLAttributes<HTMLDivElement> {
-}
+export type CloseButtonProps = HTMLAttributes<HTMLDivElement>;
 
 export function CloseButton(props: CloseButtonProps) {
   return (

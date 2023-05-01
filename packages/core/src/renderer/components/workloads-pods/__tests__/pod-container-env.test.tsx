@@ -24,13 +24,13 @@ describe("<ContainerEnv />", () => {
     const di = getDiForUnitTesting();
 
     secretStore = ({
-      load: jest.fn().mockImplementation(async () => {
+      load: jest.fn().mockImplementation(() => {
         return {} as Secret;
       }),
       getByName: jest.fn(),
     });
     configMapStore = ({
-      load: jest.fn().mockImplementation(async () => {
+      load: jest.fn().mockImplementation(() => {
         return {} as ConfigMap;
       }),
       getByName: jest.fn(),

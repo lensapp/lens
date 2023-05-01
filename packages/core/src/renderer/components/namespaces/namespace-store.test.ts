@@ -104,14 +104,14 @@ describe("NamespaceStore", () => {
   let di: DiContainer;
   let namespaceStore: NamespaceStore;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     di = getDiForUnitTesting();
 
     di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
-    di.override(hostedClusterInjectable, () => new Cluster({
+    di.override(hostedClusterInjectable, () => Cluster.createForTestingOnly({
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some-path-to-a-kubeconfig",

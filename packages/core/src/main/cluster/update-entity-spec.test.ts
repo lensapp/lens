@@ -27,7 +27,7 @@ describe("update-entity-spec", () => {
 
     updateEntitySpec = di.inject(updateEntitySpecInjectable);
 
-    cluster = new Cluster({
+    cluster = Cluster.createForTestingOnly({
       id: "some-id",
       contextName: "some-context",
       kubeConfigPath: "minikube-config.yml",

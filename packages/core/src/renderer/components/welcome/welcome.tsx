@@ -116,7 +116,7 @@ const NonInjectedWelcome = observer(({
                 <li
                   key={index}
                   className="flex grid-12"
-                  onClick={() => item.click()}
+                  onClick={() => void item.click()}
                 >
                   <Icon material={item.icon} className="box col-1" />
                   <a className="box col-10">

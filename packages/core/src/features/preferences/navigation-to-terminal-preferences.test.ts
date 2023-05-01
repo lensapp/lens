@@ -9,10 +9,10 @@ import type { Discover } from "@k8slens/react-testing-library-discovery";
 import { discoverFor } from "@k8slens/react-testing-library-discovery";
 
 describe("preferences - navigation to terminal preferences", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
 
   beforeEach(() => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
   });
 
   describe("given in preferences, when rendered", () => {
@@ -20,11 +20,11 @@ describe("preferences - navigation to terminal preferences", () => {
     let discover: Discover;
 
     beforeEach(async () => {
-      applicationBuilder.beforeWindowStart(() => {
-        applicationBuilder.preferences.navigate();
+      await builder.beforeWindowStart(() => {
+        builder.preferences.navigate();
       });
 
-      rendered = await applicationBuilder.render();
+      rendered = await builder.render();
 
       discover = discoverFor(() => rendered);
     });
@@ -44,7 +44,7 @@ describe("preferences - navigation to terminal preferences", () => {
 
     describe("when navigating to terminal preferences using navigation", () => {
       beforeEach(() => {
-        applicationBuilder.preferences.navigation.click("terminal");
+        builder.preferences.navigation.click("terminal");
       });
 
       it("renders", () => {

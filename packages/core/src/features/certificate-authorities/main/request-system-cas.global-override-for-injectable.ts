@@ -6,4 +6,4 @@
 import { getGlobalOverride } from "@k8slens/test-utils";
 import requestSystemCAsInjectable from "./request-system-cas.injectable";
 
-export default getGlobalOverride(requestSystemCAsInjectable, () => async () => []);
+export default getGlobalOverride(requestSystemCAsInjectable, () => () => []);

@@ -47,11 +47,8 @@ const initRootFrameInjectable = getInjectable({
 
       bindProtocolAddRouteHandlers();
 
-      window.addEventListener("offline", () =>
-        broadcastMessage("network:offline"),
-      );
-
-      window.addEventListener("online", () => broadcastMessage("network:online"));
+      window.addEventListener("offline", () => void broadcastMessage("network:offline"));
+      window.addEventListener("online", () => void broadcastMessage("network:online"));
 
       registerIpcListeners();
     };

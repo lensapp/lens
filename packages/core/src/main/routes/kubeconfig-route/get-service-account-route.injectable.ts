@@ -19,7 +19,16 @@ const getServiceAccountRouteInjectable = getRouteInjectable({
     path: `${apiPrefix}/kubeconfig/service-account/{namespace}/{account}`,
   })(async ({ params, cluster }) => {
     const loadProxyKubeconfig = di.inject(loadProxyKubeconfigInjectable, cluster);
-    const proxyKubeconfig = await loadProxyKubeconfig();
+    const result = await loadProxyKubeconfig();
+
+    if (!result.isOk) {
+      return {
+        error: `Proxy kubeconfig for ${cluster.name.get()} failed: ${result.error.toString()}`,
+        statusCode: 404,
+      };
+    }
+
+    const proxyKubeconfig = result.value;
     const client = proxyKubeconfig.makeApiClient(CoreV1Api);
     const secretList = await client.listNamespacedSecret(params.namespace);
 

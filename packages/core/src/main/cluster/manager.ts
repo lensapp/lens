@@ -5,8 +5,8 @@
 
 import "../../common/ipc/cluster";
 import type { IComputedValue, IObservableValue, ObservableSet } from "mobx";
-import { action, makeObservable, observe, reaction, toJS } from "mobx";
-import type { Cluster } from "../../common/cluster/cluster";
+import { runInAction, action, makeObservable, observe, reaction, toJS } from "mobx";
+import { Cluster } from "../../common/cluster/cluster";
 import { isKubernetesCluster, KubernetesCluster, LensKubernetesClusterStatus } from "../../common/catalog-entities/kubernetes-cluster";
 import { ipcMainOn } from "../../common/ipc";
 import { once } from "lodash";
@@ -18,8 +18,6 @@ import type { UpdateEntitySpec } from "./update-entity-spec.injectable";
 import type { ClusterConnection } from "./cluster-connection.injectable";
 import type { GetClusterById } from "../../features/cluster/storage/common/get-by-id.injectable";
 import type { AddCluster } from "../../features/cluster/storage/common/add.injectable";
-
-const logPrefix = "[CLUSTER-MANAGER]:";
 
 const lensSpecificClusterStatuses: Set<string> = new Set(Object.values(LensKubernetesClusterStatus));
 
@@ -84,13 +82,14 @@ export class ClusterManager {
     ipcMainOn("network:online", this.onNetworkOnline);
   });
 
-  @action
   protected updateCatalog(clusters: Cluster[]) {
     this.dependencies.logger.debug("[CLUSTER-MANAGER]: updating catalog from cluster store");
 
-    for (const cluster of clusters) {
-      this.updateEntityFromCluster(cluster);
-    }
+    runInAction(() => {
+      for (const cluster of clusters) {
+        this.updateEntityFromCluster(cluster);
+      }
+    });
   }
 
   protected updateEntityFromCluster(cluster: Cluster) {
@@ -118,31 +117,31 @@ export class ClusterManager {
     } else {
       entity.status.phase = (() => {
         if (!cluster) {
-          this.dependencies.logger.silly(`${logPrefix} setting entity ${entity.getName()} to DISCONNECTED, reason="no cluster"`);
+          this.dependencies.logger.silly(`setting entity ${entity.getName()} to DISCONNECTED, reason="no cluster"`);
 
           return LensKubernetesClusterStatus.DISCONNECTED;
         }
 
         if (cluster.accessible.get()) {
-          this.dependencies.logger.silly(`${logPrefix} setting entity ${entity.getName()} to CONNECTED, reason="cluster is accessible"`);
+          this.dependencies.logger.silly(`setting entity ${entity.getName()} to CONNECTED, reason="cluster is accessible"`);
 
           return LensKubernetesClusterStatus.CONNECTED;
         }
 
         if (!cluster.disconnected.get()) {
-          this.dependencies.logger.silly(`${logPrefix} setting entity ${entity.getName()} to CONNECTING, reason="cluster is not disconnected"`);
+          this.dependencies.logger.silly(`setting entity ${entity.getName()} to CONNECTING, reason="cluster is not disconnected"`);
 
           return LensKubernetesClusterStatus.CONNECTING;
         }
 
         // Extensions are not allowed to use the Lens specific status phases
         if (!lensSpecificClusterStatuses.has(entity?.status?.phase)) {
-          this.dependencies.logger.silly(`${logPrefix} not clearing entity ${entity.getName()} status, reason="custom string"`);
+          this.dependencies.logger.silly(`not clearing entity ${entity.getName()} status, reason="custom string"`);
 
           return entity.status.phase;
         }
 
-        this.dependencies.logger.silly(`${logPrefix} setting entity ${entity.getName()} to DISCONNECTED, reason="fallthrough"`);
+        this.dependencies.logger.silly(`setting entity ${entity.getName()} to DISCONNECTED, reason="fallthrough"`);
 
         return LensKubernetesClusterStatus.DISCONNECTED;
       })();
@@ -157,12 +156,16 @@ export class ClusterManager {
       const cluster = this.dependencies.getClusterById(entity.getId());
 
       if (!cluster) {
-        this.dependencies.addCluster({
+        const result = this.dependencies.addCluster({
           id: entity.getId(),
           kubeConfigPath: entity.spec.kubeconfigPath,
           contextName: entity.spec.kubeconfigContext,
           accessibleNamespaces: entity.spec.accessibleNamespaces ?? [],
         });
+
+        if (result.isOk === false) {
+          this.dependencies.logger.warn(`failed to sync cluster "${entity.getId()}" from catalog: ${result.error.toString()}`);
+        }
       } else {
         cluster.kubeConfigPath.set(entity.spec.kubeconfigPath);
         cluster.contextName.set(entity.spec.kubeconfigContext);
@@ -193,7 +196,7 @@ export class ClusterManager {
   }
 
   protected onNetworkOffline = async () => {
-    this.dependencies.logger.info(`${logPrefix} network is offline`);
+    this.dependencies.logger.info(`network is offline`);
 
     await Promise.allSettled(
       this.dependencies
@@ -212,7 +215,7 @@ export class ClusterManager {
   };
 
   protected onNetworkOnline = async () => {
-    this.dependencies.logger.info(`${logPrefix} network is online`);
+    this.dependencies.logger.info(`network is online`);
 
     await Promise.allSettled(
       this.dependencies

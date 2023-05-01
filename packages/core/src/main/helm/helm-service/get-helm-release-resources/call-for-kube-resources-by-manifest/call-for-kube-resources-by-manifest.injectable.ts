@@ -53,13 +53,13 @@ const callForKubeResourcesByManifestInjectable = getInjectable({
         ],
       });
 
-      if (!result.callWasSuccessful) {
+      if (!result.isOk) {
         const errorMessage = getErrorMessage(result.error);
 
         throw new Error(errorMessage);
       }
 
-      const output = JSON.parse(result.response) as { items: JsonObject[] };
+      const output = JSON.parse(result.value) as { items: JsonObject[] };
 
       return output.items;
     };

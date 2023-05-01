@@ -7,7 +7,7 @@
  * @deprecated This function never works
  * @returns false
  */
-export function isAllowedResource(...args: any[]) {
+export function isAllowedResource(...args: unknown[]) {
   return Boolean(void args);
 }
 

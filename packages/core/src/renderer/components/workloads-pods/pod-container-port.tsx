@@ -51,12 +51,12 @@ class NonInjectedPodContainerPort extends React.Component<PodContainerPortProps 
   constructor(props: PodContainerPortProps & Dependencies) {
     super(props);
     makeObservable(this);
-    this.checkExistingPortForwarding();
+    void this.checkExistingPortForwarding();
   }
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => this.props.pod, () => this.checkExistingPortForwarding()),
+      reaction(() => this.props.pod, () => void this.checkExistingPortForwarding()),
     ]);
   }
 
@@ -129,7 +129,7 @@ class NonInjectedPodContainerPort extends React.Component<PodContainerPortProps 
     } catch (error) {
       this.props.logger.error("[POD-CONTAINER-PORT]:", error, portForward);
     } finally {
-      this.checkExistingPortForwarding();
+      await this.checkExistingPortForwarding();
       this.waiting = false;
     }
   }
@@ -152,7 +152,7 @@ class NonInjectedPodContainerPort extends React.Component<PodContainerPortProps 
     } catch (error) {
       showErrorNotification(`Error occurred stopping the port-forward from port ${portForward.forwardPort}.`);
     } finally {
-      this.checkExistingPortForwarding();
+      await this.checkExistingPortForwarding();
       this.forwardPort = 0;
       this.waiting = false;
     }
@@ -161,7 +161,7 @@ class NonInjectedPodContainerPort extends React.Component<PodContainerPortProps 
   render() {
     const { pod, port } = this.props;
     const { name, containerPort, protocol } = port;
-    const text = `${name ? `${name}: ` : ""}${containerPort}/${protocol}`;
+    const text = `${name ? `${name}: ` : ""}${containerPort}/${protocol ?? ""}`;
 
     const portForwardAction = action(async () => {
       if (this.isPortForwarded) {
@@ -176,16 +176,19 @@ class NonInjectedPodContainerPort extends React.Component<PodContainerPortProps 
           protocol: predictProtocol(port.name),
         };
 
-        this.props.openPortForwardDialog(portForward, { openInBrowser: true, onClose: () => this.checkExistingPortForwarding() });
+        this.props.openPortForwardDialog(portForward, {
+          openInBrowser: true,
+          onClose: () => void this.checkExistingPortForwarding(),
+        });
       }
     });
 
     return (
       <div className={cssNames("PodContainerPort", { waiting: this.waiting })}>
-        <span title="Open in a browser" onClick={() => this.portForward()}>
+        <span title="Open in a browser" onClick={() => void this.portForward()}>
           {text}
         </span>
-        <Button primary onClick={portForwardAction}>
+        <Button primary onClick={() => void portForwardAction()}>
           {" "}
           {this.isPortForwarded ? (this.isActive ? "Stop/Remove" : "Remove") : "Forward..."}
           {" "}

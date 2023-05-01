@@ -17,7 +17,7 @@ describe("<StatusBar />", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.beforeWindowStart(({ windowDi }) => {
+    await builder.beforeWindowStart(({ windowDi }) => {
       windowDi.permitSideEffects(getRandomIdInjectionToken);
       windowDi.unoverride(getRandomIdInjectionToken);
     });
@@ -26,8 +26,8 @@ describe("<StatusBar />", () => {
   });
 
   describe("when an extension is enabled with no status items", () => {
-    beforeEach(() => {
-      builder.extensions.enable({
+    beforeEach(async () => {
+      await builder.extensions.enable({
         id: "some-id",
         name: "some-name",
 
@@ -51,13 +51,13 @@ describe("<StatusBar />", () => {
     [{}],
     {},
   ])("when an extension is enabled with an invalid data type, (%p)", (value) => {
-    beforeEach(() => {
-      builder.extensions.enable({
+    beforeEach(async () => {
+      await builder.extensions.enable({
         id: "some-id",
         name: "some-name",
 
         rendererOptions: {
-          statusBarItems: [value as any],
+          statusBarItems: [value as never],
         },
       });
     });
@@ -68,8 +68,8 @@ describe("<StatusBar />", () => {
   });
 
   describe("when an extension is enabled using a deprecated registration of a plain ReactNode", () => {
-    beforeEach(() => {
-      builder.extensions.enable({
+    beforeEach(async () => {
+      await builder.extensions.enable({
         id: "some-id",
         name: "some-name",
 
@@ -87,8 +87,8 @@ describe("<StatusBar />", () => {
   });
 
   describe("when an extension is enabled using a deprecated registration of a function returning a ReactNode", () => {
-    beforeEach(() => {
-      builder.extensions.enable({
+    beforeEach(async () => {
+      await builder.extensions.enable({
         id: "some-id",
         name: "some-name",
 
@@ -106,8 +106,8 @@ describe("<StatusBar />", () => {
   });
 
   describe("when an extension is enabled specifying the side the elements should be on", () => {
-    beforeEach(() => {
-      builder.extensions.enable({
+    beforeEach(async () => {
+      await builder.extensions.enable({
         id: "some-id",
         name: "some-name",
 
@@ -145,7 +145,7 @@ describe("<StatusBar />", () => {
       expect(result.baseElement).toMatchSnapshot();
     });
 
-    it("sort positioned items properly", async () => {
+    it("sort positioned items properly", () => {
       const elems = result.getAllByTestId("sortedElem");
       const positions = elems.map(elem => elem.textContent);
 

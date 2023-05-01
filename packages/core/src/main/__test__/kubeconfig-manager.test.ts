@@ -43,7 +43,7 @@ describe("kubeconfig manager tests", () => {
   let kubeConfManager: KubeconfigManager;
   let ensureServerMock: AsyncFnMock<() => Promise<void>>;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     di = getDiForUnitTesting();
 
     di.override(directoryForTempInjectable, () => "/some-directory-for-temp");
@@ -85,7 +85,7 @@ describe("kubeconfig manager tests", () => {
       ensureAuthProxyUrl: jest.fn(),
     }));
 
-    clusterFake = new Cluster({
+    clusterFake = Cluster.createForTestingOnly({
       id: "foo",
       contextName: "minikube",
       kubeConfigPath: "/minikube-config.yml",
@@ -109,7 +109,7 @@ describe("kubeconfig manager tests", () => {
   describe("when getPath() is called initially", () => {
     let getPathPromise: Promise<string>;
 
-    beforeEach(async () => {
+    beforeEach(() => {
       getPathPromise = kubeConfManager.ensurePath();
     });
 
@@ -220,7 +220,7 @@ describe("kubeconfig manager tests", () => {
           describe("when calling getPath a second time", () => {
             let getPathPromise: Promise<string>;
 
-            beforeEach(async () => {
+            beforeEach(() => {
               getPathPromise = kubeConfManager.ensurePath();
             });
 
@@ -228,7 +228,7 @@ describe("kubeconfig manager tests", () => {
               expect(pathExistsMock).toBeCalledTimes(1);
             });
 
-            describe("when pathExists resoves to true", () => {
+            describe("when pathExists resoles to true", () => {
               beforeEach(async () => {
                 await pathExistsMock.resolveSpecific(
                   ["/some-directory-for-temp/kubeconfig-foo"],
@@ -241,7 +241,7 @@ describe("kubeconfig manager tests", () => {
               });
             });
 
-            describe("when pathExists resoves to false", () => {
+            describe("when pathExists resoles to false", () => {
               beforeEach(async () => {
                 await pathExistsMock.resolveSpecific(
                   ["/some-directory-for-temp/kubeconfig-foo"],

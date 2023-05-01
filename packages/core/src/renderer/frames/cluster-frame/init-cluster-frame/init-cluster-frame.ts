@@ -9,10 +9,11 @@ import { when } from "mobx";
 import { requestSetClusterFrameId } from "../../../ipc";
 import type { EmitAppEvent } from "../../../../common/app-event-bus/emit-event.injectable";
 import type { Logger } from "@k8slens/logger";
+import type { ExtensionLoading } from "../../../../extensions/extension-loader";
 
 interface Dependencies {
   hostedCluster: Cluster;
-  loadExtensions: () => void;
+  loadExtensions: () => Promise<ExtensionLoading[]>;
   catalogEntityRegistry: CatalogEntityRegistry;
   frameRoutingId: number;
   emitAppEvent: EmitAppEvent;
@@ -49,7 +50,7 @@ export const initClusterFrame =
       // Note that the Catalog might still have unprocessed entities until the extensions are fully loaded.
       when(
         () => catalogEntityRegistry.items.get().length > 0,
-        () => loadExtensions(),
+        () => void loadExtensions(),
         {
           timeout: 15_000,
           onError: (error) => {

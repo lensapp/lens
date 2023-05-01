@@ -120,6 +120,9 @@ export class Tab<D> extends React.PureComponent<TabProps<D>> {
     const { active, disabled, icon, label, value, ...elemProps } = this.props;
     let { className } = this.props;
 
+    void active;
+    void value;
+
     className = cssNames("Tab flex gaps align-center", className, {
       "active": this.isActive,
       disabled,
@@ -130,9 +133,9 @@ export class Tab<D> extends React.PureComponent<TabProps<D>> {
         {...elemProps}
         className={className}
         tabIndex={0}
-        onClick={this.onClick}
-        onFocus={this.onFocus}
-        onKeyDown={this.onKeyDown}
+        onClick={(...args) => this.onClick(...args)}
+        onFocus={(...args) => this.onFocus(...args)}
+        onKeyDown={(...args) => this.onKeyDown(...args)}
         role="tab"
         ref={this.ref}
       >

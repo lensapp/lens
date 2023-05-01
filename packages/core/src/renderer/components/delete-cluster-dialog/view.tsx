@@ -68,7 +68,7 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
       this.props.removeEntityFromAllHotbars(cluster.id);
       await this.props.requestDeleteCluster(cluster.id);
     } catch(error) {
-      this.props.showErrorNotification(`Cannot remove cluster, failed to process config file. ${error}`);
+      this.props.showErrorNotification(`Cannot remove cluster, failed to process config file. ${String(error)}`);
     } finally {
       await this.props.requestClearClusterAsDeleting(cluster.id);
       this.close();
@@ -236,7 +236,7 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
             label="Cancel"
           />
           <Button
-            onClick={() => this.onDelete(state)}
+            onClick={() => void this.onDelete(state)}
             autoFocus
             accent
             label="Delete Context"

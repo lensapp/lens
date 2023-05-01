@@ -36,12 +36,12 @@ const setupKubernetesClusterContextMenuOpenInjectable = getInjectable({
 
                 const loadKubeconfig = di.inject(loadKubeconfigInjectable, cluster);
 
-                const result = await loadKubeconfig(true);
+                const result = await loadKubeconfig();
 
-                if (result.error) {
+                if (result.isOk === false) {
                   logger.error("[KUBERNETES-CLUSTER]: failed to parse kubeconfig file", result.error);
                 } else {
-                  openDeleteClusterDialog(result.config, cluster);
+                  openDeleteClusterDialog(result.value, cluster);
                 }
               },
             });

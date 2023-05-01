@@ -29,7 +29,7 @@ describe("Banners from extensions", () => {
 
   describe("when an extension is enabled with a single welcome banner", () => {
     beforeEach(() => {
-      builder.extensions.enable({
+      await builder.extensions.enable({
         id: "some-id",
         name: "some-name",
         rendererOptions: {
@@ -53,7 +53,7 @@ describe("Banners from extensions", () => {
 
   describe("when an extension is enabled with multiple banners with custom widths", () => {
     beforeEach(() => {
-      builder.extensions.enable({
+      await builder.extensions.enable({
         id: "some-id",
         name: "some-name",
         rendererOptions: {

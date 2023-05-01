@@ -39,6 +39,7 @@ export abstract class IpcMain extends IpcRegistrar {
    * @param listener The function that will be called with the arguments of the broadcast
    * @returns An optional disposer, Lens will cleanup when the extension is disabled or uninstalled even if this is not called
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   listen(channel: string, listener: (event: Electron.IpcRendererEvent, ...args: any[]) => any): Disposer {
     const prefixedChannel = `extensions@${this[IpcPrefix]}:${channel}`;
     const cleanup = once(() => {
@@ -59,6 +60,7 @@ export abstract class IpcMain extends IpcRegistrar {
    * @param channel The name of the RPC
    * @param handler The remote procedure that is called
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handle(channel: string, handler: (event: Electron.IpcMainInvokeEvent, ...args: any[]) => any): void {
     const prefixedChannel = `extensions@${this[IpcPrefix]}:${channel}`;
 

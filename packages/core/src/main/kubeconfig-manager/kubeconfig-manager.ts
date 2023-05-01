@@ -85,7 +85,7 @@ export class KubeconfigManager {
 
       return this.tempFilePath = await this.createProxyKubeconfig();
     } catch (error) {
-      throw new Error(`Failed to create temp config for auth-proxy: ${error}`);
+      throw new Error(`Failed to create temp config for auth-proxy`, { cause: error });
     }
   }
 
@@ -100,7 +100,13 @@ export class KubeconfigManager {
       this.dependencies.directoryForTemp,
       `kubeconfig-${id}`,
     );
-    const kubeConfig = await this.dependencies.loadKubeconfig();
+    const result = await this.dependencies.loadKubeconfig();
+
+    if (result.isOk === false) {
+      throw result.error;
+    }
+
+    const kubeConfig = result.value;
     const proxyConfig: PartialDeep<KubeConfig> = {
       currentContext: contextName,
       clusters: [

@@ -55,7 +55,7 @@ class NonInjectedEndpointSubsetList extends React.Component<EndpointSubsetListPr
           selectable={false}
           virtual={virtual}
           scrollable={false}
-          getTableRow={this.getAddressTableRow}
+          getTableRow={(id) => this.getAddressTableRow(id)}
           className="box grow"
         >
           <TableHead>
@@ -111,7 +111,7 @@ class NonInjectedEndpointSubsetList extends React.Component<EndpointSubsetListPr
               selectable={false}
               virtual={addressesVirtual}
               scrollable={false}
-              getTableRow={this.getAddressTableRow}
+              getTableRow={(id) => this.getAddressTableRow(id)}
               className="box grow"
             >
               <TableHead>
@@ -132,7 +132,7 @@ class NonInjectedEndpointSubsetList extends React.Component<EndpointSubsetListPr
               selectable
               virtual={notReadyAddressesVirtual}
               scrollable={false}
-              getTableRow={this.getNotReadyAddressTableRow}
+              getTableRow={(id) => this.getNotReadyAddressTableRow(id)}
               className="box grow"
             >
               <TableHead>

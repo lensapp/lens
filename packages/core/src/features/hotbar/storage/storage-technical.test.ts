@@ -56,7 +56,7 @@ describe("Hotbars technical tests", () => {
   let addHotbar: AddHotbar;
   let getHotbarById: GetHotbarById;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     di = getDiForUnitTesting();
 
     testCluster = getMockCatalogEntity({
@@ -241,13 +241,13 @@ describe("Hotbars technical tests", () => {
       });
 
       it("throws an error if getId is invalid or returns not a string", () => {
-        expect(() => activeHotbar.get()?.addEntity({} as any)).toThrowError(TypeError);
-        expect(() => activeHotbar.get()?.addEntity({ getId: () => true } as any)).toThrowError(TypeError);
+        expect(() => activeHotbar.get()?.addEntity({} as never)).toThrowError(TypeError);
+        expect(() => activeHotbar.get()?.addEntity({ getId: () => true } as never)).toThrowError(TypeError);
       });
 
       it("throws an error if getName is invalid or returns not a string", () => {
-        expect(() => activeHotbar.get()?.addEntity({ getId: () => "" } as any)).toThrowError(TypeError);
-        expect(() => activeHotbar.get()?.addEntity({ getId: () => "", getName: () => 4 } as any)).toThrowError(TypeError);
+        expect(() => activeHotbar.get()?.addEntity({ getId: () => "" } as never)).toThrowError(TypeError);
+        expect(() => activeHotbar.get()?.addEntity({ getId: () => "", getName: () => 4 } as never)).toThrowError(TypeError);
       });
 
       it("does nothing when item moved to same cell", () => {

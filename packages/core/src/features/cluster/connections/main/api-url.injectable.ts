@@ -27,12 +27,12 @@ const clusterApiUrlInjectable = getInjectable({
       if (!state || state.lastReadMtimeMs >= stats.mtimeMs) {
         const result = await loadValidatedClusterConfig(cluster);
 
-        if (result.error) {
+        if (result.isOk === false) {
           throw result.error;
         }
 
         state = {
-          url: new URL(result.cluster.server),
+          url: new URL(result.value.cluster.server),
           lastReadMtimeMs: stats.mtimeMs,
         };
       }

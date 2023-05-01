@@ -7,4 +7,4 @@ import path from "path";
 import { getGlobalOverride } from "@k8slens/test-utils";
 import joinPathsInjectable from "./join-paths.injectable";
 
-export default getGlobalOverride(joinPathsInjectable, () => path.posix.join);
+export default getGlobalOverride(joinPathsInjectable, () => (...value) => path.posix.join(...value));

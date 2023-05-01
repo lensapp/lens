@@ -182,7 +182,7 @@ export default getGlobalOverride(electronAppInjectable, () => {
       void enabled;
       throw new Error("Method not implemented.");
     }
-    setUserActivity(type: string, userInfo: any, webpageURL?: string | undefined): void {
+    setUserActivity(type: string, userInfo: unknown, webpageURL?: string | undefined): void {
       void type;
       void userInfo;
       void webpageURL;
@@ -201,11 +201,11 @@ export default getGlobalOverride(electronAppInjectable, () => {
     showEmojiPanel(): void {
       throw new Error("Method not implemented.");
     }
-    startAccessingSecurityScopedResource(bookmarkData: string): Function {
+    startAccessingSecurityScopedResource(bookmarkData: string): () => void {
       void bookmarkData;
       throw new Error("Method not implemented.");
     }
-    updateCurrentActivity(type: string, userInfo: any): void {
+    updateCurrentActivity(type: string, userInfo: unknown): void {
       void type;
       void userInfo;
       throw new Error("Method not implemented.");

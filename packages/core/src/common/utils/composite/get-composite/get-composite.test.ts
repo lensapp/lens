@@ -207,7 +207,7 @@ Available parent ids are:
   });
 
   describe("given items with missing parents, when creating composite with handling for missing parents", () => {
-    let composite: Composite<any>;
+    let composite: Composite<unknown>;
     let handleMissingParentIdMock: jest.Mock;
 
     beforeEach(() => {
@@ -290,9 +290,14 @@ Available parent ids are:
       id: undefined,
     };
 
-    const items = [root, someItem, someOtherItem];
+    const items = [root, someItem, someOtherItem] as Data[];
 
-    const getComposite = getCompositeFor<any>({
+    interface Data {
+      id: string;
+      parentId?: string;
+    }
+
+    const getComposite = getCompositeFor<Data>({
       getId: (x) => x.id,
       getParentId: (x) => x.parentId,
     });

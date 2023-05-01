@@ -24,18 +24,18 @@ const TIME_AFTER_UPDATE_MUST_BE_INSTALLED = 1000;
 const TIME_AFTER_INSTALL_STARTS = 5 * 1000;
 
 describe("force user to update when too long since update was downloaded", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let checkForPlatformUpdatesMock: AsyncFnMock<CheckForPlatformUpdates>;
   let downloadPlatformUpdateMock: AsyncFnMock<DownloadPlatformUpdate>;
   let mainDi: DiContainer;
   let quitAndInstallUpdateMock: jest.Mock;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     testUsingFakeTime("2015-10-21T07:28:00Z");
 
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
-    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+    await builder.beforeApplicationStart(({ mainDi }) => {
       checkForPlatformUpdatesMock = asyncFn();
 
       mainDi.override(checkForPlatformUpdatesInjectable, () => checkForPlatformUpdatesMock);
@@ -49,7 +49,7 @@ describe("force user to update when too long since update was downloaded", () =>
       mainDi.override(quitAndInstallUpdateInjectable, () => quitAndInstallUpdateMock);
     });
 
-    applicationBuilder.beforeWindowStart(({ windowDi }) => {
+    await builder.beforeWindowStart(({ windowDi }) => {
       windowDi.unoverride(forceUpdateModalRootFrameComponentInjectable);
       windowDi.permitSideEffects(forceUpdateModalRootFrameComponentInjectable);
 
@@ -57,14 +57,14 @@ describe("force user to update when too long since update was downloaded", () =>
       windowDi.override(secondsAfterInstallStartsInjectable, () => TIME_AFTER_INSTALL_STARTS / 1000);
     });
 
-    mainDi = applicationBuilder.mainDi;
+    mainDi = builder.mainDi;
   });
 
   describe("when application is started", () => {
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      rendered = await applicationBuilder.render();
+      rendered = await builder.render();
     });
 
     describe("given checking for updates and it resolves, when update was downloaded", () => {
@@ -73,7 +73,7 @@ describe("force user to update when too long since update was downloaded", () =>
           processCheckingForUpdatesInjectable,
         );
 
-        processCheckingForUpdates("irrelevant");
+        void processCheckingForUpdates("irrelevant");
 
         await checkForPlatformUpdatesMock.resolve({
           updateWasDiscovered: true,

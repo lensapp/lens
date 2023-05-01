@@ -7,6 +7,7 @@ import type { Injectable } from "@ogre-tools/injectable";
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { IComputedValue } from "mobx";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Injectables = Injectable<any, any, any>[];
 export type Registration = Injectables | IComputedValue<Injectables>;
 export type ExtensionRegistrator = (extension: LegacyLensExtension) => Registration;

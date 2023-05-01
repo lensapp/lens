@@ -23,7 +23,7 @@ export interface Labeled {
   label: string;
 }
 
-export interface MaybeLabeled extends SetOptional<Labeled, "label"> {}
+export type MaybeLabeled = SetOptional<Labeled, "label">;
 
 type ApplicationMenuItemType<T extends string> =
   // Note: "kind" is being used for Discriminated unions of TypeScript to achieve type narrowing.

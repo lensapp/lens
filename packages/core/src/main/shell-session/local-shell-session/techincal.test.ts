@@ -54,12 +54,12 @@ describe("technical unit tests for local shell sessions", () => {
       di.override(spawnPtyInjectable, () => spawnPtyMock);
 
       di.override(createKubectlInjectable, () => () => ({
-        binDir: async () => "/some-kubectl-binary-dir",
+        binDir: () => Promise.resolve("/some-kubectl-binary-dir"),
         getBundledPath: () => "/some-bundled-kubectl-path",
       }) as Partial<Kubectl> as Kubectl);
 
       di.override(kubeconfigManagerInjectable, () => ({
-        ensurePath: async () => "/some-proxy-kubeconfig-file",
+        ensurePath: () => Promise.resolve("/some-proxy-kubeconfig-file"),
       } as Partial<KubeconfigManager> as KubeconfigManager));
 
       openLocalShellSession = di.inject(openLocalShellSessionInjectable);
@@ -97,7 +97,7 @@ describe("technical unit tests for local shell sessions", () => {
           once: jest.fn(() => websocket),
         } as Partial<WebSocket> as WebSocket;
 
-        const cluster = new Cluster({
+        const cluster = Cluster.createForTestingOnly({
           contextName: "some-context-name",
           id: "some-cluster-id",
           kubeConfigPath: "/some-kube-config-path",

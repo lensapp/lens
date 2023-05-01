@@ -18,8 +18,7 @@ import dockStoreInjectable from "../dock/store.injectable";
 import terminalStoreInjectable from "./store.injectable";
 import autoBindReact from "auto-bind/react";
 
-export interface TerminalTabProps extends DockTabProps {
-}
+export type TerminalTabProps = DockTabProps;
 
 interface Dependencies {
   dockStore: DockStore;
@@ -39,13 +38,13 @@ class NonInjectedTerminalTab<Props extends TerminalTabProps & Dependencies> exte
     ]);
   }
 
-  private close() {
+  private close = () => {
     const { tabId } = this;
 
     if (tabId) {
       this.props.dockStore.closeTab(tabId);
     }
-  }
+  };
 
   private get tabId() {
     return this.props.value?.id;
@@ -59,13 +58,13 @@ class NonInjectedTerminalTab<Props extends TerminalTabProps & Dependencies> exte
       : false;
   }
 
-  private reconnect() {
+  private reconnect = () => {
     const { tabId } = this;
 
     if (tabId) {
-      this.props.terminalStore.reconnect(tabId);
+      void this.props.terminalStore.reconnect(tabId);
     }
-  }
+  };
 
   render() {
     const className = cssNames("TerminalTab", this.props.className, {
@@ -73,6 +72,9 @@ class NonInjectedTerminalTab<Props extends TerminalTabProps & Dependencies> exte
     });
 
     const { dockStore, terminalStore, ...tabProps } = this.props;
+
+    void dockStore;
+    void terminalStore;
 
     return (
       <DockTab

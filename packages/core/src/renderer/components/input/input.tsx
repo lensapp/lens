@@ -8,7 +8,7 @@ import "./input.scss";
 import type { DOMAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 import React from "react";
 import type { StrictReactNode, SingleOrMany } from "@k8slens/utilities";
-import { debouncePromise, isPromiseSettledFulfilled, cssNames } from "@k8slens/utilities";
+import { isReactNode, isString, isFunction, debouncePromise, isPromiseSettledFulfilled, cssNames } from "@k8slens/utilities";
 import { Icon } from "@k8slens/icon";
 import type { TooltipProps } from "@k8slens/tooltip";
 import { Tooltip } from "@k8slens/tooltip";
@@ -231,9 +231,9 @@ export class Input extends React.Component<InputProps, State> {
   }
 
   private getValidatorError(value: string, { message }: InputValidator) {
-    return typeof message === "function"
-      ? message(value, this.props)
-      : message;
+    return isReactNode(message)
+      ? message
+      : message(value, this.props);
   }
 
   private setupValidators() {
@@ -254,7 +254,7 @@ export class Input extends React.Component<InputProps, State> {
     });
 
     // run validation
-    this.validate();
+    void this.validate();
   }
 
   setDirty(dirty = true) {
@@ -276,7 +276,7 @@ export class Input extends React.Component<InputProps, State> {
 
   setDirtyOnChange = debounce(() => this.setDirty(), 500);
 
-  async onChange(evt: React.ChangeEvent<any>) {
+  async onChange(evt: React.ChangeEvent<InputElement>) {
     const newValue = evt.currentTarget.value;
     const eventCopy = { ...evt };
 
@@ -344,7 +344,7 @@ export class Input extends React.Component<InputProps, State> {
 
     if (prevProps.value !== value || defaultValue !== prevProps.defaultValue) {
       if (!this.state.submitted) {
-        this.validate();
+        void this.validate();
       } else {
         this.setState({ submitted: false });
       }
@@ -379,11 +379,11 @@ export class Input extends React.Component<InputProps, State> {
   }
 
   private renderIcon(iconData: IconData) {
-    if (typeof iconData === "string") {
+    if (isString(iconData)) {
       return <Icon material={iconData} />;
     }
 
-    if (typeof iconData === "function") {
+    if (isFunction(iconData)) {
       return iconData({
         isDirty: Boolean(this.getValue()),
       });
@@ -403,6 +403,15 @@ export class Input extends React.Component<InputProps, State> {
     } = this.props;
     const { focused, dirty, valid, validating, errors } = this.state;
 
+    void validators;
+    void theme;
+    void maxRows;
+    void children;
+    void autoSelectOnFocus;
+    void _dirty;
+    void trim;
+    void blurOnEnter;
+
     const className = cssNames("Input", this.props.className, {
       ...this.themeSelection,
       focused,
@@ -416,12 +425,12 @@ export class Input extends React.Component<InputProps, State> {
     // prepare input props
     Object.assign(inputProps, {
       className: "input box grow",
-      onFocus: this.onFocus,
-      onBlur: this.onBlur,
-      onChange: this.onChange,
-      onKeyDown: this.onKeyDown,
+      onFocus: this.onFocus.bind(this),
+      onBlur: this.onBlur.bind(this),
+      onChange: this.onChange.bind(this),
+      onKeyDown: this.onKeyDown.bind(this),
       rows: multiLine ? (rows || 1) : null,
-      ref: this.bindRef,
+      ref: this.bindRef.bind(this),
       spellCheck: "false",
       disabled,
     });

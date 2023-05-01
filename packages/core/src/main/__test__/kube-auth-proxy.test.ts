@@ -26,6 +26,7 @@ import getBasenameOfPathInjectable from "../../common/path/get-basename.injectab
 import type { Cluster } from "../../common/cluster/cluster";
 import waitUntilPortIsUsedInjectable from "../kube-auth-proxy/wait-until-port-is-used/wait-until-port-is-used.injectable";
 import addClusterInjectable from "../../features/cluster/storage/common/add.injectable";
+import assert from "assert";
 
 describe("kube auth proxy tests", () => {
   let spawnMock: jest.Mock;
@@ -85,15 +86,19 @@ describe("kube auth proxy tests", () => {
 
     const addCluster = di.inject(addClusterInjectable);
 
-    cluster = addCluster({
+    const clusterResult = addCluster({
       id: "foobar",
       kubeConfigPath: "/minikube-config.yml",
       contextName: "minikube",
     });
+
+    assert(clusterResult.isOk);
+
+    cluster = clusterResult.value;
     kubeAuthProxy = di.inject(createKubeAuthProxyInjectable, cluster)({});
   });
 
-  it("calling exit multiple times shouldn't throw", async () => {
+  it("calling exit multiple times shouldn't throw", () => {
     kubeAuthProxy.exit();
     kubeAuthProxy.exit();
     kubeAuthProxy.exit();
@@ -109,32 +114,32 @@ describe("kube auth proxy tests", () => {
       const stderr = mock<Readable>();
       const stdout = mock<Readable>();
 
-      mockedCP.stderr = stderr as any;
-      mockedCP.stdout = stdout as any;
+      mockedCP.stderr = stderr;
+      mockedCP.stdout = stdout;
 
       jest.spyOn(Kubectl.prototype, "checkBinary").mockReturnValueOnce(Promise.resolve(true));
       jest.spyOn(Kubectl.prototype, "ensureKubectl").mockReturnValueOnce(Promise.resolve(false));
-      mockedCP.on.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): ChildProcess => {
+      mockedCP.on.mockImplementation((event: string | symbol, listener: () => void): ChildProcess => {
         listeners.on(event, listener);
 
         return mockedCP;
       });
-      stderr.on.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+      stderr.on.mockImplementation((event: string | symbol, listener: () => void): Readable => {
         listeners.on(`stderr/${String(event)}`, listener);
 
         return stderr;
       });
-      stderr.off.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+      stderr.off.mockImplementation((event: string | symbol, listener: () => void): Readable => {
         listeners.off(`stderr/${String(event)}`, listener);
 
         return stderr;
       });
-      stderr.removeListener.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+      stderr.removeListener.mockImplementation((event: string | symbol, listener: () => void): Readable => {
         listeners.off(`stderr/${String(event)}`, listener);
 
         return stderr;
       });
-      stderr.once.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+      stderr.once.mockImplementation((event: string | symbol, listener: () => void): Readable => {
         listeners.once(`stderr/${String(event)}`, listener);
 
         return stderr;
@@ -144,7 +149,7 @@ describe("kube auth proxy tests", () => {
 
         return stderr;
       });
-      stdout.on.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+      stdout.on.mockImplementation((event: string | symbol, listener: () => void): Readable => {
         listeners.on(`stdout/${String(event)}`, listener);
 
         if (event === "data") {
@@ -153,17 +158,17 @@ describe("kube auth proxy tests", () => {
 
         return stdout;
       });
-      stdout.once.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+      stdout.once.mockImplementation((event: string | symbol, listener: () => void): Readable => {
         listeners.once(`stdout/${String(event)}`, listener);
 
         return stdout;
       });
-      stdout.off.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+      stdout.off.mockImplementation((event: string | symbol, listener: () => void): Readable => {
         listeners.off(`stdout/${String(event)}`, listener);
 
         return stdout;
       });
-      stdout.removeListener.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+      stdout.removeListener.mockImplementation((event: string | symbol, listener: () => void): Readable => {
         listeners.off(`stdout/${String(event)}`, listener);
 
         return stdout;

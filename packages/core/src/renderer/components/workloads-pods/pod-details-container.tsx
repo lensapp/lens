@@ -141,7 +141,7 @@ class NonInjectedPodDetailsContainer extends React.Component<PodDetailsContainer
                   <PodContainerPort
                     pod={pod}
                     port={port}
-                    key={`${container.name}-port-${port.containerPort}-${port.protocol}`}
+                    key={`${container.name}-port-${port.containerPort}-${port.protocol ?? ""}`}
                   />
                 ))
             }

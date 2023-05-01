@@ -12,13 +12,13 @@ describe("Command Pallet: keyboard shortcut tests", () => {
   let builder: ApplicationBuilder;
   let rendered: RenderResult;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     builder = getApplicationBuilder();
   });
 
   describe("when on macOS", () => {
     beforeEach(async () => {
-      builder.beforeWindowStart(({ windowDi }) => {
+      await builder.beforeWindowStart(({ windowDi }) => {
         windowDi.override(platformInjectable, () => "darwin");
       });
 
@@ -86,7 +86,7 @@ describe("Command Pallet: keyboard shortcut tests", () => {
 
   describe("when on linux", () => {
     beforeEach(async () => {
-      builder.beforeWindowStart(({ windowDi }) => {
+      await builder.beforeWindowStart(({ windowDi }) => {
         windowDi.override(platformInjectable, () => "linux");
       });
 

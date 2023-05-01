@@ -26,7 +26,6 @@ export interface ExtensionInfo {
   requireConfirmation?: boolean;
 }
 
-// @ts-ignore
 interface NpmPackageVersionDescriptor extends PackageJson {
   dist: {
     integrity: string;
@@ -65,27 +64,27 @@ const attemptInstallByInfoInjectable = getInjectable({
       try {
         const result = await downloadJson(registryUrl);
 
-        if (!result.callWasSuccessful) {
+        if (!result.isOk) {
           showErrorNotification(`Failed to get registry information for extension: ${result.error}`);
 
           return disposer();
         }
 
-        if (!isObject(result.response) || Array.isArray(result.response)) {
+        if (!isObject(result.value) || Array.isArray(result.value)) {
           showErrorNotification("Failed to get registry information for extension");
 
           return disposer();
         }
 
-        if (result.response.error || !isObject(result.response.versions)) {
-          const message = result.response.error ? `: ${result.response.error}` : "";
+        if (result.value.error || !isObject(result.value.versions)) {
+          const message = result.value.error ? `: ${String(result.value.error)}` : "";
 
           showErrorNotification(`Failed to get registry information for extension${message}`);
 
           return disposer();
         }
 
-        json = result.response as unknown as NpmRegistryPackageDescriptor;
+        json = result.value as unknown as NpmRegistryPackageDescriptor;
       } catch (error) {
         if (error instanceof SyntaxError) {
           // assume invalid JSON
@@ -93,7 +92,7 @@ const attemptInstallByInfoInjectable = getInjectable({
           showErrorNotification("Failed to get valid registry information for extension. Registry did not return valid JSON");
         } else {
           logger.error("Failed to download registry information", error);
-          showErrorNotification(`Failed to get valid registry information for extension. ${error}`);
+          showErrorNotification(`Failed to get valid registry information for extension. ${String(error)}`);
         }
 
         return disposer();
@@ -192,13 +191,13 @@ const attemptInstallByInfoInjectable = getInjectable({
       const { signal } = withTimeout(10 * 60 * 1000);
       const request = await downloadBinary(tarballUrl, { signal });
 
-      if (!request.callWasSuccessful) {
+      if (!request.isOk) {
         showErrorNotification(`Failed to download extension: ${request.error}`);
 
         return disposer();
       }
 
-      return attemptInstall({ fileName, data: request.response }, disposer);
+      return attemptInstall({ fileName, data: request.value }, disposer);
     };
   },
 });

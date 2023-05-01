@@ -19,15 +19,12 @@ import type { Logger } from "@k8slens/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { loggerInjectionToken } from "@k8slens/logger";
 
-export interface CustomResourceDefinitionDetailsProps extends KubeObjectDetailsProps<CustomResourceDefinition> {
-}
-
 interface Dependencies {
   logger: Logger;
 }
 
 @observer
-class NonInjectedCustomResourceDefinitionDetails extends React.Component<CustomResourceDefinitionDetailsProps & Dependencies> {
+class NonInjectedCustomResourceDefinitionDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
   render() {
     const { object: crd } = this.props;
 
@@ -159,7 +156,7 @@ class NonInjectedCustomResourceDefinitionDetails extends React.Component<CustomR
   }
 }
 
-export const CustomResourceDefinitionDetails = withInjectables<Dependencies, CustomResourceDefinitionDetailsProps>(NonInjectedCustomResourceDefinitionDetails, {
+export const CustomResourceDefinitionDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedCustomResourceDefinitionDetails, {
   getProps: (di, props) => ({
     ...props,
     logger: di.inject(loggerInjectionToken),

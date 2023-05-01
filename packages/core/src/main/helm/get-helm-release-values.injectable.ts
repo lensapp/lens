@@ -37,8 +37,8 @@ const getHelmReleaseValuesInjectable = getInjectable({
 
       const result = await execHelm(args);
 
-      if (result.callWasSuccessful) {
-        return result.response;
+      if (result.isOk) {
+        return result.value;
       }
 
       throw result.error;

@@ -37,11 +37,11 @@ class NonInjectedPortForwardMenu<Props extends PortForwardMenuProps & Dependenci
     autoBindReact(this);
   }
 
-  remove() {
+  async remove() {
     const { portForward, showErrorNotification } = this.props;
 
     try {
-      this.portForwardStore.remove(portForward);
+      await this.portForwardStore.remove(portForward);
     } catch (error) {
       showErrorNotification(`Error occurred stopping the port-forward from port ${portForward.forwardPort}. The port-forward may still be active.`);
     }
@@ -68,7 +68,7 @@ class NonInjectedPortForwardMenu<Props extends PortForwardMenuProps & Dependenci
 
     if (portForward.status === "Active") {
       return (
-        <MenuItem onClick={() => this.portForwardStore.stop(portForward)}>
+        <MenuItem onClick={() => void this.portForwardStore.stop(portForward)}>
           <Icon
             material="stop"
             tooltip="Stop port-forward"
@@ -80,7 +80,7 @@ class NonInjectedPortForwardMenu<Props extends PortForwardMenuProps & Dependenci
     }
 
     return (
-      <MenuItem onClick={this.startPortForwarding}>
+      <MenuItem onClick={() => void this.startPortForwarding()}>
         <Icon
           material="play_arrow"
           tooltip="Start port-forward"
@@ -129,7 +129,7 @@ class NonInjectedPortForwardMenu<Props extends PortForwardMenuProps & Dependenci
         id={`menu-actions-for-port-forward-menu-for-${this.props.portForward.getId()}`}
         {...menuProps}
         className={cssNames("PortForwardMenu", className)}
-        removeAction={this.remove}
+        removeAction={() => void this.remove()}
       >
         {this.renderContent()}
       </MenuActions>

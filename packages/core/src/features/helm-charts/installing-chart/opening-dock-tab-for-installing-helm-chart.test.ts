@@ -38,7 +38,7 @@ describe("opening dock tab for installing helm chart", () => {
     requestHelmChartReadmeMock = asyncFn();
     requestHelmChartValuesMock = jest.fn();
 
-    builder.beforeWindowStart(({ windowDi }) => {
+    await builder.beforeWindowStart(({ windowDi }) => {
       windowDi.override(directoryForLensLocalStorageInjectable, () => "/some-directory-for-lens-local-storage");
       windowDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
       windowDi.override(requestHelmChartsInjectable, () => requestHelmChartsMock);
@@ -53,7 +53,7 @@ describe("opening dock tab for installing helm chart", () => {
       );
     });
 
-    builder.setEnvironmentToClusterFrame();
+    await builder.setEnvironmentToClusterFrame();
   });
 
   describe("given application is started, when navigating to helm charts", () => {
@@ -231,8 +231,8 @@ describe("opening dock tab for installing helm chart", () => {
           describe("when readme resolves", () => {
             beforeEach(async () => {
               await requestHelmChartReadmeMock.resolve({
-                callWasSuccessful: true,
-                response: "some-readme",
+                isOk: true,
+                value: "some-readme",
               });
             });
 
@@ -280,8 +280,8 @@ describe("opening dock tab for installing helm chart", () => {
               describe("when readme resolves", () => {
                 beforeEach(async () => {
                   await requestHelmChartReadmeMock.resolve({
-                    callWasSuccessful: true,
-                    response: "some-readme",
+                    isOk: true,
+                    value: "some-readme",
                   });
                 });
 
@@ -309,7 +309,7 @@ describe("opening dock tab for installing helm chart", () => {
               describe("when readme rejects", () => {
                 beforeEach(async () => {
                   await requestHelmChartReadmeMock.resolve({
-                    callWasSuccessful: false,
+                    isOk: false,
                     error: "some-error",
                   });
                 });

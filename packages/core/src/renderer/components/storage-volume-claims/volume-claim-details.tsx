@@ -23,9 +23,6 @@ import { stopPropagation } from "@k8slens/utilities";
 import storageClassApiInjectable from "../../../common/k8s-api/endpoints/storage-class.api.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
 
-export interface PersistentVolumeClaimDetailsProps extends KubeObjectDetailsProps<PersistentVolumeClaim> {
-}
-
 interface Dependencies {
   getDetailsUrl: GetDetailsUrl;
   podStore: PodStore;
@@ -34,7 +31,7 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedPersistentVolumeClaimDetails extends React.Component<PersistentVolumeClaimDetailsProps & Dependencies> {
+class NonInjectedPersistentVolumeClaimDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
   render() {
     const { object: volumeClaim, podStore, getDetailsUrl, storageClassApi, logger } = this.props;
 
@@ -103,7 +100,7 @@ class NonInjectedPersistentVolumeClaimDetails extends React.Component<Persistent
   }
 }
 
-export const PersistentVolumeClaimDetails = withInjectables<Dependencies, PersistentVolumeClaimDetailsProps>(NonInjectedPersistentVolumeClaimDetails, {
+export const PersistentVolumeClaimDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedPersistentVolumeClaimDetails, {
   getProps: (di, props) => ({
     ...props,
     getDetailsUrl: di.inject(getDetailsUrlInjectable),

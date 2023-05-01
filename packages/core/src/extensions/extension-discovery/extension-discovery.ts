@@ -5,9 +5,8 @@
 
 import { ipcRenderer } from "electron";
 import { EventEmitter } from "events";
-import { makeObservable, observable, reaction, when } from "mobx";
+import { action, observable, reaction } from "mobx";
 import { broadcastMessage, ipcMainHandle, ipcRendererOn } from "../../common/ipc";
-import { toJS } from "../../common/utils";
 import { isErrnoException } from "@k8slens/utilities";
 import type { ExtensionLoader } from "../extension-loader";
 import type { InstalledExtension, LensExtensionId, LensExtensionManifest, ExternalInstalledExtension } from "@k8slens/legacy-extensions";
@@ -31,6 +30,7 @@ import type { GetRelativePath } from "../../common/path/get-relative-path.inject
 import type { RemovePath } from "../../common/fs/remove.injectable";
 import type TypedEventEmitter from "typed-emitter";
 import type { IsExtensionEnabled } from "../../features/extensions/enabled/common/is-enabled.injectable";
+import assert from "assert";
 
 interface Dependencies {
   readonly extensionLoader: ExtensionLoader;
@@ -95,53 +95,39 @@ export class ExtensionDiscovery {
   private extensions: Map<string, InstalledExtension> = new Map();
 
   // True if extensions have been loaded from the disk after app startup
-  @observable isLoaded = false;
-
-  get whenLoaded() {
-    return when(() => this.isLoaded);
-  }
+  readonly isLoaded = observable.box(false);
 
   public readonly events: TypedEventEmitter<ExtensionDiscoveryEvents> = new EventEmitter();
 
-  constructor(protected readonly dependencies: Dependencies) {
-    makeObservable(this);
-  }
+  constructor(protected readonly dependencies: Dependencies) {}
 
-  get localFolderPath(): string {
-    return this.dependencies.joinPaths(this.dependencies.homeDirectoryPath, ".k8slens", "extensions");
-  }
-
-  get packageJsonPath(): string {
-    return this.dependencies.joinPaths(this.dependencies.extensionPackageRootDirectory, manifestFilename);
-  }
-
-  get nodeModulesPath(): string {
-    return this.dependencies.joinPaths(this.dependencies.extensionPackageRootDirectory, "node_modules");
-  }
+  readonly localFolderPath = this.dependencies.joinPaths(this.dependencies.homeDirectoryPath, ".k8slens", "extensions");
+  readonly packageJsonPath = this.dependencies.joinPaths(this.dependencies.extensionPackageRootDirectory, manifestFilename);
+  readonly nodeModulesPath = this.dependencies.joinPaths(this.dependencies.extensionPackageRootDirectory, "node_modules");
 
   /**
    * Initializes the class and setups the file watcher for added/removed local extensions.
    */
-  async init(): Promise<void> {
+  async init() {
     if (ipcRenderer) {
       await this.initRenderer();
     } else {
-      await this.initMain();
+      this.initMain();
     }
   }
 
-  async initRenderer(): Promise<void> {
-    const onMessage = ({ isLoaded }: ExtensionDiscoveryChannelMessage) => {
-      this.isLoaded = isLoaded;
-    };
+  async initRenderer() {
+    const onMessage = action(({ isLoaded }: ExtensionDiscoveryChannelMessage) => {
+      this.isLoaded.set(isLoaded);
+    });
 
-    requestInitialExtensionDiscovery().then(onMessage);
-    ipcRendererOn(extensionDiscoveryStateChannel, (_event, message: ExtensionDiscoveryChannelMessage) => {
-      onMessage(message);
+    await requestInitialExtensionDiscovery().then(onMessage);
+    ipcRendererOn(extensionDiscoveryStateChannel, (_event, message) => {
+      onMessage(message as ExtensionDiscoveryChannelMessage);
     });
   }
 
-  async initMain(): Promise<void> {
+  initMain() {
     ipcMainHandle(extensionDiscoveryStateChannel, () => this.toJSON());
 
     reaction(() => this.toJSON(), () => {
@@ -155,12 +141,10 @@ export class ExtensionDiscovery {
    * Watches for added/removed local extensions.
    * Dependencies are installed automatically after an extension folder is copied.
    */
-  async watchExtensions(): Promise<void> {
+  watchExtensions() {
+    assert(this.isLoaded.get(), "Can only watch extensions after ExtensionDiscovery is loaded");
+
     this.dependencies.logger.info(`${logModule} watching extension add/remove in ${this.localFolderPath}`);
-
-    // Wait until .load() has been called and has been resolved
-    await this.whenLoaded;
-
     this._watch = this.dependencies.watch(this.localFolderPath, {
       // For adding and removing symlinks to work, the depth has to be 1.
       depth: 1,
@@ -174,11 +158,11 @@ export class ExtensionDiscovery {
       },
     })
       // Extension add is detected by watching "<extensionDir>/package.json" add
-      .on("add", this.handleWatchFileAdd)
+      .on("add", (path) => void this.handleWatchFileAdd(path))
       // Extension remove is detected by watching "<extensionDir>" unlink
-      .on("unlinkDir", this.handleWatchUnlinkEvent)
+      .on("unlinkDir", (path) => void this.handleWatchUnlinkEvent(path))
       // Extension remove is detected by watching "<extensionSymLink>" unlink
-      .on("unlink", this.handleWatchUnlinkEvent);
+      .on("unlink", (path) => void this.handleWatchUnlinkEvent(path));
   }
 
   async stopWatchingExtensions() {
@@ -213,7 +197,7 @@ export class ExtensionDiscovery {
           this.events.emit("add", extension);
         }
       } catch (error) {
-        this.dependencies.logger.error(`${logModule}: failed to add extension: ${error}`, { error });
+        this.dependencies.logger.error(`${logModule}: failed to add extension: ${String(error)}`, { error });
       } finally {
         this.dependencies.extensionInstallationStateStore.clearInstallingFromMain(manifestPath);
       }
@@ -309,7 +293,7 @@ export class ExtensionDiscovery {
 
     const extensions = await this.ensureExtensions();
 
-    this.isLoaded = true;
+    this.isLoaded.set(true);
 
     return extensions;
   }
@@ -362,7 +346,7 @@ export class ExtensionDiscovery {
         // ignore this error, probably from .DS_Store file
         this.dependencies.logger.debug(`${logModule}: failed to load extension manifest through a not-dir-like at ${manifestPath}`);
       } else {
-        this.dependencies.logger.error(`${logModule}: can't load extension manifest at ${manifestPath}: ${error}`);
+        this.dependencies.logger.error(`${logModule}: can't load extension manifest at ${manifestPath}: ${String(error)}`);
       }
 
       return null;
@@ -410,12 +394,12 @@ export class ExtensionDiscovery {
   }
 
   toJSON(): ExtensionDiscoveryChannelMessage {
-    return toJS({
-      isLoaded: this.isLoaded,
-    });
+    return {
+      isLoaded: this.isLoaded.get(),
+    };
   }
 
   broadcast(): void {
-    broadcastMessage(extensionDiscoveryStateChannel, this.toJSON());
+    void broadcastMessage(extensionDiscoveryStateChannel, this.toJSON());
   }
 }

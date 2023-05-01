@@ -16,6 +16,7 @@ import type { MetricProviderInfo, RequestMetricsProviders } from "../../../commo
 import { withInjectables } from "@ogre-tools/injectable-react";
 import requestMetricsProvidersInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-providers.injectable";
 import productNameInjectable from "../../../common/vars/product-name.injectable";
+import { noop } from "@k8slens/utilities";
 
 export interface ClusterPrometheusSettingProps {
   cluster: Cluster;
@@ -90,7 +91,8 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
       .then(values => {
         this.loading = false;
         this.loadedOptions.replace(values.map(provider => [provider.id, provider]));
-      });
+      })
+      .catch(noop);
   }
 
   parsePrometheusPath = () => {

@@ -26,8 +26,7 @@ import createServiceAccountDialogStateInjectable from "./state.injectable";
 import type { ShowCheckedErrorNotification } from "../../../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../../../notifications/show-checked-error.injectable";
 
-export interface CreateServiceAccountDialogProps extends Partial<DialogProps> {
-}
+export type CreateServiceAccountDialogProps = Partial<DialogProps>;
 
 interface Dependencies {
   state: CreateServiceAccountDialogState;
@@ -63,6 +62,8 @@ class NonInjectedCreateServiceAccountDialog extends React.Component<CreateServic
 
   render() {
     const { closeCreateServiceAccountDialog, serviceAccountStore, state, ...dialogProps } = this.props;
+
+    void serviceAccountStore;
 
     return (
       <Dialog

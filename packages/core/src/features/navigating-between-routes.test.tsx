@@ -23,7 +23,7 @@ describe("navigating between routes", () => {
   let rendered: RenderResult;
   let builder: ApplicationBuilder;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     builder = getApplicationBuilder();
   });
 
@@ -31,7 +31,7 @@ describe("navigating between routes", () => {
     let windowDi: DiContainer;
 
     beforeEach(async () => {
-      builder.beforeWindowStart(({ windowDi }) => {
+      await builder.beforeWindowStart(({ windowDi }) => {
         runInAction(() => {
           windowDi.register(testRouteWithoutPathParametersInjectable);
           windowDi.register(testRouteWithoutPathParametersComponentInjectable);
@@ -107,7 +107,7 @@ describe("navigating between routes", () => {
     let windowDi: DiContainer;
 
     beforeEach(async () => {
-      builder.beforeWindowStart(({ windowDi }) => {
+      await builder.beforeWindowStart(({ windowDi }) => {
         runInAction(() => {
           windowDi.register(routeWithOptionalPathParametersInjectable);
           windowDi.register(routeWithOptionalPathParametersComponentInjectable);
@@ -120,7 +120,10 @@ describe("navigating between routes", () => {
     });
 
     describe("when navigating to route with path parameters", () => {
-      let route: Route<any>;
+      let route: Route<{
+        someParameter?: string | undefined;
+        someOtherParameter?: string | undefined;
+      }>;
 
       beforeEach(() => {
         route = windowDi.inject(routeWithOptionalPathParametersInjectable);
@@ -164,7 +167,10 @@ describe("navigating between routes", () => {
     });
 
     describe("when navigating to route without path parameters", () => {
-      let route: Route<any>;
+      let route: Route<{
+        someParameter?: string | undefined;
+        someOtherParameter?: string | undefined;
+      }>;
 
       beforeEach(() => {
         route = windowDi.inject(routeWithOptionalPathParametersInjectable);
@@ -202,7 +208,7 @@ const testRouteWithoutPathParametersInjectable = getInjectable({
   id: "some-route",
   injectionToken: frontEndRouteInjectionToken,
 
-  instantiate: () => ({
+  instantiate: (): Route<void> => ({
     path: "/some-path",
     clusterFrame: false,
     isEnabled: computed(() => true),

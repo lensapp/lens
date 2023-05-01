@@ -7,6 +7,7 @@ import React from "react";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { Cluster } from "../../../common/cluster/cluster";
+import type { HorizontalPodAutoscalerMetricSpec } from "@k8slens/kube-object";
 import { HorizontalPodAutoscaler } from "@k8slens/kube-object";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
@@ -50,7 +51,7 @@ describe("<HpaDetails/>", () => {
     di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
-    di.override(hostedClusterInjectable, () => new Cluster({
+    di.override(hostedClusterInjectable, () => Cluster.createForTestingOnly({
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some-path-to-a-kubeconfig",
@@ -353,7 +354,6 @@ describe("<HpaDetails/>", () => {
         spec: {
           ...hpaV2.spec,
           metrics: [
-            // @ts-ignore
             {
               resource: {
                 name: "cpu",
@@ -362,7 +362,7 @@ describe("<HpaDetails/>", () => {
                   averageUtilization: 50,
                 },
               },
-            },
+            } as HorizontalPodAutoscalerMetricSpec,
           ],
         },
       },
@@ -383,7 +383,6 @@ describe("<HpaDetails/>", () => {
           ...hpaV2.spec,
           metrics: [
             {
-              // @ts-ignore
               type: "Unusual",
               resource: {
                 name: "cpu",
@@ -392,7 +391,7 @@ describe("<HpaDetails/>", () => {
                   averageUtilization: 50,
                 },
               },
-            },
+            } as unknown as HorizontalPodAutoscalerMetricSpec,
           ],
         },
       },

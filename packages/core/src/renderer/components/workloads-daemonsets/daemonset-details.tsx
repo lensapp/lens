@@ -25,9 +25,6 @@ import daemonSetStoreInjectable from "./store.injectable";
 import podStoreInjectable from "../workloads-pods/store.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
 
-export interface DaemonSetDetailsProps extends KubeObjectDetailsProps<DaemonSet> {
-}
-
 interface Dependencies {
   subscribeStores: SubscribeStores;
   daemonSetStore: DaemonSetStore;
@@ -36,7 +33,7 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedDaemonSetDetails extends React.Component<DaemonSetDetailsProps & Dependencies> {
+class NonInjectedDaemonSetDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
   componentDidMount() {
     disposeOnUnmount(this, [
       this.props.subscribeStores([
@@ -101,7 +98,7 @@ class NonInjectedDaemonSetDetails extends React.Component<DaemonSetDetailsProps 
   }
 }
 
-export const DaemonSetDetails = withInjectables<Dependencies, DaemonSetDetailsProps>(NonInjectedDaemonSetDetails, {
+export const DaemonSetDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedDaemonSetDetails, {
   getProps: (di, props) => ({
     ...props,
     subscribeStores: di.inject(subscribeStoresInjectable),

@@ -30,7 +30,7 @@ describe("static-file-route", () => {
   });
 
   it("serves files under static root", async () => {
-    const req: any = {
+    const req = {
       url: "",
     };
 

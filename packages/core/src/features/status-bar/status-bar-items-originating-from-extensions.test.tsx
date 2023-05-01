@@ -11,12 +11,12 @@ import type { FakeExtensionOptions } from "../../renderer/components/test-utils/
 import { computed } from "mobx";
 
 describe("status-bar-items-originating-from-extensions", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
 
-  beforeEach(() => {
-    applicationBuilder = getApplicationBuilder();
+  beforeEach(async () => {
+    builder = getApplicationBuilder();
 
-    applicationBuilder.beforeWindowStart(({ windowDi }) => {
+    await applicationBuilder.beforeWindowStart(({ windowDi }) => {
       windowDi.unoverride(getRandomIdInjectionToken);
       windowDi.permitSideEffects(getRandomIdInjectionToken);
     });
@@ -26,10 +26,10 @@ describe("status-bar-items-originating-from-extensions", () => {
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      rendered = await applicationBuilder.render();
+      rendered = await builder.render();
     });
 
-    it("when multiple extensions with status bar items are loaded, shows items in correct order", () => {
+    it("when multiple extensions with status bar items are loaded, shows items in correct order", async () => {
       const testExtension1 = {
         id: "some-id",
         name: "some-name",
@@ -62,7 +62,7 @@ describe("status-bar-items-originating-from-extensions", () => {
         },
       };
 
-      applicationBuilder.extensions.enable(testExtension1, testExtension2);
+      await builder.extensions.enable(testExtension1, testExtension2);
 
       const rightSide = rendered.getByTestId("status-bar-right");
 
@@ -77,7 +77,7 @@ describe("status-bar-items-originating-from-extensions", () => {
     describe("when extension with status bar items is loaded", () => {
       let testExtensionOptions: FakeExtensionOptions;
 
-      beforeEach(() => {
+      beforeEach(async () => {
         testExtensionOptions = {
           id: "some-id",
           name: "some-name",
@@ -119,7 +119,7 @@ describe("status-bar-items-originating-from-extensions", () => {
           },
         };
 
-        applicationBuilder.extensions.enable(testExtensionOptions);
+        await builder.extensions.enable(testExtensionOptions);
       });
 
       it("renders", () => {
@@ -152,8 +152,8 @@ describe("status-bar-items-originating-from-extensions", () => {
         expect(actual).toEqual(["left1", "left2"]);
       });
 
-      it("when the extension is removed, shows there are no extension status bar items", () => {
-        applicationBuilder.extensions.disable(testExtensionOptions);
+      it("when the extension is removed, shows there are no extension status bar items", async () => {
+        await builder.extensions.disable(testExtensionOptions);
 
         const actual = rendered.queryAllByTestId("some-testId");
 

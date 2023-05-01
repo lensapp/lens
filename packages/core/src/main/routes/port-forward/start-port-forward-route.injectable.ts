@@ -28,7 +28,7 @@ const startPortForwardRouteInjectable = getRouteInjectable({
       const proxyKubeconfigManager = di.inject(kubeconfigManagerInjectable, cluster);
 
       try {
-        let portForward = PortForward.getPortforward({
+        let portForward = PortForward.getPortForward({
           clusterId: cluster.id,
           kind: resourceType,
           name: resourceName,
@@ -79,7 +79,7 @@ const startPortForwardRouteInjectable = getRouteInjectable({
         return { response: { port: portForward.forwardPort }};
       } catch (error) {
         logger.error(
-          `[PORT-FORWARD-ROUTE]: failed to open a port-forward: ${error}`,
+          `[PORT-FORWARD-ROUTE]: failed to open a port-forward: ${String(error)}`,
           { namespace, port, resourceType, resourceName },
         );
 

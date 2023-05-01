@@ -17,8 +17,7 @@ import { Input } from "../../input";
 import { systemName } from "../../input/input_validators";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import namespaceStoreInjectable from "../store.injectable";
-import addNamespaceDialogStateInjectable
-  from "./state.injectable";
+import addNamespaceDialogStateInjectable from "./state.injectable";
 import type { NamespaceStore } from "../store";
 import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
@@ -75,22 +74,24 @@ class NonInjectedAddNamespaceDialog extends React.Component<AddNamespaceDialogPr
     const { namespace } = this;
     const isOpen = state.get();
 
+    void namespaceStore;
+
     return (
       <Dialog
         {...dialogProps}
         className="AddNamespaceDialog"
         isOpen={isOpen}
-        onClose={this.reset}
-        close={this.close}
+        onClose={(...args) => this.reset(...args)}
+        close={(...args) => this.close(...args)}
       >
         <Wizard
           header={<h5>Create Namespace</h5>}
-          done={this.close}
+          done={(...args) => this.close(...args)}
         >
           <WizardStep
             contentClass="flex gaps column"
             nextLabel="Create"
-            next={this.addNamespace}
+            next={(...args) => this.addNamespace(...args)}
           >
             <Input
               required

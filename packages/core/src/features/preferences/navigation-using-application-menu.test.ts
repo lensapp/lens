@@ -10,14 +10,14 @@ import type { Discover } from "@k8slens/react-testing-library-discovery";
 import { discoverFor } from "@k8slens/react-testing-library-discovery";
 
 describe("preferences - navigation using application menu", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let rendered: RenderResult;
   let discover: Discover;
 
   beforeEach(async () => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
-    rendered = await applicationBuilder.render();
+    rendered = await builder.render();
     discover = discoverFor(() => rendered);
   });
 
@@ -36,7 +36,7 @@ describe("preferences - navigation using application menu", () => {
 
   describe("when navigating to preferences using application menu", () => {
     beforeEach(() => {
-      applicationBuilder.applicationMenu.click(
+      builder.applicationMenu.click(
         "root",
         "mac",
         "navigate-to-preferences",

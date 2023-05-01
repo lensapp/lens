@@ -45,8 +45,8 @@ describe("requestNonCoreApiVersions", () => {
 
       it("should return empty list", async () => {
         expect(await versionsRequest).toEqual({
-          callWasSuccessful: true,
-          response: [],
+          isOk: true,
+          value: [],
         });
       });
     });
@@ -64,8 +64,8 @@ describe("requestNonCoreApiVersions", () => {
 
       it("should return single entry in list", async () => {
         expect(await versionsRequest).toEqual({
-          callWasSuccessful: true,
-          response: [{
+          isOk: true,
+          value: [{
             group: "some-name",
             path: "/apis/some-name/v1",
           }],
@@ -92,8 +92,8 @@ describe("requestNonCoreApiVersions", () => {
 
       it("should return multiple entries in list", async () => {
         expect(await versionsRequest).toEqual({
-          callWasSuccessful: true,
-          response: [
+          isOk: true,
+          value: [
             {
               group: "some-name",
               path: "/apis/some-name/v1",
@@ -141,8 +141,8 @@ describe("requestNonCoreApiVersions", () => {
 
       it("should return multiple entries in list", async () => {
         expect(await versionsRequest).toEqual({
-          callWasSuccessful: true,
-          response: [
+          isOk: true,
+          value: [
             {
               group: "some-name",
               path: "/apis/some-name/v1",

@@ -87,9 +87,9 @@ describe("ExtensionDiscovery", () => {
     watchMock.mockImplementationOnce(() => mockWatchInstance);
 
     // Need to force isLoaded to be true so that the file watching is started
-    extensionDiscovery.isLoaded = true;
+    extensionDiscovery.isLoaded.set(true);
 
-    await extensionDiscovery.watchExtensions();
+    extensionDiscovery.watchExtensions();
 
     extensionDiscovery.events.on("add", extension => {
       expect(extension).toEqual({
@@ -130,9 +130,8 @@ describe("ExtensionDiscovery", () => {
     watchMock.mockImplementationOnce(() => mockWatchInstance);
 
     // Need to force isLoaded to be true so that the file watching is started
-    extensionDiscovery.isLoaded = true;
-
-    await extensionDiscovery.watchExtensions();
+    extensionDiscovery.isLoaded.set(true);
+    extensionDiscovery.watchExtensions();
 
     const onAdd = jest.fn();
 

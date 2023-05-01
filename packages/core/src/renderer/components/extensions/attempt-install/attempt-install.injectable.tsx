@@ -106,7 +106,7 @@ const attemptInstall = ({
             </p>
             <div
               className="remove-folder-warning"
-              onClick={() => shell.openPath(extensionFolder)}
+              onClick={() => void shell.openPath(extensionFolder)}
             >
               <b>Warning:</b>
               {` ${name}@${oldVersion} will be removed before installation.`}
@@ -115,14 +115,16 @@ const attemptInstall = ({
           <Button
             autoFocus
             label="Install"
-            onClick={async () => {
+            onClick={() => {
               removeNotification();
 
-              if (await uninstallExtension(validatedRequest.id)) {
-                await unpackExtension(validatedRequest, dispose);
-              } else {
-                dispose();
-              }
+              void (async () => {
+                if (await uninstallExtension(validatedRequest.id)) {
+                  await unpackExtension(validatedRequest, dispose);
+                } else {
+                  dispose();
+                }
+              })();
             }}
           />
         </div>,

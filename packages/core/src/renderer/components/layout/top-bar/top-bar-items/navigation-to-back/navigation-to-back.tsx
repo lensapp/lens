@@ -12,7 +12,7 @@ import { observer } from "mobx-react";
 
 interface Dependencies {
   prevEnabled: IComputedValue<boolean>;
-  goBack: () => void;
+  goBack: () => Promise<void>;
 }
 
 const NonInjectedNavigationToBack = observer(({
@@ -22,7 +22,7 @@ const NonInjectedNavigationToBack = observer(({
   <Icon
     data-testid="history-back"
     material="arrow_back"
-    onClick={goBack}
+    onClick={() => void goBack()}
     disabled={!prevEnabled.get()}
   />
 ));

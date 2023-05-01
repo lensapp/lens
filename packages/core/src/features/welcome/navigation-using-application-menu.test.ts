@@ -8,13 +8,13 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 
 describe("welcome - navigation using application menu", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let rendered: RenderResult;
 
   beforeEach(async () => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
-    rendered = await applicationBuilder.render();
+    rendered = await builder.render();
   });
 
   it("renders", () => {
@@ -29,7 +29,7 @@ describe("welcome - navigation using application menu", () => {
 
   describe("when navigated somewhere else", () => {
     beforeEach(() => {
-      applicationBuilder.applicationMenu.click(
+      builder.applicationMenu.click(
         "root",
         "mac",
         "navigate-to-preferences",
@@ -48,7 +48,7 @@ describe("welcome - navigation using application menu", () => {
 
     describe("when navigated to welcome using application menu", () => {
       beforeEach(() => {
-        applicationBuilder.applicationMenu.click(
+        builder.applicationMenu.click(
           "root",
           "help",
           "navigate-to-welcome",

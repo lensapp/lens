@@ -13,7 +13,7 @@ import { getLegacyGlobalDiForExtensionApi } from "@k8slens/legacy-global-di";
 import ipcRendererInjectable from "../utils/channel/ipc-renderer.injectable";
 import { toJS } from "../../common/utils";
 
-function requestMain(channel: string, ...args: any[]) {
+async function requestMain(channel: string, ...args: unknown[]): Promise<unknown> {
   const di = getLegacyGlobalDiForExtensionApi();
 
   const ipcRenderer = di.inject(ipcRendererInjectable);
@@ -21,7 +21,7 @@ function requestMain(channel: string, ...args: any[]) {
   return ipcRenderer.invoke(channel, ...args.map(toJS));
 }
 
-function emitToMain(channel: string, ...args: any[]) {
+function emitToMain(channel: string, ...args: unknown[]) {
   const di = getLegacyGlobalDiForExtensionApi();
 
   const ipcRenderer = di.inject(ipcRendererInjectable);
@@ -37,22 +37,22 @@ export function emitWindowLocationChanged(location: Location): void {
   emitToMain(windowLocationChangedChannel, location);
 }
 
-export function requestWindowAction(type: WindowAction): Promise<void> {
-  return requestMain(windowActionHandleChannel, type);
+export async function requestWindowAction(type: WindowAction): Promise<void> {
+  await requestMain(windowActionHandleChannel, type);
 }
 
-export function requestSetClusterFrameId(clusterId: ClusterId): Promise<void> {
-  return requestMain(clusterSetFrameIdHandler, clusterId);
+export async function requestSetClusterFrameId(clusterId: ClusterId): Promise<void> {
+  await requestMain(clusterSetFrameIdHandler, clusterId);
 }
 
-export function requestInitialClusterStates(): Promise<{ id: string; state: ClusterState }[]> {
-  return requestMain(clusterStates);
+export async function requestInitialClusterStates() {
+  return (await requestMain(clusterStates)) as { id: string; state: ClusterState }[];
 }
 
-export function requestInitialExtensionDiscovery(): Promise<{ isLoaded: boolean }> {
-  return requestMain(extensionDiscoveryStateChannel);
+export async function requestInitialExtensionDiscovery() {
+  return (await requestMain(extensionDiscoveryStateChannel)) as { isLoaded: boolean };
 }
 
-export function requestExtensionLoaderInitialState(): Promise<[LensExtensionId, InstalledExtension][]> {
-  return requestMain(extensionLoaderFromMainChannel);
+export async function requestExtensionLoaderInitialState() {
+  return (await requestMain(extensionLoaderFromMainChannel)) as [LensExtensionId, InstalledExtension][];
 }

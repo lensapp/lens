@@ -9,7 +9,7 @@ import type { Stats } from "fs-extra";
 import { lowerFirst } from "lodash/fp";
 import statInjectable from "./stat.injectable";
 
-export type ValidateDirectory = (path: string) => AsyncResult<undefined>;
+export type ValidateDirectory = (path: string) => AsyncResult<undefined, string>;
 
 function getUserReadableFileType(stats: Stats): string {
   if (stats.isFile()) {
@@ -46,13 +46,13 @@ const validateDirectoryInjectable = getInjectable({
         const stats = await stat(path);
 
         if (stats.isDirectory()) {
-          return { callWasSuccessful: true, response: undefined };
+          return { isOk: true, value: undefined };
         }
 
-        return { callWasSuccessful: false, error: `the provided path is ${getUserReadableFileType(stats)} and not a directory.` };
+        return { isOk: false, error: `the provided path is ${getUserReadableFileType(stats)} and not a directory.` };
       } catch (error) {
         if (!isErrnoException(error)) {
-          return { callWasSuccessful: false, error: "of an unknown error, please try again." };
+          return { isOk: false, error: "of an unknown error, please try again." };
         }
 
         const humanReadableErrors: Record<string, string> = {
@@ -67,7 +67,7 @@ const validateDirectoryInjectable = getInjectable({
           ? humanReadableErrors[error.code]
           : lowerFirst(String(error));
 
-        return { callWasSuccessful: false, error: humanReadableError };
+        return { isOk: false, error: humanReadableError };
       }
     };
   },

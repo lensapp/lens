@@ -15,15 +15,12 @@ import type { Logger } from "@k8slens/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { loggerInjectionToken } from "@k8slens/logger";
 
-export interface EndpointsDetailsProps extends KubeObjectDetailsProps<Endpoints> {
-}
-
 interface Dependencies {
   logger: Logger;
 }
 
 @observer
-class NonInjectedEndpointsDetails extends React.Component<EndpointsDetailsProps & Dependencies> {
+class NonInjectedEndpointsDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
   render() {
     const { object: endpoint } = this.props;
 
@@ -54,7 +51,7 @@ class NonInjectedEndpointsDetails extends React.Component<EndpointsDetailsProps 
   }
 }
 
-export const EndpointsDetails = withInjectables<Dependencies, EndpointsDetailsProps>(NonInjectedEndpointsDetails, {
+export const EndpointsDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedEndpointsDetails, {
   getProps: (di, props) => ({
     ...props,
     logger: di.inject(loggerInjectionToken),

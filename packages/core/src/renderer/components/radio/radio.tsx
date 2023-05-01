@@ -17,13 +17,13 @@ export interface RadioGroupProps<T> {
   children: SingleOrMany<React.ReactElement<RadioProps<T>>>;
 }
 
-interface RadioGroupContext {
+interface RadioGroupContext<T> {
   disabled: boolean;
-  value: any | undefined;
-  onSelect: (newValue: any) => void;
+  value: T | undefined;
+  onSelect: (newValue: T) => void;
 }
 
-const radioGroupContext = React.createContext<RadioGroupContext>({
+const radioGroupContext = React.createContext<RadioGroupContext<unknown>>({
   disabled: false,
   value: undefined,
   onSelect: noop,
@@ -37,13 +37,15 @@ export function RadioGroup<T>({
   className,
   children,
 }: RadioGroupProps<T>) {
+  const context = radioGroupContext as React.Context<RadioGroupContext<T>>;
+
   return (
     <div
       className={cssNames("RadioGroup", { buttonsView: asButtons }, className)}
     >
-      <radioGroupContext.Provider value={{ disabled, onSelect: onChange, value }}>
+      <context.Provider value={{ disabled, onSelect: onChange, value }}>
         {children}
-      </radioGroupContext.Provider>
+      </context.Provider>
     </div>
   );
 }

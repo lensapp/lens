@@ -91,7 +91,7 @@ describe("preferences: extension adding preference tabs", () => {
         },
       };
 
-      builder.extensions.enable(testExtension);
+      await builder.extensions.enable(testExtension);
     });
 
     it("renders", () => {

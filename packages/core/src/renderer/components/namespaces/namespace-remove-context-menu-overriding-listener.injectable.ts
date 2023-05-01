@@ -23,7 +23,7 @@ const namespaceRemoveContextMenuOverridingListenerInjectable = getInjectable({
             id: "new-delete-kube-object",
             icon: "delete",
             title: "Delete",
-            onClick: (obj) => requestDeleteNamespace(obj as Namespace),
+            onClick: (obj) => void requestDeleteNamespace(obj as Namespace),
           },
           ...ctx.menuItems.filter((menuItem) => menuItem.id !== "delete-kube-object"),
         ]);

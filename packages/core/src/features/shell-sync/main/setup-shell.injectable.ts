@@ -28,14 +28,14 @@ const setupShellInjectable = getInjectable({
 
       const result = await computeShellEnvironment(resolvedUserShellSetting.get());
 
-      if (!result.callWasSuccessful) {
+      if (!result.isOk) {
         logger.error(`[SHELL-SYNC]: ${result.error}`);
         emitShellSyncFailed(result.error);
 
         return;
       }
 
-      const env = result.response;
+      const env = result.value;
 
       if (!env) {
         logger.debug("[SHELL-SYNC]: nothing to do, env not special in shells");

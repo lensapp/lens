@@ -19,7 +19,7 @@ describe("extensions - navigation using application menu", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.beforeWindowStart(({ windowDi }) => {
+    await builder.beforeWindowStart(({ windowDi }) => {
       focusWindowMock = jest.fn();
 
       windowDi.override(focusWindowInjectable, () => focusWindowMock);

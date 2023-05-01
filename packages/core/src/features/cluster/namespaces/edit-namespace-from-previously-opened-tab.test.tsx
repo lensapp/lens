@@ -22,11 +22,11 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
   beforeEach(() => {
     builder = getApplicationBuilder();
 
-    builder.setEnvironmentToClusterFrame();
+    await builder.setEnvironmentToClusterFrame();
 
     requestKubeResourceMock = asyncFn();
 
-    builder.beforeWindowStart(({ windowDi }) => {
+    await builder.beforeWindowStart(({ windowDi }) => {
       windowDi.override(
         directoryForLensLocalStorageInjectable,
         () => "/some-directory-for-lens-local-storage",
@@ -35,7 +35,7 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
       windowDi.override(requestKubeResourceInjectable, () => requestKubeResourceMock);
     });
 
-    builder.afterWindowStart(() => {
+    await builder.afterWindowStart(() => {
       builder.allowKubeResource({
         apiName: "namespaces",
         group: "",
@@ -47,7 +47,7 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      builder.beforeWindowStart(async ({ windowDi }) => {
+      await builder.beforeWindowStart(async ({ windowDi }) => {
         const writeJsonFile = windowDi.inject(writeJsonFileInjectable);
 
         await writeJsonFile(
@@ -123,8 +123,8 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
         // TODO: Figure out why act is needed here. In CI it works without it.
         await act(async () => {
           await requestKubeResourceMock.resolve({
-            callWasSuccessful: true,
-            response: someNamespace,
+            isOk: true,
+            value: someNamespace,
           });
         });
       });

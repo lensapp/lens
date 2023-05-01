@@ -20,12 +20,13 @@ import normalizedPlatformInjectable from "../../common/vars/normalized-platform.
 import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
 import { runInAction } from "mobx";
+import type { ServerResponse } from "http";
 
 describe("router", () => {
   let router: Router;
-  let routeHandlerMock: AsyncFnMock<() => any>;
+  let routeHandlerMock: AsyncFnMock<() => unknown>;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     routeHandlerMock = asyncFn();
 
     const di = getDiForUnitTesting();
@@ -46,7 +47,7 @@ describe("router", () => {
         method: "get",
         path: "/some-path",
         handler: routeHandlerMock,
-      } as Route<any, string>),
+      } as Route<unknown, string>),
 
       injectionToken: routeInjectionToken,
     });
@@ -62,7 +63,7 @@ describe("router", () => {
     let actualPromise: Promise<boolean>;
     let clusterStub: Cluster;
     let requestStub: SetRequired<Request, "url" | "method">;
-    let responseStub: any;
+    let responseStub: ServerResponse;
 
     beforeEach(() => {
       requestStub = new Request({
@@ -73,7 +74,7 @@ describe("router", () => {
         },
       }) as SetRequired<Request, "url" | "method">;
 
-      responseStub = { end: jest.fn(), setHeader: jest.fn(), write: jest.fn(), statusCode: undefined };
+      responseStub = { end: jest.fn(), setHeader: jest.fn(), write: jest.fn(), statusCode: 200 } as unknown as ServerResponse;
 
       clusterStub = {} as Cluster;
 
@@ -96,9 +97,8 @@ describe("router", () => {
 
       await actualPromise;
 
-      expect(responseStub.setHeader.mock.calls).toEqual([
-        ["Content-Type", "application/json"],
-      ]);
+      expect(responseStub.setHeader).toBeCalledTimes(1);
+      expect(responseStub.setHeader).toBeCalledWith("Content-Type", "application/json");
     });
 
     it("given JSON content-type is specified, when handler resolves with object, resolves with JSON", async () => {
@@ -117,15 +117,16 @@ describe("router", () => {
       });
 
       it("resolves as plain text", () => {
-        expect(responseStub.setHeader.mock.calls).toEqual([["Content-Type", "text/plain"]]);
+        expect(responseStub.setHeader).toBeCalledTimes(1);
+        expect(responseStub.setHeader).toBeCalledWith("Content-Type", "text/plain");
       });
 
-      it("resolves with status code for no content", async () => {
+      it("resolves with status code for no content", () => {
         expect(responseStub.statusCode).toBe(204);
       });
 
-      it("resolves without content", async () => {
-        expect(responseStub.end.mock.calls).toEqual([[]]);
+      it("resolves without content", () => {
+        expect(responseStub.setHeader).toBeCalledTimes(0);
       });
     });
 
@@ -137,7 +138,8 @@ describe("router", () => {
       });
 
       it("resolves as plain text", () => {
-        expect(responseStub.setHeader.mock.calls).toEqual([["Content-Type", "text/plain"]]);
+        expect(responseStub.setHeader).toBeCalledTimes(1);
+        expect(responseStub.setHeader).toBeCalledWith("Content-Type", "text/plain");
       });
 
       it('resolves with "500" status code', () => {
@@ -170,9 +172,8 @@ describe("router", () => {
         });
 
         it("has content type specific headers", () => {
-          expect(responseStub.setHeader.mock.calls).toEqual([
-            ["Content-Type", scenario.contentType],
-          ]);
+          expect(responseStub.setHeader).toBeCalledTimes(1);
+          expect(responseStub.setHeader).toBeCalledWith("Content-Type", scenario.contentType);
         });
 
         it("defaults to successful status code", () => {
@@ -216,7 +217,7 @@ describe("router", () => {
 
         await actualPromise;
 
-        expect(responseStub.end.mock.calls).toEqual([[]]);
+        expect(responseStub.setHeader).toBeCalledTimes(0);
       });
 
       it(`given content type is "${scenario.contentType}", when handler resolves with error, has error as body`, async () => {
@@ -267,11 +268,9 @@ describe("router", () => {
 
         await actualPromise;
 
-        expect(responseStub.setHeader.mock.calls).toEqual([
-          ["Content-Type", scenario.contentType],
-          ["Some-Header", "some-header-value"],
-        ]);
-
+        expect(responseStub.setHeader).toBeCalledTimes(2);
+        expect(responseStub.setHeader).toBeCalledWith("Content-Type", scenario.contentType);
+        expect(responseStub.setHeader).toBeCalledWith("Some-Header", "some-header-value");
       });
 
       describe(`given content type is "${scenario.contentType}", when handler resolves with binary content`, () => {
@@ -293,7 +292,7 @@ describe("router", () => {
         });
 
         it("does not end with the response", () => {
-          expect(responseStub.end.mock.calls[0]).toEqual([]);
+          expect(responseStub.setHeader).toBeCalledTimes(0);
         });
       });
     });

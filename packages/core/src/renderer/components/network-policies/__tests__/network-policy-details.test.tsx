@@ -70,7 +70,7 @@ describe("NetworkPolicyDetails", () => {
     expect(await findByText(container, "foo: bar")).toBeInstanceOf(HTMLElement);
   });
 
-  it("should not crash if egress nodeSelector doesn't have matchLabels", async () => {
+  it("should not crash if egress nodeSelector doesn't have matchLabels", () => {
     const policy = new NetworkPolicy({
       metadata: {
         name: "some-network-policy-name",

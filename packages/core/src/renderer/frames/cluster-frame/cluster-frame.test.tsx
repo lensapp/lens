@@ -48,7 +48,7 @@ describe("<ClusterFrame />", () => {
 
     testUsingFakeTime("2000-01-01 12:00:00am");
 
-    cluster = new Cluster({
+    cluster = Cluster.createForTestingOnly({
       contextName: "my-cluster",
       id: "123456",
       kubeConfigPath: "/irrelavent",

@@ -21,7 +21,7 @@ describe.each(allPlatforms)("application-menu, given platform is '%s'", (platfor
 
     builder = getApplicationBuilder();
 
-    builder.beforeApplicationStart(({ mainDi }) => {
+    await builder.beforeApplicationStart(({ mainDi }) => {
       mainDi.override(platformInjectable, () => platform);
 
       mainDi.override(
@@ -45,6 +45,7 @@ describe.each(allPlatforms)("application-menu, given platform is '%s'", (platfor
     beforeEach(() => {
       advanceFakeTime(100);
       applicationMenuPaths = getCompositePaths(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
         populateApplicationMenuMock.mock.calls[0][0],
       );
     });

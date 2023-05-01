@@ -10,12 +10,13 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { getPromiseStatus } from "@k8slens/test-utils";
 import logErrorInjectable from "../../log-error.injectable";
+import type { Logger } from "../../logger";
 
 describe("with-error-logging", () => {
   describe("given decorated sync function", () => {
-    let toBeDecorated: jest.Mock<number | undefined, [string, string]>;
+    let toBeDecorated: jest.MockedFunction<(a: string, b: string) => number | undefined>;
     let decorated: (a: string, b: string) => number | undefined;
-    let logErrorMock: jest.Mock;
+    let logErrorMock: jest.MockedFunction<Logger["error"]>;
 
     beforeEach(() => {
       const di = getDiForUnitTesting();
@@ -30,7 +31,7 @@ describe("with-error-logging", () => {
 
       decorated = pipeline(
         toBeDecorated,
-        withErrorLoggingFor((error: any) => `some-error-message-for-${error.message}`),
+        withErrorLoggingFor((error) => `some-error-message-for-${(error as Error).message}`),
       );
     });
 
@@ -38,8 +39,7 @@ describe("with-error-logging", () => {
       let returnValue: number | undefined;
 
       beforeEach(() => {
-        // eslint-disable-next-line unused-imports/no-unused-vars-ts
-        toBeDecorated.mockImplementation((_, __) => 42);
+        toBeDecorated.mockImplementation(() => 42);
 
         returnValue = decorated("some-parameter", "some-other-parameter");
       });
@@ -61,8 +61,7 @@ describe("with-error-logging", () => {
       let returnValue: number | undefined;
 
       beforeEach(() => {
-        // eslint-disable-next-line unused-imports/no-unused-vars-ts
-        toBeDecorated.mockImplementation((_, __) => undefined);
+        toBeDecorated.mockImplementation(() => undefined);
 
         returnValue = decorated("some-parameter", "some-other-parameter");
       });
@@ -84,15 +83,14 @@ describe("with-error-logging", () => {
       let error: Error;
 
       beforeEach(() => {
-        // eslint-disable-next-line unused-imports/no-unused-vars-ts
-        toBeDecorated.mockImplementation((_, __) => {
+        toBeDecorated.mockImplementation(() => {
           throw new Error("some-error");
         });
 
         try {
           decorated("some-parameter", "some-other-parameter");
-        } catch (e: any) {
-          error = e;
+        } catch (e) {
+          error = e as Error;
         }
       });
 
@@ -130,8 +128,7 @@ describe("with-error-logging", () => {
         toBeDecorated,
 
         withErrorLoggingFor(
-          (error: any) =>
-            `some-error-message-for-${error.message || error.someProperty}`,
+          (error) => `some-error-message-for-${(error as Error).message || (error as { someProperty: string }).someProperty}`,
         ),
       );
     });
@@ -159,7 +156,7 @@ describe("with-error-logging", () => {
 
       describe("when call rejects with error instance", () => {
         beforeEach(() => {
-          toBeDecorated.reject(new Error("some-error"));
+          void toBeDecorated.reject(new Error("some-error"));
         });
 
         it("logs the error", async () => {
@@ -183,7 +180,7 @@ describe("with-error-logging", () => {
         let error: unknown;
 
         beforeEach(async () => {
-          toBeDecorated.reject({ someProperty: "some-rejection" });
+          void toBeDecorated.reject({ someProperty: "some-rejection" });
 
           try {
             await returnValuePromise;

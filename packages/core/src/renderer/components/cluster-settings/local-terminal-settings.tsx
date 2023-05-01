@@ -59,7 +59,7 @@ const NonInjectedClusterLocalTerminalSetting = observer((props: Dependencies & C
     const dir = resolveTilde(directory);
     const result = await validateDirectory(dir);
 
-    if (result.callWasSuccessful) {
+    if (result.isOk) {
       runInAction(() => {
         cluster.preferences.terminalCWD = dir;
         presenter.directory.set(dir);
@@ -85,11 +85,11 @@ const NonInjectedClusterLocalTerminalSetting = observer((props: Dependencies & C
 
   const setAndCommitDirectory = (newPath: string) => {
     presenter.directory.set(newPath);
-    commitDirectory(newPath);
+    void commitDirectory(newPath);
   };
 
   const openFilePicker = () => {
-    openPathPickingDialog({
+    void openPathPickingDialog({
       message: "Choose Working Directory",
       buttonLabel: "Pick",
       properties: ["openDirectory", "showHiddenFiles"],
@@ -106,7 +106,7 @@ const NonInjectedClusterLocalTerminalSetting = observer((props: Dependencies & C
           value={presenter.directory.get()}
           data-testid="working-directory"
           onChange={value => presenter.directory.set(value)}
-          onBlur={() => commitDirectory(presenter.directory.get())}
+          onBlur={() => void commitDirectory(presenter.directory.get())}
           placeholder={isWindows ? "$USERPROFILE" : "$HOME"}
           iconRight={(
             <>

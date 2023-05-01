@@ -44,12 +44,10 @@ export class LocalShellSession extends ShellSession {
       throw new Error("PTYSHELL is not defined with the environment");
     }
 
-    const args = await this.getShellArgs(shell);
-
-    await this.openShellProcess(shell, args, env);
+    await this.openShellProcess(shell, this.getShellArgs(shell), env);
   }
 
-  protected async getShellArgs(shell: string): Promise<string[]> {
+  protected getShellArgs(shell: string): string[] {
     const pathFromPreferences = this.dependencies.state.kubectlBinariesPath || this.kubectl.getBundledPath();
     const kubectlPathDir = this.dependencies.state.downloadKubectlBinaries
       ? this.dependencies.directoryContainingKubectl
@@ -61,7 +59,7 @@ export class LocalShellSession extends ShellSession {
       case "bash":
         return ["--init-file", this.dependencies.joinPaths(this.dependencies.directoryContainingKubectl, ".bash_set_path")];
       case "fish":
-        return ["--login", "--init-command", `export PATH="${kubectlPathDir}:${this.dependencies.directoryForBinaries}:$PATH"; export KUBECONFIG="${await this.dependencies.proxyKubeconfigPath}"`];
+        return ["--login", "--init-command", `export PATH="${kubectlPathDir}:${this.dependencies.directoryForBinaries}:$PATH"; export KUBECONFIG="${this.dependencies.proxyKubeconfigPath}"`];
       case "zsh":
         return ["--login"];
       default:

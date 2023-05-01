@@ -56,7 +56,7 @@ export const backoffCaller = async <T, E>(fn: () => AsyncResult<T, E>, options?:
   do {
     result = await fn();
 
-    if (result.callWasSuccessful) {
+    if (result.isOk) {
       return result;
     }
 

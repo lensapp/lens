@@ -19,7 +19,7 @@ describe("reactively disable cluster pages", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.setEnvironmentToClusterFrame();
+    await builder.setEnvironmentToClusterFrame();
 
     someObservable = observable.box(false);
 
@@ -40,7 +40,7 @@ describe("reactively disable cluster pages", () => {
 
     rendered = await builder.render();
 
-    builder.extensions.enable(testExtensionOptions);
+    await builder.extensions.enable(testExtensionOptions);
 
     testExtensionInstance =
       builder.extensions.get("test-extension-id").applicationWindows.only;

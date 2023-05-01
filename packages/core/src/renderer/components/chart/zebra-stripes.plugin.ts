@@ -30,7 +30,7 @@ export class ZebraStripesPlugin implements PluginServiceRegistrationOptions {
   }
 
   getOptions(chart: ChartJS): ZebraStripesOptions | undefined {
-    return chart.options.plugins?.ZebraStripes;
+    return chart.options.plugins?.ZebraStripes as ZebraStripesOptions;
   }
 
   getLastUpdate(chart: ChartJS) {

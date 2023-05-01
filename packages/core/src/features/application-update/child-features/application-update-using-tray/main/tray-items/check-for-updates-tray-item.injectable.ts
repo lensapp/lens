@@ -66,7 +66,7 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
           if (updateIsReadyToBeInstalled) {
             await showApplicationWindow();
           } else {
-            showMessagePopup(
+            await showMessagePopup(
               "No Updates Available",
               "You're all good",
               "You've got the latest version of Lens,\nthanks for staying on the ball.",
@@ -76,12 +76,8 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
             );
           }
         },
-
         withErrorLoggingFor(() => "[TRAY]: Checking for updates failed."),
-
-        // TODO: Find out how to improve typing so that instead of
-        // x => withErrorSuppression(x) there could only be withErrorSuppression
-        (x) => withErrorSuppression(x),
+        withErrorSuppression,
       ),
     };
   },

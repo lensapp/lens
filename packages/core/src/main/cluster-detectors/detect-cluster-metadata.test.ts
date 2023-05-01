@@ -22,7 +22,7 @@ describe("detect-cluster-metadata", () => {
 
   let cluster: Cluster;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const di = getDiForUnitTesting();
 
     const lastSeenDetectMock = jest.fn().mockReturnValue(Promise.resolve({ value: "some-time-stamp", accuracy: 100 }));
@@ -63,7 +63,7 @@ describe("detect-cluster-metadata", () => {
 
     detectClusterMetadata = di.inject(detectClusterMetadataInjectable);
 
-    cluster = new Cluster({
+    cluster = Cluster.createForTestingOnly({
       id: "some-id",
       contextName: "some-context",
       kubeConfigPath: "minikube-config.yml",

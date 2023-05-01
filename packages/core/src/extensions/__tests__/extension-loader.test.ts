@@ -31,7 +31,7 @@ describe("ExtensionLoader", () => {
     di.override(currentlyInClusterFrameInjectable, () => false);
 
     di.override(ipcRendererInjectable, () => ({
-      invoke: jest.fn(async (channel: string) => {
+      invoke: jest.fn((channel: string) => {
         if (channel === "extension-loader:main:state") {
           return [
             [
@@ -68,7 +68,7 @@ describe("ExtensionLoader", () => {
         return [];
       }),
 
-      on: (channel: string, listener: (event: any, ...args: any[]) => void) => {
+      on: (channel: string, listener: (event: unknown, ...args: unknown[]) => void) => {
         if (channel === "extension-loader:main:state") {
           // First initialize with extensions 1 and 2
           // and then broadcast event to remove extension 2 and add extension number 3

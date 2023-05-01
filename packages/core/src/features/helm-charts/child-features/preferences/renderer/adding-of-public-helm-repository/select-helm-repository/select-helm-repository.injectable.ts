@@ -16,15 +16,15 @@ const selectHelmRepositoryInjectable = getInjectable({
     const addHelmRepository = di.inject(addHelmRepositoryInjectable);
     const removeHelmRepository = di.inject(removeHelmRepositoryInjectable);
 
-    return (selected: SingleValue<SelectOption<HelmRepo>>) => {
+    return async (selected: SingleValue<SelectOption<HelmRepo>>) => {
       if (!selected) {
         return;
       }
 
       if (!selected.isSelected) {
-        addHelmRepository(selected.value);
+        await addHelmRepository(selected.value);
       } else {
-        removeHelmRepository(selected.value);
+        await removeHelmRepository(selected.value);
       }
     };
   },

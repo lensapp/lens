@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { loggerInjectionToken } from "@k8slens/logger";
+import { prefixedLoggerInjectable } from "@k8slens/logger";
 import showCheckedErrorNotificationInjectable from "../notifications/show-checked-error.injectable";
 import kubeconfigDialogStateInjectable from "./state.injectable";
 import type { StrictReactNode } from "@k8slens/utilities";
@@ -20,17 +20,17 @@ const openKubeconfigDialogInjectable = getInjectable({
   instantiate: (di): OpenKubeconfigDialog => {
     const state = di.inject(kubeconfigDialogStateInjectable);
     const showCheckedErrorNotification = di.inject(showCheckedErrorNotificationInjectable);
-    const logger = di.inject(loggerInjectionToken);
+    const logger = di.inject(prefixedLoggerInjectable, "KUBE-CONFIG-DIALOG");
 
     return ({ title, loader }) => {
-      (async () => {
+      void (async () => {
         try {
           const config = await loader();
 
           state.set({ title, config });
         } catch (error) {
-          showCheckedErrorNotification(error, "Failed to retrieve config for dialog");
-          logger.warn("[KUBECONFIG-DIALOG]: failed to retrieve config for dialog", error);
+          showCheckedErrorNotification(error, "Failed to retrieved config for dialog");
+          logger.warn("failed to retrieved config for dialog", error);
         }
       })();
     };

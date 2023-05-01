@@ -17,6 +17,8 @@ import configToModelsInjectable from "./config-to-models.injectable";
 import kubeconfigSyncLoggerInjectable from "./logger.injectable";
 import clusterConnectionInjectable from "../../cluster/cluster-connection.injectable";
 import getClusterByIdInjectable from "../../../features/cluster/storage/common/get-by-id.injectable";
+import type { ZodError } from "zod";
+import type { Result } from "@k8slens/utilities";
 
 export type ComputeKubeconfigDiff = (contents: string, source: ObservableMap<string, [Cluster, CatalogEntity]>, filePath: string) => void;
 
@@ -31,13 +33,13 @@ const computeKubeconfigDiffInjectable = getInjectable({
 
     return action((contents, source, filePath) => {
       try {
-        const { config, error } = loadConfigFromString(contents);
+        const result = loadConfigFromString(contents);
 
-        if (error) {
-          logger.warn(`encountered errors while loading config: ${error.message}`, { filePath, details: error.details });
+        if (result.isOk === false) {
+          return logger.warn(`encountered errors while loading config: ${result.error.message}`, { filePath, details: result.error.errors });
         }
 
-        const rawModels = configToModels(config, filePath);
+        const rawModels = configToModels(result.value, filePath);
         const models = new Map(rawModels.map((model) => [model.contextName, model]));
 
         logger.debug(`File now has ${models.size} entries`, { filePath });
@@ -69,24 +71,37 @@ const computeKubeconfigDiffInjectable = getInjectable({
         }
 
         for (const [contextName, model] of models) {
-          // add new clusters to the source
-          try {
-            const clusterId = createHash("md5").update(`${filePath}:${contextName}`).digest("hex");
-            const cluster = getClusterById(clusterId) ?? new Cluster({ ...model, id: clusterId });
-            const entity = catalogEntityFromCluster(cluster);
+          const clusterId = createHash("md5").update(`${filePath}:${contextName}`).digest("hex");
+          const clusterResult = ((): Result<Cluster, ZodError<unknown>> => {
+            const cluster = getClusterById(clusterId);
 
-            if (!filePath.startsWith(directoryForKubeConfigs)) {
-              entity.metadata.labels.file = filePath.replace(homedir(), "~");
+            if (cluster) {
+              return {
+                isOk: true,
+                value: cluster,
+              };
             }
-            source.set(contextName, [cluster, entity]);
 
-            logger.debug(`Added new cluster from sync`, { filePath, contextName });
-          } catch (error) {
-            logger.warn(`Failed to create cluster from model: ${error}`, { filePath, contextName });
+            return Cluster.create({ ...model, id: clusterId });
+          })();
+
+          if (!clusterResult.isOk) {
+            logger.warn(`Failed to create cluster from model: ${clusterResult.error.toString()}`, { filePath, contextName });
+            continue;
           }
+
+          const cluster = clusterResult.value;
+          const entity = catalogEntityFromCluster(cluster);
+
+          if (!filePath.startsWith(directoryForKubeConfigs)) {
+            entity.metadata.labels.file = filePath.replace(homedir(), "~");
+          }
+          source.set(contextName, [cluster, entity]);
+
+          logger.debug(`Added new cluster from sync`, { filePath, contextName });
         }
       } catch (error) {
-        logger.warn(`Failed to compute diff: ${error}`, { filePath });
+        logger.warn(`Failed to compute diff: ${String(error)}`, { filePath });
         source.clear(); // clear source if we have failed so as to not show outdated information
       }
 

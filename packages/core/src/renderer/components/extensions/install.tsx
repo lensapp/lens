@@ -70,7 +70,7 @@ const NonInjectedInstall = observer(({
             validators={installPath ? installInputValidator : undefined}
             value={installPath}
             onChange={setInstallPath}
-            onSubmit={() => installExtensionFromInput(installPath)}
+            onSubmit={() => void installExtensionFromInput(installPath)}
             iconRight={(
               <Icon
                 className={styles.icon}
@@ -89,7 +89,7 @@ const NonInjectedInstall = observer(({
             label="Install"
             disabled={installState.anyPreInstallingOrInstalling}
             waiting={installState.anyPreInstallingOrInstalling}
-            onClick={() => installExtensionFromInput(installPath)}
+            onClick={() => void installExtensionFromInput(installPath)}
           />
         </div>
       </div>

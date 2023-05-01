@@ -7,7 +7,7 @@ import execFileInjectable from "../../../common/fs/exec-file.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
 import { platformSpecificRequestSystemCAsInjectionToken } from "../common/request-system-cas-token";
 
-const pemEncoding = (hexEncodedCert: String) => {
+const pemEncoding = (hexEncodedCert: string) => {
   const certData = Buffer.from(hexEncodedCert, "hex").toString("base64");
   const lines = ["-----BEGIN CERTIFICATE-----"];
 
@@ -19,6 +19,13 @@ const pemEncoding = (hexEncodedCert: String) => {
 
   return lines.join("\r\n");
 };
+
+
+interface NonWebpackRequire {
+  resolve(name: string): string;
+}
+
+declare const __non_webpack_require__: NonWebpackRequire;
 
 const win32RequestSystemCAsInjectable = getInjectable({
   id: "win32-request-system-cas",
@@ -38,14 +45,14 @@ const win32RequestSystemCAsInjectable = getInjectable({
           maxBuffer: 128 * 1024 * 1024, // 128 MiB
         });
 
-        if (!result.callWasSuccessful) {
+        if (!result.isOk) {
           logger.warn(`[INJECT-CAS]: Error retrieving CAs`, result.error);
 
           return [];
         }
 
         return result
-          .response
+          .value
           .split("\r\n")
           .filter(Boolean)
           .map(pemEncoding);

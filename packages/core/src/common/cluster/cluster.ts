@@ -6,10 +6,12 @@
 import { computed, observable, toJS, runInAction } from "mobx";
 import type { KubeApiResource } from "../rbac";
 import type { ClusterState, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel } from "../cluster-types";
-import { ClusterMetadataKey, clusterModelIdChecker, updateClusterModelChecker } from "../cluster-types";
+import { ClusterMetadataKey, clusterModelIdSchema, updateClusterModelSchema } from "../cluster-types";
 import type { IObservableValue } from "mobx";
 import { replaceObservableObject } from "../utils/replace-observable-object";
 import { pick } from "lodash";
+import type { ZodError } from "zod";
+import type { Result } from "@k8slens/utilities";
 
 export class Cluster {
   /**
@@ -20,12 +22,12 @@ export class Cluster {
   /**
    * Kubeconfig context name
    */
-  readonly contextName = observable.box() as IObservableValue<string>;
+  readonly contextName: IObservableValue<string>;
 
   /**
    * Path to kubeconfig
    */
-  readonly kubeConfigPath = observable.box() as IObservableValue<string>;
+  readonly kubeConfigPath: IObservableValue<string>;
 
   /**
    * Describes if we can detect that cluster is online
@@ -117,15 +119,58 @@ export class Cluster {
    */
   readonly prometheusPreferences = computed(() => pick(toJS(this.preferences), "prometheus", "prometheusProvider") as ClusterPrometheusPreferences);
 
-  constructor({ id, ...model }: ClusterModel) {
-    const { error } = clusterModelIdChecker.validate({ id });
+  static create({ id, ...model }: ClusterModel): Result<Cluster, ZodError<unknown>> {
+    const clusterIdResult = clusterModelIdSchema.safeParse({ id });
 
-    if (error) {
-      throw error;
+    if (!clusterIdResult.success) {
+      return {
+        isOk: false,
+        error: clusterIdResult.error,
+      };
     }
 
+    const updateModelResult = updateClusterModelSchema.safeParse(model);
+
+    if (!updateModelResult.success) {
+      return {
+        isOk: false,
+        error: updateModelResult.error,
+      };
+    }
+
+    return {
+      isOk: true,
+      value: new Cluster(clusterIdResult.data.id, updateModelResult.data),
+    };
+  }
+
+  static createForTestingOnly({ id, ...model }: ClusterModel): Cluster {
+    const clusterIdResult = clusterModelIdSchema.parse({ id });
+    const updateModelResult = updateClusterModelSchema.parse(model);
+
+    return new Cluster(clusterIdResult.id, updateModelResult);
+  }
+
+  private constructor(id: string, model: UpdateClusterModel) {
     this.id = id;
-    this.updateModel(model);
+    this.kubeConfigPath = observable.box(model.kubeConfigPath);
+    this.contextName = observable.box(model.contextName);
+
+    if (model.preferences) {
+      replaceObservableObject(this.preferences, model.preferences);
+    }
+
+    if (model.metadata) {
+      replaceObservableObject(this.metadata, model.metadata);
+    }
+
+    if (model.accessibleNamespaces) {
+      this.accessibleNamespaces.replace(model.accessibleNamespaces);
+    }
+
+    if (model.labels) {
+      replaceObservableObject(this.labels, model.labels);
+    }
   }
 
   /**
@@ -133,13 +178,14 @@ export class Cluster {
    *
    * @param model
    */
-  updateModel(model: UpdateClusterModel) {
-    // Note: do not assign ID as that should never be updated
+  updateModel(model: UpdateClusterModel): Result<Cluster, ZodError<unknown>> {
+    const updateModelResult = updateClusterModelSchema.safeParse(model);
 
-    const { error } = updateClusterModelChecker.validate(model, { allowUnknown: true });
-
-    if (error) {
-      throw error;
+    if (!updateModelResult.success) {
+      return {
+        isOk: false,
+        error: updateModelResult.error,
+      };
     }
 
     runInAction(() => {
@@ -162,6 +208,11 @@ export class Cluster {
         replaceObservableObject(this.labels, model.labels);
       }
     });
+
+    return {
+      isOk: true,
+      value: this,
+    };
   }
 
   toJSON(): ClusterModel {

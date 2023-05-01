@@ -36,7 +36,7 @@ export async function bootstrap(di: DiContainerForInjection) {
   try {
     await initializeApp();
   } catch (error) {
-    console.error(`[BOOTSTRAP]: view initialization error: ${error}`, {
+    console.error(`[BOOTSTRAP]: view initialization error: ${String(error)}`, {
       origin: location.href,
       isTopFrameView: process.isMainFrame,
     });

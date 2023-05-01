@@ -15,22 +15,6 @@ import type { CatalogEntityRegistry } from "../entity-registry";
 class InvalidEntity extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus, WebLinkSpec> {
   public readonly apiVersion = "entity.k8slens.dev/v1alpha1";
   public readonly kind = "Invalid";
-
-  async onRun() {
-    return;
-  }
-
-  public onSettingsOpen(): void {
-    return;
-  }
-
-  public onDetailsOpen(): void {
-    return;
-  }
-
-  public onContextMenuOpen(): void {
-    return;
-  }
 }
 
 describe("CatalogEntityRegistry", () => {

@@ -12,7 +12,7 @@ const requestSystemCAsInjectable = getInjectable({
     const platformSpecificVersion = di.inject(platformSpecificVersionInjectable);
     const platformSpecificRequestSystemCAs = platformSpecificVersion(platformSpecificRequestSystemCAsInjectionToken);
 
-    return platformSpecificRequestSystemCAs ?? (async () => []);
+    return platformSpecificRequestSystemCAs ?? (() => []);
   },
   injectionToken: requestSystemCAsInjectionToken,
 });

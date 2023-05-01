@@ -33,7 +33,7 @@ interface Dependencies {
 
 export interface ClusterPrometheusHandler {
   setupPrometheus(preferences?: ClusterPrometheusPreferences): void;
-  getPrometheusDetails(): Promise<PrometheusDetails>;
+  getPrometheusDetails(): Promise<PrometheusDetails | undefined>;
 }
 
 const ensurePrometheusPath = ({ service, namespace, port }: PrometheusService) => `${namespace}/services/${service}:${port}`;
@@ -57,7 +57,7 @@ export const createClusterPrometheusHandler = (...args: [Dependencies, Cluster])
 
   const ensurePrometheusProvider = (service: PrometheusService) => {
     if (!prometheusProvider) {
-      logger.info(`[CONTEXT-HANDLER]: using ${service.kind} as prometheus provider for clusterId=${cluster.id}`);
+      logger.info(`using ${service.kind} as prometheus provider for clusterId=${cluster.id}`);
       prometheusProvider = service.kind;
     }
 
@@ -76,7 +76,7 @@ export const createClusterPrometheusHandler = (...args: [Dependencies, Cluster])
     return prometheusProviders.get();
   };
 
-  const getPrometheusService = async (): Promise<PrometheusService> => {
+  const getPrometheusService = async (): Promise<PrometheusService | undefined> => {
     setupPrometheus(cluster.preferences);
 
     if (prometheus && prometheusProvider) {
@@ -89,7 +89,15 @@ export const createClusterPrometheusHandler = (...args: [Dependencies, Cluster])
     }
 
     const providers = listPotentialProviders();
-    const proxyConfig = await loadProxyKubeconfig();
+    const proxyConfigResult = await loadProxyKubeconfig();
+
+    if (!proxyConfigResult.isOk) {
+      logger.error(`PROXY CONFIG FAILED VALIDATION: ${proxyConfigResult.error.toString()}`);
+
+      return undefined;
+    }
+
+    const proxyConfig = proxyConfigResult.value;
     const apiClient = proxyConfig.makeApiClient(CoreV1Api);
     const potentialServices = await Promise.allSettled(
       providers.map(provider => provider.getPrometheusService(apiClient)),
@@ -114,6 +122,11 @@ export const createClusterPrometheusHandler = (...args: [Dependencies, Cluster])
 
   const getPrometheusDetails: ClusterPrometheusHandler["getPrometheusDetails"] = async () => {
     const service = await getPrometheusService();
+
+    if (!service) {
+      return undefined;
+    }
+
     const prometheusPath = ensurePrometheusPath(service);
     const provider = ensurePrometheusProvider(service);
 

@@ -12,7 +12,7 @@ describe("multiple separators originating from extension", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.beforeApplicationStart(({ mainDi }) => {
+    await builder.beforeApplicationStart(({ mainDi }) => {
       mainDi.unoverride(getRandomIdInjectionToken);
       mainDi.permitSideEffects(getRandomIdInjectionToken);
     });
@@ -20,7 +20,7 @@ describe("multiple separators originating from extension", () => {
     await builder.render();
   });
 
-  it("given extension with multiple separators, when extension is enabled, does not throw", () => {
+  it("given extension with multiple separators, when extension is enabled, does not throw", async () => {
     const someExtension = {
       id: "some-extension-id",
       name: "some-extension",
@@ -30,8 +30,6 @@ describe("multiple separators originating from extension", () => {
       },
     };
 
-    expect(() => {
-      builder.extensions.enable(someExtension);
-    }).not.toThrow();
+    await expect(builder.extensions.enable(someExtension)).resolves.toBeUndefined();
   });
 });

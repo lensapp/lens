@@ -56,7 +56,7 @@ const NonInjectedCommandDialog = observer(({
           const { forceRootFrame = false } = opts;
 
           if (forceRootFrame) {
-            broadcastMessage(IpcRendererNavigationEvents.NAVIGATE_IN_APP, url);
+            void broadcastMessage(IpcRendererNavigationEvents.NAVIGATE_IN_APP, url);
           } else {
             navigate(url);
           }

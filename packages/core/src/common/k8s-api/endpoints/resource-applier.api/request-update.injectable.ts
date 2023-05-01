@@ -17,20 +17,20 @@ const requestKubeObjectCreationInjectable = getInjectable({
     return async (data) => {
       const result = await apiBase.post("/stack", { data }) as Result<string, string>;
 
-      if (!result.callWasSuccessful) {
+      if (!result.isOk) {
         return result;
       }
 
       try {
-        const response = JSON.parse(result.response);
+        const response = JSON.parse(result.value) as KubeJsonApiData;
 
         return {
-          callWasSuccessful: true,
+          isOk: true,
           response,
         };
       } catch (error) {
         return {
-          callWasSuccessful: false,
+          isOk: false,
           error: String(error),
         };
       }

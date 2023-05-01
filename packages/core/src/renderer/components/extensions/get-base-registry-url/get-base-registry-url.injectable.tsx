@@ -32,8 +32,8 @@ const getBaseRegistryUrlInjectable = getInjectable({
           );
           const result = await execFile("npm", ["config", "get", "registry"], { env: filteredEnv });
 
-          if (result.callWasSuccessful) {
-            return result.response.trim();
+          if (result.isOk) {
+            return result.value.trim();
           }
 
           showErrorNotification((

@@ -18,7 +18,7 @@ const broadcastConnectionUpdateInjectable = getInjectable({
 
     return (update) => {
       logger.debug(`[CLUSTER]: broadcasting connection update`, { ...update, meta: cluster.getMeta() });
-      broadcastMessage(`cluster:${cluster.id}:connection-update`, update);
+      void broadcastMessage(`cluster:${cluster.id}:connection-update`, update);
     };
   },
   lifecycle: lifecycleEnum.keyedSingleton({

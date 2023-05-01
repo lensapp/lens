@@ -40,7 +40,15 @@ export class NodeShellSession extends ShellSession {
   }
 
   public async open() {
-    const proxyKubeconfig = await this.dependencies.loadProxyKubeconfig();
+    const proxyConfigResult = await this.dependencies.loadProxyKubeconfig();
+
+    if (!proxyConfigResult.isOk) {
+      this.dependencies.logger.error(`PROXY CONFIG FAILED VALIDATION: ${proxyConfigResult.error.toString()}`);
+
+      return;
+    }
+
+    const proxyKubeconfig = proxyConfigResult.value;
     const coreApi = proxyKubeconfig.makeApiClient(CoreV1Api);
 
     const cleanup = once(() => {

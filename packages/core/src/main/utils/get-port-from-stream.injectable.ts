@@ -48,12 +48,13 @@ const getPortFromStreamInjectable = getInjectable({
         const handler = (data: unknown) => {
           const logItem = String(data);
           const match = args.lineRegex.match(logItem);
+          const { address } = match.groups ?? {};
 
           logLines.push(logItem);
 
-          if (match.matched) {
+          if (match.matched && address) {
             // use unknown protocol so that there is no default port
-            const addr = new URLParse(`s://${match.groups?.address?.trim()}`);
+            const addr = new URLParse(`s://${address.trim()}`);
 
             args.onFind?.();
             stream.off("data", handler);

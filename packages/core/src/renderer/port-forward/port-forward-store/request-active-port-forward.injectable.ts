@@ -33,7 +33,7 @@ const requestActivePortForwardInjectable = getInjectable({
           ...rest,
         };
       } catch (error) {
-        logger.warn(`[PORT-FORWARD-STORE] Error getting active port-forward: ${error}`, { namespace, kind, name });
+        logger.warn(`[PORT-FORWARD-STORE] Error getting active port-forward: ${String(error)}`, { namespace, kind, name });
 
         return undefined;
       }

@@ -164,7 +164,7 @@ class NonInjectedInfoPanel extends Component<InfoPanelProps & Dependencies> {
               outlined={showSubmitClose}
               primary={!showSubmitClose}// one button always should be primary (blue)
               label={submitLabel}
-              onClick={submit}
+              onClick={() => void submit()}
               disabled={isDisabled}
               data-testid={this.props.submitTestId}
             />
@@ -172,8 +172,13 @@ class NonInjectedInfoPanel extends Component<InfoPanelProps & Dependencies> {
               <Button
                 primary
                 active
-                label={`${submitLabel} & Close`}
-                onClick={submitAndClose}
+                label={(
+                  <>
+                    {submitLabel}
+                    {" & Close"}
+                  </>
+                )}
+                onClick={() => void submitAndClose()}
                 disabled={isDisabled}
                 data-testid={this.props.submitAndCloseTestId}
               />

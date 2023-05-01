@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { action, makeObservable, observable, reaction } from "mobx";
+import { action, makeObservable, observable, reaction, runInAction } from "mobx";
 import { ItemStore } from "../../../common/item.store";
 import type { StorageLayer } from "../../utils/storage-helper";
 import { disposer } from "@k8slens/utilities";
@@ -24,14 +24,14 @@ interface Dependencies {
 }
 
 export class PortForwardStore extends ItemStore<PortForwardItem> {
-  @observable portForwards: PortForwardItem[] = [];
+  readonly portForwards = observable.array<PortForwardItem>();
 
   constructor(protected readonly dependencies: Dependencies) {
     super();
     makeObservable(this);
     autoBind(this);
 
-    this.init();
+    void this.init();
   }
 
   private async init() {
@@ -60,7 +60,7 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
     return disposer(
       reaction(
         () => this.portForwards.slice(),
-        () => this.loadAll(),
+        () => void this.loadAll(),
       ),
     );
   }
@@ -71,7 +71,7 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
 
       this.dependencies.storage.set(portForwards);
 
-      this.portForwards = [];
+      this.portForwards.clear();
       portForwards.map((pf) => this.portForwards.push(new PortForwardItem(pf)));
 
       return this.portForwards;
@@ -127,52 +127,42 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
    *
    * @returns the port-forward after being modified.
    */
-  modify = action(
-    async (
-      portForward: ForwardedPort,
-      desiredPort: number,
-    ): Promise<ForwardedPort> => {
-      const pf = this.findPortForward(portForward);
+  modify = async (portForward: ForwardedPort, desiredPort: number): Promise<ForwardedPort> => {
+    const pf = this.findPortForward(portForward);
 
-      if (!pf) {
-        throw new Error("port-forward not found");
-      }
+    if (!pf) {
+      throw new Error("port-forward not found");
+    }
 
-      if (pf.status === "Active") {
-        try {
-          await this.stop(pf);
-        } catch {
-          // ignore, assume it is stopped and proceed to restart it
-        }
-
-        pf.forwardPort = desiredPort;
-        pf.protocol = portForward.protocol ?? "http";
-        this.setPortForward(pf);
-
-        return await this.start(pf);
+    if (pf.status === "Active") {
+      try {
+        await this.stop(pf);
+      } catch {
+        // ignore, assume it is stopped and proceed to restart it
       }
 
       pf.forwardPort = desiredPort;
+      pf.protocol = portForward.protocol ?? "http";
       this.setPortForward(pf);
 
-      return pf as ForwardedPort;
-    },
-  );
+      return await this.start(pf);
+    }
+
+    pf.forwardPort = desiredPort;
+    this.setPortForward(pf);
+
+    return pf as ForwardedPort;
+  };
 
   /**
    * remove and stop an existing port-forward.
    * @param portForward the port-forward to remove.
    */
-  remove = action(async (portForward: ForwardedPort) => {
+  remove = async (portForward: ForwardedPort) => {
     const pf = this.findPortForward(portForward);
 
     if (!pf) {
-      const error = new Error("port-forward not found");
-
-      this.dependencies.logger.warn(
-        `[PORT-FORWARD-STORE] Error getting port-forward: ${error}`,
-        portForward,
-      );
+      this.dependencies.logger.warn(`[PORT-FORWARD-STORE] Error getting port-forward: port-forward not found`, portForward);
 
       return;
     }
@@ -182,18 +172,20 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
     } catch (error) {
       if (pf.status === "Active") {
         this.dependencies.logger.warn(
-          `[PORT-FORWARD-STORE] Error removing port-forward: ${error}`,
+          `[PORT-FORWARD-STORE] Error removing port-forward: ${String(error)}`,
           portForward,
         );
       }
     }
 
-    const index = this.portForwards.findIndex(portForwardsEqual(portForward));
+    runInAction(() => {
+      const index = this.portForwards.findIndex(portForwardsEqual(portForward));
 
-    if (index >= 0) {
-      this.portForwards.splice(index, 1);
-    }
-  });
+      if (index >= 0) {
+        this.portForwards.splice(index, 1);
+      }
+    });
+  };
 
   /**
    * gets the list of port-forwards in the store
@@ -232,7 +224,7 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
       await waitUntilFree(+forwardPort, 200, 1000);
     } catch (error) {
       this.dependencies.logger.warn(
-        `[PORT-FORWARD-STORE] Error stopping active port-forward: ${error}`,
+        `[PORT-FORWARD-STORE] Error stopping active port-forward: ${String(error)}`,
         portForward,
       );
       throw error;
@@ -298,7 +290,7 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
       pf.status = "Active";
     } catch (error) {
       this.dependencies.logger.warn(
-        `[PORT-FORWARD-STORE] Error starting port-forward: ${error}`,
+        `[PORT-FORWARD-STORE] Error starting port-forward: ${String(error)}`,
         pf,
       );
       pf.status = "Disabled";

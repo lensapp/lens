@@ -7,9 +7,9 @@ import logErrorInjectable from "../../log-error.injectable";
 
 export type WithErrorLoggingFor = (
   getErrorMessage: (error: unknown) => string
-) => <T extends (...args: any[]) => any>(
-  toBeDecorated: T
-) => (...args: Parameters<T>) => ReturnType<T>;
+) => <Params extends unknown[], Res>(
+  toBeDecorated: (...args: Params) => Res
+) => (...args: Params) => Res;
 
 const withErrorLoggingInjectable = getInjectable({
   id: "with-error-logging",
@@ -32,14 +32,14 @@ const withErrorLoggingInjectable = getInjectable({
             throw e;
           }
 
-          if ((returnValue as any) instanceof Promise) {
+          if (returnValue instanceof Promise) {
             return returnValue.catch((e: unknown) => {
               const errorMessage = getErrorMessage(e);
 
               logError(errorMessage, e);
 
               throw e;
-            });
+            }) as never;
           }
 
           return returnValue;

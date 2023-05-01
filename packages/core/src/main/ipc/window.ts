@@ -43,7 +43,7 @@ export function handleWindowAction(action: WindowAction) {
     }
 
     default:
-      throw new Error(`Attemped window action ${action} is unknown`);
+      throw new Error(`Attempted window action ${action} is unknown`);
   }
 }
 
@@ -66,6 +66,6 @@ export function onLocationChange(): void {
     return false;
   });
 
-  broadcastMessage("history:can-go-back", canGoBack);
-  broadcastMessage("history:can-go-forward", canGoForward);
+  void broadcastMessage("history:can-go-back", canGoBack);
+  void broadcastMessage("history:can-go-forward", canGoForward);
 }

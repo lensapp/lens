@@ -38,29 +38,31 @@ export class LensProtocolRouterRenderer extends proto.LensProtocolRouter {
         ));
       }
     });
-    ipcRenderer.on(proto.ProtocolHandlerExtension, async (event, rawUrl: string, mainAttemptResult: RouteAttempt) => {
-      const rendererAttempt = await this._routeToExtension(new Url(rawUrl, true));
+    ipcRenderer.on(proto.ProtocolHandlerExtension, (event, rawUrl: string, mainAttemptResult: RouteAttempt) => {
+      void (async () => {
+        const rendererAttempt = await this._routeToExtension(new Url(rawUrl, true));
 
-      switch (foldAttemptResults(mainAttemptResult, rendererAttempt)) {
-        case RouteAttempt.MISSING:
-          this.dependencies.showShortInfoNotification((
-            <p>
-              {"Unknown action "}
-              <code>{rawUrl}</code>
-              {". Are you on the latest version of the extension?"}
-            </p>
-          ));
-          break;
-        case RouteAttempt.MISSING_EXTENSION:
-          this.dependencies.showShortInfoNotification((
-            <p>
-              {"Missing extension for action "}
-              <code>{rawUrl}</code>
-              {". Not able to find extension in our known list. Try installing it manually."}
-            </p>
-          ));
-          break;
-      }
+        switch (foldAttemptResults(mainAttemptResult, rendererAttempt)) {
+          case RouteAttempt.MISSING:
+            this.dependencies.showShortInfoNotification((
+              <p>
+                {"Unknown action "}
+                <code>{rawUrl}</code>
+                {". Are you on the latest version of the extension?"}
+              </p>
+            ));
+            break;
+          case RouteAttempt.MISSING_EXTENSION:
+            this.dependencies.showShortInfoNotification((
+              <p>
+                {"Missing extension for action "}
+                <code>{rawUrl}</code>
+                {". Not able to find extension in our known list. Try installing it manually."}
+              </p>
+            ));
+            break;
+        }
+      })();
     });
     ipcRenderer.on(ProtocolHandlerInvalid, (event, error: string, rawUrl: string) => {
       this.dependencies.showErrorNotification((

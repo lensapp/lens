@@ -32,7 +32,7 @@ const readmeOfSelectedHelmChartInjectable = getInjectable({
           chartVersion.getVersion(),
         );
 
-        return result.callWasSuccessful ? result.response : "";
+        return result.isOk ? result.value : "";
       },
 
       valueWhenPending: "",

@@ -10,7 +10,7 @@ import { clearKubeconfigEnvVars } from "../utils/clear-kube-env-vars";
 import path from "path";
 import os from "os";
 import type * as pty from "node-pty";
-import { getOrInsertWith } from "@k8slens/utilities";
+import { getOrInsertWith, json } from "@k8slens/utilities";
 import { type TerminalMessage, TerminalChannels } from "../../common/terminal/channels";
 import type { Logger } from "@k8slens/logger";
 import type { ComputeShellEnvironment } from "../../features/shell-sync/main/compute-shell-environment.injectable";
@@ -250,7 +250,7 @@ export abstract class ShellSession {
         const data = rawData.toString();
 
         try {
-          const message: TerminalMessage = JSON.parse(data);
+          const message = JSON.parse(data) as TerminalMessage;
 
           switch (message.type) {
             case TerminalChannels.STDIN:
@@ -312,7 +312,7 @@ export abstract class ShellSession {
       this.dependencies.shellSessionEnvs.set(clusterId, env);
     } else {
       // refresh env in the background
-      this.getShellEnv().then((shellEnv: any) => {
+      void this.getShellEnv().then((shellEnv) => {
         this.dependencies.shellSessionEnvs.set(clusterId, shellEnv);
       });
     }
@@ -324,14 +324,14 @@ export abstract class ShellSession {
     const shell = this.dependencies.userShellSetting.get();
     const result = await this.dependencies.computeShellEnvironment(shell);
     const rawEnv = (() => {
-      if (result.callWasSuccessful) {
-        return result.response ?? process.env;
+      if (result.isOk) {
+        return result.value ?? process.env;
       }
 
       return process.env;
     })();
 
-    const env = clearKubeconfigEnvVars(JSON.parse(JSON.stringify(rawEnv)));
+    const env = clearKubeconfigEnvVars(json.clone(rawEnv));
     const pathStr = [this.dependencies.directoryContainingKubectl, ...this.getPathEntries(), env.PATH].join(path.delimiter);
 
     delete env.DEBUG; // don't pass DEBUG into shells

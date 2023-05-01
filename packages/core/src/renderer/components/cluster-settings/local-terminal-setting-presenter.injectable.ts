@@ -24,11 +24,16 @@ const localTerminalSettingPresenterInjectable = getInjectable({
   instantiate: async (di, cluster: Cluster): Promise<LocalTerminalSettingPresenter> => {
     const loadKubeconfig = di.inject(loadKubeconfigInjectable, cluster);
 
-    const kubeconfig = await loadKubeconfig();
+    const result = await loadKubeconfig();
 
+    if (result.isOk === false) {
+      throw result.error;
+    }
+
+    const kubeConfig = result.value;
     const directory = observable.box(cluster.preferences.terminalCWD || "");
     const defaultNamespace = observable.box(cluster.preferences.defaultNamespace || "");
-    const placeholderDefaultNamespace = kubeconfig.getContextObject(cluster.contextName.get())?.namespace || "default";
+    const placeholderDefaultNamespace = kubeConfig.getContextObject(cluster.contextName.get())?.namespace || "default";
 
     return {
       directory: {

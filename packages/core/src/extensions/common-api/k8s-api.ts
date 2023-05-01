@@ -59,9 +59,9 @@ export interface ExternalKubeApiOptions {
 
 // NOTE: this is done to preserve `instanceOf` behaviour
 function KubeApiCstr<
-  Object extends KubeObject = KubeObject,
-  Data extends KubeJsonApiDataFor<Object> = KubeJsonApiDataFor<Object>,
->({ autoRegister = true, ...opts }: KubeApiOptions<Object, Data> & ExternalKubeApiOptions) {
+  Kube extends KubeObject = KubeObject,
+  Data extends KubeJsonApiDataFor<Kube> = KubeJsonApiDataFor<Kube>,
+>({ autoRegister = true, ...opts }: KubeApiOptions<Kube, Data> & ExternalKubeApiOptions) {
   const api = new InternalKubeApi(getKubeApiDeps(), opts);
 
   const di = getLegacyGlobalDiForExtensionApi();
@@ -75,14 +75,14 @@ function KubeApiCstr<
 }
 
 export type KubeApi<
-  Object extends KubeObject = KubeObject,
-  Data extends KubeJsonApiDataFor<Object> = KubeJsonApiDataFor<Object>,
-> = InternalKubeApi<Object, Data>;
+  Kube extends KubeObject = KubeObject,
+  Data extends KubeJsonApiDataFor<Kube> = KubeJsonApiDataFor<Kube>,
+> = InternalKubeApi<Kube, Data>;
 
 export const KubeApi = KubeApiCstr as unknown as new<
-  Object extends KubeObject = KubeObject,
-  Data extends KubeJsonApiDataFor<Object> = KubeJsonApiDataFor<Object>,
->(opts: KubeApiOptions<Object, Data> & ExternalKubeApiOptions) => InternalKubeApi<Object, Data>;
+  Kube extends KubeObject = KubeObject,
+  Data extends KubeJsonApiDataFor<Kube> = KubeJsonApiDataFor<Kube>,
+>(opts: KubeApiOptions<Kube, Data> & ExternalKubeApiOptions) => InternalKubeApi<Kube, Data>;
 
 /**
  * @deprecated Switch to using `Common.createResourceStack` instead
@@ -94,11 +94,11 @@ export class ResourceStack implements ResourceApplyingStack {
     this.impl = createResourceStack(cluster, name);
   }
 
-  kubectlApplyFolder(folderPath: string, templateContext?: any, extraArgs?: string[] | undefined): Promise<string> {
+  kubectlApplyFolder(folderPath: string, templateContext?: unknown, extraArgs?: string[] | undefined): Promise<string> {
     return this.impl.kubectlApplyFolder(folderPath, templateContext, extraArgs);
   }
 
-  kubectlDeleteFolder(folderPath: string, templateContext?: any, extraArgs?: string[] | undefined): Promise<string> {
+  kubectlDeleteFolder(folderPath: string, templateContext?: unknown, extraArgs?: string[] | undefined): Promise<string> {
     return this.impl.kubectlDeleteFolder(folderPath, templateContext, extraArgs);
   }
 }
@@ -211,19 +211,19 @@ export interface IgnoredKubeApiOptions {
   /**
    * @deprecated this option is overridden and should not be used
    */
-  objectConstructor?: any;
+  objectConstructor?: unknown;
   /**
    * @deprecated this option is overridden and should not be used
    */
-  kind?: any;
+  kind?: unknown;
   /**
    * @deprecated this option is overridden and should not be used
    */
-  isNamespaces?: any;
+  isNamespaces?: unknown;
   /**
    * @deprecated this option is overridden and should not be used
    */
-  apiBase?: any;
+  apiBase?: unknown;
 }
 
 // NOTE: these *Constructor functions MUST be `function` to work with `new X()`

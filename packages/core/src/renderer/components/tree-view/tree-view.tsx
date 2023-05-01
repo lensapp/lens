@@ -62,7 +62,7 @@ export function TreeItem(props: TreeItemProps) {
     selected = false,
   } = props;
   const [hovering, setHovering] = useState(false);
-  const optionalCssNames: Partial<Record<string, any>> = {};
+  const optionalCssNames: Partial<Record<string, unknown>> = {};
 
   if (classes.selected) {
     optionalCssNames[classes.selected] = selected;

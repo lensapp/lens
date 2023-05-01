@@ -36,24 +36,22 @@ const setupDeepLinkingInjectable = getInjectable({
         await openDeepLinkForUrl(url);
       }
 
-      app.on("open-url", async (event, url) => {
+      app.on("open-url", (event, url) => {
         event.preventDefault();
-
-        await openDeepLinkForUrl(url);
+        void openDeepLinkForUrl(url);
       });
 
-      app.on(
-        "second-instance",
-        async (_, secondInstanceCommandLineArguments) => {
-          const url = getDeepLinkUrl(secondInstanceCommandLineArguments);
+      app.on("second-instance", (_, secondInstanceCommandLineArguments) => {
+        const url = getDeepLinkUrl(secondInstanceCommandLineArguments);
 
+        void (async () => {
           await showApplicationWindow();
 
           if (url) {
             await openDeepLinkForUrl(url);
           }
-        },
-      );
+        })();
+      });
     },
   }),
 

@@ -25,7 +25,7 @@ import broadcastMessageInjectable from "../../common/ipc/broadcast-message.injec
 import createListNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
 import kubeAuthProxyServerInjectable from "./kube-auth-proxy-server.injectable";
 import loadProxyKubeconfigInjectable from "./load-proxy-kubeconfig.injectable";
-import { loggerInjectionToken } from "@k8slens/logger";
+import { prefixedLoggerInjectable } from "@k8slens/logger";
 import prometheusHandlerInjectable from "./prometheus-handler/prometheus-handler.injectable";
 import removeProxyKubeconfigInjectable from "./remove-proxy-kubeconfig.injectable";
 import requestApiResourcesInjectable from "./request-api-resources.injectable";
@@ -75,15 +75,15 @@ class ClusterConnection {
   ) {}
 
   private bindEvents() {
-    this.dependencies.logger.info(`[CLUSTER]: bind events`, this.cluster.getMeta());
+    this.dependencies.logger.info(`bind events`, this.cluster.getMeta());
     const refreshTimer = setInterval(() => {
       if (!this.cluster.disconnected.get()) {
-        this.refresh();
+        void this.refresh();
       }
     }, 30_000); // every 30s
     const refreshMetadataTimer = setInterval(() => {
       if (this.cluster.available.get()) {
-        this.refreshAccessibilityAndMetadata();
+        void this.refreshAccessibilityAndMetadata();
       }
     }, 900000); // every 15 minutes
 
@@ -95,18 +95,18 @@ class ClusterConnection {
       ),
       () => clearInterval(refreshTimer),
       () => clearInterval(refreshMetadataTimer),
-      reaction(() => this.cluster.preferences.defaultNamespace, () => this.recreateProxyKubeconfig()),
+      reaction(() => this.cluster.preferences.defaultNamespace, () => void this.recreateProxyKubeconfig()),
     );
   }
 
   protected async recreateProxyKubeconfig() {
-    this.dependencies.logger.info("[CLUSTER]: Recreating proxy kubeconfig");
+    this.dependencies.logger.info("Recreating proxy kubeconfig");
 
     try {
       await this.dependencies.removeProxyKubeconfig();
       await this.dependencies.loadProxyKubeconfig();
     } catch (error) {
-      this.dependencies.logger.error(`[CLUSTER]: failed to recreate proxy kubeconfig`, error);
+      this.dependencies.logger.error(`failed to recreate proxy kubeconfig`, error);
     }
   }
 
@@ -118,7 +118,7 @@ class ClusterConnection {
       return;
     }
 
-    this.dependencies.logger.info(`[CLUSTER]: activate`, this.cluster.getMeta());
+    this.dependencies.logger.info(`activate`, this.cluster.getMeta());
 
     if (!this.eventsDisposer.length) {
       this.bindEvents();
@@ -134,7 +134,7 @@ class ClusterConnection {
       } catch (error) {
         this.dependencies.broadcastConnectionUpdate({
           level: "error",
-          message: `Failed to start connection: ${error}`,
+          message: `Failed to start connection: ${String(error)}`,
         });
 
         return;
@@ -150,7 +150,7 @@ class ClusterConnection {
     } catch (error) {
       this.dependencies.broadcastConnectionUpdate({
         level: "error",
-        message: `Failed to connection status: ${error}`,
+        message: `Failed to connection status: ${String(error)}`,
       });
 
       return;
@@ -166,7 +166,7 @@ class ClusterConnection {
       } catch (error) {
         this.dependencies.broadcastConnectionUpdate({
           level: "error",
-          message: `Failed to refresh accessibility: ${error}`,
+          message: `Failed to refresh accessibility: ${String(error)}`,
         });
 
         return;
@@ -181,7 +181,7 @@ class ClusterConnection {
   }
 
   async reconnect() {
-    this.dependencies.logger.info(`[CLUSTER]: reconnect`, this.cluster.getMeta());
+    this.dependencies.logger.info(`reconnect`, this.cluster.getMeta());
     await this.dependencies.kubeAuthProxyServer?.restart();
 
     runInAction(() => {
@@ -191,11 +191,11 @@ class ClusterConnection {
 
   disconnect() {
     if (this.cluster.disconnected.get()) {
-      return this.dependencies.logger.debug("[CLUSTER]: already disconnected", { id: this.cluster.id });
+      return this.dependencies.logger.debug("already disconnected", { id: this.cluster.id });
     }
 
     runInAction(() => {
-      this.dependencies.logger.info(`[CLUSTER]: disconnecting`, { id: this.cluster.id });
+      this.dependencies.logger.info(`disconnecting`, { id: this.cluster.id });
       this.eventsDisposer();
       this.dependencies.kubeAuthProxyServer?.stop();
       this.cluster.disconnected.set(true);
@@ -204,12 +204,12 @@ class ClusterConnection {
       this.cluster.ready.set(false);
       this.activated = false;
       this.cluster.allowedNamespaces.clear();
-      this.dependencies.logger.info(`[CLUSTER]: disconnected`, { id: this.cluster.id });
+      this.dependencies.logger.info(`disconnected`, { id: this.cluster.id });
     });
   }
 
   async refresh() {
-    this.dependencies.logger.info(`[CLUSTER]: refresh`, this.cluster.getMeta());
+    this.dependencies.logger.info(`refresh`, this.cluster.getMeta());
     await this.refreshConnectionStatus();
   }
 
@@ -219,7 +219,7 @@ class ClusterConnection {
   }
 
   async refreshMetadata() {
-    this.dependencies.logger.info(`[CLUSTER]: refreshMetadata`, this.cluster.getMeta());
+    this.dependencies.logger.info(`refreshMetadata`, this.cluster.getMeta());
     const metadata = await this.dependencies.detectClusterMetadata(this.cluster);
 
     runInAction(() => {
@@ -228,8 +228,16 @@ class ClusterConnection {
   }
 
   private async refreshAccessibility(): Promise<void> {
-    this.dependencies.logger.info(`[CLUSTER]: refreshAccessibility`, this.cluster.getMeta());
-    const proxyConfig = await this.dependencies.loadProxyKubeconfig();
+    this.dependencies.logger.info(`refreshAccessibility`, this.cluster.getMeta());
+    const proxyConfigResult = await this.dependencies.loadProxyKubeconfig();
+
+    if (!proxyConfigResult.isOk) {
+      this.dependencies.logger.error(`PROXY CONFIG FAILED VALIDATION: ${proxyConfigResult.error.toString()}`);
+
+      return;
+    }
+
+    const proxyConfig = proxyConfigResult.value;
     const api = this.dependencies.createAuthorizationApi(proxyConfig);
     const canI = this.dependencies.createCanI(api);
     const requestNamespaceListPermissions = this.dependencies.createRequestNamespaceListPermissions(api);
@@ -247,17 +255,17 @@ class ClusterConnection {
     const knownResources = await (async () => {
       const result = await this.dependencies.requestApiResources(this.cluster);
 
-      if (result.callWasSuccessful) {
-        return result.response;
+      if (result.isOk) {
+        return result.value;
       }
 
       if (this.cluster.knownResources.length > 0) {
-        this.dependencies.logger.warn(`[CLUSTER]: failed to list KUBE resources, sticking with previous list`);
+        this.dependencies.logger.warn(`failed to list KUBE resources, sticking with previous list`);
 
         return this.cluster.knownResources;
       }
 
-      this.dependencies.logger.warn(`[CLUSTER]: failed to list KUBE resources for the first time, blocking connection to cluster...`);
+      this.dependencies.logger.warn(`failed to list KUBE resources for the first time, blocking connection to cluster...`);
       this.dependencies.broadcastConnectionUpdate({
         level: "error",
         message: "Failed to list kube API resources, please reconnect...",
@@ -276,7 +284,7 @@ class ClusterConnection {
       this.cluster.ready.set(this.cluster.knownResources.length > 0);
     });
 
-    this.dependencies.logger.debug(`[CLUSTER]: refreshed accessibility data`, this.cluster.getState());
+    this.dependencies.logger.debug(`refreshed accessibility data`, this.cluster.getState());
   }
 
   async refreshConnectionStatus() {
@@ -298,7 +306,7 @@ class ClusterConnection {
 
       return ClusterStatus.AccessGranted;
     } catch (error) {
-      this.dependencies.logger.error(`[CLUSTER]: Failed to connect to "${this.cluster.contextName.get()}": ${error}`);
+      this.dependencies.logger.error(`Failed to connect to "${this.cluster.contextName.get()}": ${String(error)}`);
 
       if (isRequestError(error)) {
         if (error.statusCode) {
@@ -348,7 +356,7 @@ class ClusterConnection {
       } else if (error instanceof Error || typeof error === "string") {
         this.dependencies.broadcastConnectionUpdate({
           level: "error",
-          message: `${error}`,
+          message: `${String(error)}`,
         });
       } else {
         this.dependencies.broadcastConnectionUpdate({
@@ -378,8 +386,8 @@ class ClusterConnection {
       if (namespaceList.length === 0 && error instanceof HttpError && error.statusCode === 403) {
         const { response } = error as HttpError & { response: Response };
 
-        this.dependencies.logger.info("[CLUSTER]: listing namespaces is forbidden, broadcasting", { clusterId: this.cluster.id, error: response.body });
-        this.dependencies.broadcastMessage(clusterListNamespaceForbiddenChannel, this.cluster.id);
+        this.dependencies.logger.info("listing namespaces is forbidden, broadcasting", { clusterId: this.cluster.id, error: response.body });
+        void this.dependencies.broadcastMessage(clusterListNamespaceForbiddenChannel, this.cluster.id);
       }
 
       return namespaceList;
@@ -407,7 +415,7 @@ const clusterConnectionInjectable = getInjectable({
     {
       clusterVersionDetector: di.inject(clusterVersionDetectorInjectable),
       kubeAuthProxyServer: di.inject(kubeAuthProxyServerInjectable, cluster),
-      logger: di.inject(loggerInjectionToken),
+      logger: di.inject(prefixedLoggerInjectable, "CLUSTER"),
       prometheusHandler: di.inject(prometheusHandlerInjectable, cluster),
       broadcastConnectionUpdate: di.inject(broadcastConnectionUpdateInjectable, cluster),
       broadcastMessage: di.inject(broadcastMessageInjectable),

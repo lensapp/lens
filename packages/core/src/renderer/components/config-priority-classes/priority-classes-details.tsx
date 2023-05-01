@@ -9,16 +9,20 @@ import React from "react";
 import { observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import type { PriorityClass } from "@k8slens/kube-object";
-
-export interface PriorityClassesDetailsProps extends KubeObjectDetailsProps<PriorityClass> {
-}
+import { PriorityClass } from "@k8slens/kube-object";
 
 @observer
-export class PriorityClassesDetails extends React.Component<PriorityClassesDetailsProps> {
-
+export class PriorityClassesDetails extends React.Component<KubeObjectDetailsProps> {
   render() {
     const { object: pc } = this.props;
+
+    if (!pc) {
+      return null;
+    }
+
+    if (!(pc instanceof PriorityClass)) {
+      return null;
+    }
 
     return (
       <div className="PriorityClassesDetails">
@@ -33,7 +37,6 @@ export class PriorityClassesDetails extends React.Component<PriorityClassesDetai
         <DrawerItem name="Global Default">
           {pc.getGlobalDefault()}
         </DrawerItem>
-
       </div>
     );
   }

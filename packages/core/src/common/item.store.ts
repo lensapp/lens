@@ -57,11 +57,11 @@ export abstract class ItemStore<Item extends ItemObject> {
    * @param order whether to sort from least to greatest (`"asc"` (default)) or vice-versa (`"desc"`)
    */
   @action
-  protected sortItems(items: Item[] = this.items, sorting: ((item: Item) => any)[] = [this.defaultSorting], order?: "asc" | "desc"): Item[] {
+  protected sortItems(items: Item[] = this.items, sorting: ((item: Item) => unknown)[] = [this.defaultSorting], order?: "asc" | "desc"): Item[] {
     return orderBy(items, sorting, order);
   }
 
-  protected async createItem(...args: any[]): Promise<any>;
+  protected async createItem(...args: unknown[]): Promise<unknown>;
   @action
   protected async createItem(request: () => Promise<Item>) {
     const newItem = await request();
@@ -78,7 +78,7 @@ export abstract class ItemStore<Item extends ItemObject> {
     }
   }
 
-  protected async loadItems(...args: any[]): Promise<any>;
+  protected async loadItems(...args: unknown[]): Promise<unknown>;
   /**
    * Load items to this.items
    * @param request Function to return the items to be loaded.
@@ -87,7 +87,7 @@ export abstract class ItemStore<Item extends ItemObject> {
    * @returns
    */
   @action
-  protected async loadItems(request: () => Promise<Item[] | any>, sortItems = true, concurrency = false) {
+  protected async loadItems(request: () => Promise<Item[]>, sortItems = true, concurrency = false) {
     if (this.isLoading) {
       await when(() => !this.isLoading);
 
@@ -142,7 +142,7 @@ export abstract class ItemStore<Item extends ItemObject> {
   }
 
   @action
-  protected async removeItem(item: Item, request: () => Promise<any>) {
+  protected async removeItem(item: Item, request: () => Promise<unknown>) {
     await request();
     this.items.remove(item);
     this.selectedItemsIds.delete(item.getId());
@@ -173,19 +173,19 @@ export abstract class ItemStore<Item extends ItemObject> {
 
   @action
   toggleSelectionAll(visibleItems: Item[] = this.items) {
-    const allSelected = visibleItems.every(this.isSelected);
+    const allSelected = visibleItems.every(item => this.isSelected(item));
 
-    if (allSelected) {
-      visibleItems.forEach(this.unselect);
-    } else {
-      visibleItems.forEach(this.select);
-    }
+    visibleItems.forEach((
+      allSelected
+        ? (item) => this.unselect(item)
+        : (item) => this.select(item)
+    ));
   }
 
   isSelectedAll(visibleItems: Item[] = this.items) {
     if (!visibleItems.length) return false;
 
-    return visibleItems.every(this.isSelected);
+    return visibleItems.every((item) => this.isSelected(item));
   }
 
   @action
@@ -202,7 +202,7 @@ export abstract class ItemStore<Item extends ItemObject> {
     this.isLoading = false;
   }
 
-  async removeSelectedItems?(): Promise<any>;
+  async removeSelectedItems?(): Promise<unknown>;
 
   async removeItems?(items: Item[]): Promise<void>;
 

@@ -15,7 +15,7 @@ const v500Alpha2HotbarStoreMigrationInjectable = getInjectable({
     version: "5.0.0-alpha.2",
     run(store) {
       const rawHotbars = store.get("hotbars");
-      const hotbars: HotbarData[] = Array.isArray(rawHotbars) ? rawHotbars : [];
+      const hotbars = (Array.isArray(rawHotbars) ? rawHotbars : []) as HotbarData[];
 
       store.set("hotbars", hotbars.map(({ id, ...rest }) => ({
         id: id || uuid.v4(),

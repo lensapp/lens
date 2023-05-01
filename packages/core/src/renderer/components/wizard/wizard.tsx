@@ -43,6 +43,12 @@ export class Wizard<D> extends React.Component<WizardProps<D>, State> {
     const { className, title, step, header, onChange, children, ...commonProps } = this.props;
     const steps = React.Children.toArray(children) as React.ReactElement<WizardStepProps<D>>[];
 
+    void className;
+    void title;
+    void step;
+    void header;
+    void onChange;
+
     return steps
       .filter(step => !step.props.skip)
       .map((stepElem, i) => (
@@ -80,10 +86,18 @@ export class Wizard<D> extends React.Component<WizardProps<D>, State> {
 
   isFirstStep = () => this.step === 1;
   isLastStep = () => this.step === this.steps.length;
-  firstStep = (): any => this.step = 1;
-  nextStep = (): any => this.step++;
-  prevStep = (): any => this.step--;
-  lastStep = (): any => this.step = this.steps.length;
+  firstStep = () => {
+    this.step = 1;
+  };
+  nextStep = () => {
+    this.step++;
+  };
+  prevStep = () => {
+    this.step--;
+  };
+  lastStep = () => {
+    this.step = this.steps.length;
+  };
 
   render() {
     const { className, title, header, hideSteps } = this.props;
@@ -118,7 +132,7 @@ export interface WizardStepProps<D> extends WizardCommonProps<D> {
   step?: number;
   prevLabel?: StrictReactNode; // custom label for prev button
   nextLabel?: StrictReactNode; // custom label for next button
-  next?: () => void | boolean | Promise<any>; // custom action for next button
+  next?: () => void | boolean | Promise<void>; // custom action for next button
   prev?: () => void; // custom action for prev button
   first?: () => void;
   last?: () => void;
@@ -143,9 +157,9 @@ export class WizardStep<D> extends React.Component<WizardStepProps<D>, WizardSte
   public state: WizardStepState = {};
   private unmounting = false;
 
-  static defaultProps: WizardStepProps<any> = {
+  static defaultProps: object = ({
     scrollable: true,
-  };
+  } as WizardStepProps<unknown>);
 
   componentWillUnmount() {
     this.unmounting = true;
@@ -226,7 +240,7 @@ export class WizardStep<D> extends React.Component<WizardStepProps<D>, WizardSte
 
     return (
       <form
-        className={cssNames(`WizardStep step${step}`, className)}
+        className={cssNames(`WizardStep step${step ?? 0}`, className)}
         onSubmit={prevDefault(this.submit)}
         noValidate={noValidate}
         onKeyDown={(evt) => this.keyDown(evt)}

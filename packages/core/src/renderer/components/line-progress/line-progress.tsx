@@ -13,7 +13,7 @@ export interface LineProgressProps extends React.HTMLProps<HTMLDivElement> {
   value: number;
   min?: number;
   max?: number;
-  className?: any;
+  className?: string;
   precise?: number;
   children?: StrictReactNode;
 }

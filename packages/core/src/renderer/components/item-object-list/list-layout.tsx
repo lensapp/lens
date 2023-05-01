@@ -7,11 +7,11 @@ import "./item-list-layout.scss";
 
 import React from "react";
 import type { IComputedValue } from "mobx";
-import { computed, makeObservable, untracked } from "mobx";
+import { action, computed, makeObservable, untracked } from "mobx";
 import type { ConfirmDialogParams } from "../confirm-dialog";
 import type { TableProps, TableRowProps, TableSortCallbacks } from "../table";
 import type { IClassName, StrictReactNode, SingleOrMany } from "@k8slens/utilities";
-import { cssNames, noop } from "@k8slens/utilities";
+import { isFunction, cssNames, noop } from "@k8slens/utilities";
 import type { AddRemoveButtonsProps } from "../add-remove-buttons";
 import type { ItemObject, TableCellProps } from "@k8slens/list-layout";
 import type { SearchInputUrlProps } from "../input";
@@ -78,7 +78,7 @@ export type ItemListStore<I extends ItemObject, PreLoadStores extends boolean> =
 export type RenderHeaderTitle<
   Item extends ItemObject,
   PreLoadStores extends boolean,
-> = StrictReactNode | ((parent: NonInjectedItemListLayout<Item, PreLoadStores>) => StrictReactNode);
+> = (parent: NonInjectedItemListLayout<Item, PreLoadStores>) => StrictReactNode;
 
 export type HeaderCustomizer = (placeholders: HeaderPlaceholders) => HeaderPlaceholders;
 export type ItemListLayoutProps<Item extends ItemObject, PreLoadStores extends boolean = boolean> = {
@@ -96,7 +96,7 @@ export type ItemListLayoutProps<Item extends ItemObject, PreLoadStores extends b
   // header (title, filtering, searching, etc.)
   showHeader?: boolean;
   headerClassName?: IClassName;
-  renderHeaderTitle?: RenderHeaderTitle<Item, PreLoadStores>;
+  renderHeaderTitle?: StrictReactNode | RenderHeaderTitle<Item, PreLoadStores>;
   customizeHeader?: HeaderCustomizer | HeaderCustomizer[];
 
   // items list configuration
@@ -180,7 +180,7 @@ class NonInjectedItemListLayout<I extends ItemObject, PreLoadStores extends bool
     autoBindReact(this);
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const { isConfigurable, tableId, preloadStores } = this.props;
 
     if (isConfigurable && !tableId) {
@@ -191,7 +191,7 @@ class NonInjectedItemListLayout<I extends ItemObject, PreLoadStores extends bool
       const { store, dependentStores = [] } = this.props;
       const stores = Array.from(new Set([store, ...dependentStores])) as ItemListStore<I, true>[];
 
-      stores.forEach(store => store.loadAll(this.props.selectedFilterNamespaces.get()));
+      stores.forEach(store => void store.loadAll(this.props.selectedFilterNamespaces.get()));
     }
   }
 
@@ -214,9 +214,9 @@ class NonInjectedItemListLayout<I extends ItemObject, PreLoadStores extends bool
     return activeFilters;
   }
 
-  toggleFilters() {
+  toggleFilters = action(() => {
     this.showFilters = !this.showFilters;
-  }
+  });
 
   @computed get isReady() {
     return this.props.isReady ?? this.props.store.isLoaded;
@@ -273,7 +273,8 @@ class NonInjectedItemListLayout<I extends ItemObject, PreLoadStores extends bool
   }
 
   render() {
-    const { renderHeaderTitle, "data-testid": dataTestId } = this.props;
+    const { "data-testid": dataTestId } = this.props;
+    const renderHeaderTitle = this.props.renderHeaderTitle as ItemListLayoutProps<I, boolean>["renderHeaderTitle"];
 
     return untracked(() => (
       <div
@@ -289,7 +290,7 @@ class NonInjectedItemListLayout<I extends ItemObject, PreLoadStores extends bool
           showHeader={this.props.showHeader}
           headerClassName={this.props.headerClassName}
           renderHeaderTitle={(
-            typeof renderHeaderTitle === "function"
+            isFunction(renderHeaderTitle)
               ? () => renderHeaderTitle(this)
               : renderHeaderTitle
           )}

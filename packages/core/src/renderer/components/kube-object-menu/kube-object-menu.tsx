@@ -98,8 +98,8 @@ class NonInjectedKubeObjectMenu<Kube extends KubeObject> extends React.Component
     } = this.props;
 
     const store = apiManager.getStore(object.selfLink);
-    const isEditable = editable ?? (Boolean(store?.patch) || Boolean(updateAction));
-    const isRemovable = removable ?? (Boolean(store?.remove) || Boolean(removeAction));
+    const isEditable = editable ?? (Boolean(store) || Boolean(updateAction));
+    const isRemovable = removable ?? (Boolean(store) || Boolean(removeAction));
 
     runInAction(() => {
       this.menuItems.clear();
@@ -117,7 +117,7 @@ class NonInjectedKubeObjectMenu<Kube extends KubeObject> extends React.Component
 
               if (removeAction) {
                 await removeAction();
-              } else if (store?.remove) {
+              } else if (store) {
                 await store.remove(object);
               }
             },
@@ -130,11 +130,11 @@ class NonInjectedKubeObjectMenu<Kube extends KubeObject> extends React.Component
           id: "edit-kube-object",
           title: "Edit",
           icon: "edit",
-          onClick: async () => {
+          onClick: () => {
             hideDetails();
 
             if (updateAction) {
-              await updateAction();
+              void updateAction();
             } else {
               createEditResourceTab(object);
             }
@@ -187,6 +187,12 @@ class NonInjectedKubeObjectMenu<Kube extends KubeObject> extends React.Component
       updateAction, // This is here so we don't pass it down to `<MenuAction>`
       ...menuProps
     } = this.props;
+
+    void editable;
+    void removable;
+    void removeAction;
+    void removeConfirmationMessage;
+    void updateAction;
 
     return (
       <MenuActions

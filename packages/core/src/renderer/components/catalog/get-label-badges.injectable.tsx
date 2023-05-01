@@ -7,10 +7,10 @@ import React from "react";
 import { getInjectable } from "@ogre-tools/injectable";
 import type { CatalogEntity } from "../../api/catalog-entity";
 import searchUrlPageParamInjectable from "../input/search-url-page-param.injectable";
-import { KubeObject } from "@k8slens/kube-object";
+import { stringifyLabels } from "@k8slens/kube-object";
 import { Badge } from "../badge";
 
-export type GetLabelBadges = (entity: CatalogEntity, onClick?: (evt: React.MouseEvent<any, MouseEvent>) => void) => JSX.Element[];
+export type GetLabelBadges = (entity: CatalogEntity, onClick?: (evt: React.MouseEvent) => void) => JSX.Element[];
 
 const getLabelBadgesInjectable = getInjectable({
   id: "get-label-badges",
@@ -18,7 +18,7 @@ const getLabelBadgesInjectable = getInjectable({
     const searchUrlParam = di.inject(searchUrlPageParamInjectable);
 
     return (entity, onClick) => (
-      KubeObject.stringifyLabels(entity.metadata.labels)
+      stringifyLabels(entity.metadata.labels)
         .map(label => (
           <Badge
             scrollable

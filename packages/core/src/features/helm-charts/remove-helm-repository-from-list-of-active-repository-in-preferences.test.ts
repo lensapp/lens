@@ -19,7 +19,7 @@ import type { AsyncResult } from "@k8slens/utilities";
 describe("remove helm repository from list of active repositories in preferences", () => {
   let builder: ApplicationBuilder;
   let rendered: RenderResult;
-  let getActiveHelmRepositoriesMock: AsyncFnMock<() => AsyncResult<HelmRepo[]>>;
+  let getActiveHelmRepositoriesMock: AsyncFnMock<() => AsyncResult<HelmRepo[], Error>>;
   let execFileMock: AsyncFnMock<ExecFile>;
 
   beforeEach(async () => {
@@ -28,21 +28,21 @@ describe("remove helm repository from list of active repositories in preferences
     execFileMock = asyncFn();
     getActiveHelmRepositoriesMock = asyncFn();
 
-    builder.beforeApplicationStart(({ mainDi }) => {
+    await builder.beforeApplicationStart(({ mainDi }) => {
       mainDi.override(getActiveHelmRepositoriesInjectable, () => getActiveHelmRepositoriesMock);
       mainDi.override(execFileInjectable, () => execFileMock);
       mainDi.override(helmBinaryPathInjectable, () => "some-helm-binary-path");
     });
 
-    builder.beforeWindowStart(({ windowDi }) => {
-      windowDi.override(requestPublicHelmRepositoriesInjectable, () => async () => []);
+    await builder.beforeWindowStart(({ windowDi }) => {
+      windowDi.override(requestPublicHelmRepositoriesInjectable, () => () => Promise.resolve([]));
     });
 
     rendered = await builder.render();
   });
 
   describe("when navigating to preferences containing helm repositories", () => {
-    beforeEach(async () => {
+    beforeEach(() => {
       builder.preferences.navigate();
       builder.preferences.navigation.click("kubernetes");
     });
@@ -53,9 +53,9 @@ describe("remove helm repository from list of active repositories in preferences
 
     describe("when active repositories resolve", () => {
       beforeEach(async () => {
-        getActiveHelmRepositoriesMock.resolve({
-          callWasSuccessful: true,
-          response: [{
+        await getActiveHelmRepositoriesMock.resolve({
+          isOk: true,
+          value: [{
             name: "some-active-repository",
             url: "some-url",
             cacheFilePath: "/some-cache-file",
@@ -106,8 +106,8 @@ describe("remove helm repository from list of active repositories in preferences
                 ["repo", "remove", "some-active-repository"],
               ],
               {
-                callWasSuccessful: true,
-                response: "",
+                isOk: true,
+                value: "",
               },
             );
           });

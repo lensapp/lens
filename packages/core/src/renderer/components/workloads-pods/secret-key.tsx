@@ -32,29 +32,31 @@ const NonInjectedSecretKey = (props: SecretKeyProps & Dependencies) => {
     return null;
   }
 
-  const showKey = async (evt: React.MouseEvent) => {
+  const showKey = (evt: React.MouseEvent) => {
     evt.preventDefault();
     setLoading(true);
 
-    try {
-      const secret = await secretStore.load({ name, namespace });
-
+    void (async () => {
       try {
-        setSecretData(base64.decode(secret.data[key] ?? ""));
-      } catch {
-        setSecretData(secret.data[key]);
+        const secret = await secretStore.load({ name, namespace });
+
+        try {
+          setSecretData(base64.decode(secret.data[key] ?? ""));
+        } catch {
+          setSecretData(secret.data[key]);
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+          setSecretData(`${String(error)}`);
+        } else if (isObject(error)) {
+          setSecretData(`Error: ${JSON.stringify(error)}`);
+        } else {
+          setSecretData(`Error: ${String(error)}`);
+        }
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      if (error instanceof Error) {
-        setSecretData(`${error}`);
-      } else if (isObject(error)) {
-        setSecretData(`Error: ${JSON.stringify(error)}`);
-      } else {
-        setSecretData(`Error: ${error}`);
-      }
-    } finally {
-      setLoading(false);
-    }
+    })();
   };
 
   if (secretData) {

@@ -7,7 +7,7 @@ import "./search-input.scss";
 
 import React, { createRef } from "react";
 import { observer } from "mobx-react";
-import { cssNames } from "@k8slens/utilities";
+import { addWindowEventListener, cssNames, disposer } from "@k8slens/utilities";
 import { Icon } from "@k8slens/icon";
 import type { InputProps } from "./input";
 import { Input } from "./input";
@@ -37,7 +37,8 @@ interface Dependencies {
 class NonInjectedSearchInput extends React.Component<SearchInputProps & Dependencies> {
   static defaultProps = defaultProps as object;
 
-  private inputRef = createRef<Input>();
+  private readonly inputRef = createRef<Input>();
+  private readonly removeEventListeners = disposer();
 
   constructor(props: SearchInputProps & Dependencies) {
     super(props);
@@ -45,40 +46,45 @@ class NonInjectedSearchInput extends React.Component<SearchInputProps & Dependen
   }
 
   componentDidMount() {
-    if (!this.props.bindGlobalFocusHotkey) return;
-    window.addEventListener("keydown", this.onGlobalKey);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("keydown", this.onGlobalKey);
-  }
-
-  onGlobalKey(evt: KeyboardEvent) {
-    if (evt.key === "f" && (this.props.isMac ? evt.metaKey : evt.ctrlKey)) {
-      this.inputRef.current?.focus();
+    if (this.props.bindGlobalFocusHotkey) {
+      this.removeEventListeners.push(addWindowEventListener("keydown", this.onGlobalKey));
     }
   }
 
-  onKeyDown(evt: React.KeyboardEvent<any>) {
+  componentWillUnmount() {
+    this.removeEventListeners();
+  }
+
+  onGlobalKey = (evt: KeyboardEvent) => {
+    if (evt.key === "f" && (this.props.isMac ? evt.metaKey : evt.ctrlKey)) {
+      this.inputRef.current?.focus();
+    }
+  };
+
+  onKeyDown = (evt: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     this.props.onKeyDown?.(evt);
 
     if (evt.nativeEvent.code === "Escape") {
       this.clear();
       evt.stopPropagation();
     }
-  }
+  };
 
-  clear() {
+  clear = () => {
     if (this.props.onClear) {
       this.props.onClear();
     } else {
       this.inputRef.current?.setValue("");
     }
-  }
+  };
 
   render() {
     const { className, compact, onClear, showClearIcon, bindGlobalFocusHotkey, value, isMac, ...inputProps } = this.props;
     let rightIcon = <Icon small material="search"/>;
+
+    void onClear;
+    void bindGlobalFocusHotkey;
+    void isMac;
 
     if (showClearIcon && value) {
       rightIcon = (

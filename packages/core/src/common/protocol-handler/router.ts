@@ -195,7 +195,7 @@ export abstract class LensProtocolRouter {
       });
     } catch (error) {
       this.dependencies.logger.info(
-        `${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not installed (${error})`,
+        `${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not installed (${String(error)})`,
       );
 
       return name;

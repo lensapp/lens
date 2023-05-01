@@ -48,7 +48,7 @@ const NonInjectedAnimate = (propsAndDeps: AnimateProps & Dependencies) => {
   const [showClassNameLeave, setShowClassNameLeave] = useState(false);
 
   // eslint-disable-next-line xss/no-mixed-html
-  const contentElem = React.Children.only(children) as React.ReactElement<React.HTMLAttributes<any>>;
+  const contentElem = React.Children.only(children) as React.ReactElement<React.HTMLAttributes<Element>>;
   const classNames = cssNames("Animate", name, contentElem.props.className, {
     enter: showClassNameEnter,
     leave: showClassNameLeave,

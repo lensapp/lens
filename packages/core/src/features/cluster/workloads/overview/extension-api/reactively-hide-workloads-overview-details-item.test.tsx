@@ -18,7 +18,7 @@ describe("reactively hide workloads overview details item", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.setEnvironmentToClusterFrame();
+    await builder.setEnvironmentToClusterFrame();
 
     someObservable = observable.box(false);
 
@@ -51,7 +51,7 @@ describe("reactively hide workloads overview details item", () => {
 
     navigateToWorkloadsOverview();
 
-    builder.extensions.enable(testExtension);
+    await builder.extensions.enable(testExtension);
   });
 
   it("does not show the workload overview detail item", () => {

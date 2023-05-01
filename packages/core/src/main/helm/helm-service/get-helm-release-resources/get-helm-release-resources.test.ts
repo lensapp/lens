@@ -59,22 +59,22 @@ describe("get helm release resources", () => {
 
     it("when call for manifest resolves without resources, resolves without resources", async () => {
       await execHelmMock.resolve({
-        callWasSuccessful: true,
-        response: "",
+        isOk: true,
+        value: "",
       });
 
       const actual = await actualPromise;
 
       expect(actual).toEqual({
-        callWasSuccessful: true,
-        response: [],
+        isOk: true,
+        value: [],
       });
     });
 
     it("when call to manifest resolves with resources, resolves with resources", async () => {
       await execHelmMock.resolve({
-        callWasSuccessful: true,
-        response: `---
+        isOk: true,
+        value: `---
 apiVersion: v1
 kind: SomeKind
 metadata:
@@ -105,8 +105,8 @@ metadata:
       });
 
       expect(await actualPromise).toEqual({
-        callWasSuccessful: true,
-        response: [
+        isOk: true,
+        value: [
           {
             apiVersion: "v1",
             kind: "SomeKind",

@@ -13,7 +13,7 @@ import type { ConfirmDialogParams } from "../confirm-dialog";
 import type { TableProps, TableRowProps, TableSortCallbacks } from "../table";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import type { IClassName, StrictReactNode } from "@k8slens/utilities";
-import { cssNames, isDefined, isReactNode, noop, prevDefault, stopPropagation } from "@k8slens/utilities";
+import { isFunction, cssNames, isDefined, isReactNode, noop, prevDefault, stopPropagation } from "@k8slens/utilities";
 import type { AddRemoveButtonsProps } from "../add-remove-buttons";
 import { AddRemoveButtons } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
@@ -96,9 +96,7 @@ class NonInjectedItemListLayoutContent<
     return this.props.store.failedLoading;
   }
 
-  renderRow(item: Item) {
-    return this.getTableRow(item);
-  }
+  renderRow = (item: Item) => this.getTableRow(item);
 
   getTableRow(item: Item) {
     const {
@@ -154,21 +152,23 @@ class NonInjectedItemListLayoutContent<
     );
   }
 
-  getRow(uid: string) {
-    return (
-      <div key={uid}>
-        <Observer>
-          {() => {
+  getRow = (uid: string) => (
+    <div key={uid}>
+      <Observer>
+        {
+          () => {
             const item = this.props.getItems().find(item => item.getId() === uid);
 
-            if (!item) return null;
+            if (!item) {
+              return null;
+            }
 
             return this.getTableRow(item);
-          }}
-        </Observer>
-      </div>
-    );
-  }
+          }
+        }
+      </Observer>
+    </div>
+  );
 
   removeItemsDialog(selectedItems: Item[]) {
     const { customizeRemoveDialog, store, openConfirmDialog } = this.props;
@@ -207,9 +207,9 @@ class NonInjectedItemListLayoutContent<
         </p>
       );
     const { removeSelectedItems, removeItems } = store;
-    const onConfirm = typeof removeItems === "function"
+    const onConfirm = isFunction(removeItems)
       ? () => removeItems.apply(store, [selectedItems])
-      : typeof removeSelectedItems === "function"
+      : isFunction(removeSelectedItems)
         ? removeSelectedItems.bind(store)
         : noop;
 
@@ -365,7 +365,7 @@ class NonInjectedItemListLayoutContent<
             .map((cellProps) => (
               <MenuItem key={cellProps.id} className="input">
                 <Checkbox
-                  label={cellProps.title ?? `<${cellProps.className}>`}
+                  label={cellProps.title ?? `<${cellProps.className ?? ""}>`}
                   value={this.showColumn(cellProps)}
                   onChange={() => this.props.toggleTableColumnVisibility(tableId, cellProps.id)}
                 />

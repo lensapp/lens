@@ -2,9 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable } from "@ogre-tools/injectable";
 import { NamespaceStore } from "./store";
-import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/kube-object-store-token";
+import { getKubeStoreInjectable } from "../../../common/k8s-api/api-manager/kube-object-store-token";
 import namespaceApiInjectable from "../../../common/k8s-api/endpoints/namespace.api.injectable";
 import assert from "assert";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
@@ -13,7 +12,7 @@ import clusterConfiguredAccessibleNamespacesInjectable from "../../cluster/acces
 import { loggerInjectionToken } from "@k8slens/logger";
 import selectedNamespacesStorageInjectable from "../../../features/namespace-filtering/renderer/storage.injectable";
 
-const namespaceStoreInjectable = getInjectable({
+const namespaceStoreInjectable = getKubeStoreInjectable({
   id: "namespace-store",
 
   instantiate: (di) => {
@@ -28,7 +27,6 @@ const namespaceStoreInjectable = getInjectable({
       logger: di.inject(loggerInjectionToken),
     }, api);
   },
-  injectionToken: kubeObjectStoreInjectionToken,
 });
 
 export default namespaceStoreInjectable;

@@ -22,7 +22,7 @@ export interface SendCommandOptions {
   /**
    * @deprecated This option is ignored and inferred to be `true` if `tabId` is not provided
    */
-  newTab?: any;
+  newTab?: unknown;
 
   /**
    * Specify a specific terminal tab to send this command to

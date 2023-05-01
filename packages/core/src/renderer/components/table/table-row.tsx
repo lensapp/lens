@@ -37,11 +37,15 @@ export class TableRow<Item> extends React.Component<TableRowProps<Item>> {
     const { className, nowrap, selected, disabled, children, sortItem, searchItem, testId, ...rowProps } = this.props;
     const classNames = cssNames("TableRow", className, { selected, nowrap, disabled });
 
+    void sortItem;
+    void searchItem;
+
     return (
       <div
         className={classNames}
         data-testid={testId}
-        {...rowProps}>
+        {...rowProps}
+      >
         {children}
       </div>
     );

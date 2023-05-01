@@ -79,7 +79,7 @@ export class LensProxy {
         cert: dependencies.certificate.cert,
       },
       (req, res) => {
-        this.handleRequest(req as ServerIncomingMessage, res);
+        void this.handleRequest(req as ServerIncomingMessage, res);
       },
     ), 500);
 
@@ -121,14 +121,14 @@ export class LensProxy {
           this.dependencies.logger.info(`[LENS-PROXY]: Proxy server has started at ${address}:${port}`);
 
           this.proxyServer.on("error", (error) => {
-            this.dependencies.logger.info(`[LENS-PROXY]: Subsequent error: ${error}`);
+            this.dependencies.logger.info(`[LENS-PROXY]: Subsequent error: ${String(error)}`);
           });
 
           this.dependencies.emitAppEvent({ name: "lens-proxy", action: "listen", params: { port }});
           resolve(port);
         })
         .once("error", (error) => {
-          this.dependencies.logger.info(`[LENS-PROXY]: Proxy server failed to start: ${error}`);
+          this.dependencies.logger.info(`[LENS-PROXY]: Proxy server failed to start: ${String(error)}`);
           reject(error);
         });
     });
@@ -198,7 +198,7 @@ export class LensProxy {
         return;
       }
 
-      this.dependencies.logger.error(`[LENS-PROXY]: http proxy errored for cluster: ${error}`, { url: req.url });
+      this.dependencies.logger.error(`[LENS-PROXY]: http proxy errored for cluster: ${String(error)}`, { url: req.url });
 
       if (target) {
         this.dependencies.logger.debug(`Failed proxy to target: ${JSON.stringify(target, null, 2)}`);
@@ -213,14 +213,14 @@ export class LensProxy {
             setTimeout(() => {
               this.retryCounters.set(reqId, retryCount + 1);
               this.handleRequest(req as ServerIncomingMessage, res)
-                .catch(error => this.dependencies.logger.error(`[LENS-PROXY]: failed to handle request on proxy error: ${error}`));
+                .catch(error => this.dependencies.logger.error(`[LENS-PROXY]: failed to handle request on proxy error: ${String(error)}`));
             }, timeoutMs);
           }
         }
       }
 
       try {
-        res.writeHead(500).end(`Oops, something went wrong.\n${error}`);
+        res.writeHead(500).end(`Oops, something went wrong.\n${String(error)}`);
       } catch (e) {
         this.dependencies.logger.error(`[LENS-PROXY]: Failed to write headers: `, e);
       }
@@ -232,7 +232,7 @@ export class LensProxy {
   protected getRequestId(req: http.IncomingMessage): string {
     assert(req.headers.host);
 
-    return req.headers.host + req.url;
+    return req.headers.host + (req.url ?? "");
   }
 
   protected async handleRequest(req: ServerIncomingMessage, res: http.ServerResponse) {

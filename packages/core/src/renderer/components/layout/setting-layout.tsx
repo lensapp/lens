@@ -8,13 +8,13 @@ import "./setting-layout.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { IClassName, StrictReactNode } from "@k8slens/utilities";
-import { cssNames } from "@k8slens/utilities";
+import { addWindowEventListener, disposer, cssNames } from "@k8slens/utilities";
 import { CloseButton } from "./close-button";
 import { getLegacyGlobalDiForExtensionApi } from "@k8slens/legacy-global-di";
 import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import { observableHistoryInjectionToken } from "@k8slens/routing";
 
-export interface SettingLayoutProps extends React.DOMAttributes<any> {
+export interface SettingLayoutProps extends React.DOMAttributes<Element> {
   className?: IClassName;
   contentClass?: IClassName;
   provideBackButtonNavigation?: boolean;
@@ -48,18 +48,20 @@ const defaultProps: Partial<SettingLayoutProps> = {
 export class SettingLayout extends React.Component<SettingLayoutProps> {
   static defaultProps = defaultProps as object;
 
-  async componentDidMount() {
+  private readonly removeEventListeners = disposer();
+
+  componentDidMount() {
     const { hash } = window.location;
 
     if (hash) {
       document.querySelector(hash)?.scrollIntoView();
     }
 
-    window.addEventListener("keydown", this.onEscapeKey);
+    this.removeEventListeners.push(addWindowEventListener("keydown", this.onEscapeKey));
   }
 
   componentWillUnmount() {
-    window.removeEventListener("keydown", this.onEscapeKey);
+    this.removeEventListeners();
   }
 
   onEscapeKey = (evt: KeyboardEvent) => {
@@ -79,6 +81,8 @@ export class SettingLayout extends React.Component<SettingLayoutProps> {
       contentGaps, navigation, children, back, closeButtonProps, ...elemProps
     } = this.props;
     const className = cssNames("SettingLayout", { showNavigation: navigation }, this.props.className);
+
+    void provideBackButtonNavigation;
 
     return (
       <div {...elemProps} className={className}>

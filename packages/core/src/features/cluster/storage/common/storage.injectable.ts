@@ -38,19 +38,17 @@ const clustersPersistentStorageInjectable = getInjectable({
         const newClusters = new Map<ClusterId, Cluster>();
 
         for (const clusterModel of clusters) {
-          try {
-            let cluster = currentClusters.get(clusterModel.id);
+          const clusterResult = (
+            currentClusters.get(clusterModel.id)?.updateModel(clusterModel)
+            ?? Cluster.create(clusterModel)
+          );
 
-            if (cluster) {
-              cluster.updateModel(clusterModel);
-            } else {
-              cluster = new Cluster(clusterModel);
-            }
-
-            newClusters.set(clusterModel.id, cluster);
-          } catch (error) {
-            logger.warn(`[CLUSTER-STORE]: Failed to update/create a cluster: ${error}`);
+          if (!clusterResult.isOk) {
+            logger.warn(`[CLUSTER-STORE]: Failed to update/create a cluster: ${clusterResult.error.toString()}`);
+            continue;
           }
+
+          newClusters.set(clusterModel.id, clusterResult.value);
         }
 
         clustersState.replace(newClusters);

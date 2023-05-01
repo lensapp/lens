@@ -33,19 +33,19 @@ export interface CreateKubeApiForRemoteClusterConfig {
    agent?: Agent;
 }
 
-export type KubeApiConstructor<Object extends KubeObject, Api extends KubeApi<Object>> = new (apiOpts: KubeApiOptions<Object>) => Api;
+export type KubeApiConstructor<Kube extends KubeObject, Api extends KubeApi<Kube>> = new (apiOpts: KubeApiOptions<Kube>) => Api;
 
 export interface CreateKubeApiForRemoteCluster {
-  <Object extends KubeObject, Api extends KubeApi<Object>, Data extends KubeJsonApiDataFor<Object>>(
+  <Kube extends KubeObject, Api extends KubeApi<Kube>, Data extends KubeJsonApiDataFor<Kube>>(
     config: CreateKubeApiForRemoteClusterConfig,
-    kubeClass: KubeObjectConstructor<Object, Data>,
-    apiClass: KubeApiConstructor<Object, Api>,
+    kubeClass: KubeObjectConstructor<Kube, Data>,
+    apiClass: KubeApiConstructor<Kube, Api>,
   ): Api;
-  <Object extends KubeObject, Data extends KubeJsonApiDataFor<Object>>(
+  <Kube extends KubeObject, Data extends KubeJsonApiDataFor<Kube>>(
     config: CreateKubeApiForRemoteClusterConfig,
-    kubeClass: KubeObjectConstructor<Object, Data>,
-    apiClass?: KubeApiConstructor<Object, KubeApi<Object>>,
-  ): KubeApi<Object>;
+    kubeClass: KubeObjectConstructor<Kube, Data>,
+    apiClass?: KubeApiConstructor<Kube, KubeApi<Kube>>,
+  ): KubeApi<Kube>;
 }
 
 const createKubeApiForRemoteClusterInjectable = getInjectable({

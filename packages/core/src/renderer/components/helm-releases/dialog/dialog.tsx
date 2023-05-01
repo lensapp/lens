@@ -24,8 +24,7 @@ import requestHelmReleaseHistoryInjectable from "../../../../common/k8s-api/endp
 import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
 
-export interface ReleaseRollbackDialogProps extends DialogProps {
-}
+export type ReleaseRollbackDialogProps = DialogProps;
 
 interface Dependencies {
   rollbackRelease: RollbackRelease;

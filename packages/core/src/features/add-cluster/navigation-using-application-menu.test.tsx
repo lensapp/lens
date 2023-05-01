@@ -8,13 +8,13 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 
 describe("add-cluster - navigation using application menu", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let rendered: RenderResult;
 
   beforeEach(async () => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
-    rendered = await applicationBuilder.render();
+    rendered = await builder.render();
   });
 
   it("renders", () => {
@@ -28,8 +28,8 @@ describe("add-cluster - navigation using application menu", () => {
   });
 
   describe("when navigating to add cluster using application menu", () => {
-    beforeEach(async () => {
-      await applicationBuilder.applicationMenu.click(
+    beforeEach(() => {
+      builder.applicationMenu.click(
         "root",
         "file",
         "add-cluster",

@@ -47,10 +47,14 @@ const initializeStateInjectable = getInjectable({
         logger.info(`${storageHelperLogPrefix} loading finished for ${filePath}`);
       }
 
-      reaction(() => toJS(lensLocalStorageState), saveFile, {
-        delay: storageSaveDelay, // lazy, avoid excessive writes to fs
-        equals: comparer.structural, // save only when something really changed
-      });
+      reaction(
+        () => toJS(lensLocalStorageState),
+        (data) => void saveFile(data),
+        {
+          delay: storageSaveDelay, // lazy, avoid excessive writes to fs
+          equals: comparer.structural, // save only when something really changed
+        },
+      );
 
       async function saveFile(state: Record<string, unknown>) {
         try {
@@ -58,7 +62,7 @@ const initializeStateInjectable = getInjectable({
           logger.info(`${storageHelperLogPrefix} saving ${filePath}`);
           await writeJsonFile(filePath, state);
         } catch (error) {
-          logger.error(`${storageHelperLogPrefix} saving failed: ${error}`, {
+          logger.error(`${storageHelperLogPrefix} saving failed: ${String(error)}`, {
             json: state, jsonFilePath: filePath,
           });
         } finally {

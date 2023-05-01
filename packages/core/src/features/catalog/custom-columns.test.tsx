@@ -68,7 +68,7 @@ describe("custom category columns for catalog", () => {
     });
 
     describe("when the Test category tab is clicked", () => {
-      beforeEach(async () => {
+      beforeEach(() => {
         const testCategory = renderResult.getByTestId("foo.bar.bat/Test-tab");
 
         testCategory.click();
@@ -100,8 +100,8 @@ describe("custom category columns for catalog", () => {
     });
 
     describe("when an extension is registered with additional custom columns", () => {
-      beforeEach(() => {
-        builder.extensions.enable({
+      beforeEach(async () => {
+        await builder.extensions.enable({
           id: "some-id",
           name: "some-name",
           rendererOptions: {
@@ -132,7 +132,7 @@ describe("custom category columns for catalog", () => {
       });
 
       describe("when the Test category tab is clicked", () => {
-        beforeEach(async () => {
+        beforeEach(() => {
           const testCategory = renderResult.getByTestId("foo.bar.bat/Test-tab");
 
           testCategory.click();
@@ -200,7 +200,7 @@ describe("custom category columns for catalog", () => {
     });
 
     describe("when the Test category tab is clicked", () => {
-      beforeEach(async () => {
+      beforeEach(() => {
         const testCategory = renderResult.getByTestId("foo.bar.bat/Test-tab");
 
         testCategory.click();
@@ -256,7 +256,7 @@ describe("custom category columns for catalog", () => {
     });
 
     describe("when the Test category tab is clicked", () => {
-      beforeEach(async () => {
+      beforeEach(() => {
         const testCategory = renderResult.getByTestId("foo.bar.bat/Test-tab");
 
         testCategory.click();

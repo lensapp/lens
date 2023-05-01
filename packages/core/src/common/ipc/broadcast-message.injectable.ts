@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { broadcastMessage } from "./ipc";
 
-export type BroadcastMessage = (channel: string, ...args: any[]) => Promise<void>;
+export type BroadcastMessage = (channel: string, ...args: unknown[]) => Promise<void>;
 
 const broadcastMessageInjectable = getInjectable({
   id: "broadcast-message",

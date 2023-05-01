@@ -21,7 +21,7 @@ describe("resolve-system-proxy", () => {
 
     resolveSystemProxyFromElectronMock = asyncFn();
 
-    builder.beforeApplicationStart(({ mainDi }) => {
+    await builder.beforeApplicationStart(({ mainDi }) => {
       mainDi.override(
         resolveSystemProxyFromElectronInjectable,
         () => resolveSystemProxyFromElectronMock,
@@ -32,10 +32,8 @@ describe("resolve-system-proxy", () => {
   });
 
   describe("given in main, when called with URL", () => {
-    beforeEach(async () => {
-      const resolveSystemProxyInMain = builder.mainDi.inject(
-        resolveSystemProxyInjectionToken,
-      );
+    beforeEach(() => {
+      const resolveSystemProxyInMain = builder.mainDi.inject(resolveSystemProxyInjectionToken);
 
       actualPromise = resolveSystemProxyInMain("some-url");
     });
@@ -51,19 +49,17 @@ describe("resolve-system-proxy", () => {
     });
 
     it("when the call for proxy resolves, resolves with the proxy", async () => {
-      resolveSystemProxyFromElectronMock.resolve("some-proxy");
+      await resolveSystemProxyFromElectronMock.resolve("some-proxy");
 
       expect(await actualPromise).toBe("some-proxy");
     });
   });
 
   describe("given in renderer, when called with URL", () => {
-    beforeEach(async () => {
+    beforeEach(() => {
       const windowDi = builder.applicationWindow.only.di;
 
-      const resolveSystemProxyInRenderer = windowDi.inject(
-        resolveSystemProxyInjectionToken,
-      );
+      const resolveSystemProxyInRenderer = windowDi.inject(resolveSystemProxyInjectionToken);
 
       actualPromise = resolveSystemProxyInRenderer("some-url");
     });
@@ -79,7 +75,7 @@ describe("resolve-system-proxy", () => {
     });
 
     it("when the call for proxy resolves, resolves with the proxy", async () => {
-      resolveSystemProxyFromElectronMock.resolve("some-proxy");
+      await resolveSystemProxyFromElectronMock.resolve("some-proxy");
 
       expect(await actualPromise).toBe("some-proxy");
     });

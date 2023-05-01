@@ -54,7 +54,7 @@ export function getShortName(entity: CatalogEntity): string {
 }
 
 export function getIconColourHash(entity: CatalogEntity): string {
-  return `${entity.metadata.name}-${entity.metadata.source}`;
+  return `${entity.metadata.name}-${entity.metadata.source ?? ""}`;
 }
 
 export function getIconBackground(entity: CatalogEntity): string | undefined {

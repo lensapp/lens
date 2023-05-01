@@ -26,9 +26,6 @@ import podStoreInjectable from "../workloads-pods/store.injectable";
 import jobStoreInjectable from "./store.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
 
-export interface JobDetailsProps extends KubeObjectDetailsProps<Job> {
-}
-
 interface Dependencies {
   subscribeStores: SubscribeStores;
   podStore: PodStore;
@@ -37,7 +34,7 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependencies> {
+class NonInjectedJobDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
   componentDidMount() {
     disposeOnUnmount(this, [
       this.props.subscribeStores([
@@ -118,7 +115,7 @@ class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependenci
   }
 }
 
-export const JobDetails = withInjectables<Dependencies, JobDetailsProps>(NonInjectedJobDetails, {
+export const JobDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedJobDetails, {
   getProps: (di, props) => ({
     ...props,
     subscribeStores: di.inject(subscribeStoresInjectable),

@@ -19,7 +19,7 @@ import activeHelmRepositoriesInjectable from "../active-helm-repositories.inject
 interface Dependencies {
   publicRepositories: IAsyncComputed<HelmRepo[]>;
   activeRepositories: IAsyncComputed<HelmRepo[]>;
-  selectRepository: (value: SingleValue<SelectOption<HelmRepo>>) => void;
+  selectRepository: (value: SingleValue<SelectOption<HelmRepo>>) => Promise<void>;
 }
 
 const NonInjectedAddingOfPublicHelmRepository = observer(({
@@ -45,7 +45,7 @@ const NonInjectedAddingOfPublicHelmRepository = observer(({
       isLoading={valuesAreLoading}
       isDisabled={valuesAreLoading}
       options={repositoryOptions}
-      onChange={selectRepository}
+      onChange={(...args) => void selectRepository(...args)}
       value={dereferencesPublicRepositories}
       formatOptionLabel={formatOptionLabel}
       controlShouldRenderValue={false}

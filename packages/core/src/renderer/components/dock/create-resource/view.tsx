@@ -20,7 +20,6 @@ import { isObject, prevDefault } from "@k8slens/utilities";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import createResourceTabStoreInjectable from "./store.injectable";
 import createResourceTemplatesInjectable from "./create-resource-templates.injectable";
-import { Spinner } from "../../spinner";
 import type { GroupBase } from "react-select";
 import type { Navigate } from "../../../navigation/navigate.injectable";
 import type { GetDetailsUrl } from "../../kube-detail-params/get-details-url.injectable";
@@ -94,14 +93,14 @@ class NonInjectedCreateResource extends React.Component<CreateResourceProps & De
     const creatingResources = resources.map(async (resource) => {
       const result = await requestKubeObjectCreation(dump(resource));
 
-      if (!result.callWasSuccessful) {
+      if (!result.isOk) {
         this.props.logger.warn("Failed to create resource", { resource }, result.error);
         this.props.showCheckedErrorNotification(result.error, "Unknown error occurred while creating resources");
 
         throw result.error;
       }
 
-      const { kind, apiVersion, metadata: { name, namespace }} = result.response;
+      const { kind, apiVersion, metadata: { name, namespace }} = result.value;
 
       const close = this.props.showSuccessNotification((
         <p>
@@ -177,12 +176,10 @@ class NonInjectedCreateResource extends React.Component<CreateResourceProps & De
 }
 
 export const CreateResource = withInjectables<Dependencies, CreateResourceProps>(NonInjectedCreateResource, {
-  getPlaceholder: () => <Spinner center />,
-
-  getProps: async (di, props) => ({
+  getProps: (di, props) => ({
     ...props,
     createResourceTabStore: di.inject(createResourceTabStoreInjectable),
-    createResourceTemplates: await di.inject(createResourceTemplatesInjectable),
+    createResourceTemplates: di.inject(createResourceTemplatesInjectable),
     apiManager: di.inject(apiManagerInjectable),
     logger: di.inject(loggerInjectionToken),
     getDetailsUrl: di.inject(getDetailsUrlInjectable),

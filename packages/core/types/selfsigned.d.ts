@@ -10,13 +10,13 @@
      cert: string;
    }
 
-   type GenerateAttributes = Array<any>;
+   type GenerateAttributes = unknown[];
 
    interface GenerateOptions {
      keySize?: number;
      days?: number;
      algorithm?: "sha1" | "sha256";
-     extensions?: any;
+     extensions?: unknown;
      pkcs7?: boolean;
      clientCertificate?: boolean;
      clientCertificateCN?: string;

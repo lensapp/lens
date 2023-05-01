@@ -35,9 +35,9 @@ const getHelmReleaseInjectable = getInjectable({
         proxyKubeconfigPath,
       );
 
-      if (!releaseResult.callWasSuccessful) {
+      if (!releaseResult.isOk) {
         return {
-          callWasSuccessful: false,
+          isOk: false,
           error: `Failed to get helm release data: ${releaseResult.error}`,
         };
       }
@@ -48,18 +48,18 @@ const getHelmReleaseInjectable = getInjectable({
         proxyKubeconfigPath,
       );
 
-      if (!resourcesResult.callWasSuccessful) {
+      if (!resourcesResult.isOk) {
         return {
-          callWasSuccessful: false,
+          isOk: false,
           error: `Failed to get helm release resources: ${resourcesResult.error}`,
         };
       }
 
       return {
-        callWasSuccessful: true,
-        response: {
-          ...releaseResult.response,
-          resources: resourcesResult.response,
+        isOk: true,
+        value: {
+          ...releaseResult.value,
+          resources: resourcesResult.value,
         },
       };
     };

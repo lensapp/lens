@@ -26,9 +26,6 @@ import { loggerInjectionToken } from "@k8slens/logger";
 import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 
-export interface CronJobDetailsProps extends KubeObjectDetailsProps<CronJob> {
-}
-
 interface Dependencies {
   subscribeStores: SubscribeStores;
   jobStore: JobStore;
@@ -38,7 +35,7 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedCronJobDetails extends React.Component<CronJobDetailsProps & Dependencies> {
+class NonInjectedCronJobDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
   componentDidMount() {
     disposeOnUnmount(this, [
       this.props.subscribeStores([
@@ -121,7 +118,7 @@ class NonInjectedCronJobDetails extends React.Component<CronJobDetailsProps & De
   }
 }
 
-export const CronJobDetails = withInjectables<Dependencies, CronJobDetailsProps>(NonInjectedCronJobDetails, {
+export const CronJobDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedCronJobDetails, {
   getProps: (di, props) => ({
     ...props,
     subscribeStores: di.inject(subscribeStoresInjectable),

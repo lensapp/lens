@@ -18,7 +18,7 @@ describe("metrics-enabled", () => {
   beforeEach(() => {
     di = getDiForUnitTesting();
 
-    cluster = new Cluster({ contextName: "irrelevant", id: "irrelevant", kubeConfigPath: "irrelevant" });
+    cluster = Cluster.createForTestingOnly({ contextName: "irrelevant", id: "irrelevant", kubeConfigPath: "irrelevant" });
     const observableCluster = observable.box(cluster);
 
     di.override(activeEntityInternalClusterInjectable, () => observableCluster);

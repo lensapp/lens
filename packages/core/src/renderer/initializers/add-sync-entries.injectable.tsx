@@ -17,7 +17,7 @@ const addSyncEntriesInjectable = getInjectable({
     const navigateToKubernetesPreferences = di.inject(navigateToKubernetesPreferencesInjectable);
     const showSuccessNotification = di.inject(showSuccessNotificationInjectable);
 
-    return async (paths: string[]) => {
+    return (paths: string[]) => {
       runInAction(() => {
         for (const path of paths) {
           state.syncKubeconfigEntries.set(path, {});

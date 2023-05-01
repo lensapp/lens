@@ -9,7 +9,7 @@ export interface NavigateToUrlOptions {
   forceRootFrame?: boolean;
 }
 
-export type NavigateToUrl = (url: string, options?: NavigateToUrlOptions) => void;
+export type NavigateToUrl = (url: string, options?: NavigateToUrlOptions) => void | Promise<void>;
 
 export const navigateToUrlInjectionToken = getInjectionToken<NavigateToUrl>(
   { id: "navigate-to-url-injection-token" },

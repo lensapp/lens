@@ -29,6 +29,8 @@ const requestClusterDeactivationInjectable = getInjectable({
 
       connection.disconnect();
       clusterFrames.delete(clusterId);
+
+      return Promise.resolve();
     };
   },
   injectionToken: requestClusterDeactivationInjectionToken,

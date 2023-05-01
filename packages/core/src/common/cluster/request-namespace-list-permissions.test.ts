@@ -193,7 +193,7 @@ describe("requestNamespaceListPermissions", () => {
               status,
               spec: {},
             },
-            response: null as unknown as IncomingMessage,
+            value: null as unknown as IncomingMessage,
           });
         });
 

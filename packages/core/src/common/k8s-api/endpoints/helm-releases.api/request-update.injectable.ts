@@ -38,10 +38,10 @@ const requestHelmReleaseUpdateInjectable = getInjectable({
           },
         });
       } catch (e) {
-        return { callWasSuccessful: false, error: e };
+        return { isOk: false, error: e };
       }
 
-      return { callWasSuccessful: true };
+      return { isOk: true };
     };
   },
 });

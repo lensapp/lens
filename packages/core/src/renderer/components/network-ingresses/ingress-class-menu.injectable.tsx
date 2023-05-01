@@ -16,8 +16,7 @@ import type { KubeObjectMenuProps } from "../kube-object-menu";
 import { Icon } from "@k8slens/icon";
 import hideDetailsInjectable from "../kube-detail-params/hide-details.injectable";
 
-export interface IngressClassMenuProps extends KubeObjectMenuProps<IngressClass> {
-}
+export type IngressClassMenuProps = KubeObjectMenuProps<IngressClass>;
 
 export interface Dependencies {
   setDefault: (item: IngressClass) => Promise<void>;

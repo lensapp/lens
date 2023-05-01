@@ -12,6 +12,6 @@ export const checkThatAllDiscriminablesAreExhausted = <T extends never>(value: T
   const _exhaustiveCheck: never = value;
 
   return new Error(
-    `Tried to exhaust discriminables, but no instructions were found for ${(_exhaustiveCheck as any).kind}`,
+    `Tried to exhaust discriminables, but no instructions were found for ${(_exhaustiveCheck as Discriminable<string>).kind}`,
   );
 };

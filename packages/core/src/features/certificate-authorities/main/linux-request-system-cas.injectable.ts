@@ -9,7 +9,7 @@ const linuxRequestSystemCAsInjectable = getInjectable({
   id: "linux-request-system-cas",
   instantiate: () => ({
     platform: "linux" as const,
-    instantiate: () => async () => [],
+    instantiate: () => () => [],
   }),
   injectionToken: platformSpecificRequestSystemCAsInjectionToken,
 });

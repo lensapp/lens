@@ -11,7 +11,7 @@ import type http from "http";
  * @param content The data or its JSON stringified version of it
  * @param status [200] The status code to respond with
  */
-export function respondJson(res: http.ServerResponse, content: Object | string, status = 200) {
+export function respondJson(res: http.ServerResponse, content: object | string, status = 200) {
   const normalizedContent = typeof content === "object"
     ? JSON.stringify(content)
     : content;

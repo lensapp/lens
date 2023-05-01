@@ -15,9 +15,9 @@ const getActiveHelmRepositoryInjectable = getInjectable({
     return async (name: string) => {
       const activeHelmRepositories = await getActiveHelmRepositories();
 
-      assert(activeHelmRepositories.callWasSuccessful);
+      assert(activeHelmRepositories.isOk);
 
-      return activeHelmRepositories.response.find(
+      return activeHelmRepositories.value.find(
         (repository) => repository.name === name,
       );
     };

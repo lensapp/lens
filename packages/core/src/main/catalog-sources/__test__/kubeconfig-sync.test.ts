@@ -33,16 +33,16 @@ import readJsonSyncInjectable from "../../../common/fs/read-json-sync.injectable
 import writeJsonSyncInjectable from "../../../common/fs/write-json-sync.injectable";
 import type { KubeconfigManager } from "../../kubeconfig-manager/kubeconfig-manager";
 import kubeconfigManagerInjectable from "../../kubeconfig-manager/kubeconfig-manager.injectable";
-import type { KubeconfigSyncValue } from "../../../features/user-preferences/common/preferences-helpers";
 import kubeconfigSyncsInjectable from "../../../features/user-preferences/common/kubeconfig-syncs.injectable";
+import assert from "assert";
 
 describe("kubeconfig-sync.source tests", () => {
   let computeKubeconfigDiff: ComputeKubeconfigDiff;
   let configToModels: ConfigToModels;
-  let kubeconfigSyncs: ObservableMap<string, KubeconfigSyncValue>;
+  let kubeconfigSyncs: ObservableMap<string, object>;
   let di: DiContainer;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     di = getDiForUnitTesting();
 
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
@@ -53,7 +53,7 @@ describe("kubeconfig-sync.source tests", () => {
     di.override(writeJsonSyncInjectable, () => () => { throw new Error("tried call writeJsonSync without override"); });
 
     di.override(kubeconfigManagerInjectable, () => ({
-      ensurePath: async () => "/some-proxy-kubeconfig-file",
+      ensurePath: () => Promise.resolve("/some-proxy-kubeconfig-file"),
     } as Partial<KubeconfigManager> as KubeconfigManager));
 
     kubeconfigSyncs = observable.map();
@@ -191,7 +191,10 @@ describe("kubeconfig-sync.source tests", () => {
 
       expect(rootSource.size).toBe(1);
 
-      const c = rootSource.values().next().value[0] as Cluster;
+      const first = rootSource.values().next();
+
+      assert(first.done === false);
+      const c = first.value[0];
 
       expect(c.kubeConfigPath.get()).toBe("/bar");
       expect(c.contextName.get()).toBe("context-name");
@@ -244,7 +247,10 @@ describe("kubeconfig-sync.source tests", () => {
       expect(rootSource.size).toBe(2);
 
       {
-        const c = rootSource.values().next().value[0] as Cluster;
+        const first = rootSource.values().next();
+
+        assert(first.done === false);
+        const c = first.value[0];
 
         runInAction(() => {
           expect(c.kubeConfigPath.get()).toBe("/bar");
@@ -286,7 +292,10 @@ describe("kubeconfig-sync.source tests", () => {
       expect(rootSource.size).toBe(1);
 
       {
-        const c = rootSource.values().next().value[0] as Cluster;
+        const first = rootSource.values().next();
+
+        assert(first.done === false);
+        const c = first.value[0];
 
         expect(c.kubeConfigPath.get()).toBe("/bar");
         expect(c.contextName.get()).toBe("context-name");
@@ -297,8 +306,8 @@ describe("kubeconfig-sync.source tests", () => {
   describe("given a config file at /foobar/config", () => {
     let manager: KubeconfigSyncManager;
     let watchInstances: Map<string, Watcher<true>>;
-    let firstReadFoobarConfigSteam: ReadStream;
-    let secondReadFoobarConfigSteam: ReadStream;
+    let firstReadFoobarConfigSteam: ReadStream | undefined;
+    let secondReadFoobarConfigSteam: ReadStream | undefined;
     let statMock: AsyncFnMock<Stat>;
 
     beforeEach(() => {
@@ -334,8 +343,8 @@ describe("kubeconfig-sync.source tests", () => {
     });
 
     afterEach(() => {
-      (firstReadFoobarConfigSteam as any) = undefined;
-      (secondReadFoobarConfigSteam as any) = undefined;
+      firstReadFoobarConfigSteam = undefined;
+      secondReadFoobarConfigSteam = undefined;
     });
 
     it("should not find any entities", () => {
@@ -376,9 +385,9 @@ describe("kubeconfig-sync.source tests", () => {
 
             describe("when the data is read in", () => {
               beforeEach(() => {
-                firstReadFoobarConfigSteam.emit("data", Buffer.from(foobarConfig));
-                firstReadFoobarConfigSteam.emit("end");
-                firstReadFoobarConfigSteam.emit("close");
+                firstReadFoobarConfigSteam?.emit("data", Buffer.from(foobarConfig));
+                firstReadFoobarConfigSteam?.emit("end");
+                firstReadFoobarConfigSteam?.emit("close");
               });
 
               it("should find a single entity", () => {
@@ -410,9 +419,9 @@ describe("kubeconfig-sync.source tests", () => {
 
                     describe("when the data is read in", () => {
                       beforeEach(() => {
-                        secondReadFoobarConfigSteam.emit("data", Buffer.from(foobarConfig));
-                        secondReadFoobarConfigSteam.emit("end");
-                        secondReadFoobarConfigSteam.emit("close");
+                        secondReadFoobarConfigSteam?.emit("data", Buffer.from(foobarConfig));
+                        secondReadFoobarConfigSteam?.emit("end");
+                        secondReadFoobarConfigSteam?.emit("close");
                       });
 
                       it("should still only find a single entity", () => {

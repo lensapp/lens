@@ -10,7 +10,8 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import { Link } from "react-router-dom";
 
-import type { Secret, ServiceAccount } from "@k8slens/kube-object";
+import { ServiceAccount } from "@k8slens/kube-object";
+import type { Secret } from "@k8slens/kube-object";
 import { DrawerItem, DrawerTitle } from "../../drawer";
 import { Icon } from "@k8slens/icon";
 import type { KubeObjectDetailsProps } from "../../kube-object-details";
@@ -22,16 +23,13 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import getDetailsUrlInjectable from "../../kube-detail-params/get-details-url.injectable";
 import secretStoreInjectable from "../../config-secrets/store.injectable";
 
-export interface ServiceAccountsDetailsProps extends KubeObjectDetailsProps<ServiceAccount> {
-}
-
 interface Dependencies {
   secretStore: SecretStore;
   getDetailsUrl: GetDetailsUrl;
 }
 
 @observer
-class NonInjectedServiceAccountsDetails extends React.Component<ServiceAccountsDetailsProps & Dependencies> {
+class NonInjectedServiceAccountsDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
   readonly secrets = observable.array<Secret | string>();
   readonly imagePullSecrets = observable.array<Secret | string>();
 
@@ -50,7 +48,7 @@ class NonInjectedServiceAccountsDetails extends React.Component<ServiceAccountsD
           this.imagePullSecrets.clear();
         });
 
-        const { object: serviceAccount } = this.props;
+        const serviceAccount = this.props.object as ServiceAccount;
         const namespace = serviceAccount?.getNs();
 
         if (!namespace) {
@@ -128,6 +126,11 @@ class NonInjectedServiceAccountsDetails extends React.Component<ServiceAccountsD
     if (!serviceAccount) {
       return null;
     }
+
+    if (!(serviceAccount instanceof ServiceAccount)) {
+      return null;
+    }
+
     const tokens = secretStore.items.filter(secret =>
       secret.getNs() == serviceAccount.getNs() &&
       secret.getAnnotations().some(annot => annot == `kubernetes.io/service-account.name: ${serviceAccount.getName()}`),
@@ -156,7 +159,7 @@ class NonInjectedServiceAccountsDetails extends React.Component<ServiceAccountsD
   }
 }
 
-export const ServiceAccountsDetails = withInjectables<Dependencies, ServiceAccountsDetailsProps>(NonInjectedServiceAccountsDetails, {
+export const ServiceAccountsDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedServiceAccountsDetails, {
   getProps: (di, props) => ({
     ...props,
     getDetailsUrl: di.inject(getDetailsUrlInjectable),

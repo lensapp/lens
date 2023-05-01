@@ -24,9 +24,6 @@ import type { ReplicaSetStore } from "./store";
 import replicaSetStoreInjectable from "./store.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
 
-export interface ReplicaSetDetailsProps extends KubeObjectDetailsProps<ReplicaSet> {
-}
-
 interface Dependencies {
   subscribeStores: SubscribeStores;
   podStore: PodStore;
@@ -35,7 +32,7 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedReplicaSetDetails extends React.Component<ReplicaSetDetailsProps & Dependencies> {
+class NonInjectedReplicaSetDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
   componentDidMount() {
     disposeOnUnmount(this, [
       this.props.subscribeStores([
@@ -99,7 +96,7 @@ class NonInjectedReplicaSetDetails extends React.Component<ReplicaSetDetailsProp
   }
 }
 
-export const ReplicaSetDetails = withInjectables<Dependencies, ReplicaSetDetailsProps>(NonInjectedReplicaSetDetails, {
+export const ReplicaSetDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedReplicaSetDetails, {
   getProps: (di, props) => ({
     ...props,
     subscribeStores: di.inject(subscribeStoresInjectable),

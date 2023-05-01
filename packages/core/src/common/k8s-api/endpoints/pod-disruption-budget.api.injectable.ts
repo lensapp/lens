@@ -2,15 +2,14 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
 import { PodDisruptionBudgetApi } from "@k8slens/kube-api";
-import { kubeApiInjectionToken } from "@k8slens/kube-api-specifics";
+import { getKubeApiInjectable } from "@k8slens/kube-api-specifics";
 import { loggerInjectionToken } from "@k8slens/logger";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 
-const podDisruptionBudgetApiInjectable = getInjectable({
+const podDisruptionBudgetApiInjectable = getKubeApiInjectable({
   id: "pod-disruption-budget-api",
   instantiate: (di) => {
     assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "podDisruptionBudgetApi is only available in certain environments");
@@ -28,8 +27,6 @@ const podDisruptionBudgetApiInjectable = getInjectable({
       },
     });
   },
-
-  injectionToken: kubeApiInjectionToken,
 });
 
 export default podDisruptionBudgetApiInjectable;

@@ -9,7 +9,7 @@ export type GetBasenameOfPath = (path: string) => string;
 
 const getBasenameOfPathInjectable = getInjectable({
   id: "get-basename-of-path",
-  instantiate: (): GetBasenameOfPath => path.basename,
+  instantiate: (): GetBasenameOfPath => (...values) => path.basename(...values),
   causesSideEffects: true,
 });
 

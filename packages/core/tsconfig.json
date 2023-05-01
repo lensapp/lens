@@ -21,9 +21,9 @@
   },
   "include": [
     "package.json",
-    "webpack/vars.ts",
     "src/**/*",
     "types/*.d.ts",
+    "__mocks__/**/*",
   ],
   "exclude": [
     "node_modules",

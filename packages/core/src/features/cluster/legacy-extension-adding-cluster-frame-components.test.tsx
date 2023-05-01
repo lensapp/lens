@@ -16,7 +16,7 @@ describe("legacy extension adding cluster frame components", () => {
 
   beforeEach(() => {
     builder = getApplicationBuilder();
-    builder.setEnvironmentToClusterFrame();
+    await builder.setEnvironmentToClusterFrame();
   });
 
   describe("given custom components for cluster view available", () => {
@@ -46,7 +46,7 @@ describe("legacy extension adding cluster frame components", () => {
       };
 
       rendered = await builder.render();
-      builder.extensions.enable(testExtension);
+      await builder.extensions.enable(testExtension);
     });
 
     it("renders", () => {

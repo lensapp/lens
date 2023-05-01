@@ -16,6 +16,10 @@ import {
 import rendererLogFileIdInjectable from "./renderer-log-file-id.injectable";
 import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
 
+interface LogEntry extends winston.LogEntry {
+  [MESSAGE]: string;
+}
+
 /**
  * Winston uses symbol property for the actual message.
  *
@@ -23,14 +27,14 @@ import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
  */
 function serializeLogForIpc(
   fileId: string,
-  entry: winston.LogEntry,
+  entry: LogEntry,
 ): IpcFileLogObject {
   return {
     fileId,
     entry: {
       level: entry.level,
       message: entry.message,
-      internalMessage: Object.getOwnPropertyDescriptor(entry, MESSAGE)?.value,
+      internalMessage: entry[MESSAGE],
     },
   };
 }
@@ -42,7 +46,7 @@ const ipcLogTransportInjectable = getInjectable({
     const fileId = di.inject(rendererLogFileIdInjectable);
 
     return new IpcLogTransport({
-      sendIpcLogMessage: (entry) =>
+      sendIpcLogMessage: (entry: LogEntry) =>
         messageToChannel(
           ipcFileLoggerChannel,
           serializeLogForIpc(fileId, entry),

@@ -17,14 +17,14 @@ const getHelmEnvInjectable = getInjectable({
   instantiate: (di) => {
     const execHelm = di.inject(execHelmInjectable);
 
-    return async (): AsyncResult<HelmEnv> => {
+    return async (): AsyncResult<HelmEnv, string> => {
       const result = await execHelm(["env"]);
 
-      if (!result.callWasSuccessful) {
-        return { callWasSuccessful: false, error: result.error.stderr };
+      if (!result.isOk) {
+        return { isOk: false, error: result.error.stderr };
       }
 
-      const lines = result.response.split(/\r?\n/); // split by new line feed
+      const lines = result.value.split(/\r?\n/); // split by new line feed
       const env: HelmEnv = {};
 
       lines.forEach((line: string) => {
@@ -35,7 +35,7 @@ const getHelmEnvInjectable = getInjectable({
         }
       });
 
-      return { callWasSuccessful: true, response: env };
+      return { isOk: true, value: env };
     };
   },
 });

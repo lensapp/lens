@@ -5,12 +5,12 @@
 
 import { apiPrefix } from "../../../common/vars";
 import { getRouteInjectable } from "../../router/router.injectable";
-import type { ClusterPrometheusMetadata } from "../../../common/cluster-types";
+import type { ClusterPrometheusMetadata, Metadata } from "../../../common/cluster-types";
 import { ClusterMetadataKey } from "../../../common/cluster-types";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { clusterRoute } from "../../router/route";
 import { isObject } from "lodash";
-import { isRequestError, object } from "@k8slens/utilities";
+import { isRequestError, isString, isTypedArray, object } from "@k8slens/utilities";
 import type { GetMetrics } from "../../get-metrics.injectable";
 import getMetricsInjectable from "../../get-metrics.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
@@ -20,12 +20,12 @@ import { runInAction } from "mobx";
 // This is used for backoff retry tracking.
 const ATTEMPTS = [false, false, false, false, true];
 
-const loadMetricsFor = (getMetrics: GetMetrics) => async (promQueries: string[], cluster: Cluster, prometheusPath: string, queryParams: Partial<Record<string, string>>): Promise<any[]> => {
+const loadMetricsFor = (getMetrics: GetMetrics) => async (promQueries: string[], cluster: Cluster, prometheusPath: string, queryParams: Partial<Record<string, string>>): Promise<unknown[]> => {
   const queries = promQueries.map(p => p.trim());
-  const loaders = new Map<string, Promise<any>>();
+  const loaders = new Map<string, Promise<unknown>>();
 
-  async function loadMetric(query: string): Promise<any> {
-    async function loadMetricHelper(): Promise<any> {
+  async function loadMetric(query: string): Promise<unknown> {
+    async function loadMetricHelper() {
       for (const [attempt, lastAttempt] of ATTEMPTS.entries()) { // retry
         try {
           return await getMetrics(cluster, prometheusPath, { query, ...queryParams });
@@ -71,16 +71,18 @@ const addMetricsRouteInjectable = getRouteInjectable({
       const prometheusHandler = di.inject(prometheusHandlerInjectable, cluster);
 
       try {
-        const { prometheusPath, provider } = await prometheusHandler.getPrometheusDetails();
+        const details = await prometheusHandler.getPrometheusDetails();
 
-        prometheusMetadata.provider = provider?.kind;
-        prometheusMetadata.autoDetected = !cluster.preferences.prometheusProvider?.type;
-
-        if (!prometheusPath) {
+        if (!details) {
           prometheusMetadata.success = false;
 
           return { response: {}};
         }
+
+        const { prometheusPath, provider } = details;
+
+        prometheusMetadata.provider = provider?.kind;
+        prometheusMetadata.autoDetected = !cluster.preferences.prometheusProvider?.type;
 
         // return data in same structure as query
         if (typeof payload === "string") {
@@ -89,7 +91,7 @@ const addMetricsRouteInjectable = getRouteInjectable({
           return { response: data };
         }
 
-        if (Array.isArray(payload)) {
+        if (isTypedArray(payload, isString)) {
           const data = await loadMetrics(payload, cluster, prometheusPath, queryParams);
 
           return { response: data };
@@ -119,7 +121,7 @@ const addMetricsRouteInjectable = getRouteInjectable({
         return { response: {}};
       } finally {
         runInAction(() => {
-          cluster.metadata[ClusterMetadataKey.PROMETHEUS] = prometheusMetadata;
+          cluster.metadata[ClusterMetadataKey.PROMETHEUS] = prometheusMetadata as Metadata;
         });
       }
     });

@@ -14,7 +14,7 @@ export type CreateHandlerForRoute = (route: Route<unknown, string>) => RouteHand
 
 interface LensServerResponse {
   statusCode: number;
-  content: any;
+  content: unknown;
   headers: {
     [name: string]: string;
   };

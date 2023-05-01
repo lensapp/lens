@@ -27,7 +27,7 @@ export interface LegacyInputValidator {
   /**
    * Filters itself based on the input props
    */
-  condition?: (props: InputProps) => any;
+  condition?: (props: InputProps) => unknown;
   validate: InputValidation<boolean>;
   message?: SyncValidationMessage;
   debounce?: number;
@@ -37,7 +37,7 @@ export interface AsyncInputValidator {
   /**
    * Filters itself based on the input props
    */
-  condition?: (props: InputProps) => any;
+  condition?: (props: InputProps) => unknown;
   validate: InputValidation<true>;
   message?: SyncValidationMessage;
   debounce: number;
@@ -47,7 +47,7 @@ export interface SyncInputValidator {
   /**
    * Filters itself based on the input props
    */
-  condition?: (props: InputProps) => any;
+  condition?: (props: InputProps) => unknown;
   validate: InputValidation<false>;
   message: SyncValidationMessage;
   debounce?: undefined;

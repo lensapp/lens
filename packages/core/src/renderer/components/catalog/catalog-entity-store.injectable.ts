@@ -57,7 +57,9 @@ const catalogEntityStoreInjectable = getInjectable({
         reaction(() => entities.get(), loadAll),
         reaction(() => activeCategory.get(), loadAll, { delay: 100 }),
       ),
-      onRun: entity => catalogEntityRegistry.onRun(entity),
+      onRun: entity => {
+        void catalogEntityRegistry.onRun(entity);
+      },
       failedLoading: false,
       getTotalCount: () => entities.get().length,
       isLoaded: true,

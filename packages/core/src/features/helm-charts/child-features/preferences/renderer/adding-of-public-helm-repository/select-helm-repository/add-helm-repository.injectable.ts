@@ -25,7 +25,7 @@ const addHelmRepositoryInjectable = getInjectable({
         repository,
       );
 
-      if (result.callWasSuccessful) {
+      if (result.isOk) {
         showSuccessNotification(
           `Helm repository ${repository.name} has been added.`,
         );

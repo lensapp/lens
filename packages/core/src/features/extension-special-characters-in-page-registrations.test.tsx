@@ -20,7 +20,7 @@ describe("extension special characters in page registrations", () => {
 
     rendered = await builder.render();
 
-    builder.extensions.enable(extensionWithPagesHavingSpecialCharacters);
+    await builder.extensions.enable(extensionWithPagesHavingSpecialCharacters);
 
     windowDi = builder.applicationWindow.only.di;
   });

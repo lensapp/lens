@@ -3,8 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { action, computed, observable, makeObservable } from "mobx";
-import autoBind from "auto-bind";
+import { action, computed, observable } from "mobx";
 
 export class SearchStore {
   /**
@@ -15,56 +14,48 @@ export class SearchStore {
     return value ? value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&") : "";
   }
 
-  constructor() {
-    makeObservable(this);
-    autoBind(this);
-  }
-
   /**
    * Text in the search input
-   *
-   * @observable
    */
-  @observable searchQuery = "";
+  readonly searchQuery = observable.box("");
 
   /**
    * Array with line numbers, eg [0, 0, 10, 21, 21, 40...]
-   *
-   * @observable
    */
-  @observable occurrences: number[] = [];
+  readonly occurrences = observable.array<number>();
 
   /**
    * Index within the occurrences array. Showing where is activeOverlay currently located
    *
    * @observable
    */
-  @observable activeOverlayIndex = -1;
+  readonly activeOverlayIndex = observable.box(-1);
 
   /**
    * Sets default activeOverlayIndex
    * @param text An array of any textual data (logs, for example)
    * @param query Search query from input
    */
-  @action
-  public onSearch(text?: string[] | null, query = this.searchQuery): void {
-    this.searchQuery = query;
+  public onSearch = action((text?: string[] | null, query = this.searchQuery.get()): void => {
+    this.searchQuery.set(query);
 
     if (!query) {
       return this.reset();
     }
 
-    this.occurrences = this.findOccurrences(text ?? [], query);
+    this.occurrences.replace(this.findOccurrences(text ?? [], query));
 
     if (!this.occurrences.length) {
       return;
     }
 
+    const activeOverlayIndex = this.activeOverlayIndex.get();
+
     // If new highlighted keyword in exact same place as previous one, then no changing in active overlay
-    if (this.occurrences[this.activeOverlayIndex] === undefined) {
-      this.activeOverlayIndex = this.getNextOverlay(true);
+    if (this.occurrences[activeOverlayIndex] === undefined) {
+      this.activeOverlayIndex.set(this.getNextOverlay(true));
     }
-  }
+  });
 
   /**
    * Does searching within text array, create a list of search keyword occurrences.
@@ -86,10 +77,11 @@ export class SearchStore {
    * @returns next overlay index
    */
   private getNextOverlay(loopOver = false): number {
-    const next = this.activeOverlayIndex + 1;
+    const activeOverlayIndex = this.activeOverlayIndex.get();
+    const next = activeOverlayIndex + 1;
 
     if (next > this.occurrences.length - 1) {
-      return loopOver ? 0 : this.activeOverlayIndex;
+      return loopOver ? 0 : activeOverlayIndex;
     }
 
     return next;
@@ -101,54 +93,48 @@ export class SearchStore {
    * @returns previous overlay index
    */
   private getPrevOverlay(loopOver = false): number {
-    const prev = this.activeOverlayIndex - 1;
+    const activeOverlayIndex = this.activeOverlayIndex.get();
+    const prev = activeOverlayIndex - 1;
 
     if (prev < 0) {
-      return loopOver ? this.occurrences.length - 1 : this.activeOverlayIndex;
+      return loopOver ? this.occurrences.length - 1 : activeOverlayIndex;
     }
 
     return prev;
   }
 
-  public setNextOverlayActive(): void {
-    this.activeOverlayIndex = this.getNextOverlay(true);
-  }
+  public setNextOverlayActive = action((): void => {
+    this.activeOverlayIndex.set(this.getNextOverlay(true));
+  });
 
-  public setPrevOverlayActive(): void {
-    this.activeOverlayIndex = this.getPrevOverlay(true);
-  }
+  public setPrevOverlayActive = action((): void => {
+    this.activeOverlayIndex.set(this.getPrevOverlay(true));
+  });
 
   /**
    * Gets line index of where active overlay is located
    * @returns A line index within the text/logs array
    */
-  @computed get activeOverlayLine(): number {
-    return this.occurrences[this.activeOverlayIndex];
-  }
+  readonly activeOverlayLine = computed(() => this.occurrences[this.activeOverlayIndex.get()]);
 
-  @computed get activeFind(): number {
-    return this.activeOverlayIndex + 1;
-  }
+  readonly activeFind = computed(() => this.activeOverlayIndex.get() + 1);
 
-  @computed get totalFinds(): number {
-    return this.occurrences.length;
-  }
+  readonly totalFinds = computed(() => this.occurrences.length);
 
   /**
    * Checks if overlay is active (to highlight it with orange background usually)
    * @param line Index of the line where overlay is located
    * @param occurrence Number of the overlay within one line
    */
-  public isActiveOverlay(line: number, occurrence: number): boolean {
+  public isActiveOverlay = (line: number, occurrence: number): boolean => {
     const firstLineIndex = this.occurrences.findIndex(item => item === line);
 
-    return firstLineIndex + occurrence === this.activeOverlayIndex;
-  }
+    return firstLineIndex + occurrence === this.activeOverlayIndex.get();
+  };
 
-  @action
-  private reset(): void {
-    this.searchQuery = "";
-    this.activeOverlayIndex = -1;
-    this.occurrences = [];
-  }
+  private reset = action((): void => {
+    this.searchQuery.set("");
+    this.activeOverlayIndex.set(-1);
+    this.occurrences.clear();
+  });
 }

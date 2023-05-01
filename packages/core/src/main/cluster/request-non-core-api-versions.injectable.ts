@@ -19,8 +19,8 @@ const requestNonCoreApiVersionsInjectable = getInjectable({
           const { groups } = (await k8sRequest(cluster, "/apis")) as V1APIGroupList;
 
           return {
-            callWasSuccessful: true,
-            response: iter.chain(groups.values())
+            isOk: true,
+            value: iter.chain(groups.values())
               .flatMap((group) =>
                 group.versions.map((version) => ({
                   group: group.name,
@@ -31,7 +31,7 @@ const requestNonCoreApiVersionsInjectable = getInjectable({
           };
         } catch (error) {
           return {
-            callWasSuccessful: false,
+            isOk: false,
             error: error as Error,
           };
         }

@@ -4,15 +4,12 @@
  */
 import { noop } from "lodash/fp";
 
-export function withErrorSuppression<TDecorated extends (...args: any[]) => Promise<any>>(toBeDecorated: TDecorated): (...args: Parameters<TDecorated>) => ReturnType<TDecorated> | Promise<void>;
-export function withErrorSuppression<TDecorated extends (...args: any[]) => any>(toBeDecorated: TDecorated): (...args: Parameters<TDecorated>) => ReturnType<TDecorated> | void;
-
-export function withErrorSuppression(toBeDecorated: any) {
-  return (...args: any[]) => {
+export function withErrorSuppression<Params extends unknown[], Res>(toBeDecorated: (...args: Params) => Res): (...args: Params) => Res extends Promise<infer T> ? Promise<T | undefined> : Res | undefined {
+  return ((...args: Params) => {
     try {
       const returnValue = toBeDecorated(...args);
 
-      if ((returnValue as any) instanceof Promise) {
+      if ((returnValue) instanceof Promise) {
         return returnValue.catch(noop);
       }
 
@@ -20,5 +17,5 @@ export function withErrorSuppression(toBeDecorated: any) {
     } catch (e) {
       return undefined;
     }
-  };
+  }) as never;
 }

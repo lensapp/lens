@@ -51,12 +51,13 @@ class NonInjectedServicePortComponent extends React.Component<ServicePortCompone
   constructor(props: ServicePortComponentProps & Dependencies) {
     super(props);
     makeObservable(this);
-    this.checkExistingPortForwarding();
   }
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => this.props.service, () => this.checkExistingPortForwarding()),
+      reaction(() => this.props.service, () => void this.checkExistingPortForwarding(), {
+        fireImmediately: true,
+      }),
     ]);
   }
 
@@ -133,7 +134,7 @@ class NonInjectedServicePortComponent extends React.Component<ServicePortCompone
     } catch (error) {
       this.props.logger.error("[SERVICE-PORT-COMPONENT]:", error, portForward);
     } finally {
-      this.checkExistingPortForwarding();
+      await this.checkExistingPortForwarding();
       this.waiting = false;
     }
   }
@@ -156,7 +157,7 @@ class NonInjectedServicePortComponent extends React.Component<ServicePortCompone
     } catch (error) {
       showErrorNotification(`Error occurred stopping the port-forward from port ${portForward.forwardPort}.`);
     } finally {
-      this.checkExistingPortForwarding();
+      await this.checkExistingPortForwarding();
       this.forwardPort = 0;
       this.waiting = false;
     }
@@ -165,29 +166,30 @@ class NonInjectedServicePortComponent extends React.Component<ServicePortCompone
   render() {
     const { port, service } = this.props;
 
-    const portForwardAction = action(async () => {
+    const portForwardAction = async () => {
       if (this.isPortForwarded) {
         await this.stopPortForward();
       } else {
-        const portForward: ForwardedPort = {
+        this.props.openPortForwardDialog({
           kind: "service",
           name: service.getName(),
           namespace: service.getNs(),
           port: port.port,
           forwardPort: this.forwardPort,
           protocol: predictProtocol(port.name),
-        };
-
-        this.props.openPortForwardDialog(portForward, { openInBrowser: true, onClose: () => this.checkExistingPortForwarding() });
+        }, {
+          openInBrowser: true,
+          onClose: () => void this.checkExistingPortForwarding(),
+        });
       }
-    });
+    };
 
     return (
       <div className={cssNames("ServicePortComponent", { waiting: this.waiting })}>
-        <span title="Open in a browser" onClick={() => this.portForward()}>
+        <span title="Open in a browser" onClick={() => void this.portForward()}>
           {port.toString()}
         </span>
-        <Button primary onClick={portForwardAction}>
+        <Button primary onClick={() => void portForwardAction()}>
           {" "}
           {this.isPortForwarded ? (this.isActive ? "Stop/Remove" : "Remove") : "Forward..."}
           {" "}

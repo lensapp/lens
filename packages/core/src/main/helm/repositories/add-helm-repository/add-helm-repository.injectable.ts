@@ -56,14 +56,14 @@ const addHelmRepositoryInjectable = getInjectable({
 
       const result = await execHelm(args);
 
-      if (result.callWasSuccessful) {
+      if (result.isOk) {
         return {
-          callWasSuccessful: true as const,
+          isOk: true as const,
         };
       }
 
       return {
-        callWasSuccessful: false as const,
+        isOk: false as const,
         error: result.error.stderr || result.error.message,
       };
     };

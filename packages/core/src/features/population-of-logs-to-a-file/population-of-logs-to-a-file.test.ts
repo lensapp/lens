@@ -18,7 +18,7 @@ import { runInAction } from "mobx";
 describe("Population of logs to a file", () => {
   let builder: ApplicationBuilder;
   let windowDi: DiContainer;
-  let logWarningInRenderer: (message: string, ...args: any) => void;
+  let logWarningInRenderer: (message: string, ...args: unknown[]) => void;
   let frameSpecificWinstonLogInMainMock: jest.Mock;
   let frameSpecificCloseLogInMainMock: jest.Mock;
 
@@ -32,13 +32,13 @@ describe("Population of logs to a file", () => {
     builder = getApplicationBuilder();
 
     if (isClusterFrame) {
-      builder.setEnvironmentToClusterFrame();
+      await builder.setEnvironmentToClusterFrame();
     }
 
     frameSpecificWinstonLogInMainMock = jest.fn();
     frameSpecificCloseLogInMainMock = jest.fn();
 
-    builder.beforeApplicationStart(({ mainDi }) => {
+    await builder.beforeApplicationStart(({ mainDi }) => {
       mainDi.override(
         createIpcFileLoggerTransportInjectable,
         () => (fileId: string) =>
@@ -51,7 +51,7 @@ describe("Population of logs to a file", () => {
       );
     });
 
-    builder.beforeWindowStart(({ windowDi }) => {
+    await builder.beforeWindowStart(({ windowDi }) => {
       windowDi.unoverride(winstonLoggerInjectable);
 
       // Now that we have the actual winston logger in use, let's not be noisy and deregister console transport
@@ -82,7 +82,7 @@ describe("Population of logs to a file", () => {
       });
     });
 
-    it("when logging a warning in renderer, writes to frame specific Winston log", async () => {
+    it("when logging a warning in renderer, writes to frame specific Winston log", () => {
       logWarningInRenderer("some-warning");
       expect(frameSpecificWinstonLogInMainMock).toHaveBeenCalledWith(
         {
@@ -116,7 +116,7 @@ describe("Population of logs to a file", () => {
       });
     });
 
-    it("when logging a warning in renderer, writes to frame specific Winston log", async () => {
+    it("when logging a warning in renderer, writes to frame specific Winston log", () => {
       logWarningInRenderer("some-warning");
       expect(frameSpecificWinstonLogInMainMock).toHaveBeenCalledWith(
         {

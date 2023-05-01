@@ -5,9 +5,7 @@
 import type { DiContainer } from "@ogre-tools/injectable";
 import kubectlApplyAllInjectable from "../../main/kubectl/kubectl-apply-all.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
-import type { KubernetesCluster } from "../catalog-entities";
-import readDirectoryInjectable from "../fs/read-directory.injectable";
-import readFileInjectable from "../fs/read-file.injectable";
+import { KubernetesCluster } from "../catalog-entities";
 import createResourceStackInjectable from "../k8s/create-resource-stack.injectable";
 import appPathsStateInjectable from "../app-paths/app-paths-state.injectable";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
@@ -16,26 +14,35 @@ describe("create resource stack tests", () => {
   let di: DiContainer;
   let cluster: KubernetesCluster;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     di = getDiForUnitTesting();
-    cluster = {
-      getId: () => "test-cluster",
-    } as any;
+    cluster = new KubernetesCluster({
+      metadata: {
+        labels: {},
+        name: "some-name",
+        uid: "test-cluster",
+      },
+      spec: {
+        kubeconfigContext: "some-context",
+        kubeconfigPath: "/some-kubeconfig-path",
+      },
+      status: {
+        phase: "some-phase",
+      },
+    });
 
-    di.override(readDirectoryInjectable, () => () => Promise.resolve(["file1"]) as any);
-    di.override(readFileInjectable, () => () => Promise.resolve("filecontents"));
     di.override(appPathsStateInjectable, () => ({
       get: () => ({}),
     }));
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
-  
+
   });
 
   describe("kubectlApplyFolder", () => {
     it("returns response", async () => {
       di.override(kubectlApplyAllInjectable, () => () => Promise.resolve({
-        callWasSuccessful: true as const,
-        response: "success",
+        isOk: true as const,
+        value: "success",
       }));
 
       const createResourceStack = di.inject(createResourceStackInjectable);
@@ -48,7 +55,7 @@ describe("create resource stack tests", () => {
 
     it("throws on error", async () => {
       di.override(kubectlApplyAllInjectable, () => () => Promise.resolve({
-        callWasSuccessful: false as const,
+        isOk: false as const,
         error: "No permissions",
       }));
 

@@ -7,12 +7,11 @@ import "./drop-file-input.scss";
 import React from "react";
 import type { IClassName } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
-import { observable, makeObservable } from "mobx";
+import { observable } from "mobx";
 import { observer } from "mobx-react";
 import type { Logger } from "@k8slens/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { loggerInjectionToken } from "@k8slens/logger";
-import autoBindReact from "auto-bind/react";
 
 export interface DropFileInputProps<T extends HTMLElement> extends React.DOMAttributes<T> {
   className?: IClassName;
@@ -30,47 +29,45 @@ interface Dependencies {
 
 @observer
 class NonInjectedDropFileInput<T extends HTMLElement> extends React.Component<DropFileInputProps<T> & Dependencies> {
-  @observable dropAreaActive = false;
-  dragCounter = 0; // Counter preventing firing onDragLeave() too early (https://stackoverflow.com/questions/7110353/html5-dragleave-fired-when-hovering-a-child-element)
+  readonly dropAreaActive = observable.box(false);
 
-  constructor(props: DropFileInputProps<T> & Dependencies) {
-    super(props);
-    makeObservable(this);
-    autoBindReact(this);
-  }
+  /**
+   * Counter preventing firing onDragLeave() too early (https://stackoverflow.com/questions/7110353/html5-dragleave-fired-when-hovering-a-child-element)
+   */
+  dragCounter = 0;
 
-  onDragEnter() {
+  onDragEnter = () => {
     this.dragCounter++;
-    this.dropAreaActive = true;
-  }
+    this.dropAreaActive.set(true);
+  };
 
-  onDragLeave() {
+  onDragLeave = () => {
     this.dragCounter--;
 
     if (this.dragCounter == 0) {
-      this.dropAreaActive = false;
+      this.dropAreaActive.set(false);
     }
-  }
+  };
 
-  onDragOver(evt: React.DragEvent<T>) {
+  onDragOver = (evt: React.DragEvent<T>) => {
     if (this.props.onDragOver) {
       this.props.onDragOver(evt);
     }
     evt.preventDefault(); // enable onDrop()-callback
     evt.dataTransfer.dropEffect = "move";
-  }
+  };
 
-  onDrop(evt: React.DragEvent<T>) {
+  onDrop = (evt: React.DragEvent<T>) => {
     if (this.props.onDrop) {
       this.props.onDrop(evt);
     }
-    this.dropAreaActive = false;
+    this.dropAreaActive.set(false);
     const files = Array.from(evt.dataTransfer.files);
 
     if (files.length > 0) {
       this.props.onDropFiles(files, { evt });
     }
-  }
+  };
 
   render() {
     const { onDragEnter, onDragLeave, onDragOver, onDrop } = this;

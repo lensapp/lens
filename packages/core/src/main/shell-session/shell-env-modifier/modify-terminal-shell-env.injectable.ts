@@ -37,7 +37,7 @@ const modifyTerminalShellEnvInjectable = getInjectable({
         const ctx = { catalogEntity: entity };
 
         // clone it so the passed value is not also modified
-        env = JSON.parse(JSON.stringify(env));
+        env = JSON.parse(JSON.stringify(env)) as Partial<Record<string, string>>;
         env = modifiers.reduce((env, modifier) => modifier(ctx, env), env);
       }
 

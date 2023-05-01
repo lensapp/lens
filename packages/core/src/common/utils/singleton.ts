@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-export interface StaticThis<T, R extends any[]> { new(...args: R): T }
+export interface StaticThis<T, R extends unknown[]> { new(...args: R): T }
 
 /**
  * @deprecated This is a form of global shared state
@@ -30,7 +30,7 @@ export class Singleton {
    * @param args The constructor arguments for the child class
    * @returns An instance of the child class
    */
-  static createInstance<T extends Singleton, R extends any[]>(this: StaticThis<T, R>, ...args: R): T {
+  static createInstance<T extends Singleton, R extends unknown[]>(this: StaticThis<T, R>, ...args: R): T {
     if (!Singleton.instances.has(this)) {
       if (Singleton.creating.length > 0) {
         throw new TypeError(`Cannot create a second singleton (${this.name}) while creating a first (${Singleton.creating})`);
@@ -54,9 +54,9 @@ export class Singleton {
    * Default: `true`
    * @returns An instance of the child class
    */
-  static getInstance<T, R extends any[]>(this: StaticThis<T, R>, strict?: true): T;
-  static getInstance<T, R extends any[]>(this: StaticThis<T, R>, strict: false): T | undefined;
-  static getInstance<T, R extends any[]>(this: StaticThis<T, R>, strict = true): T | undefined {
+  static getInstance<T, R extends unknown[]>(this: StaticThis<T, R>, strict?: true): T;
+  static getInstance<T, R extends unknown[]>(this: StaticThis<T, R>, strict: false): T | undefined;
+  static getInstance<T, R extends unknown[]>(this: StaticThis<T, R>, strict = true): T | undefined {
     if (!Singleton.instances.has(this) && strict) {
       throw new TypeError(`instance of ${this.name} is not created`);
     }

@@ -99,10 +99,11 @@ class NonInjectedPortForwards extends React.Component<Dependencies> {
   render() {
     return (
       <SiblingsInTabLayout>
-        <ItemListLayout
+        <ItemListLayout<PortForwardItem, false>
           isConfigurable
           tableId="port_forwards"
           className="PortForwards"
+          preloadStores={false}
           store={this.props.portForwardStore}
           getItems={() => this.props.portForwardStore.items}
           sortingCallbacks={{

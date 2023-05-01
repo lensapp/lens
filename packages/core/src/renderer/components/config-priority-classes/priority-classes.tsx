@@ -25,8 +25,7 @@ enum columnId {
   age = "age",
 }
 
-export interface PriorityClassesProps extends KubeObjectDetailsProps<PriorityClass> {
-}
+export type PriorityClassesProps = KubeObjectDetailsProps<PriorityClass>;
 
 interface Dependencies {
   priorityClassStore: PriorityClassStore;

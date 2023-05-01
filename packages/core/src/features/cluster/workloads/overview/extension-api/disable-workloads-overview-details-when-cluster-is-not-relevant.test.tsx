@@ -21,7 +21,7 @@ describe("disable workloads overview details when cluster is not relevant", () =
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.setEnvironmentToClusterFrame();
+    await builder.setEnvironmentToClusterFrame();
 
     isEnabledForClusterMock = asyncFn();
 
@@ -54,7 +54,7 @@ describe("disable workloads overview details when cluster is not relevant", () =
 
     navigateToWorkloadsOverview();
 
-    builder.extensions.enable(testExtension);
+    await builder.extensions.enable(testExtension);
   });
 
   describe("given not yet known if extension should be enabled for the cluster", () => {

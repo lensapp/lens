@@ -12,6 +12,7 @@ import readJsonSyncInjectable from "../fs/read-json-sync.injectable";
 import writeJsonSyncInjectable from "../fs/write-json-sync.injectable";
 import { get, has, set } from "lodash";
 import semver from "semver";
+import type { Options as ConfOptions } from "conf/dist/source/types";
 
 const MIGRATION_KEY = `__internal__.migrations.version`;
 
@@ -43,16 +44,16 @@ export default getGlobalOverride(getConfigurationFileModelInjectable, (di) => {
   const readJsonSync = di.inject(readJsonSyncInjectable);
   const writeJsonSync = di.inject(writeJsonSyncInjectable);
 
-  return (options) => {
+  return <T extends object>(options: ConfOptions<T>) => {
     assert(options.cwd, "Missing options.cwd");
     assert(options.configName, "Missing options.configName");
     assert(options.projectVersion, "Missing options.projectVersion");
 
     const configFilePath = path.posix.join(options.cwd, `${options.configName}.json`);
-    let store: object = {};
+    let store: Partial<Record<string, unknown>> = {};
 
     try {
-      store = readJsonSync(configFilePath);
+      store = readJsonSync(configFilePath) as Partial<Record<string, unknown>>;
     } catch {
       // ignore
     }
@@ -62,12 +63,12 @@ export default getGlobalOverride(getConfigurationFileModelInjectable, (di) => {
         return store;
       },
       path: configFilePath,
-      get: (key: string) => get(store, key),
+      get: (key: string) => get(store, key) as unknown,
       set: (key: string, value: unknown) => {
         let currentState: Partial<Record<string, unknown>>;
 
         try {
-          currentState = readJsonSync(configFilePath);
+          currentState = readJsonSync(configFilePath) as Partial<Record<string, unknown>>;
         } catch {
           currentState = {};
         }
@@ -76,13 +77,13 @@ export default getGlobalOverride(getConfigurationFileModelInjectable, (di) => {
           ...currentState,
           [key]: value,
         });
-        store = readJsonSync(configFilePath);
+        store = readJsonSync(configFilePath) as Partial<Record<string, unknown>>;
       },
       delete: (key: string) => {
         let currentState: Partial<Record<string, unknown>>;
 
         try {
-          currentState = readJsonSync(configFilePath);
+          currentState = readJsonSync(configFilePath) as Partial<Record<string, unknown>>;
         } catch {
           currentState = {};
         }
@@ -90,20 +91,20 @@ export default getGlobalOverride(getConfigurationFileModelInjectable, (di) => {
         delete currentState[key];
 
         writeJsonSync(configFilePath, currentState);
-        store = readJsonSync(configFilePath);
+        store = readJsonSync(configFilePath) as Partial<Record<string, unknown>>;
       },
       has: (key: string) => has(store, key),
       clear: () => {
         writeJsonSync(configFilePath, {});
-        store = readJsonSync(configFilePath);
+        store = readJsonSync(configFilePath) as Partial<Record<string, unknown>>;
       },
-    } as Partial<Config> as Config<any>;
+    } as Partial<Config> as Config<T>;
 
     // Migrate
     {
       const migrations = options.migrations ?? [];
       const versionToMigrate = options.projectVersion;
-      let previousMigratedVersion = get(store, MIGRATION_KEY) || "0.0.0";
+      let previousMigratedVersion = String(get(store, MIGRATION_KEY)) || "0.0.0";
       const newerVersions = Object.entries(migrations)
         .filter(([candidateVersion]) => _shouldPerformMigration(candidateVersion, previousMigratedVersion, versionToMigrate));
 
@@ -118,7 +119,7 @@ export default getGlobalOverride(getConfigurationFileModelInjectable, (di) => {
         }
         catch (error) {
           store = storeBackup;
-          throw new Error(`Something went wrong during the migration! Changes applied to the store until this failed migration will be restored. ${error}`);
+          throw new Error(`Something went wrong during the migration! Changes applied to the store until this failed migration will be restored. ${String(error)}`);
         }
       }
 

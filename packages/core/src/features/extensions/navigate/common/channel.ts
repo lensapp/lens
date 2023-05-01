@@ -8,7 +8,7 @@ import type { MessageChannel } from "@k8slens/messaging";
 export interface NavigateForExtensionArgs {
   extId: string;
   pageId: string | undefined;
-  params: Record<string, any> | undefined;
+  params: Record<string, unknown> | undefined;
 }
 
 export const navigateForExtensionChannel: MessageChannel<NavigateForExtensionArgs> = {

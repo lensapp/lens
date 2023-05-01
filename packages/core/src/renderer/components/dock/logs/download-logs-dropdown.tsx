@@ -19,14 +19,16 @@ interface DownloadLogsDropdownProps {
 export function DownloadLogsDropdown({ downloadAllLogs, downloadVisibleLogs, disabled }: DownloadLogsDropdownProps) {
   const [waiting, setWaiting] = useState(false);
 
-  const downloadAll = async () => {
+  const downloadAll = () => {
     setWaiting(true);
 
-    try {
-      await downloadAllLogs();
-    } finally {
-      setWaiting(false);
-    }
+    void (async () => {
+      try {
+        await downloadAllLogs();
+      } finally {
+        setWaiting(false);
+      }
+    })();
   };
 
   return (

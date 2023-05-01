@@ -3,12 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import Joi from "joi";
+import { z } from "zod";
 
 /**
  * JSON serializable metadata type
  */
-export type ClusterMetadata = Record<string, string | number | boolean | object>;
+export type ClusterMetadata = Partial<Record<string, Metadata>>;
 
 /**
  * Metadata for cluster's prometheus settings
@@ -29,31 +29,55 @@ export type ClusterId = string;
  */
 export type UpdateClusterModel = Omit<ClusterModel, "id">;
 
+export type Literal = z.infer<typeof literalSchema>;
+export const literalSchema = z.string().or(z.number()).or(z.boolean());
+
+export type Metadata = Literal | { [key: string]: Metadata } | Metadata[];
+export const metadataSchema: z.ZodType<Metadata> = z.lazy(() => z.union([literalSchema, z.array(metadataSchema), z.record(metadataSchema)]));
+
+export const prometheusPreferencesSchema = z.object({
+  namespace: z.string(),
+  service: z.string(),
+  prefix: z.string(),
+  port: z.number(),
+});
+
+export const prometheusProviderPreferencesSchema = z.object({
+  type: z.string(),
+});
+
+export const preferencesSchema = z.object({
+  terminalCWD: z.string().min(1).optional(),
+  clusterName: z.string().min(1).optional(),
+  httpsProxy: z.string().min(1).optional(),
+  nodeShellImage: z.string().min(1).optional(),
+  imagePullSecret: z.string().min(1).optional(),
+  defaultNamespace: z.string().min(1).optional(),
+  iconOrder: z.number().optional(),
+  icon: z.nullable(z.string()).optional(),
+  hiddenMetrics: z.array(z.string()).optional(),
+  prometheus: prometheusPreferencesSchema.optional(),
+  prometheusProvider: prometheusProviderPreferencesSchema.optional(),
+});
+
 /**
  * A type validator for `UpdateClusterModel` so that only expected types are present
  */
-export const updateClusterModelChecker = Joi.object<UpdateClusterModel>({
-  kubeConfigPath: Joi.string()
-    .required()
-    .min(1),
-  contextName: Joi.string()
-    .required()
-    .min(1),
-  preferences: Joi.object(),
-  metadata: Joi.object(),
-  accessibleNamespaces: Joi.array()
-    .items(Joi.string()),
-  labels: Joi.object().pattern(Joi.string(), Joi.string()),
+export const updateClusterModelSchema = z.object({
+  kubeConfigPath: z.string().min(1),
+  contextName: z.string().min(1),
+  preferences: preferencesSchema.optional(),
+  metadata: z.record(metadataSchema).optional(),
+  accessibleNamespaces: z.array(z.string()).optional(),
+  labels: z.record(z.string()).optional(),
 });
 
 /**
  * A type validator for just the `id` fields of `ClusterModel`. The rest is
  * covered by `updateClusterModelChecker`
  */
-export const clusterModelIdChecker = Joi.object<Pick<ClusterModel, "id">>({
-  id: Joi.string()
-    .required()
-    .min(1),
+export const clusterModelIdSchema = z.object({
+  id: z.string().min(1),
 });
 
 /**
@@ -85,7 +109,7 @@ export interface ClusterModel {
 }
 
 /**
- * This data is retreived from the kubeconfig file before calling the cluster constructor.
+ * This data is retrieved from the kubeconfig file before calling the cluster constructor.
  *
  * That is done to remove the external dependency on the construction of Cluster instances.
  */

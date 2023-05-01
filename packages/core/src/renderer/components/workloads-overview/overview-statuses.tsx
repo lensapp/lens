@@ -14,33 +14,30 @@ import workloadsInjectable from "./workloads/workloads.injectable";
 import type { Workload } from "./workloads/workload-injection-token";
 import { formatKubeApiResource } from "../../../common/rbac";
 
-export interface OverviewStatusesProps {}
-
 interface Dependencies {
   workloads: IComputedValue<Workload[]>;
 }
 
-const NonInjectedOverviewStatuses = observer(
-  ({ workloads }: Dependencies & OverviewStatusesProps) => (
-    <div className="OverviewStatuses">
-      <div className="workloads">
-        {workloads.get().map((workload) => (
-          <div className="workload" key={formatKubeApiResource(workload.resource)}>
-            <div className="title">
-              <a onClick={workload.open}>
-                {`${workload.title} (${workload.amountOfItems.get()})`}
-              </a>
-            </div>
-
-            <OverviewWorkloadStatus workload={workload} />
+const NonInjectedOverviewStatuses = observer(({ workloads }: Dependencies) => (
+  <div className="OverviewStatuses">
+    <div className="workloads">
+      {workloads.get().map((workload) => (
+        <div className="workload" key={formatKubeApiResource(workload.resource)}>
+          <div className="title">
+            <a onClick={workload.open}>
+              {`${workload.title} (${workload.amountOfItems.get()})`}
+            </a>
           </div>
-        ))}
-      </div>
+
+          <OverviewWorkloadStatus workload={workload} />
+        </div>
+      ))}
     </div>
-  ),
+  </div>
+),
 );
 
-export const OverviewStatuses = withInjectables<Dependencies, OverviewStatusesProps>(NonInjectedOverviewStatuses, {
+export const OverviewStatuses = withInjectables<Dependencies>(NonInjectedOverviewStatuses, {
   getProps: (di, props) => ({
     workloads: di.inject(workloadsInjectable),
     ...props,

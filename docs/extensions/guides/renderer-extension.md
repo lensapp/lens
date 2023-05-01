@@ -95,7 +95,7 @@ The properties of the `clusterPages` array objects are defined as follows:
 
 - `id` is a string that identifies the page.
 - `components` matches the `PageComponents` interface for which there is one field, `Page`.
-- `Page` is of type ` React.ComponentType<any>`.
+- `Page` is of type ` React.ComponentType<Record<string, never>>`.
   It offers flexibility in defining the appearance and behavior of your page.
 
 `ExamplePage` in the example above can be defined in `page.tsx`:
@@ -304,7 +304,7 @@ The properties of the `globalPages` array objects are defined as follows:
 
 - `id` is a string that identifies the page.
 - `components` matches the `PageComponents` interface for which there is one field, `Page`.
-- `Page` is of type `React.ComponentType<any>`.
+- `Page` is of type `React.ComponentType<Record<string, never>>`.
   It offers flexibility in defining the appearance and behavior of your page.
 
 `HelpPage` in the example above can be defined in `page.tsx`:

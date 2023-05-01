@@ -19,9 +19,9 @@ const listHelmChartsInjectable = getInjectable({
     return async () => {
       const result = await getActiveHelmRepositories();
 
-      assert(result.callWasSuccessful);
+      assert(result.isOk);
 
-      const repositories = result.response;
+      const repositories = result.value;
 
       return object.fromEntries(
         await Promise.all(

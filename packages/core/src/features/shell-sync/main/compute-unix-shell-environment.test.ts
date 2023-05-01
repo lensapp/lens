@@ -39,13 +39,13 @@ describe("computeUnixShellEnvironment technical tests", () => {
   beforeEach(() => {
     di = getDiForUnitTesting();
 
-    spawnMock = jest.fn().mockImplementation((spawnfile, spawnargs) => {
+    spawnMock = jest.fn().mockImplementation((spawnfile: string, spawnargs: string[]) => {
       shellStdin = new MemoryStream();
       shellStdout = new MemoryStream();
       shellStderr = new MemoryStream();
       stdinValue = "";
 
-      shellStdin.on("data", (chunk) => {
+      shellStdin.on("data", (chunk: Buffer) => {
         stdinValue += chunk.toString();
       });
 
@@ -57,7 +57,9 @@ describe("computeUnixShellEnvironment technical tests", () => {
           shellStdin,
           shellStdout,
           shellStderr,
-        ] as any,
+          null,
+          null,
+        ] as ChildProcessWithoutNullStreams["stdio"],
         killed: false,
         kill: jest.fn(),
         send: jest.fn(),
@@ -124,7 +126,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
 
       it("should resolve with a failed call", async () => {
         await expect(unixShellEnv).resolves.toEqual({
-          callWasSuccessful: false,
+          isOk: false,
           error: `Failed to spawn ${shellPath}: ${JSON.stringify({
             error: "Error: some-error",
             stdout: "",
@@ -141,7 +143,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
 
       it("should resolve with a failed call", async () => {
         await expect(unixShellEnv).resolves.toEqual({
-          callWasSuccessful: false,
+          isOk: false,
           error: 'Shell did not exit successfully: {\n    "code": 1,\n    "signal": null,\n    "stdout": "",\n    "stderr": ""\n}',
         });
       });
@@ -154,7 +156,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
 
       it("should resolve with a failed call", async () => {
         await expect(unixShellEnv).resolves.toEqual({
-          callWasSuccessful: false,
+          isOk: false,
           error: 'Shell did not exit successfully: {\n    "code": 0,\n    "signal": "SIGKILL",\n    "stdout": "",\n    "stderr": ""\n}',
         });
       });
@@ -177,8 +179,8 @@ describe("computeUnixShellEnvironment technical tests", () => {
 
         it("should resolve the env", async () => {
           await expect(unixShellEnv).resolves.toEqual({
-            callWasSuccessful: true,
-            response: {
+            isOk: true,
+            value: {
               PATH: "/bin",
               SOME_ENV_VAR: "some-env-value",
               TERM: "some-other-value",
@@ -230,7 +232,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
 
       it("should resolve with a failed call", async () => {
         await expect(unixShellEnv).resolves.toEqual({
-          callWasSuccessful: false,
+          isOk: false,
           error: `Failed to spawn ${shellPath}: ${JSON.stringify({
             error: "Error: some-error",
             stdout: "",
@@ -247,7 +249,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
 
       it("should resolve with a failed call", async () => {
         await expect(unixShellEnv).resolves.toEqual({
-          callWasSuccessful: false,
+          isOk: false,
           error: 'Shell did not exit successfully: {\n    "code": 1,\n    "signal": null,\n    "stdout": "",\n    "stderr": ""\n}',
         });
       });
@@ -260,7 +262,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
 
       it("should resolve with a failed call", async () => {
         await expect(unixShellEnv).resolves.toEqual({
-          callWasSuccessful: false,
+          isOk: false,
           error: 'Shell did not exit successfully: {\n    "code": 0,\n    "signal": "SIGKILL",\n    "stdout": "",\n    "stderr": ""\n}',
         });
       });
@@ -283,8 +285,8 @@ describe("computeUnixShellEnvironment technical tests", () => {
 
         it("should resolve the env", async () => {
           await expect(unixShellEnv).resolves.toEqual({
-            callWasSuccessful: true,
-            response: {
+            isOk: true,
+            value: {
               PATH: "/bin",
               SOME_ENV_VAR: "some-env-value",
               TERM: "some-other-value",
@@ -335,7 +337,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
 
       it("should resolve with a failed call", async () => {
         await expect(unixShellEnv).resolves.toEqual({
-          callWasSuccessful: false,
+          isOk: false,
           error: `Failed to spawn ${shellPath}: ${JSON.stringify({
             error: "Error: some-error",
             stdout: "",
@@ -352,7 +354,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
 
       it("should resolve with a failed call", async () => {
         await expect(unixShellEnv).resolves.toEqual({
-          callWasSuccessful: false,
+          isOk: false,
           error: 'Shell did not exit successfully: {\n    "code": 1,\n    "signal": null,\n    "stdout": "",\n    "stderr": ""\n}',
         });
       });
@@ -365,7 +367,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
 
       it("should resolve with a failed call", async () => {
         await expect(unixShellEnv).resolves.toEqual({
-          callWasSuccessful: false,
+          isOk: false,
           error: 'Shell did not exit successfully: {\n    "code": 0,\n    "signal": "SIGKILL",\n    "stdout": "",\n    "stderr": ""\n}',
         });
       });
@@ -388,8 +390,8 @@ describe("computeUnixShellEnvironment technical tests", () => {
 
         it("should resolve the env", async () => {
           await expect(unixShellEnv).resolves.toEqual({
-            callWasSuccessful: true,
-            response: {
+            isOk: true,
+            value: {
               PATH: "/bin",
               SOME_ENV_VAR: "some-env-value",
               TERM: "some-other-value",
@@ -439,7 +441,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
 
       it("should resolve with a failed call", async () => {
         await expect(unixShellEnv).resolves.toEqual({
-          callWasSuccessful: false,
+          isOk: false,
           error: `Failed to spawn ${shellPath}: ${JSON.stringify({
             error: "Error: some-error",
             stdout: "",
@@ -456,7 +458,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
 
       it("should resolve with a failed call", async () => {
         await expect(unixShellEnv).resolves.toEqual({
-          callWasSuccessful: false,
+          isOk: false,
           error: 'Shell did not exit successfully: {\n    "code": 1,\n    "signal": null,\n    "stdout": "",\n    "stderr": ""\n}',
         });
       });
@@ -469,7 +471,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
 
       it("should resolve with a failed call", async () => {
         await expect(unixShellEnv).resolves.toEqual({
-          callWasSuccessful: false,
+          isOk: false,
           error: 'Shell did not exit successfully: {\n    "code": 0,\n    "signal": "SIGKILL",\n    "stdout": "",\n    "stderr": ""\n}',
         });
       });
@@ -492,8 +494,8 @@ describe("computeUnixShellEnvironment technical tests", () => {
 
         it("should resolve the env", async () => {
           await expect(unixShellEnv).resolves.toEqual({
-            callWasSuccessful: true,
-            response: {
+            isOk: true,
+            value: {
               PATH: "/bin",
               SOME_ENV_VAR: "some-env-value",
               TERM: "some-other-value",

@@ -28,8 +28,7 @@ enum columnId {
   age = "age",
 }
 
-export interface PodDisruptionBudgetsProps extends KubeObjectDetailsProps<PodDisruptionBudget> {
-}
+export type PodDisruptionBudgetsProps = KubeObjectDetailsProps<PodDisruptionBudget>;
 
 interface Dependencies {
   podDisruptionBudgetStore: PodDisruptionBudgetStore;

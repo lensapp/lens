@@ -60,7 +60,7 @@ const uninstallExtensionInjectable = getInjectable({
         const message = getMessageFromError(error);
 
         logger.info(
-          `[EXTENSION-UNINSTALL]: uninstalling ${displayName} has failed: ${error}`,
+          `[EXTENSION-UNINSTALL]: uninstalling ${displayName} has failed: ${String(error)}`,
           { error },
         );
         showErrorNotification(

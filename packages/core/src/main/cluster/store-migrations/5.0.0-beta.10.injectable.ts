@@ -32,7 +32,7 @@ const v500Beta10ClusterStoreMigrationInjectable = getInjectable({
       version: "5.0.0-beta.10",
       run(store) {
         try {
-          const workspaceData: Pre500WorkspaceStoreModel = readJsonSync(joinPaths(userDataPath, "lens-workspace-store.json"));
+          const workspaceData = readJsonSync(joinPaths(userDataPath, "lens-workspace-store.json")) as Pre500WorkspaceStoreModel;
           const workspaces = new Map<string, string>(); // mapping from WorkspaceId to name
 
           for (const { id, name } of workspaceData.workspaces) {
@@ -53,11 +53,6 @@ const v500Beta10ClusterStoreMigrationInjectable = getInjectable({
 
           store.set("clusters", clusters);
         } catch (error) {
-          // KLUDGE: remove after https://github.com/streamich/memfs/pull/893 is released
-          if (process.env.JEST_WORKER_ID && (error as any).code === "ENOENT") {
-            return;
-          }
-
           if (isErrnoException(error) && error.code === "ENOENT" && error.path?.endsWith("lens-workspace-store.json")) {
             // ignore lens-workspace-store.json being missing
             return;

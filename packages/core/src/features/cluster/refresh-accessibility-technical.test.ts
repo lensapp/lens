@@ -26,6 +26,8 @@ import createKubeAuthProxyInjectable from "../../main/kube-auth-proxy/create-kub
 import type { Mocked } from "../../test-utils/mock-interface";
 import { flushPromises } from "@k8slens/test-utils";
 import addClusterInjectable from "./storage/common/add.injectable";
+import type { IncomingMessage } from "http";
+import assert from "assert";
 
 describe("Refresh Cluster Accessibility Technical Tests", () => {
   let builder: ApplicationBuilder;
@@ -62,12 +64,12 @@ describe("Refresh Cluster Accessibility Technical Tests", () => {
     mainDi.override(createAuthorizationApiInjectable, () => () => ({
       createSelfSubjectRulesReview: createSelfSubjectRulesReviewMock,
       createSelfSubjectAccessReview: createSelfSubjectAccessReviewMock,
-    } as any));
+    }) as unknown as AuthorizationV1Api);
 
     listNamespaceMock = asyncFn();
     mainDi.override(createCoreApiInjectable, () => () => ({
       listNamespace: listNamespaceMock,
-    } as any));
+    }) as unknown as CoreV1Api);
 
     await builder.render();
   });
@@ -103,11 +105,15 @@ describe("Refresh Cluster Accessibility Technical Tests", () => {
         }],
       });
 
-      cluster = addCluster({
+      const clusterResult = addCluster({
         contextName: "some-cluster-context",
         id: "some-cluster-id",
         kubeConfigPath: "/some-kube-config-path",
       });
+
+      assert(clusterResult.isOk);
+
+      cluster = clusterResult.value;
       clusterConnection = mainDi.inject(clusterConnectionInjectable, cluster);
       refreshPromise = clusterConnection.refreshAccessibilityAndMetadata();
     });
@@ -123,7 +129,7 @@ describe("Refresh Cluster Accessibility Technical Tests", () => {
         await flushPromises();
       });
 
-      it("requests if cluster has admin permissions", async () => {
+      it("requests if cluster has admin permissions", () => {
         expect(createSelfSubjectAccessReviewMock).toBeCalledWith(anyObject({
           spec: {
             namespace: "kube-system",
@@ -140,8 +146,9 @@ describe("Refresh Cluster Accessibility Technical Tests", () => {
               status: {
                 allowed: isAdmin,
               },
-            } as PartialDeep<V1SelfSubjectAccessReview>,
-          } as any);
+            } as unknown as V1SelfSubjectAccessReview,
+            response: null as unknown as IncomingMessage,
+          });
         });
 
         it("requests if cluster has global watch permissions", () => {
@@ -160,8 +167,9 @@ describe("Refresh Cluster Accessibility Technical Tests", () => {
                 status: {
                   allowed: globalWatch,
                 },
-              } as PartialDeep<V1SelfSubjectAccessReview>,
-            } as any);
+              } as unknown as V1SelfSubjectAccessReview,
+              response: null as unknown as IncomingMessage,
+            });
           });
 
           it("requests namespaces", () => {

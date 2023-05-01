@@ -22,9 +22,6 @@ import showErrorNotificationInjectable from "../notifications/show-error-notific
 import { loggerInjectionToken } from "@k8slens/logger";
 import { MonacoEditor } from "../monaco-editor";
 
-export interface ConfigMapDetailsProps extends KubeObjectDetailsProps<ConfigMap> {
-}
-
 interface Dependencies {
   configMapStore: ConfigMapStore;
   logger: Logger;
@@ -33,11 +30,11 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedConfigMapDetails extends React.Component<ConfigMapDetailsProps & Dependencies> {
+class NonInjectedConfigMapDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
   @observable isSaving = false;
   @observable data = observable.map<string, string | undefined>();
 
-  constructor(props: ConfigMapDetailsProps & Dependencies) {
+  constructor(props: KubeObjectDetailsProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -45,7 +42,7 @@ class NonInjectedConfigMapDetails extends React.Component<ConfigMapDetailsProps 
   componentDidMount() {
     disposeOnUnmount(this, [
       autorun(() => {
-        const { object: configMap } = this.props;
+        const configMap = this.props.object as ConfigMap;
 
         if (configMap) {
           this.data.replace(configMap.data); // refresh
@@ -54,8 +51,8 @@ class NonInjectedConfigMapDetails extends React.Component<ConfigMapDetailsProps 
     ]);
   }
 
-  save = () => {
-    const { object: configMap, configMapStore } = this.props;
+  save = (configMap: ConfigMap) => {
+    const { configMapStore } = this.props;
 
     void (async () => {
       try {
@@ -129,7 +126,7 @@ class NonInjectedConfigMapDetails extends React.Component<ConfigMapDetailsProps 
                 label="Save"
                 waiting={this.isSaving}
                 className="save-btn"
-                onClick={this.save}
+                onClick={() => this.save(configMap)}
               />
             </>
           )
@@ -139,7 +136,7 @@ class NonInjectedConfigMapDetails extends React.Component<ConfigMapDetailsProps 
   }
 }
 
-export const ConfigMapDetails = withInjectables<Dependencies, ConfigMapDetailsProps>(NonInjectedConfigMapDetails, {
+export const ConfigMapDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedConfigMapDetails, {
   getProps: (di, props) => ({
     ...props,
     configMapStore: di.inject(configMapStoreInjectable),

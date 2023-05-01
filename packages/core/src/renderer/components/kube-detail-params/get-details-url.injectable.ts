@@ -27,7 +27,7 @@ const getDetailsUrlInjectable = getInjectable({
         params.set(kubeSelectedUrlParam.name, kubeSelectedUrlParam.get());
       }
 
-      return `?${params}`;
+      return `?${params.toString()}`;
     };
   },
 });

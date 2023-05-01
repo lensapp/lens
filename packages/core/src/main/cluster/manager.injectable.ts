@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { loggerInjectionToken } from "@k8slens/logger";
+import { prefixedLoggerInjectable } from "@k8slens/logger";
 import addClusterInjectable from "../../features/cluster/storage/common/add.injectable";
 import clustersInjectable from "../../features/cluster/storage/common/clusters.injectable";
 import getClusterByIdInjectable from "../../features/cluster/storage/common/get-by-id.injectable";
@@ -22,7 +22,7 @@ const clusterManagerInjectable = getInjectable({
     catalogEntityRegistry: di.inject(catalogEntityRegistryInjectable),
     clustersThatAreBeingDeleted: di.inject(clustersThatAreBeingDeletedInjectable),
     visibleCluster: di.inject(visibleClusterInjectable),
-    logger: di.inject(loggerInjectionToken),
+    logger: di.inject(prefixedLoggerInjectable, "CLUSTER-MANAGER"),
     addCluster: di.inject(addClusterInjectable),
     clusters: di.inject(clustersInjectable),
     getClusterById: di.inject(getClusterByIdInjectable),

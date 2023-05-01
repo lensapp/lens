@@ -25,6 +25,7 @@ export abstract class IpcRenderer extends IpcRegistrar {
    * @param listener The function that will be called with the arguments of the broadcast
    * @returns An optional disposer, Lens will cleanup even if this is not called
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   listen(channel: string, listener: (event: Electron.IpcRendererEvent, ...args: any[]) => any): Disposer {
     const prefixedChannel = `extensions@${this[IpcPrefix]}:${channel}`;
     const cleanup = once(() => {
@@ -48,7 +49,8 @@ export abstract class IpcRenderer extends IpcRegistrar {
    * @param args The arguments to pass to the RPC
    * @returns A promise of the resulting value
    */
-  invoke(channel: string, ...args: any[]): Promise<any> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  invoke(channel: string, ...args: unknown[]): Promise<any> {
     const prefixedChannel = `extensions@${this[IpcPrefix]}:${channel}`;
 
     return ipcRenderer.invoke(prefixedChannel, ...args);

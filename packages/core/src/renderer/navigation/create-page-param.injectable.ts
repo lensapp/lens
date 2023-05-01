@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { observableHistoryInjectionToken } from "@k8slens/routing";
-import type { PageParamDependencies, PageParamInit } from "./page-param";
+import type { PageParamDeclaration, PageParamDependencies, PageParamInit, WithName } from "./page-param";
 import { PageParam } from "./page-param";
 
 export type CreatePageParam = <Value = string>(init: PageParamInit<Value>) => PageParam<Value>;
@@ -16,7 +16,9 @@ const createPageParamInjectable = getInjectable({
       history: di.inject(observableHistoryInjectionToken),
     };
 
-    return (init) => new PageParam(deps, init);
+    return <Value>(init: PageParamInit<Value>) => (
+      new PageParam<Value>(deps, init as unknown as (PageParamDeclaration<Value> & WithName))
+    );
   },
 });
 

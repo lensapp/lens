@@ -26,9 +26,6 @@ import replicaSetStoreInjectable from "../workloads-replicasets/store.injectable
 import deploymentStoreInjectable from "./store.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
 
-export interface DeploymentDetailsProps extends KubeObjectDetailsProps<Deployment> {
-}
-
 interface Dependencies {
   subscribeStores: SubscribeStores;
   replicaSetStore: ReplicaSetStore;
@@ -37,7 +34,7 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedDeploymentDetails extends React.Component<DeploymentDetailsProps & Dependencies> {
+class NonInjectedDeploymentDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
   componentDidMount() {
     disposeOnUnmount(this, [
       this.props.subscribeStores([
@@ -108,7 +105,7 @@ class NonInjectedDeploymentDetails extends React.Component<DeploymentDetailsProp
                     <>
                       <p>{message}</p>
                       <p>
-                        {`Last transition time: ${lastTransitionTime}`}
+                        {`Last transition time: ${lastTransitionTime ?? "<unknown>"}`}
                       </p>
                     </>
                   )} />
@@ -124,7 +121,7 @@ class NonInjectedDeploymentDetails extends React.Component<DeploymentDetailsProp
   }
 }
 
-export const DeploymentDetails = withInjectables<Dependencies, DeploymentDetailsProps>(NonInjectedDeploymentDetails, {
+export const DeploymentDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedDeploymentDetails, {
   getProps: (di, props) => ({
     ...props,
     subscribeStores: di.inject(subscribeStoresInjectable),

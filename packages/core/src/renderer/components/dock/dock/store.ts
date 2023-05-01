@@ -55,7 +55,7 @@ export interface DockTabCreate {
   /**
    * Extra fields are supported.
    */
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**
@@ -100,7 +100,7 @@ export interface DockTabCloseEvent {
 
 interface Dependencies {
   readonly storage: StorageLayer<DockStorageState>;
-  readonly tabDataClearers: Record<TabKind, (tabId: TabId) => void>;
+  readonly tabDataCleaners: Record<TabKind, (tabId: TabId) => void>;
   readonly tabDataValidator: Partial<Record<TabKind, (tabId: TabId) => boolean>>;
 }
 
@@ -187,10 +187,10 @@ export class DockStore implements DockStorageState {
     return Math.max(preferredMax, this.minHeight); // don't let max < min
   }
 
-  protected adjustHeight() {
+  protected adjustHeight = () => {
     if (this.height < this.minHeight) this.height = this.minHeight;
     if (this.height > this.maxHeight) this.height = this.maxHeight;
-  }
+  };
 
   onResize(callback: () => void, opts: { fireImmediately?: boolean } = {}) {
     return reaction(() => [this.height, this.fullSize], callback, {
@@ -232,43 +232,39 @@ export class DockStore implements DockStorageState {
     }), reactionOpts);
   }
 
-  hasTabs() {
+  hasTabs = () => {
     return this.tabs.length > 0;
-  }
+  };
 
-  @action
-  open(fullSize?: boolean) {
+  open = action((fullSize?: boolean) => {
     this.isOpen = true;
 
     if (typeof fullSize === "boolean") {
       this.fullSize = fullSize;
     }
-  }
+  });
 
-  @action
-  close() {
+  close = action(() => {
     this.isOpen = false;
-  }
+  });
 
-  @action
-  toggle() {
+  toggle = action(() => {
     if (this.isOpen) this.close();
     else this.open();
-  }
+  });
 
-  @action
-  toggleFillSize() {
+  toggleFillSize = action(() => {
     if (!this.isOpen) this.open();
     this.fullSize = !this.fullSize;
-  }
+  });
 
-  getTabById(tabId: TabId) {
+  getTabById = (tabId: TabId) => {
     return this.tabs.find(tab => tab.id === tabId);
-  }
+  };
 
-  getTabIndex(tabId: TabId) {
+  getTabIndex = (tabId: TabId) => {
     return this.tabs.findIndex(tab => tab.id === tabId);
-  }
+  };
 
   protected getNewTabNumber(kind: TabKind) {
     const tabNumbers = this.tabs
@@ -316,8 +312,7 @@ export class DockStore implements DockStorageState {
     return tab;
   });
 
-  @action
-  closeTab(tabId: TabId) {
+  closeTab = action((tabId: TabId) => {
     const tab = this.getTabById(tabId);
     const tabIndex = this.getTabIndex(tabId);
 
@@ -326,7 +321,7 @@ export class DockStore implements DockStorageState {
     }
 
     this.tabs = this.tabs.filter(tab => tab.id !== tabId);
-    this.dependencies.tabDataClearers[tab.kind](tab.id);
+    this.dependencies.tabDataCleaners[tab.kind](tab.id);
 
     if (this.selectedTabId === tab.id) {
       if (this.tabs.length) {
@@ -338,46 +333,43 @@ export class DockStore implements DockStorageState {
         this.close();
       }
     }
-  }
+  });
 
-  @action
-  closeTabs(tabs: DockTab[]) {
+  closeTabs = action((tabs: DockTab[]) => {
     tabs.forEach(tab => this.closeTab(tab.id));
-  }
+  });
 
-  closeAllTabs() {
+  closeAllTabs = action(() => {
     this.closeTabs([...this.tabs]);
-  }
+  });
 
-  closeOtherTabs(tabId: TabId) {
+  closeOtherTabs = action((tabId: TabId) => {
     const index = this.getTabIndex(tabId);
     const tabs = [...this.tabs.slice(0, index), ...this.tabs.slice(index + 1)];
 
     this.closeTabs(tabs);
-  }
+  });
 
-  closeTabsToTheRight(tabId: TabId) {
+  closeTabsToTheRight = action((tabId: TabId) => {
     const index = this.getTabIndex(tabId);
     const tabs = this.tabs.slice(index + 1);
 
     this.closeTabs(tabs);
-  }
+  });
 
-  renameTab(tabId: TabId, title: string) {
+  renameTab = (tabId: TabId, title: string) => {
     const tab = this.getTabById(tabId);
 
     if (tab) {
       tab.title = title;
     }
-  }
+  };
 
-  @action
-  selectTab(tabId: TabId) {
+  selectTab = action((tabId: TabId) => {
     this.selectedTabId = this.getTabById(tabId)?.id;
-  }
+  });
 
-  @action
-  reset() {
+  reset = action(() => {
     this.dependencies.storage?.reset();
-  }
+  });
 }

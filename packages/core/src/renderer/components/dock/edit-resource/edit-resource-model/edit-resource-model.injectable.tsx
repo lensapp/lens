@@ -71,6 +71,8 @@ function getEditSelfLinkFor(object: RawKubeObject): string | undefined {
 
     const { apiVersionWithGroup, ...parsedApi } = parsedKubeApi;
 
+    void apiVersionWithGroup;
+
     return createKubeApiURL({
       ...parsedApi,
       apiVersion: lensVersionLabel,
@@ -136,27 +138,27 @@ export class EditResourceModel {
 
     let result = await this.dependencies.requestKubeResource(this.selfLink);
 
-    if (!result.callWasSuccessful) {
+    if (!result.isOk) {
       return void this.dependencies.showErrorNotification(`Loading resource failed: ${result.error}`);
     }
 
-    if (result?.response?.metadata.labels?.[EditResourceLabelName]) {
+    if (result?.value?.metadata.labels?.[EditResourceLabelName]) {
       const parsed = parseKubeApi(this.selfLink);
 
       if (!parsed) {
         return void this.dependencies.showErrorNotification(`Object's selfLink is invalid: "${this.selfLink}"`);
       }
 
-      parsed.apiVersion = result.response.metadata.labels[EditResourceLabelName];
+      parsed.apiVersion = result.value.metadata.labels[EditResourceLabelName];
 
       result = await this.dependencies.requestKubeResource(createKubeApiURL(parsed));
     }
 
-    if (!result.callWasSuccessful) {
+    if (!result.isOk) {
       return void this.dependencies.showErrorNotification(`Loading resource failed: ${result.error}`);
     }
 
-    const resource = result.response;
+    const resource = result.value;
 
     runInAction(() => {
       this._resource = resource;
@@ -207,7 +209,7 @@ export class EditResourceModel {
 
     const result = await this.dependencies.requestPatchKubeResource(selfLink, patches);
 
-    if (!result.callWasSuccessful) {
+    if (!result.isOk) {
       this.dependencies.showErrorNotification((
         <p>
           Failed to save resource:
@@ -219,7 +221,7 @@ export class EditResourceModel {
       return null;
     }
 
-    const { kind, name } = result.response;
+    const { kind, name } = result.value;
 
     this.dependencies.showSuccessNotification(
       <p>

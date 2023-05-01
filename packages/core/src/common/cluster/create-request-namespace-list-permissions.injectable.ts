@@ -32,7 +32,7 @@ const createRequestNamespaceListPermissionsInjectable = getInjectable({
         });
 
         if (!status || status.incomplete) {
-          logger.warn(`[AUTHORIZATION-NAMESPACE-REVIEW]: allowing all resources in namespace="${namespace}" due to incomplete SelfSubjectRulesReview: ${status?.evaluationError}`);
+          logger.warn(`[AUTHORIZATION-NAMESPACE-REVIEW]: allowing all resources in namespace="${namespace}" due to incomplete SelfSubjectRulesReview: ${status?.evaluationError ?? ""}`);
 
           return () => true;
         }

@@ -189,7 +189,7 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
       this.createEditor();
       this.logger.info(`[MONACO]: editor did mount`, this.logMetadata);
     } catch (error) {
-      this.logger.error(`[MONACO]: mounting failed: ${error}`, this.logMetadata);
+      this.logger.error(`[MONACO]: mounting failed: ${String(error)}`, this.logMetadata);
     }
   }
 
@@ -221,7 +221,8 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
       ...this.options,
     });
 
-    this.logger.info(`[MONACO]: editor created for language=${language}, theme=${theme}`, this.logMetadata);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    this.logger.info(`[MONACO]: editor created for language=${language!}, theme=${theme}`, this.logMetadata);
     this.validateLazy(); // validate initial value
     this.restoreViewState(this.model); // restore previous state if any
 
@@ -245,7 +246,7 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
     });
 
     this.dispose.push(
-      reaction(() => this.model, this.onModelChange),
+      reaction(() => this.model, (model) => this.onModelChange(model)),
       reaction(() => this.theme, editor.setTheme),
       reaction(() => this.props.value, value => this.setValue(value), {
         fireImmediately: true,
@@ -298,7 +299,7 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
   }
 
   // avoid excessive validations during typing
-  validateLazy = debounce(this.validate, 250);
+  validateLazy = debounce((value?: string) => this.validate(value), 250);
 
   get initialHeight() {
     return this.props.getEditorHeightFromLinesCount(this.model.getLineCount());

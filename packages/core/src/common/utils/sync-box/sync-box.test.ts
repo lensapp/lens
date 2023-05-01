@@ -3,27 +3,25 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { DiContainer } from "@ogre-tools/injectable";
-import { getInjectable } from "@ogre-tools/injectable";
 import { observe, runInAction } from "mobx";
 import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
-import createSyncBoxInjectable from "./create-sync-box.injectable";
 import type { SyncBox } from "./sync-box-injection-token";
-import { syncBoxInjectionToken } from "./sync-box-injection-token";
+import { getSyncBoxInjectable } from "./sync-box-injection-token";
 
 describe("sync-box", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
 
-  beforeEach(() => {
-    applicationBuilder = getApplicationBuilder();
+  beforeEach(async () => {
+    builder = getApplicationBuilder();
 
-    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+    await builder.beforeApplicationStart(({ mainDi }) => {
       runInAction(() => {
         mainDi.register(someInjectable);
       });
     });
 
-    applicationBuilder.beforeWindowStart(({ windowDi }) => {
+    await builder.beforeWindowStart(({ windowDi }) => {
       runInAction(() => {
         windowDi.register(someInjectable);
       });
@@ -35,9 +33,9 @@ describe("sync-box", () => {
     let syncBoxInMain: SyncBox<string>;
 
     beforeEach(async () => {
-      await applicationBuilder.startHidden();
+      await builder.startHidden();
 
-      syncBoxInMain = applicationBuilder.mainDi.inject(someInjectable);
+      syncBoxInMain = builder.mainDi.inject(someInjectable);
 
       observe(syncBoxInMain.value, ({ newValue }) => {
         valueInMain = newValue as string;
@@ -59,7 +57,7 @@ describe("sync-box", () => {
 
       beforeEach(async () => {
         const applicationWindow =
-          applicationBuilder.applicationWindow.create("some-window-id");
+          builder.applicationWindow.create("some-window-id");
 
         await applicationWindow.start();
 
@@ -101,11 +99,11 @@ describe("sync-box", () => {
     let syncBoxInRenderer: SyncBox<string>;
 
     beforeEach(async () => {
-      await applicationBuilder.render();
+      await builder.render();
 
-      const applicationWindow = applicationBuilder.applicationWindow.only;
+      const applicationWindow = builder.applicationWindow.only;
 
-      syncBoxInMain = applicationBuilder.mainDi.inject(someInjectable);
+      syncBoxInMain = builder.mainDi.inject(someInjectable);
       syncBoxInRenderer = applicationWindow.di.inject(someInjectable);
 
       observe(syncBoxInRenderer.value, ({ newValue }) => {
@@ -159,14 +157,4 @@ describe("sync-box", () => {
   });
 });
 
-const someInjectable = getInjectable({
-  id: "some-injectable",
-
-  instantiate: (di) => {
-    const createSyncBox = di.inject(createSyncBoxInjectable);
-
-    return createSyncBox("some-sync-box", "some-initial-value");
-  },
-
-  injectionToken: syncBoxInjectionToken,
-});
+const someInjectable = getSyncBoxInjectable("some-sync-box", "some-initial-value");

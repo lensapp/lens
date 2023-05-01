@@ -22,7 +22,7 @@ describe("periodical checking of updates", () => {
 
     builder = getApplicationBuilder();
 
-    builder.beforeApplicationStart(({ mainDi }) => {
+    await builder.beforeApplicationStart(({ mainDi }) => {
       mainDi.unoverride(periodicalCheckForUpdatesInjectable);
       mainDi.permitSideEffects(periodicalCheckForUpdatesInjectable);
 
@@ -39,7 +39,7 @@ describe("periodical checking of updates", () => {
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      builder.beforeApplicationStart(({ mainDi }) => {
+      await builder.beforeApplicationStart(({ mainDi }) => {
         mainDi.override(electronUpdaterIsActiveInjectable, () => true);
         mainDi.override(publishIsConfiguredInjectable, () => true);
       });
@@ -74,7 +74,7 @@ describe("periodical checking of updates", () => {
 
   describe("given updater is enabled but no configuration exist, when started", () => {
     beforeEach(async () => {
-      builder.beforeApplicationStart(({ mainDi }) => {
+      await builder.beforeApplicationStart(({ mainDi }) => {
         mainDi.override(electronUpdaterIsActiveInjectable, () => true);
         mainDi.override(publishIsConfiguredInjectable, () => false);
       });
@@ -95,7 +95,7 @@ describe("periodical checking of updates", () => {
 
   describe("given updater is not enabled but and configuration exist, when started", () => {
     beforeEach(async () => {
-      builder.beforeApplicationStart(({ mainDi }) => {
+      await builder.beforeApplicationStart(({ mainDi }) => {
         mainDi.override(electronUpdaterIsActiveInjectable, () => false);
         mainDi.override(publishIsConfiguredInjectable, () => true);
       });

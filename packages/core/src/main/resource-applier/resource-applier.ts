@@ -74,8 +74,8 @@ export class ResourceApplier {
 
     const result = await this.dependencies.execFile(kubectlPath, args);
 
-    if (result.callWasSuccessful) {
-      return result.response;
+    if (result.isOk) {
+      return result.value;
     }
 
     throw result.error.stderr || result.error.message;
@@ -112,12 +112,12 @@ export class ResourceApplier {
 
       const result = await this.dependencies.execFile(kubectlPath, args);
 
-      if (result.callWasSuccessful) {
+      if (result.isOk) {
         return result;
       }
 
       return {
-        callWasSuccessful: false,
+        isOk: false,
         error: result.error.stderr || result.error.message,
       };
     } finally {
@@ -153,7 +153,7 @@ export class ResourceApplier {
     this.dependencies.logger.info(`[RESOURCE-APPLIER] running kubectl`, { args });
     const result = await this.dependencies.execFile(kubectlPath, args);
 
-    if (result.callWasSuccessful) {
+    if (result.isOk) {
       return result;
     }
 
@@ -162,7 +162,7 @@ export class ResourceApplier {
     const splitError = result.error.stderr.split(`.yaml": `);
 
     return {
-      callWasSuccessful: false,
+      isOk: false,
       error: splitError[1] || result.error.message,
     };
   }

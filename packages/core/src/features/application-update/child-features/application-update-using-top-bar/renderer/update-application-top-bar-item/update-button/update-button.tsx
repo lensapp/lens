@@ -17,7 +17,7 @@ import type { IComputedValue } from "mobx";
 import restartAndInstallUpdateInjectable from "../../../../../renderer/restart-and-install-update.injectable";
 import updateWarningLevelInjectable from "../update-warning-level.injectable";
 
-interface UpdateButtonProps extends HTMLAttributes<HTMLButtonElement> {}
+type UpdateButtonProps = HTMLAttributes<HTMLButtonElement>;
 
 interface Dependencies {
   warningLevel: IComputedValue<"light" | "medium" | "high" | "">;

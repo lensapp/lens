@@ -16,8 +16,8 @@ import type { ReadFile } from "../fs/read-file.injectable";
 import { hasTypedProperty, isObject } from "@k8slens/utilities";
 
 export interface ResourceApplyingStack {
-  kubectlApplyFolder(folderPath: string, templateContext?: any, extraArgs?: string[]): Promise<string>;
-  kubectlDeleteFolder(folderPath: string, templateContext?: any, extraArgs?: string[]): Promise<string>;
+  kubectlApplyFolder(folderPath: string, templateContext?: unknown, extraArgs?: string[]): Promise<string>;
+  kubectlDeleteFolder(folderPath: string, templateContext?: unknown, extraArgs?: string[]): Promise<string>;
 }
 
 export interface ResourceStackDependencies {
@@ -41,12 +41,12 @@ export class ResourceStack {
    * @param folderPath folder path that is searched for files defining kubernetes resources.
    * @param templateContext sets the template parameters that are to be applied to any templated kubernetes resources that are to be applied.
    */
-  async kubectlApplyFolder(folderPath: string, templateContext?: any, extraArgs?: string[]): Promise<string> {
+  async kubectlApplyFolder(folderPath: string, templateContext?: unknown, extraArgs?: string[]): Promise<string> {
     const resources = await this.renderTemplates(folderPath, templateContext);
     const result = await this.applyResources(resources, extraArgs);
 
-    if (result.callWasSuccessful) {
-      return result.response;
+    if (result.isOk) {
+      return result.value;
     }
 
     this.dependencies.logger.warn(`[RESOURCE-STACK]: failed to apply resources: ${result.error}`);
@@ -59,12 +59,12 @@ export class ResourceStack {
    * @param folderPath folder path that is searched for files defining kubernetes resources.
    * @param templateContext sets the template parameters that are to be applied to any templated kubernetes resources that are to be applied.
    */
-  async kubectlDeleteFolder(folderPath: string, templateContext?: any, extraArgs?: string[]): Promise<string> {
+  async kubectlDeleteFolder(folderPath: string, templateContext?: unknown, extraArgs?: string[]): Promise<string> {
     const resources = await this.renderTemplates(folderPath, templateContext);
     const result = await this.deleteResources(resources, extraArgs);
 
-    if (result.callWasSuccessful) {
-      return result.response;
+    if (result.isOk) {
+      return result.value;
     }
 
     this.dependencies.logger.warn(`[RESOURCE-STACK]: failed to delete resources: ${result.error}`);
@@ -100,7 +100,7 @@ export class ResourceStack {
     return [];
   }
 
-  protected async renderTemplates(folderPath: string, templateContext: any): Promise<string[]> {
+  protected async renderTemplates(folderPath: string, templateContext: unknown): Promise<string[]> {
     const resources: string[] = [];
     const di = getLegacyGlobalDiForExtensionApi();
     const productName = di.inject(productNameInjectable);

@@ -6,8 +6,8 @@
 import type React from "react";
 
 export interface AppPreferenceComponents {
-  Hint: React.ComponentType<any>;
-  Input: React.ComponentType<any>;
+  Hint: React.ComponentType<Record<string, never>>;
+  Input: React.ComponentType<Record<string, never>>;
 }
 
 export interface AppPreferenceRegistration {

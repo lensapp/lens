@@ -125,14 +125,14 @@ interface Dependencies {
 
 @observer
 class NonInjectedTable<Item extends ItemObject> extends React.Component<TableProps<Item> & Dependencies> {
-  static defaultProps: TableProps<any> = {
+  static defaultProps: object = ({
     scrollable: true,
     autoSize: true,
     rowPadding: 8,
     rowLineHeight: 17,
     sortSyncWithUrl: true,
     customRowHeights: (item, lineHeight, paddings) => lineHeight + paddings,
-  };
+  } as TableProps<unknown>);
 
   constructor(props: TableProps<Item> & Dependencies) {
     super(props);
@@ -187,7 +187,7 @@ class NonInjectedTable<Item extends ItemObject> extends React.Component<TablePro
 
           return React.cloneElement(elem, {
             title,
-            _sort: this.sort,
+            _sort: (sortBy: string) => this.sort(sortBy),
             _sorting: this.sortParams,
             _nowrap: headElem.props.nowrap,
           });

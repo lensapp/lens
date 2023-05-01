@@ -123,18 +123,18 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
           return JSON.stringify(context, null, 4);
         };
 
-        shellProcess.stdout.on("data", b => stdout.push(b));
-        shellProcess.stderr.on("data", b => stderr.push(b));
+        shellProcess.stdout.on("data", (b: Buffer) => stdout.push(b));
+        shellProcess.stderr.on("data", (b: Buffer) => stderr.push(b));
 
         shellProcess.on("error", (error) => {
           if (opts.signal.aborted) {
             resolve({
-              callWasSuccessful: false,
+              isOk: false,
               error: `timeout: ${getErrorContext()}`,
             });
           } else {
             resolve({
-              callWasSuccessful: false,
+              isOk: false,
               error: `Failed to spawn ${shellPath}: ${getErrorContext({ error: String(error) })}`,
             });
           }
@@ -142,7 +142,7 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
         shellProcess.on("close", (code, signal) => {
           if (code || signal) {
             return resolve({
-              callWasSuccessful: false,
+              isOk: false,
               error: `Shell did not exit successfully: ${getErrorContext({ code, signal })}`,
             });
           }
@@ -156,7 +156,7 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
 
             if (!matchedOutput) {
               return resolve({
-                callWasSuccessful: false,
+                isOk: false,
                 error: "Something has blocked the shell from producing the environment variables",
               });
             }
@@ -165,12 +165,12 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
 
             resetEnvPairs(resolvedEnv);
             resolve({
-              callWasSuccessful: true,
-              response: resolvedEnv,
+              isOk: true,
+              value: resolvedEnv,
             });
           } catch (err) {
             resolve({
-              callWasSuccessful: false,
+              isOk: false,
               error: String(err),
             });
           }

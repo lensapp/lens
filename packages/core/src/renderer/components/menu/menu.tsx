@@ -9,7 +9,7 @@ import type { ReactElement } from "react";
 import React, { Fragment } from "react";
 import { createPortal } from "react-dom";
 import type { StrictReactNode } from "@k8slens/utilities";
-import { cssNames, noop } from "@k8slens/utilities";
+import { addEventListener, addWindowEventListener, cssNames, disposer, noop } from "@k8slens/utilities";
 import { Animate, requestAnimationFrameInjectable } from "@k8slens/animate";
 import type { IconProps } from "@k8slens/icon";
 import { Icon } from "@k8slens/icon";
@@ -59,7 +59,7 @@ interface State {
   menuStyle?: MenuStyle;
 }
 
-const defaultPropsMenu: Partial<MenuProps> = {
+const defaultPropsMenu = {
   position: { right: true, bottom: true },
   autoFocus: false,
   usePortal: false,
@@ -74,13 +74,9 @@ interface Dependencies {
   requestAnimationFrame: RequestAnimationFrame;
 }
 
-class NonInjectedMenu extends React.Component<MenuProps & Dependencies, State> {
+class DefaultNonInjectedMenu extends React.Component<MenuProps & Dependencies & typeof defaultPropsMenu, State> {
   static defaultProps = defaultPropsMenu as object;
 
-  constructor(props: MenuProps & Dependencies) {
-    super(props);
-    autoBindReact(this);
-  }
   private opener: HTMLElement | null = null;
   private elem: HTMLUListElement | null = null;
   protected items: { [index: number]: MenuItem } = {};
@@ -93,6 +89,8 @@ class NonInjectedMenu extends React.Component<MenuProps & Dependencies, State> {
   get isClosed() {
     return !this.isOpen;
   }
+
+  private readonly cleanupEventListeners = disposer();
 
   componentDidMount() {
     const {
@@ -118,28 +116,23 @@ class NonInjectedMenu extends React.Component<MenuProps & Dependencies, State> {
     }
 
     if (this.opener) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      this.opener.addEventListener(toggleEvent!, this.toggle);
-      this.opener.addEventListener("keydown", this.onKeyDown);
+      this.cleanupEventListeners.push(
+        addEventListener(this.opener, toggleEvent, this.toggle.bind(this)),
+        addEventListener(this.opener, "keydown", this.onKeyDown.bind(this)),
+      );
     }
-    window.addEventListener("resize", this.onWindowResize);
-    window.addEventListener("click", this.onClickOutside, true);
-    window.addEventListener("scroll", this.onScrollOutside, true);
-    window.addEventListener("contextmenu", this.onContextMenu, true);
-    window.addEventListener("blur", this.onBlur, true);
+
+    this.cleanupEventListeners.push(
+      addWindowEventListener("resize", this.onWindowResize.bind(this)),
+      addWindowEventListener("click", this.onClickOutside.bind(this), true),
+      addWindowEventListener("scroll", this.onScrollOutside.bind(this), true),
+      addWindowEventListener("contextmenu", this.onContextMenu.bind(this), true),
+      addWindowEventListener("blur", this.onBlur.bind(this), true),
+    );
   }
 
   componentWillUnmount() {
-    if (this.opener) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      this.opener.removeEventListener(this.props.toggleEvent!, this.toggle);
-      this.opener.removeEventListener("keydown", this.onKeyDown);
-    }
-    window.removeEventListener("resize", this.onWindowResize);
-    window.removeEventListener("click", this.onClickOutside, true);
-    window.removeEventListener("scroll", this.onScrollOutside, true);
-    window.removeEventListener("blur", this.onBlur, true);
-    window.removeEventListener("contextmenu", this.onContextMenu, true);
+    this.cleanupEventListeners();
   }
 
   componentDidUpdate(prevProps: MenuProps) {
@@ -332,11 +325,11 @@ class NonInjectedMenu extends React.Component<MenuProps & Dependencies, State> {
       portal: usePortal,
     });
 
-    let children = this.props.children as ReactElement<any>;
+    const rawChildren = this.props.children as ReactElement;
+    const children = rawChildren.type === Fragment
+      ? (rawChildren as React.ReactElement<{ children?: React.ReactNode }>).props.children
+      : rawChildren;
 
-    if (children.type === Fragment) {
-      children = children.props.children;
-    }
     const menuItems = React.Children.toArray(children).map((item, index) => {
       if (typeof item === "object" && (item as ReactElement).type === MenuItem) {
         return React.cloneElement(item as ReactElement, {
@@ -350,13 +343,13 @@ class NonInjectedMenu extends React.Component<MenuProps & Dependencies, State> {
     let menu = (
       <ul
         id={id}
-        ref={this.bindRef}
+        ref={this.bindRef.bind(this)}
         className={classNames}
         style={{
           left: this.state?.menuStyle?.left,
           top: this.state?.menuStyle?.top,
         }}
-        onKeyDown={this.onKeyDown}
+        onKeyDown={this.onKeyDown.bind(this)}
         data-testid={dataTestId}
       >
         {menuItems}
@@ -387,6 +380,8 @@ class NonInjectedMenu extends React.Component<MenuProps & Dependencies, State> {
   }
 }
 
+const NonInjectedMenu = DefaultNonInjectedMenu as React.ElementType<Dependencies & MenuProps>;
+
 export const Menu = withInjectables<Dependencies, MenuProps>(NonInjectedMenu, {
   getProps: (di, props) => ({
     ...props,
@@ -411,7 +406,7 @@ export function SubMenu(props: Partial<MenuProps>) {
   );
 }
 
-export interface MenuItemProps extends React.HTMLProps<any> {
+export interface MenuItemProps extends React.HTMLProps<Element> {
   icon?: string | Partial<IconProps>;
   disabled?: boolean;
   active?: boolean;
@@ -474,11 +469,11 @@ export class MenuItem extends React.Component<MenuItemProps> {
       }
     }
 
-    const elemProps: React.HTMLProps<any> = {
+    const elemProps: React.HTMLProps<Element> = {
       tabIndex: this.isFocusable ? 0 : -1,
       ...props,
       className: cssNames("MenuItem", className, { disabled, active, spacer }),
-      onClick: this.onClick,
+      onClick: this.onClick.bind(this),
       children: icon ? (
         <>
           <Icon {...iconProps}/>
@@ -486,7 +481,7 @@ export class MenuItem extends React.Component<MenuItemProps> {
           {children}
         </>
       ) : children,
-      ref: this.bindRef,
+      ref: this.bindRef.bind(this),
     };
 
     if (this.isLink) {

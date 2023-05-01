@@ -32,7 +32,7 @@ describe("opening application window using tray", () => {
 
       builder = getApplicationBuilder();
 
-      builder.beforeApplicationStart(({ mainDi }) => {
+      await builder.beforeApplicationStart(({ mainDi }) => {
         mainDi.override(focusApplicationInjectable, () => focusApplicationMock);
 
         mainDi.override(
@@ -48,7 +48,7 @@ describe("opening application window using tray", () => {
           .fn(callForApplicationWindowHtmlMock)
           .mockImplementationOnce(() => Promise.resolve());
 
-        createElectronWindowMock = jest.fn((toBeDecorated): CreateElectronWindow => (configuration) => {
+        createElectronWindowMock = jest.fn((toBeDecorated: CreateElectronWindow): CreateElectronWindow => (configuration) => {
           const browserWindow = toBeDecorated(configuration);
 
           if (configuration.id === "splash") {
@@ -63,7 +63,8 @@ describe("opening application window using tray", () => {
         });
 
         runInAction(() => {
-          (mainDi as any).decorateFunction(
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/ban-types
+          (mainDi as unknown as { decorateFunction: Function }).decorateFunction(
             createElectronWindowInjectable,
             createElectronWindowMock,
           );

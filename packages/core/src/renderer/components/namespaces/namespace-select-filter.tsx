@@ -59,7 +59,7 @@ export const NamespaceSelectFilter = withInjectables<Dependencies, NamespaceSele
   }),
 });
 
-export interface CustomPlaceholderProps extends PlaceholderProps<NamespaceSelectFilterOption, true> {}
+export type CustomPlaceholderProps = PlaceholderProps<NamespaceSelectFilterOption, true>;
 
 interface PlaceholderDependencies {
   namespaceStore: NamespaceStore;

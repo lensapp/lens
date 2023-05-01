@@ -4,34 +4,32 @@
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { pipeline } from "@ogre-tools/fp";
-import type { PageParamInit } from "../navigation/page-param";
+import type { FallthroughPageParamDeclaration, PageParamDeclaration, PageParamInit } from "../navigation/page-param";
 import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
 import { map } from "lodash/fp";
 import createPageParamInjectable from "../navigation/create-page-param.injectable";
-import { object } from "@k8slens/utilities";
-import type { PageRegistration } from "./page-registration";
+import { isString, object } from "@k8slens/utilities";
+import type { PageParams, PageRegistration } from "./page-registration";
 
-export interface ExtensionPageParametersInstantiationParam {
+export interface ExtensionPageParametersInstantiationParam<Params> {
   extension: LensRendererExtension;
-  registration: PageRegistration;
+  registration: PageRegistration<Params>;
 }
 
 const extensionPageParametersInjectable = getInjectable({
   id: "extension-page-parameters",
 
-  instantiate: (di, { registration }: ExtensionPageParametersInstantiationParam) => {
+  instantiate: (di, { registration }) => {
     const createPageParam = di.inject(createPageParamInjectable);
 
     return pipeline(
-      registration.params ?? {},
-      Object.entries,
-      map(([key, value]): [string, PageParamInit<unknown>] => [
+      object.entries((registration.params ?? {}) as PageParams<string | PageParamDeclaration<unknown>>),
+      map(([key, value]) => [
         key,
-        typeof value === "string"
-          ? convertStringToPageParamInit(key, value)
-          : convertPartialPageParamInitToFull(key, value),
-      ]),
-      map(([key, value]) => [key, createPageParam(value)] as const),
+        isString(value)
+          ? createPageParam(convertStringToPageParamInit(key, value))
+          : createPageParam(convertPartialPageParamInitToFull(key, value)),
+      ] as const),
       object.fromEntries,
     );
   },
@@ -39,20 +37,17 @@ const extensionPageParametersInjectable = getInjectable({
   lifecycle: lifecycleEnum.keyedSingleton({
     getInstanceKey: (
       di,
-      { extension, registration }: ExtensionPageParametersInstantiationParam,
-    ) => `${extension.sanitizedExtensionId}-${registration?.id}`,
+      { extension, registration }: ExtensionPageParametersInstantiationParam<unknown>,
+    ) => `${extension.sanitizedExtensionId}-${registration?.id ?? ""}`,
   }),
 });
 
-const convertPartialPageParamInitToFull = <V>(
-  key: string,
-  value: PageParamInit<V>,
-): PageParamInit<V> => ({
-    name: key,
-    defaultValue: value.defaultValue,
-    stringify: value.stringify,
-    parse: value.parse,
-  });
+const convertPartialPageParamInitToFull = (key: string, value: FallthroughPageParamDeclaration) => ({
+  name: key,
+  defaultValue: value.defaultValue,
+  stringify: value.stringify,
+  parse: value.parse,
+}) as PageParamInit<unknown>;
 
 const convertStringToPageParamInit = (
   key: string,

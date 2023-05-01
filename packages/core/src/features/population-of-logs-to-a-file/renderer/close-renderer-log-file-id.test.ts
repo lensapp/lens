@@ -24,7 +24,7 @@ describe("close renderer file logging", () => {
     sendIpcMock = jest.fn();
     winstonMock = {
       remove: jest.fn(),
-    } as any as winston.Logger;
+    } as unknown as winston.Logger;
     ipcTransportMock = { name: "ipc-renderer-transport" } as IpcLogTransport;
 
     di.override(winstonLoggerInjectable, () => winstonMock);

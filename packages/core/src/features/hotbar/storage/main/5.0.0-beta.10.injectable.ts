@@ -6,7 +6,7 @@
 import * as uuid from "uuid";
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import catalogCatalogEntityInjectable from "../../../../common/catalog-entities/general-catalog-entities/implementations/catalog-catalog-entity.injectable";
-import { isDefined, isErrnoException } from "@k8slens/utilities";
+import { isDefined, isErrnoException, isObject } from "@k8slens/utilities";
 import joinPathsInjectable from "../../../../common/path/join-paths.injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import { hotbarStoreMigrationInjectionToken } from "../common/migrations-token";
@@ -46,7 +46,7 @@ const v500Beta10HotbarStoreMigrationInjectable = getInjectable({
       const logger = di.inject(loggerInjectionToken);
       const createHotbar = di.inject(createHotbarInjectable);
       const rawHotbars = store.get("hotbars");
-      const hotbars: HotbarData[] = Array.isArray(rawHotbars) ? rawHotbars.filter(h => h && typeof h === "object") : [];
+      const hotbars = (Array.isArray(rawHotbars) ? rawHotbars.filter(isObject) : []) as unknown as HotbarData[];
 
       // Hotbars might be empty, if some of the previous migrations weren't run
       if (hotbars.length === 0) {
@@ -57,8 +57,8 @@ const v500Beta10HotbarStoreMigrationInjectable = getInjectable({
       }
 
       try {
-        const workspaceStoreData: Pre500WorkspaceStoreModel = readJsonSync(joinPaths(userDataPath, "lens-workspace-store.json"));
-        const { clusters = [] }: Pre500ClusterStoreModel = readJsonSync(joinPaths(userDataPath, "lens-cluster-store.json"));
+        const workspaceStoreData = readJsonSync(joinPaths(userDataPath, "lens-workspace-store.json")) as Pre500WorkspaceStoreModel;
+        const { clusters = [] } = readJsonSync(joinPaths(userDataPath, "lens-cluster-store.json")) as Pre500ClusterStoreModel;
         const workspaceHotbars = new Map<string, HotbarData>(); // mapping from WorkspaceId to HotBar
 
         for (const { id, name } of workspaceStoreData.workspaces) {

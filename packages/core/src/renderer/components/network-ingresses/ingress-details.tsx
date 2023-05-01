@@ -16,15 +16,12 @@ import type { Logger } from "@k8slens/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { loggerInjectionToken } from "@k8slens/logger";
 
-export interface IngressDetailsProps extends KubeObjectDetailsProps<Ingress> {
-}
-
 interface Dependencies {
   logger: Logger;
 }
 
 @observer
-class NonInjectedIngressDetails extends React.Component<IngressDetailsProps & Dependencies> {
+class NonInjectedIngressDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
   renderPaths(ingress: Ingress) {
     return ingress.getRules()
       .map((rule, index) => (
@@ -121,7 +118,7 @@ class NonInjectedIngressDetails extends React.Component<IngressDetailsProps & De
         )}
         {port && (
           <DrawerItem name="Service">
-            {`${port.serviceName}:${port.servicePort}`}
+            {`${port.serviceName ?? ""}:${port.servicePort ?? ""}`}
           </DrawerItem>
         )}
         <DrawerTitle>Rules</DrawerTitle>
@@ -134,7 +131,7 @@ class NonInjectedIngressDetails extends React.Component<IngressDetailsProps & De
   }
 }
 
-export const IngressDetails = withInjectables<Dependencies, IngressDetailsProps>(NonInjectedIngressDetails, {
+export const IngressDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedIngressDetails, {
   getProps: (di, props) => ({
     ...props,
     logger: di.inject(loggerInjectionToken),

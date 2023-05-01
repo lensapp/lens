@@ -38,9 +38,9 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
   beforeEach(() => {
     builder = getApplicationBuilder();
 
-    builder.setEnvironmentToClusterFrame();
+    await builder.setEnvironmentToClusterFrame();
 
-    builder.beforeWindowStart(({ windowDi }) => {
+    await builder.beforeWindowStart(({ windowDi }) => {
       windowDi.override(
         directoryForLensLocalStorageInjectable,
         () => "/some-directory-for-lens-local-storage",
@@ -68,7 +68,7 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
       windowDi.override(apiKubeGetInjectable, () => apiKubeGetMock);
     });
 
-    builder.afterWindowStart(() => {
+    await builder.afterWindowStart(() => {
       builder.allowKubeResource({
         apiName: "namespaces",
         group: "",

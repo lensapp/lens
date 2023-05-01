@@ -3,12 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { computed, observable, makeObservable, action } from "mobx";
+import { computed, observable, makeObservable, action, runInAction } from "mobx";
 import { ipcRendererOn } from "../../../../common/ipc";
 import type { CatalogCategory, CatalogEntity, CatalogEntityData, CatalogCategoryRegistry, CatalogEntityKindData } from "../../../../common/catalog";
-import "../../../../common/catalog-entities";
-import { iter } from "@k8slens/utilities";
 import type { Disposer } from "@k8slens/utilities";
+import { iter } from "@k8slens/utilities";
 import { once } from "lodash";
 import { CatalogRunEvent } from "../../../../common/catalog/catalog-run-event";
 import { ipcRenderer } from "electron";
@@ -17,7 +16,7 @@ import { isMainFrame } from "process";
 import type { Navigate } from "../../../navigation/navigate.injectable";
 import type { Logger } from "@k8slens/logger";
 
-export type EntityFilter = (entity: CatalogEntity) => any;
+export type EntityFilter = (entity: CatalogEntity) => unknown;
 export type CatalogEntityOnBeforeRun = (event: CatalogRunEvent) => void | Promise<void>;
 
 interface Dependencies {
@@ -83,19 +82,19 @@ export class CatalogEntityRegistry {
   }
 
   init() {
-    ipcRendererOn(catalogItemsChannel, (event, items: (CatalogEntityData & CatalogEntityKindData)[]) => {
-      this.updateItems(items);
+    ipcRendererOn(catalogItemsChannel, (event, items) => {
+      this.updateItems(items as (CatalogEntityData & CatalogEntityKindData)[]);
     });
 
     // Make sure that we get items ASAP and not the next time one of them changes
     ipcRenderer.send(catalogInitChannel);
 
     if (isMainFrame) {
-      ipcRendererOn(catalogEntityRunListener, (event, id: string) => {
-        const entity = this.getById(id);
+      ipcRendererOn(catalogEntityRunListener, (event, id) => {
+        const entity = this.getById(id as string);
 
         if (entity) {
-          this.onRun(entity);
+          void this.onRun(entity);
         }
       });
     }
@@ -197,8 +196,10 @@ export class CatalogEntityRegistry {
    * @param fn The function that should return a truthy value if that entity should be sent currently "active"
    * @returns A function to remove that filter
    */
-  @action addCatalogFilter(fn: EntityFilter): Disposer {
-    this.filters.add(fn);
+  addCatalogFilter(fn: EntityFilter): Disposer {
+    runInAction(() => {
+      this.filters.add(fn);
+    });
 
     return once(() => void this.filters.delete(fn));
   }
@@ -208,8 +209,10 @@ export class CatalogEntityRegistry {
    * @param onBeforeRun The function that should return a boolean if the onRun of catalog entity should be triggered.
    * @returns A function to remove that hook
    */
-  @action addOnBeforeRun(onBeforeRun: CatalogEntityOnBeforeRun): Disposer {
-    this.onBeforeRunHooks.add(onBeforeRun);
+  addOnBeforeRun(onBeforeRun: CatalogEntityOnBeforeRun): Disposer {
+    runInAction(() => {
+      this.onBeforeRunHooks.add(onBeforeRun);
+    });
 
     return once(() => void this.onBeforeRunHooks.delete(onBeforeRun));
   }

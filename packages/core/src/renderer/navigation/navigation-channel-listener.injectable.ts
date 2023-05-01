@@ -26,7 +26,7 @@ const navigationChannelListenerInjectable = getInjectable({
         : appNavigationChannel,
 
       handler: (url: string) => {
-        navigateToUrl(url);
+        void navigateToUrl(url);
 
         if (!currentlyInClusterFrame) {
           focusWindow(); // make sure that the main frame is focused

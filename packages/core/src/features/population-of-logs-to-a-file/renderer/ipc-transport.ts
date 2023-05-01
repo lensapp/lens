@@ -2,9 +2,14 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { LogEntry } from "winston";
+import type winston from "winston";
 import type { TransportStreamOptions } from "winston-transport";
 import TransportStream from "winston-transport";
+import type { MESSAGE } from "triple-beam";
+
+interface LogEntry extends winston.LogEntry {
+  [MESSAGE]: string;
+}
 
 interface IpcLogTransportOptions extends TransportStreamOptions {
   sendIpcLogMessage: (entry: LogEntry) => void;

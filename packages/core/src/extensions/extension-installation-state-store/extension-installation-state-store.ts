@@ -35,11 +35,11 @@ export class ExtensionInstallationStateStore {
 
   bindIpcListeners = () => {
     ipcRenderer
-      .on(installingFromMainChannel, (event, extId) => {
+      .on(installingFromMainChannel, (event, extId: string) => {
         this.setInstalling(extId);
       })
 
-      .on(clearInstallingFromMainChannel, (event, extId) => {
+      .on(clearInstallingFromMainChannel, (event, extId: string) => {
         this.clearInstalling(extId);
       });
   };
@@ -68,7 +68,7 @@ export class ExtensionInstallationStateStore {
    * @param extId the ID of the extension
    */
   setInstallingFromMain = (extId: string): void => {
-    broadcastMessage(installingFromMainChannel, extId);
+    void broadcastMessage(installingFromMainChannel, extId);
   };
 
   /**
@@ -76,7 +76,7 @@ export class ExtensionInstallationStateStore {
    * @param extId the ID of the extension
    */
   clearInstallingFromMain = (extId: string): void => {
-    broadcastMessage(clearInstallingFromMainChannel, extId);
+    void broadcastMessage(clearInstallingFromMainChannel, extId);
   };
 
   /**
@@ -89,13 +89,13 @@ export class ExtensionInstallationStateStore {
     const preInstallStepId = uuid.v4();
 
     this.dependencies.logger.debug(
-      `${Prefix}: starting a new preinstall phase: ${preInstallStepId}`,
+      `${Prefix}: starting a new pre-install phase: ${preInstallStepId}`,
     );
     this.preInstallIds.add(preInstallStepId);
 
     return disposer(() => {
       this.preInstallIds.delete(preInstallStepId);
-      this.dependencies.logger.debug(`${Prefix}: ending a preinstall phase: ${preInstallStepId}`);
+      this.dependencies.logger.debug(`${Prefix}: ending a pre-install phase: ${preInstallStepId}`);
     });
   };
 
@@ -225,23 +225,23 @@ export class ExtensionInstallationStateStore {
   }
 
   /**
-   * The current number of extensions preinstalling
+   * The current number of extensions pre-installing
    */
-  get preinstalling(): number {
+  get preInstalling(): number {
     return this.preInstallIds.size;
   }
 
   /**
    * If there is at least one extension currently downloading
    */
-  get anyPreinstalling(): boolean {
-    return this.preinstalling > 0;
+  get anyPreInstalling(): boolean {
+    return this.preInstalling > 0;
   }
 
   /**
-   * If there is at least one installing or preinstalling step taking place
+   * If there is at least one installing or pre-installing step taking place
    */
   get anyPreInstallingOrInstalling(): boolean {
-    return this.anyInstalling || this.anyPreinstalling;
+    return this.anyInstalling || this.anyPreInstalling;
   }
 }

@@ -8,7 +8,7 @@ import type React from "react";
 
 export interface WorkloadOverviewDetail {
   orderNumber: number;
-  Component: React.ElementType<{}>;
+  Component: React.ElementType<object>;
   enabled: IComputedValue<boolean>;
 }
 

@@ -23,7 +23,7 @@ describe("namespaces route when viewed with some subNamespaces", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.setEnvironmentToClusterFrame();
+    await builder.setEnvironmentToClusterFrame();
 
     builder.namespaces.add("default");
     builder.namespaces.add("foobar");
@@ -32,12 +32,12 @@ describe("namespaces route when viewed with some subNamespaces", () => {
     requestDeleteNormalNamespaceMock = asyncFn();
     requestDeleteSubNamespaceAnchorMock = asyncFn();
 
-    builder.beforeWindowStart(({ windowDi }) => {
+    await builder.beforeWindowStart(({ windowDi }) => {
       windowDi.override(requestDeleteNormalNamespaceInjectable, () => requestDeleteNormalNamespaceMock);
       windowDi.override(requestDeleteSubNamespaceAnchorInjectable, () => requestDeleteSubNamespaceAnchorMock);
     });
 
-    builder.afterWindowStart(() => {
+    await builder.afterWindowStart(() => {
       builder.allowKubeResource({ group: "", apiName: "namespaces" });
     });
 

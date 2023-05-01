@@ -35,7 +35,7 @@ class NonInjectedTerminalWindow extends React.Component<TerminalWindowProps & De
   public terminal!: Terminal;
 
   componentDidMount() {
-    this.props.terminalStore.connect(this.props.tab);
+    void this.props.terminalStore.connect(this.props.tab);
     const terminal = this.props.terminalStore.getTerminal(this.props.tab.id);
 
     assert(terminal, "Terminal must be created for tab before mounting");
@@ -53,7 +53,7 @@ class NonInjectedTerminalWindow extends React.Component<TerminalWindowProps & De
 
   componentDidUpdate(): void {
     this.terminal.detach();
-    this.props.terminalStore.connect(this.props.tab);
+    void this.props.terminalStore.connect(this.props.tab);
     const terminal = this.props.terminalStore.getTerminal(this.props.tab.id);
 
     assert(terminal, "Terminal must be created for tab before mounting");

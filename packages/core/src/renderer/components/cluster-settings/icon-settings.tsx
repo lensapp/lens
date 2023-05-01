@@ -35,18 +35,21 @@ const NonInjectedClusterIconSetting = observer((props: ClusterIconSettingProps &
   const { cluster, entity } = props;
   const menuId = `menu-actions-for-cluster-icon-settings-for-${entity.getId()}`;
 
-  const onIconPick = async ([file]: File[]) => {
+  const onIconPick = ([file]: File[]) => {
     if (!file) {
       return;
     }
 
-    try {
-      const buf = Buffer.from(await file.arrayBuffer());
+    void (async () => {
+      try {
+        const buf = Buffer.from(await file.arrayBuffer());
 
-      cluster.preferences.icon = `data:${file.type};base64,${buf.toString("base64")}`;
-    } catch (e) {
-      props.showErrorNotification(String(e));
-    }
+        cluster.preferences.icon = `data:${file.type};base64,${buf.toString("base64")}`;
+      } catch (e) {
+        props.showErrorNotification(String(e));
+      }
+    })();
+
   };
 
   const onUploadClick = () => {
@@ -64,7 +67,7 @@ const NonInjectedClusterIconSetting = observer((props: ClusterIconSettingProps &
             accept="image/*"
             label={(
               <Avatar
-                colorHash={`${entity.getName()}-${entity.metadata.source}`}
+                colorHash={`${entity.getName()}-${entity.metadata.source ?? ""}`}
                 title={entity.getName()}
                 src={entity.spec.icon?.src}
                 size={53}
@@ -111,7 +114,7 @@ const NonInjectedClusterIconSetting = observer((props: ClusterIconSettingProps &
 export const ClusterIconSetting = withInjectables<Dependencies, ClusterIconSettingProps>(NonInjectedClusterIconSetting, {
   getProps: (di, props) => {
     const computedInjectMany = di.inject(computedInjectManyInjectable);
-   
+
     return {
       ...props,
       menuItems: computedInjectMany(clusterIconSettingsMenuInjectionToken),

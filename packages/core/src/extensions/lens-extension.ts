@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { action, computed, makeObservable, observable } from "mobx";
+import { computed, makeObservable, observable, runInAction } from "mobx";
 import { disposer } from "@k8slens/utilities";
 import type { ProtocolHandlerRegistration } from "../common/protocol-handler/registration";
 import type { InstalledExtension, LensExtensionId, LensExtensionManifest } from "@k8slens/legacy-extensions";
@@ -83,30 +83,34 @@ export class LensExtension {
     return this.dependencies.ensureHashedDirectoryForExtension(this.storeName);
   }
 
-  @action
   async enable() {
     if (this._isEnabled) {
       return;
     }
 
-    this._isEnabled = true;
+    runInAction(() => {
+      this._isEnabled = true;
+    });
     this.dependencies.logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
+
+    return Promise.resolve();
   }
 
-  @action
   async disable() {
     if (!this._isEnabled) {
       return;
     }
 
-    this._isEnabled = false;
+    runInAction(() => {
+      this._isEnabled = false;
+    });
 
     try {
       await this.onDeactivate();
       this[Disposers]();
       this.dependencies.logger.info(`[EXTENSION]: disabled ${this.name}@${this.version}`);
     } catch (error) {
-      this.dependencies.logger.error(`[EXTENSION]: disabling ${this.name}@${this.version} threw an error: ${error}`);
+      this.dependencies.logger.error(`[EXTENSION]: disabling ${this.name}@${this.version} threw an error: ${String(error)}`);
     }
   }
 

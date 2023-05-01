@@ -12,6 +12,7 @@ module.exports = {
     "**/static/**/*",
     "**/site/**/*",
     "**/build/webpack/**/*",
+    "**/webpack/**/*",
   ],
   settings: {
     react: {
@@ -106,6 +107,7 @@ module.exports = {
       extends: [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
         "plugin:react/recommended",
         "plugin:import/recommended",
         "plugin:import/typescript",
@@ -116,8 +118,8 @@ module.exports = {
         "react-hooks",
       ],
       parserOptions: {
-        ecmaVersion: 2018,
-        sourceType: "module",
+        project: true,
+        tsconfigRootDir: "./tsconfig.json",
       },
       rules: {
         "no-constant-condition": ["error", {
@@ -126,19 +128,14 @@ module.exports = {
         "header/header": [2, "../../license-header"],
         "react/prop-types": "off",
         "no-invalid-this": "off",
-        "@typescript-eslint/no-invalid-this": ["error"],
+        "@typescript-eslint/no-invalid-this": "error",
         "@typescript-eslint/explicit-function-return-type": "off",
-        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-explicit-any": "error",
         "@typescript-eslint/interface-name-prefix": "off",
         "@typescript-eslint/no-use-before-define": "off",
-        "@typescript-eslint/no-empty-interface": "off",
-        "@typescript-eslint/no-var-requires": "off",
-        "@typescript-eslint/ban-ts-ignore": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
-        "@typescript-eslint/ban-types": "off",
-        "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/no-empty-function": "off",
-        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/no-unnecessary-type-assertion": "off",
         "no-restricted-imports": ["error", {
           "paths": [
             {
@@ -186,6 +183,11 @@ module.exports = {
           "named": "never",
           "asyncArrow": "always",
         }],
+        "@typescript-eslint/restrict-template-expressions": ["error", {
+          "allowNumber": true,
+          "allowBoolean": true,
+          "allowNever": true,
+        }],
         "@typescript-eslint/naming-convention": ["error",
           {
             "selector": "interface",
@@ -217,7 +219,7 @@ module.exports = {
             "ignoreRestSiblings": true,
           },
         ],
-        "comman-dangle": "off",
+        "comma-dangle": "off",
         "@typescript-eslint/comma-dangle": ["error", "always-multiline"],
         "comma-spacing": "off",
         "@typescript-eslint/comma-spacing": "error",
@@ -294,6 +296,20 @@ module.exports = {
             },
           ],
         }],
+      },
+    },
+    {
+      files: [
+        "**/*.test.ts",
+        "**/*.test.tsx",
+      ],
+      plugins: [
+        "jest",
+      ],
+      rules: {
+        "@typescript-eslint/unbound-method": "off",
+        "jest/unbound-method": "error",
+        "@typescript-eslint/no-unsafe-assignment": "off",
       },
     },
   ],

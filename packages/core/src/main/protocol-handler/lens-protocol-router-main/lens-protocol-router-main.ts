@@ -79,12 +79,12 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
         await this._routeToExtension(url);
       }
     } catch (error) {
-      this.dependencies.broadcastMessage(ProtocolHandlerInvalid, error ? String(error) : "unknown error", rawUrl);
+      void this.dependencies.broadcastMessage(ProtocolHandlerInvalid, error ? String(error) : "unknown error", rawUrl);
 
       if (error instanceof proto.RoutingError) {
-        this.dependencies.logger.error(`${proto.LensProtocolRouter.LoggingPrefix}: ${error}`, { url: error.url });
+        this.dependencies.logger.error(`${proto.LensProtocolRouter.LoggingPrefix}: ${String(error)}`, { url: error.url });
       } else {
-        this.dependencies.logger.error(`${proto.LensProtocolRouter.LoggingPrefix}: ${error}`, { rawUrl });
+        this.dependencies.logger.error(`${proto.LensProtocolRouter.LoggingPrefix}: ${String(error)}`, { rawUrl });
       }
     }
   }
@@ -116,7 +116,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
   protected _routeToInternal(url: URLParse<Record<string, string | undefined>>): RouteAttempt {
     const rawUrl = url.toString(); // for sending to renderer
     const attempt = super._routeToInternal(url);
-    const broadcastToRenderer = () => this.dependencies.broadcastMessage(proto.ProtocolHandlerInternal, rawUrl, attempt);
+    const broadcastToRenderer = () => void this.dependencies.broadcastMessage(proto.ProtocolHandlerInternal, rawUrl, attempt);
 
     if (this.rendererLoaded.get()) {
       broadcastToRenderer();
@@ -138,7 +138,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
      * argument.
      */
     const attempt = await super._routeToExtension(new URLParse(url.toString(), true));
-    const broadcastToRenderer = () => this.dependencies.broadcastMessage(proto.ProtocolHandlerExtension, rawUrl, attempt);
+    const broadcastToRenderer = () => void this.dependencies.broadcastMessage(proto.ProtocolHandlerExtension, rawUrl, attempt);
 
     if (this.rendererLoaded.get()) {
       broadcastToRenderer();

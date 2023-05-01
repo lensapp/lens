@@ -10,15 +10,16 @@ import { observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import type { PodDisruptionBudget } from "@k8slens/kube-object";
+import { PodDisruptionBudget } from "@k8slens/kube-object";
 
-export interface PodDisruptionBudgetDetailsProps extends KubeObjectDetailsProps<PodDisruptionBudget> {
-}
-
-export const PodDisruptionBudgetDetails = observer((props: PodDisruptionBudgetDetailsProps) => {
+export const PodDisruptionBudgetDetails = observer((props: KubeObjectDetailsProps) => {
   const { object: pdb } = props;
 
   if (!pdb) {
+    return null;
+  }
+
+  if (!(pdb instanceof PodDisruptionBudget)) {
     return null;
   }
 

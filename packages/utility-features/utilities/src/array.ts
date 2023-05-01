@@ -13,6 +13,15 @@ function filled<T>(length: number, value: T): T[] {
 }
 
 /**
+ * A inference typed version of `Array(length).fill(value)`
+ * @param length The number of entries
+ * @param value The value of each of the indices
+ */
+function filledWith<T>(length: number, fn: (index: number) => T): T[] {
+  return Array(length).fill(undefined).map((value, index) => fn(index));
+}
+
+/**
  * This function splits an array into two sub arrays on the first instance of
  * element (from the left). If the array does not contain the element. The
  * return value is defined to be `[array, [], false]`. If the element is in
@@ -52,4 +61,5 @@ export const array = {
   bifurcate,
   filled,
   split,
+  filledWith,
 };

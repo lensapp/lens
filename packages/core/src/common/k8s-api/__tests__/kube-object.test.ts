@@ -3,12 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { KubeObject } from "@k8slens/kube-object";
+import { isJsonApiData, isJsonApiDataList, isPartialJsonApiData } from "@k8slens/kube-object";
 
 describe("KubeObject", () => {
   describe("isJsonApiData", () => {
     {
-      type TestCase = [any];
+      type TestCase = [unknown];
       const tests: TestCase[] = [
         [false],
         [true],
@@ -22,12 +22,12 @@ describe("KubeObject", () => {
       ];
 
       it.each(tests)("should reject invalid value: %p", (input) => {
-        expect(KubeObject.isJsonApiData(input)).toBe(false);
+        expect(isJsonApiData(input)).toBe(false);
       });
     }
 
     {
-      type TestCase = [string, any];
+      type TestCase = [string, unknown];
       const tests: TestCase[] = [
         ["kind", { apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "" }}],
         ["apiVersion", { kind: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "" }}],
@@ -38,12 +38,12 @@ describe("KubeObject", () => {
       ];
 
       it.each(tests)("should reject with missing: %s", (missingField, input) => {
-        expect(KubeObject.isJsonApiData(input)).toBe(false);
+        expect(isJsonApiData(input)).toBe(false);
       });
     }
 
     {
-      type TestCase = [string, any];
+      type TestCase = [string, unknown];
       const tests: TestCase[] = [
         ["kind", { kind: 1, apiVersion: "", metadata: {}}],
         ["apiVersion", { apiVersion: 1, kind: "", metadata: {}}],
@@ -65,20 +65,20 @@ describe("KubeObject", () => {
       ];
 
       it.each(tests)("should reject with wrong type for field: %s", (missingField, input) => {
-        expect(KubeObject.isJsonApiData(input)).toBe(false);
+        expect(isJsonApiData(input)).toBe(false);
       });
     }
 
     it("should accept valid KubeJsonApiData (ignoring other fields)", () => {
       const valid = { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", annotations: { food: "" }}};
 
-      expect(KubeObject.isJsonApiData(valid)).toBe(true);
+      expect(isJsonApiData(valid)).toBe(true);
     });
   });
 
   describe("isPartialJsonApiData", () => {
     {
-      type TestCase = [any];
+      type TestCase = [unknown];
       const tests: TestCase[] = [
         [false],
         [true],
@@ -91,16 +91,16 @@ describe("KubeObject", () => {
       ];
 
       it.each(tests)("should reject invalid value: %p", (input) => {
-        expect(KubeObject.isPartialJsonApiData(input)).toBe(false);
+        expect(isPartialJsonApiData(input)).toBe(false);
       });
     }
 
     it("should accept {}", () => {
-      expect(KubeObject.isPartialJsonApiData({})).toBe(true);
+      expect(isPartialJsonApiData({})).toBe(true);
     });
 
     {
-      type TestCase = [string, any];
+      type TestCase = [string, unknown];
       const tests: TestCase[] = [
         ["kind", { apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "" }}],
         ["apiVersion", { kind: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "" }}],
@@ -108,12 +108,12 @@ describe("KubeObject", () => {
       ];
 
       it.each(tests)("should not reject with missing top level field: %s", (missingField, input) => {
-        expect(KubeObject.isPartialJsonApiData(input)).toBe(true);
+        expect(isPartialJsonApiData(input)).toBe(true);
       });
     }
 
     {
-      type TestCase = [string, any];
+      type TestCase = [string, unknown];
       const tests: TestCase[] = [
         ["kind", { kind: 1, apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "" }}],
         ["apiVersion", { apiVersion: 1, kind: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "" }}],
@@ -135,23 +135,23 @@ describe("KubeObject", () => {
       ];
 
       it.each(tests)("should reject with wrong type for field: %s", (missingField, input) => {
-        expect(KubeObject.isPartialJsonApiData(input)).toBe(false);
+        expect(isPartialJsonApiData(input)).toBe(false);
       });
     }
 
     it("should accept valid Partial<KubeJsonApiData> (ignoring other fields)", () => {
       const valid = { kind: "", apiVersion: "", metadata: { uid: "", name: "", resourceVersion: "", selfLink: "", annotations: { food: "" }}};
 
-      expect(KubeObject.isPartialJsonApiData(valid)).toBe(true);
+      expect(isPartialJsonApiData(valid)).toBe(true);
     });
   });
 
   describe("isJsonApiDataList", () => {
-    function isAny(val: unknown): val is any {
+    function isSomething(val: unknown): val is unknown {
       return true;
     }
 
-    function isNotAny(val: unknown): val is any {
+    function isNotSomething(val: unknown): val is unknown {
       return false;
     }
 
@@ -160,7 +160,7 @@ describe("KubeObject", () => {
     }
 
     {
-      type TestCase = [any];
+      type TestCase = [unknown];
       const tests: TestCase[] = [
         [false],
         [true],
@@ -174,12 +174,12 @@ describe("KubeObject", () => {
       ];
 
       it.each(tests)("should reject invalid value: %p", (input) => {
-        expect(KubeObject.isJsonApiDataList(input, isAny)).toBe(false);
+        expect(isJsonApiDataList(input, isSomething)).toBe(false);
       });
     }
 
     {
-      type TestCase = [string, any];
+      type TestCase = [string, unknown];
       const tests: TestCase[] = [
         ["kind", { apiVersion: "", items: [], metadata: { resourceVersion: "", selfLink: "" }}],
         ["apiVersion", { kind: "", items: [], metadata: { resourceVersion: "", selfLink: "" }}],
@@ -187,12 +187,12 @@ describe("KubeObject", () => {
       ];
 
       it.each(tests)("should reject with missing: %s", (missingField, input) => {
-        expect(KubeObject.isJsonApiDataList(input, isAny)).toBe(false);
+        expect(isJsonApiDataList(input, isSomething)).toBe(false);
       });
     }
 
     {
-      type TestCase = [string, any];
+      type TestCase = [string, unknown];
       const tests: TestCase[] = [
         ["kind", { kind: 1, items: [], apiVersion: "", metadata: { resourceVersion: "", selfLink: "" }}],
         ["apiVersion", { kind: "", items: [], apiVersion: 1, metadata: { resourceVersion: "", selfLink: "" }}],
@@ -206,14 +206,14 @@ describe("KubeObject", () => {
       ];
 
       it.each(tests)("should reject with wrong type for field: %s", (missingField, input) => {
-        expect(KubeObject.isJsonApiDataList(input, isNotAny)).toBe(false);
+        expect(isJsonApiDataList(input, isNotSomething)).toBe(false);
       });
     }
 
     it("should accept valid KubeJsonApiDataList (ignoring other fields)", () => {
       const valid = { kind: "", items: [false], apiVersion: "", metadata: { resourceVersion: "", selfLink: "" }};
 
-      expect(KubeObject.isJsonApiDataList(valid, isBoolean)).toBe(true);
+      expect(isJsonApiDataList(valid, isBoolean)).toBe(true);
     });
   });
 });

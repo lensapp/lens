@@ -26,7 +26,7 @@ import type { OpenPortForward } from "./open-port-forward.injectable";
 import openPortForwardInjectable from "./open-port-forward.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
 
-export interface PortForwardDialogProps extends Partial<DialogProps> {}
+export type PortForwardDialogProps = Partial<DialogProps>;
 
 interface Dependencies {
   portForwardStore: PortForwardStore;
@@ -51,7 +51,7 @@ class NonInjectedPortForwardDialog extends Component<PortForwardDialogProps & De
     return this.props.portForwardStore;
   }
 
-  onOpen = async (data: PortForwardDialogData) => {
+  onOpen = (data: PortForwardDialogData) => {
     this.currentPort = +data.portForward.forwardPort;
     this.desiredPort = this.currentPort;
   };
@@ -96,7 +96,7 @@ class NonInjectedPortForwardDialog extends Component<PortForwardDialogProps & De
         this.props.openPortForward(portForward);
       }
     } catch (error) {
-      this.props.logger.error(`[PORT-FORWARD-DIALOG]: ${error}`, portForward);
+      this.props.logger.error(`[PORT-FORWARD-DIALOG]: ${String(error)}`, portForward);
     } finally {
       this.props.model.close();
     }
@@ -156,6 +156,8 @@ class NonInjectedPortForwardDialog extends Component<PortForwardDialogProps & De
     const { className, portForwardStore, model, ...dialogProps } = this.props;
     const data = model.data.get();
     const isOpen = Boolean(data);
+
+    void portForwardStore;
 
     return (
       <Dialog

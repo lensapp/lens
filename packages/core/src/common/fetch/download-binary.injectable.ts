@@ -25,26 +25,26 @@ const downloadBinaryInjectable = getInjectable({
         result = await fetch(url, opts as RequestInit);
       } catch (error) {
         return {
-          callWasSuccessful: false,
+          isOk: false,
           error: String(error),
         };
       }
 
       if (result.status < 200 || 300 <= result.status) {
         return {
-          callWasSuccessful: false,
+          isOk: false,
           error: result.statusText,
         };
       }
 
       try {
         return {
-          callWasSuccessful: true,
-          response: await result.buffer(),
+          isOk: true,
+          value: await result.buffer(),
         };
       } catch (error) {
         return {
-          callWasSuccessful: false,
+          isOk: false,
           error: String(error),
         };
       }

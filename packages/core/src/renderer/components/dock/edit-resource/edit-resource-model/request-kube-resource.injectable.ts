@@ -11,7 +11,7 @@ import type { Writable } from "type-fest";
 import { parseKubeApi } from "@k8slens/kube-api";
 import apiKubeGetInjectable from "../../../../k8s/api-kube-get.injectable";
 
-export type RequestKubeResource = (selfLink: string) => AsyncResult<KubeObject | undefined>;
+export type RequestKubeResource = (selfLink: string) => AsyncResult<KubeObject | undefined, string>;
 
 const requestKubeResourceInjectable = getInjectable({
   id: "request-kube-resource",
@@ -23,7 +23,7 @@ const requestKubeResourceInjectable = getInjectable({
       const parsed = parseKubeApi(selfLink);
 
       if (!parsed?.name) {
-        return { callWasSuccessful: false, error: "Invalid API path" };
+        return { isOk: false, error: "Invalid API path" };
       }
 
       try {
@@ -32,11 +32,11 @@ const requestKubeResourceInjectable = getInjectable({
         (rawData.metadata as Writable<typeof rawData.metadata>).selfLink = selfLink;
 
         return {
-          callWasSuccessful: true,
-          response: new KubeObject(rawData),
+          isOk: true,
+          value: new KubeObject(rawData),
         };
       } catch (e) {
-        return { callWasSuccessful: false, error: getErrorMessage(e) };
+        return { isOk: false, error: getErrorMessage(e) };
       }
     };
   },

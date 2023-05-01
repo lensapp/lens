@@ -11,9 +11,9 @@ import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import createStorageHelperInjectable from "../create-storage-helper.injectable";
 
 interface StorageModel {
-  [prop: string]: any /*json-serializable*/;
+  [prop: string]: unknown /*json-serializable*/;
   message?: string;
-  description?: any;
+  description?: unknown;
 }
 
 describe("renderer/utils/StorageHelper", () => {
@@ -57,7 +57,7 @@ describe("renderer/utils/StorageHelper", () => {
       });
     });
 
-    it("initialized with default value", async () => {
+    it("initialized with default value", () => {
       expect(storageHelper.key).toBe(storageKey);
       expect(storageHelper.get()).toEqual(storageHelper.defaultValue);
     });
@@ -94,14 +94,14 @@ describe("renderer/utils/StorageHelper", () => {
   });
 
   describe("data in storage-helper is observable (mobx)", () => {
-    let storageHelper: StorageHelper<any>;
-    const defaultValue: any = { firstName: "Joe" };
-    const observedChanges: any[] = [];
+    let storageHelper: StorageHelper<{ firstName: string; lastName?: string } | string>;
+    const defaultValue = { firstName: "Joe" };
+    const observedChanges: unknown[] = [];
 
     beforeEach(() => {
       observedChanges.length = 0;
 
-      storageHelper = createStorageHelper<typeof defaultValue>("some-key", {
+      storageHelper = createStorageHelper<{ firstName: string; lastName?: string } | string>("some-key", {
         defaultValue,
         storage: {
           getItem: jest.fn(),

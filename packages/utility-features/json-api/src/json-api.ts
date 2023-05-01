@@ -14,9 +14,9 @@ import type { Logger } from "@k8slens/logger";
 import type Fetch from "@k8slens/node-fetch";
 import type { RequestInit, Response } from "@k8slens/node-fetch";
 import type { Defaulted } from "@k8slens/utilities";
-import { isObject, isString, json } from "@k8slens/utilities";
+import { isArray, isObject, isString, json } from "@k8slens/utilities";
 
-export interface JsonApiData {}
+export type JsonApiData = Record<string, never>;
 
 export interface JsonApiError {
   code?: number;
@@ -56,11 +56,11 @@ export interface JsonApiLog {
   method: string;
   reqUrl: string;
   reqInit: RequestInit;
-  data?: any;
-  error?: any;
+  data?: unknown;
+  error?: unknown;
 }
 
-export type GetRequestOptions = () => Promise<RequestInit>;
+export type GetRequestOptions = () => RequestInit | Promise<RequestInit>;
 
 export interface JsonApiConfig {
   apiBase: string;
@@ -236,7 +236,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
 
     const text = await res.text();
     const parseResponse = json.parse(text || "{}");
-    const data = parseResponse.callWasSuccessful ? (parseResponse.response as Data) : (text as Data);
+    const data = parseResponse.isOk ? (parseResponse.value as Data) : (text as Data);
 
     if (status >= 200 && status < 300) {
       this.onData.emit(data, res);
@@ -271,7 +271,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
 
     const { errors, message } = error as { errors?: { title: string }[]; message?: string };
 
-    if (Array.isArray(errors)) {
+    if (isArray(errors)) {
       return errors.map((error) => error.title);
     }
 

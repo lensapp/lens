@@ -57,9 +57,9 @@ export class DockTabStore<T> {
     return this.data.toJSON();
   }
 
-  findTabIdFromData(inspecter: (val: T) => any): TabId | undefined {
+  findTabIdFromData(inspector: (val: T) => unknown): TabId | undefined {
     for (const [tabId, data] of this.data) {
-      if (inspecter(data)) {
+      if (inspector(data)) {
         return tabId;
       }
     }

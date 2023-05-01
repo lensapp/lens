@@ -9,10 +9,10 @@ import type { PageTarget } from "../../routes/page-registration";
 import type { IComputedValue } from "mobx";
 import type { StrictReactNode } from "@k8slens/utilities";
 
-export interface ClusterPageMenuRegistration {
+export interface ClusterPageMenuRegistration<Params = unknown> {
   id?: string;
   parentId?: string;
-  target?: PageTarget;
+  target?: PageTarget<Params>;
   title: StrictReactNode;
   components: ClusterPageMenuComponents;
   visible?: IComputedValue<boolean>;

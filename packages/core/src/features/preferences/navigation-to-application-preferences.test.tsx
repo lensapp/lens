@@ -23,7 +23,7 @@ describe("preferences - navigation to application preferences", () => {
     let discover: Discover;
 
     beforeEach(async () => {
-      builder.beforeWindowStart(() => {
+      await builder.beforeWindowStart(() => {
         builder.preferences.navigate();
       });
 
@@ -47,7 +47,7 @@ describe("preferences - navigation to application preferences", () => {
 
     describe("when extension with application preference items gets enabled", () => {
       beforeEach(() => {
-        builder.extensions.enable(
+        await builder.extensions.enable(
           extensionStubWithApplicationPreferenceItems,
         );
       });
@@ -70,7 +70,7 @@ describe("preferences - navigation to application preferences", () => {
     let discover: Discover;
 
     beforeEach(async () => {
-      builder.beforeWindowStart(({ windowDi }) => {
+      await builder.beforeWindowStart(({ windowDi }) => {
         const navigateToProxyPreferences = windowDi.inject(navigateToProxyPreferencesInjectable);
 
         navigateToProxyPreferences();

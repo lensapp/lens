@@ -160,17 +160,17 @@ export class Kubectl {
     ];
     const execResult = await this.dependencies.execFile(path, args);
 
-    if (!execResult.callWasSuccessful) {
-      this.dependencies.logger.error(`Local kubectl failed to run properly (${execResult.error}), unlinking`);
+    if (!execResult.isOk) {
+      this.dependencies.logger.error(`Removing local kubectl, due to it failing to run properly: ${execResult.error.message}`);
       await this.dependencies.unlink(this.path);
 
       return;
     }
 
-    const parseResult = json.parse(execResult.response);
+    const parseResult = json.parse(execResult.value);
 
-    if (!parseResult.callWasSuccessful) {
-      this.dependencies.logger.error(`Local kubectl failed to run properly (${parseResult.error}), unlinking`);
+    if (!parseResult.isOk) {
+      this.dependencies.logger.error(`Removing local kubectl, due to it failing to run properly: ${parseResult.error.message}`);
       await this.dependencies.unlink(this.path);
 
       return;
@@ -180,7 +180,7 @@ export class Kubectl {
       return true;
     }
 
-    const { response: output } = parseResult;
+    const { value: output } = parseResult;
 
     if (
       !isObject(output)
@@ -221,7 +221,7 @@ export class Kubectl {
 
         return true;
       } catch (err) {
-        this.dependencies.logger.error(`Could not copy the bundled kubectl to app-data: ${err}`);
+        this.dependencies.logger.error(`Could not copy the bundled kubectl to app-data: ${String(err)}`);
 
         return false;
       }

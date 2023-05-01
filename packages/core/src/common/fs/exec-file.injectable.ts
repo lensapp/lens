@@ -6,6 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { ExecFileException, ExecFileOptions } from "child_process";
 import { execFile } from "child_process";
 import type { AsyncResult } from "@k8slens/utilities";
+import { isArray } from "@k8slens/utilities";
 
 export type ExecFileError = ExecFileException & { stderr: string };
 
@@ -21,7 +22,7 @@ const execFileInjectable = getInjectable({
   instantiate: (): ExecFile => {
     return (filePath: string, argsOrOptions?: string[] | ExecFileOptions, maybeOptions?: ExecFileOptions) => {
       const { args, options } = (() => {
-        if (Array.isArray(argsOrOptions)) {
+        if (isArray(argsOrOptions)) {
           return {
             args: argsOrOptions,
             options: maybeOptions ?? {},
@@ -38,13 +39,13 @@ const execFileInjectable = getInjectable({
         execFile(filePath, args, options, (error, stdout, stderr) => {
           if (error) {
             resolve({
-              callWasSuccessful: false,
+              isOk: false,
               error: Object.assign(error, { stderr }),
             });
           } else {
             resolve({
-              callWasSuccessful: true,
-              response: stdout,
+              isOk: true,
+              value: stdout,
             });
           }
         });

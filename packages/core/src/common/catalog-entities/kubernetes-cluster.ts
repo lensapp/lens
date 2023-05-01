@@ -55,8 +55,7 @@ export interface KubernetesClusterMetadata extends CatalogEntityMetadata {
  */
 export type KubernetesClusterStatusPhase = "connected" | "connecting" | "disconnected" | "deleting";
 
-export interface KubernetesClusterStatus extends CatalogEntityStatus {
-}
+export type KubernetesClusterStatus = CatalogEntityStatus;
 
 export function isKubernetesCluster(item: unknown): item is KubernetesCluster {
   return item instanceof KubernetesCluster;
@@ -89,16 +88,8 @@ export class KubernetesCluster<
     await requestClusterDeactivation(this.getId());
   }
 
-  async onRun(context: CatalogEntityActionContext) {
+  onRun(context: CatalogEntityActionContext) {
     context.navigate(`/cluster/${this.getId()}`);
-  }
-
-  onDetailsOpen(): void {
-    //
-  }
-
-  onSettingsOpen(): void {
-    //
   }
 
   onContextMenuOpen(context: CatalogEntityContextMenuContext) {
@@ -120,8 +111,8 @@ export class KubernetesCluster<
           title: "Disconnect",
           icon: "link_off",
           onClick: () => {
-            this.disconnect();
-            broadcastMessage(
+            void this.disconnect();
+            void broadcastMessage(
               IpcRendererNavigationEvents.NAVIGATE_IN_APP,
               "/catalog",
             );

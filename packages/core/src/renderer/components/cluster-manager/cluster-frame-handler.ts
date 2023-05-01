@@ -34,8 +34,7 @@ export class ClusterFrameHandler {
     return Boolean(this.views.get(clusterId)?.isLoaded);
   }
 
-  @action
-  public initView(clusterId: ClusterId) {
+  public initView = action((clusterId: ClusterId) => {
     const cluster = this.dependencies.getClusterById(clusterId);
 
     if (!cluster) {
@@ -102,7 +101,7 @@ export class ClusterFrameHandler {
         );
       },
     );
-  }
+  });
 
   private prevVisibleClusterChange?: Disposer;
 
@@ -110,7 +109,7 @@ export class ClusterFrameHandler {
     // Clear the previous when ASAP
     this.prevVisibleClusterChange?.();
 
-    this.dependencies.logger.info(`[LENS-VIEW]: refreshing iframe views, visible cluster id=${clusterId}`);
+    this.dependencies.logger.info(`[LENS-VIEW]: refreshing iframe views, visible cluster id=${String(clusterId)}`);
     this.dependencies.emitClusterVisibility(null);
 
     for (const { frame: view } of this.views.values()) {

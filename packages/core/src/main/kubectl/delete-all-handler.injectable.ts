@@ -27,7 +27,7 @@ const kubectlDeleteAllChannelHandlerInjectable = getRequestChannelListenerInject
 
       if (!cluster) {
         return {
-          callWasSuccessful: false,
+          isOk: false,
           error: `No cluster found for clusterId="${clusterId}"`,
         };
       }

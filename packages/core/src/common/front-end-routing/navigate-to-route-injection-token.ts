@@ -18,9 +18,11 @@ type RequiredKeys<T> = Exclude<
 
 type ObjectContainingNoRequired<T> = T extends void
   ? never
-  : RequiredKeys<T> extends []
-  ? any
-  : never;
+  : (
+    RequiredKeys<T> extends []
+      ? Record<string, never>
+      : never
+  );
 
 type ObjectContainsNoRequired<T> = T extends ObjectContainingNoRequired<T>
   ? true
@@ -30,10 +32,12 @@ type ObjectContainsNoRequired<T> = T extends ObjectContainingNoRequired<T>
 // - Navigating to route without parameters, with parameters
 // - Navigating to route with required parameters, without parameters
 type Parameters<TParameters> = TParameters extends void
-  ? {}
-  : ObjectContainsNoRequired<TParameters> extends true
-  ? { parameters?: TParameters }
-  : { parameters: TParameters };
+  ? { parameters?: undefined }
+  : (
+    ObjectContainsNoRequired<TParameters> extends true
+      ? { parameters?: TParameters }
+      : { parameters: TParameters }
+  );
 
 export type NavigateToRouteOptions<TRoute> = Parameters<
   InferParametersFrom<TRoute>

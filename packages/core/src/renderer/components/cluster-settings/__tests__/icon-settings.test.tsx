@@ -62,7 +62,7 @@ describe("Icon settings", () => {
     di = getDiForUnitTesting();
 
     const render = renderFor(di);
-    const cluster = new Cluster({
+    const cluster = Cluster.createForTestingOnly({
       contextName: "some-context",
       id: "some-id",
       kubeConfigPath: "/some/path/to/kubeconfig",
@@ -128,7 +128,7 @@ describe("Icon settings", () => {
       expect(rendered.baseElement).toMatchSnapshot();
     });
 
-    it("does not have any external components", async () => {
+    it("does not have any external components", () => {
       expect(rendered.queryByTestId("test-react-component")).not.toBeInTheDocument();
     });
   });
@@ -140,11 +140,11 @@ describe("Icon settings", () => {
       });
     });
 
-    it("renders external component", async () => {
+    it("renders external component", () => {
       expect(rendered.queryByTestId("my-react-component")).toBeInTheDocument();
     });
 
-    it("external component has cluster preferences in props", async () => {
+    it("external component has cluster preferences in props", () => {
       expect(rendered.getByText(/some-cluster-name/)).toBeInTheDocument();
     });
   });

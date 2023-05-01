@@ -11,12 +11,12 @@ import type { FakeExtensionOptions } from "../../../renderer/components/test-uti
 
 describe("extendability-using-extension-api", () => {
   let rendered: RenderResult;
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
 
   beforeEach(async () => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
-    rendered = await applicationBuilder.render();
+    rendered = await builder.render();
   });
 
   it("renders", () => {
@@ -30,7 +30,7 @@ describe("extendability-using-extension-api", () => {
   describe("given an extension with top-bar items is enabled", () => {
     let testExtension: FakeExtensionOptions;
 
-    beforeEach(() => {
+    beforeEach(async () => {
       testExtension = {
         id: "test-extension",
         name: "Test Extension",
@@ -48,7 +48,7 @@ describe("extendability-using-extension-api", () => {
         },
       };
 
-      applicationBuilder.extensions.enable(testExtension);
+      await builder.extensions.enable(testExtension);
     });
 
     it("renders", () => {
@@ -60,8 +60,8 @@ describe("extendability-using-extension-api", () => {
     });
 
     describe("when the extension is disabled", () => {
-      beforeEach(() => {
-        applicationBuilder.extensions.disable(testExtension);
+      beforeEach(async () => {
+        await builder.extensions.disable(testExtension);
       });
 
       it("renders", () => {
@@ -75,7 +75,7 @@ describe("extendability-using-extension-api", () => {
   });
 
   describe("given an extension with a weakly typed and invalid top-bar item is enabled", () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       const testExtension: FakeExtensionOptions = {
         id: "test-extension",
         name: "Test Extension",
@@ -85,20 +85,20 @@ describe("extendability-using-extension-api", () => {
             {
               components: {
                 // Note: this makes the item invalid.
-                Item: undefined,
+                Item: undefined as never,
               },
-            } as any,
+            },
 
             // Note: empty object makes the item invalid.
-            {} as any,
+            {} as never,
 
             // Note: non-object makes the item invalid.
-            undefined as any,
+            undefined as never,
           ],
         },
       };
 
-      applicationBuilder.extensions.enable(testExtension);
+      await builder.extensions.enable(testExtension);
     });
 
     it("renders without blowing up", () => {

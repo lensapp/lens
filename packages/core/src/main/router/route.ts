@@ -8,7 +8,7 @@ import type http from "http";
 import type httpProxy from "http-proxy";
 import type { LensApiResultContentType } from "./router-content-types";
 import type { URLSearchParams } from "url";
-import type Joi from "joi";
+import type { SafeParseReturnType } from "zod";
 
 export type InferParam<
   T extends string,
@@ -27,7 +27,7 @@ export type InferParamFromPath<P extends string> =
       : never
     : P extends `${infer A}/${infer B}`
       ? InferParam<A, InferParamFromPath<B>>
-      : InferParam<P, {}>;
+      : InferParam<P, Record<string, never>>;
 
 export interface LensApiRequest<Path extends string> {
   path: Path;
@@ -48,7 +48,7 @@ export interface ClusterLensApiRequest<Path extends string> extends LensApiReque
 export interface LensApiResult<Response> {
   statusCode?: number;
   response?: Response;
-  error?: any;
+  error?: unknown;
   contentType?: LensApiResultContentType;
   headers?: Partial<Record<string, string>>;
   proxy?: httpProxy;
@@ -68,11 +68,11 @@ export interface BaseRoutePaths<Path extends string> {
 }
 
 export interface PayloadValidator<Payload> {
-  validate(payload: unknown): Joi.ValidationResult<Payload>;
+  safeParse(payload: unknown): SafeParseReturnType<unknown, Payload>;
 }
 
 export interface ValidatorBaseRoutePaths<Path extends string, Payload> extends BaseRoutePaths<Path> {
-  payloadValidator: PayloadValidator<Payload>;
+  payloadSchema: PayloadValidator<Payload>;
 }
 
 export interface Route<TResponse, Path extends string> extends BaseRoutePaths<Path> {
@@ -126,13 +126,13 @@ export interface BindValidatedClusterHandler<Path extends string, Payload> {
   <Response>(handler: ValidatedClusterRouteHandler<Payload, Response, Path>): Route<Response, Path>;
 }
 
-export function payloadValidatedClusterRoute<Path extends string, Payload>({ payloadValidator, ...parts }: ValidatorBaseRoutePaths<Path, Payload>): BindValidatedClusterHandler<Path, Payload> {
+export function payloadWithSchemaClusterRoute<Path extends string, Payload>({ payloadSchema: payloadValidator, ...parts }: ValidatorBaseRoutePaths<Path, Payload>): BindValidatedClusterHandler<Path, Payload> {
   const boundClusterRoute = clusterRoute(parts);
 
   return (handler) => boundClusterRoute(({ payload, ...rest }) => {
-    const validationResult = payloadValidator.validate(payload);
+    const validationResult = payloadValidator.safeParse(payload);
 
-    if (validationResult.error) {
+    if (!validationResult.success) {
       return {
         error: validationResult.error,
         statusCode: 400,
@@ -140,7 +140,7 @@ export function payloadValidatedClusterRoute<Path extends string, Payload>({ pay
     }
 
     return handler({
-      payload: validationResult.value,
+      payload: validationResult.data,
       ...rest,
     });
   });

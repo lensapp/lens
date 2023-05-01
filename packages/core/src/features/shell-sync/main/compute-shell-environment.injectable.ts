@@ -18,9 +18,9 @@ const computeShellEnvironmentInjectable = getInjectable({
     const computeUnixShellEnvironment = di.inject(computeUnixShellEnvironmentInjectable);
 
     if (isWindows) {
-      return async () => ({
-        callWasSuccessful: true,
-        response: undefined,
+      return () => Promise.resolve({
+        isOk: true,
+        value: undefined,
       });
     }
 
@@ -31,13 +31,13 @@ const computeShellEnvironmentInjectable = getInjectable({
 
       clearTimeout(timeoutHandle);
 
-      if (result.callWasSuccessful) {
+      if (result.isOk) {
         return result;
       }
 
       if (controller.signal.aborted) {
         return {
-          callWasSuccessful: false,
+          isOk: false,
           error: `Resolving shell environment is taking very long. Please review your shell configuration: ${result.error}`,
         };
       }

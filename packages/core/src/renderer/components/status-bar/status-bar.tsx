@@ -15,17 +15,16 @@ import type { StatusBarStatus } from "./current-status.injectable";
 import statusBarCurrentStatusInjectable from "./current-status.injectable";
 import { cssNames } from "@k8slens/utilities";
 
-export interface StatusBarProps {}
-
 interface Dependencies {
   items: IComputedValue<StatusBarItems>;
   status: IObservableValue<StatusBarStatus>;
 }
 
-const NonInjectedStatusBar = observer(({
-  items,
-  status,
-}: Dependencies & StatusBarProps) => {
+const NonInjectedStatusBar = observer((props: Dependencies) => {
+  const {
+    items,
+    status,
+  } = props;
   const { left, right } = items.get();
   const barStatus = status.get();
   const barStyle = barStatus === "default"
@@ -59,7 +58,7 @@ const NonInjectedStatusBar = observer(({
 
 });
 
-export const StatusBar = withInjectables<Dependencies, StatusBarProps>(NonInjectedStatusBar, {
+export const StatusBar = withInjectables<Dependencies>(NonInjectedStatusBar, {
   getProps: (di, props) => ({
     ...props,
     items: di.inject(statusBarItemsInjectable),

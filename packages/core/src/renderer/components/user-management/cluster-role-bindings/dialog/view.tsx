@@ -40,8 +40,7 @@ import showDetailsInjectable from "../../../kube-detail-params/show-details.inje
 import type { ShowCheckedErrorNotification } from "../../../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../../../notifications/show-checked-error.injectable";
 
-export interface ClusterRoleBindingDialogProps extends Partial<DialogProps> {
-}
+export type ClusterRoleBindingDialogProps = Partial<DialogProps>;
 
 interface Dependencies {
   state: IObservableValue<ClusterRoleBindingDialogState>;

@@ -10,7 +10,7 @@ export type GetAbsolutePath = (...args: string[]) => string;
 const getAbsolutePathInjectable = getInjectable({
   id: "get-absolute-path",
 
-  instantiate: (): GetAbsolutePath => path.resolve,
+  instantiate: (): GetAbsolutePath => (...values) => path.resolve(...values),
 
   // This causes side effect e.g. Windows creates different kinds of
   // absolute paths than linux

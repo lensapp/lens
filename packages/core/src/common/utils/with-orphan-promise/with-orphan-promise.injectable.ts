@@ -13,13 +13,13 @@ const withOrphanPromiseInjectable = getInjectable({
   instantiate: (di) => {
     const withErrorLoggingFor = di.inject(withErrorLoggingInjectable);
 
-    return <T extends (...args: any[]) => Promise<any>>(toBeDecorated: T) =>
+    return <T extends (...args: unknown[]) => Promise<unknown>>(toBeDecorated: T) =>
       (...args: Parameters<T>): void => {
         const decorated = pipeline(
           toBeDecorated,
           withErrorLoggingFor(() => "Orphan promise rejection encountered"),
           withErrorSuppression,
-        ) as ((...args: any[]) => any);
+        ) as ((...args: unknown[]) => unknown);
 
         decorated(...args);
       };

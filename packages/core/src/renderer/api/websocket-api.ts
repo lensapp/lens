@@ -193,7 +193,7 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
     this.writeLog("%cCLOSE", `color:${error ? "red" : "black"};font-weight:bold;`, evt);
   }
 
-  protected writeLog(...data: any[]) {
+  protected writeLog(...data: unknown[]) {
     if (this.params.logging) {
       console.debug(...data);
     }

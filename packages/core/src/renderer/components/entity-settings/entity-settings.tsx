@@ -16,6 +16,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import currentCatalogEntityForSettingsInjectable from "./current-entity.injectable";
 import type { ActiveEntitySettings } from "./active-tabs.injectable";
 import activeEntitySettingsTabInjectable from "./active-tabs.injectable";
+import type { KubernetesCluster } from "../../../common/catalog-entities";
 
 interface Dependencies {
   entity: IComputedValue<CatalogEntity | undefined>;
@@ -57,10 +58,10 @@ const NonInjectedCatalogEntitySettings = observer((props: CatalogEntitySettingsP
       <div className={styles.avatarAndName}>
         <Avatar
           title={entity.getName()}
-          colorHash={`${entity.getName()}-${entity.metadata.source}`}
-          src={entity.spec.icon?.src}
+          colorHash={`${entity.getName()}-${entity.metadata.source ?? ""}`}
+          src={(entity as KubernetesCluster).spec.icon?.src}
           className={styles.settingsAvatar}
-          background={entity.spec.icon?.background}
+          background={(entity as KubernetesCluster).spec.icon?.background}
           size={40}
         />
         <div className={styles.entityName}>

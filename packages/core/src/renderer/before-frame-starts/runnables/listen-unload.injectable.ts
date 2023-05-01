@@ -25,7 +25,7 @@ const listenUnloadInjectable = getInjectable({
           const frameRoutingId = di.inject(frameRoutingIdInjectable);
 
           logger.info(
-            `[CLUSTER-FRAME] Unload dashboard, clusterId=${hostedCluster?.id}, frameId=${frameRoutingId}`,
+            `[CLUSTER-FRAME] Unload dashboard, clusterId=${String(hostedCluster?.id)}, frameId=${frameRoutingId}`,
           );
         } else {
           logger.info("[ROOT-FRAME]: Unload app");

@@ -23,9 +23,6 @@ import storageClassStoreInjectable from "./store.injectable";
 import persistentVolumeStoreInjectable from "../storage-volumes/store.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
 
-export interface StorageClassDetailsProps extends KubeObjectDetailsProps<StorageClass> {
-}
-
 interface Dependencies {
   subscribeStores: SubscribeStores;
   storageClassStore: StorageClassStore;
@@ -34,7 +31,7 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedStorageClassDetails extends React.Component<StorageClassDetailsProps & Dependencies> {
+class NonInjectedStorageClassDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
   componentDidMount() {
     disposeOnUnmount(this, [
       this.props.subscribeStores([
@@ -83,7 +80,7 @@ class NonInjectedStorageClassDetails extends React.Component<StorageClassDetails
             <DrawerTitle>Parameters</DrawerTitle>
             {
               Object.entries(parameters).map(([name, value]) => (
-                <DrawerItem key={name + value} name={startCase(name)}>
+                <DrawerItem key={`${name}${value ?? ""}`} name={startCase(name)}>
                   {value}
                 </DrawerItem>
               ))
@@ -96,7 +93,7 @@ class NonInjectedStorageClassDetails extends React.Component<StorageClassDetails
   }
 }
 
-export const StorageClassDetails = withInjectables<Dependencies, StorageClassDetailsProps>(NonInjectedStorageClassDetails, {
+export const StorageClassDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedStorageClassDetails, {
   getProps: (di, props) => ({
     ...props,
     subscribeStores: di.inject(subscribeStoresInjectable),

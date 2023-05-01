@@ -27,8 +27,7 @@ export interface KubeconfigDialogData {
   config: string;
 }
 
-export interface KubeConfigDialogProps extends Partial<DialogProps> {
-}
+export type KubeConfigDialogProps = Partial<DialogProps>;
 
 interface Dependencies {
   state: IObservableValue<KubeconfigDialogData | undefined>;

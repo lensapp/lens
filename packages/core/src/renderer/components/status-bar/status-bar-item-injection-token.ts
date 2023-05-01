@@ -8,7 +8,7 @@ import type React from "react";
 
 export interface StatusBarItem {
   origin?: string;
-  component: React.ComponentType<any>;
+  component: React.ComponentType<Record<string, never>>;
   position: "left" | "right";
   visible: IComputedValue<boolean>;
 }

@@ -35,7 +35,7 @@ const checkForUpdatesMenuItemInjectable = getInjectable({
         if (updateIsReadyToBeInstalled) {
           await showApplicationWindow();
         } else {
-          showMessagePopup(
+          await showMessagePopup(
             "No Updates Available",
             "You're all good",
             "You've got the latest version of Lens,\nthanks for staying on the ball.",

@@ -100,7 +100,7 @@ export class HelmChartManager {
       }
     }
 
-    return JSON.parse(cacheEntry.data);
+    return JSON.parse(cacheEntry.data) as RepoHelmChartList;
   }
 }
 

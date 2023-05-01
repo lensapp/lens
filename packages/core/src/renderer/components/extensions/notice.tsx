@@ -8,7 +8,7 @@ import type { DOMAttributes } from "react";
 import React from "react";
 import { cssNames } from "@k8slens/utilities";
 
-export interface NoticeProps extends DOMAttributes<any> {
+export interface NoticeProps extends DOMAttributes<Element> {
   className?: string;
 }
 

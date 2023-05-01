@@ -16,8 +16,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
 import activeThemeInjectable from "../../themes/active.injectable";
 
-export interface PieChartProps extends ChartProps {
-}
+export type PieChartProps = ChartProps;
 
 export interface PieChartData extends ChartJS.ChartData {
   datasets?: PieChartDataSets[];
@@ -73,7 +72,7 @@ const NonInjectedPieChart = observer(({
 
           return tooltipLabelCustomizer
             ? tooltipLabelCustomizer(percentLabel)
-            : `${dataset.label}: ${percentLabel}`;
+            : `${dataset.label ?? ""}: ${percentLabel}`;
         },
       },
       filter: ({ datasetIndex, index }, { datasets = [] }) => {
@@ -118,6 +117,6 @@ export const PieChart = withInjectables<Dependencies, PieChartProps>(NonInjected
   }),
 });
 
-ChartJS.Tooltip.positioners.cursor = function (elements: any, position: { x: number; y: number }) {
+ChartJS.Tooltip.positioners.cursor = function (elements: unknown, position: { x: number; y: number }) {
   return position;
 };

@@ -8,8 +8,8 @@ import type { ReadYamlFile } from "../../../../common/fs/read-yaml-file.injectab
 import readYamlFileInjectable from "../../../../common/fs/read-yaml-file.injectable";
 import getHelmEnvInjectable from "../../get-helm-env/get-helm-env.injectable";
 import execHelmInjectable from "../../exec-helm/exec-helm.injectable";
-import { loggerInjectionToken } from "@k8slens/logger";
 import type { AsyncResult } from "@k8slens/utilities";
+import { result } from "@k8slens/utilities";
 
 interface HelmRepositoryFromYaml {
   name: string;
@@ -34,74 +34,47 @@ const getActiveHelmRepositoriesInjectable = getInjectable({
     const readYamlFile = di.inject(readYamlFileInjectable);
     const execHelm = di.inject(execHelmInjectable);
     const getHelmEnv = di.inject(getHelmEnvInjectable);
-    const logger = di.inject(loggerInjectionToken);
 
     const getRepositories = getRepositoriesFor(readYamlFile);
 
-    return async (): AsyncResult<HelmRepo[]> => {
+    return async (): AsyncResult<HelmRepo[], Error> => {
       const envResult = await getHelmEnv();
 
-      if (!envResult.callWasSuccessful) {
-        return {
-          callWasSuccessful: false,
-          error: `Error getting Helm configuration: ${envResult.error}`,
-        };
+      if (!envResult.isOk) {
+        return result.wrapError("Failed to get helm configuration", envResult);
       }
 
       const {
         HELM_REPOSITORY_CONFIG: repositoryConfigFilePath,
         HELM_REPOSITORY_CACHE: helmRepositoryCacheDirPath,
-      } = envResult.response;
+      } = envResult.value;
 
       if (!repositoryConfigFilePath) {
-        const errorMessage = "Tried to get Helm repositories, but HELM_REPOSITORY_CONFIG was not present in `$ helm env`.";
-
-        logger.error(errorMessage);
-
-        return {
-          callWasSuccessful: false,
-          error: `Error getting Helm configuration: ${errorMessage}`,
-        };
+        return result.error(new Error("Tried to get Helm repositories, but HELM_REPOSITORY_CONFIG was not present in `$ helm env`."));
       }
 
       if (!helmRepositoryCacheDirPath) {
-        const errorMessage = "Tried to get Helm repositories, but HELM_REPOSITORY_CACHE was not present in `$ helm env`.";
-
-        logger.error(errorMessage);
-
-        return {
-          callWasSuccessful: false,
-          error: `Error getting Helm configuration: ${errorMessage}`,
-        };
+        return result.error(new Error("Tried to get Helm repositories, but HELM_REPOSITORY_CACHE was not present in `$ helm env`."));
       }
 
       const updateResult = await execHelm(["repo", "update"]);
 
-      if (!updateResult.callWasSuccessful) {
+      if (!updateResult.isOk) {
         if (!updateResult.error.stderr.includes(internalHelmErrorForNoRepositoriesFound)) {
-          return {
-            callWasSuccessful: false,
-            error: `Error updating Helm repositories: ${updateResult.error.stderr}`,
-          };
+          return result.error(new Error("Failed to update helm repositories", { cause: updateResult.error.stderr }));
         }
+
         const resultOfAddingDefaultRepository = await execHelm(["repo", "add", "bitnami", "https://charts.bitnami.com/bitnami"]);
 
-        if (!resultOfAddingDefaultRepository.callWasSuccessful) {
-          return {
-            callWasSuccessful: false,
-            error: `Error when adding default Helm repository: ${resultOfAddingDefaultRepository.error.stderr}`,
-          };
+        if (!resultOfAddingDefaultRepository.isOk) {
+          return result.error(new Error("Failed to add default helm repository", { cause: updateResult.error.stderr }));
         }
       }
 
-      return {
-        callWasSuccessful: true,
-
-        response: await getRepositories(
-          repositoryConfigFilePath,
-          helmRepositoryCacheDirPath,
-        ),
-      };
+      return result.ok(await getRepositories(
+        repositoryConfigFilePath,
+        helmRepositoryCacheDirPath,
+      ));
     };
   },
 });

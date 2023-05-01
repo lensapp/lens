@@ -6,6 +6,7 @@
 import { getGlobalOverride } from "@k8slens/test-utils";
 import extractTarInjectable from "./extract-tar.injectable";
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export default getGlobalOverride(extractTarInjectable, () => async () => {
   throw new Error("tried to extract a tar file without override");
 });

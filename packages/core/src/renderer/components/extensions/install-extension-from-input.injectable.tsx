@@ -43,7 +43,7 @@ const installExtensionFromInputInjectable = getInjectable({
           const { signal } = withTimeout(10 * 60 * 1000);
           const result = await downloadBinary(input, { signal });
 
-          if (!result.callWasSuccessful) {
+          if (!result.isOk) {
             showErrorNotification(`Failed to download extension: ${result.error}`);
 
             return disposer();
@@ -51,7 +51,7 @@ const installExtensionFromInputInjectable = getInjectable({
 
           const fileName = getBasenameOfPath(input);
 
-          return await attemptInstall({ fileName, data: result.response }, disposer);
+          return await attemptInstall({ fileName, data: result.value }, disposer);
         }
 
         try {

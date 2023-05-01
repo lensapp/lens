@@ -47,7 +47,7 @@ describe("ClusterLocalTerminalSettings", () => {
       getContextObject: () => ({}),
     }));
 
-    const cluster = new Cluster({
+    const cluster = Cluster.createForTestingOnly({
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some/path",
@@ -67,7 +67,7 @@ describe("ClusterLocalTerminalSettings", () => {
       getContextObject: () => ({ namespace: "blat" }),
     }));
 
-    const cluster = new Cluster({
+    const cluster = Cluster.createForTestingOnly({
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some/path",
@@ -87,7 +87,7 @@ describe("ClusterLocalTerminalSettings", () => {
       getContextObject: () => ({}),
     }));
 
-    const cluster = new Cluster({
+    const cluster = Cluster.createForTestingOnly({
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some/path",
@@ -107,7 +107,7 @@ describe("ClusterLocalTerminalSettings", () => {
   });
 
   it("should save the new CWD if path is a directory", async () => {
-    statMock.mockImplementation(async (path) => {
+    statMock.mockImplementation((path) => {
       expect(path).toBe("/foobar");
 
       return {
@@ -119,7 +119,7 @@ describe("ClusterLocalTerminalSettings", () => {
       getContextObject: () => ({}),
     }));
 
-    const cluster = new Cluster({
+    const cluster = Cluster.createForTestingOnly({
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some/path",
@@ -136,7 +136,7 @@ describe("ClusterLocalTerminalSettings", () => {
   });
 
   it("should not save the new CWD if path is a file", async () => {
-    statMock.mockImplementation(async (path) => {
+    statMock.mockImplementation((path) => {
       expect(path).toBe("/foobar");
 
       return {
@@ -149,7 +149,7 @@ describe("ClusterLocalTerminalSettings", () => {
       getContextObject: () => ({}),
     }));
 
-    const cluster = new Cluster({
+    const cluster = Cluster.createForTestingOnly({
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some/path",

@@ -17,9 +17,6 @@ import type { Logger } from "@k8slens/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { loggerInjectionToken } from "@k8slens/logger";
 
-export interface ResourceQuotaDetailsProps extends KubeObjectDetailsProps<ResourceQuota> {
-}
-
 function transformUnit(name: string, value: string): number | undefined {
   if (name.includes("memory") || name.includes("storage")) {
     return unitsToBytes(value);
@@ -82,7 +79,7 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedResourceQuotaDetails extends React.Component<ResourceQuotaDetailsProps & Dependencies> {
+class NonInjectedResourceQuotaDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
   render() {
     const { object: quota } = this.props;
 
@@ -132,7 +129,7 @@ class NonInjectedResourceQuotaDetails extends React.Component<ResourceQuotaDetai
   }
 }
 
-export const ResourceQuotaDetails = withInjectables<Dependencies, ResourceQuotaDetailsProps>(NonInjectedResourceQuotaDetails, {
+export const ResourceQuotaDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedResourceQuotaDetails, {
   getProps: (di, props) => ({
     ...props,
     logger: di.inject(loggerInjectionToken),

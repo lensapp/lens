@@ -23,7 +23,7 @@ const openPortForwardInjectable = getInjectable({
 
       openLinkInBrowser(browseTo)
         .catch(error => {
-          logger.error(`failed to open in browser: ${error}`, {
+          logger.error(`failed to open in browser: ${String(error)}`, {
             port: portForward.port,
             kind: portForward.kind,
             namespace: portForward.namespace,

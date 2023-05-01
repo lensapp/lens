@@ -6,7 +6,8 @@ import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
 import React from "react";
-import { KubeObject } from "@k8slens/kube-object";
+import type { KubeObject } from "@k8slens/kube-object";
+import { createKubeObject } from "@k8slens/kube-object";
 import apiManagerInjectable from "../../../../common/k8s-api/api-manager/manager.injectable";
 import type { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 import type { KubeApi } from "@k8slens/kube-api";
@@ -21,9 +22,9 @@ describe("disable kube object detail items when cluster is not relevant", () => 
 
   beforeEach(async () => {
     builder = getApplicationBuilder();
-    builder.setEnvironmentToClusterFrame();
+    await builder.setEnvironmentToClusterFrame();
 
-    builder.afterWindowStart(({ windowDi }) => {
+    await builder.afterWindowStart(({ windowDi }) => {
       const apiManager = windowDi.inject(apiManagerInjectable);
       const api = {
         apiBase: "/api/some-api-version/some-kind",
@@ -68,7 +69,7 @@ describe("disable kube object detail items when cluster is not relevant", () => 
 
     showDetails("/api/some-api-version/namespaces/some-namespace/some-kind/some-name");
 
-    builder.extensions.enable(testExtension);
+    await builder.extensions.enable(testExtension);
   });
 
   describe("given not yet known if extension should be enabled for the cluster", () => {
@@ -117,7 +118,7 @@ describe("disable kube object detail items when cluster is not relevant", () => 
 });
 
 const getKubeObjectStub = (kind: string, apiVersion: string) =>
-  KubeObject.create({
+  createKubeObject({
     apiVersion,
     kind,
     metadata: {

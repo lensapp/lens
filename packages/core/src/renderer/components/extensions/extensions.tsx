@@ -45,7 +45,7 @@ interface Dependencies {
 }
 
 const NonInjectedExtensions = ({ installOnDrop }: Dependencies) => (
-  <DropFileInput onDropFiles={installOnDrop}>
+  <DropFileInput onDropFiles={(files) => void installOnDrop(files)}>
     <SettingLayout
       className="Extensions"
       contentGaps={false}

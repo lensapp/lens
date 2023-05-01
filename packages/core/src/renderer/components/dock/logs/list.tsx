@@ -31,6 +31,7 @@ export interface LogListProps {
 }
 
 const colorConverter = new AnsiUp();
+const ansiToHtml = (ansi: string) => DOMPurify.sanitize(colorConverter.ansi_to_html(ansi));
 
 export interface LogListRef {
   scrollToItem: (index: number, align: Align) => void;
@@ -49,7 +50,7 @@ class NonForwardedLogList extends React.Component<Dependencies & LogListProps & 
   private virtualListRef = React.createRef<VirtualListRef>(); // A reference for VirtualList component
   private lineHeight = 18; // Height of a log line. Should correlate with styles in pod-log-list.scss
 
-  constructor(props: any) {
+  constructor(props: Dependencies & LogListProps & { innerRef: ForwardedRef<LogListRef> }) {
     super(props);
     makeObservable(this);
     autoBindReact(this);
@@ -162,7 +163,7 @@ class NonForwardedLogList extends React.Component<Dependencies & LogListProps & 
     const { scrollOffset } = props;
 
     if (scrollOffset === 0) {
-      this.props.model.loadLogs();
+      void this.props.model.loadLogs();
     }
   };
 
@@ -196,40 +197,45 @@ class NonForwardedLogList extends React.Component<Dependencies & LogListProps & 
    * @returns A react element with a row itself
    */
   getLogRow = (rowIndex: number) => {
-    const { searchQuery, isActiveOverlay } = this.props.model.searchStore;
+    const { isActiveOverlay } = this.props.model.searchStore;
+    const searchQuery = this.props.model.searchStore.searchQuery.get();
     const item = this.logs[rowIndex];
-    const contents: React.ReactElement[] = [];
-    const ansiToHtml = (ansi: string) => DOMPurify.sanitize(colorConverter.ansi_to_html(ansi));
 
-    if (searchQuery) { // If search is enabled, replace keyword with backgrounded <span>
-      // Case-insensitive search (lowercasing query and keywords in line)
-      const regex = new RegExp(SearchStore.escapeRegex(searchQuery), "gi");
-      const matches = item.matchAll(regex);
-      const modified = item.replace(regex, match => match.toLowerCase());
-      // Splitting text line by keyword
-      const pieces = modified.split(searchQuery.toLowerCase());
+    // If search is enabled, replace keyword with a background <span>
+    const contents = searchQuery
+      ? (() => {
+        // Case-insensitive search (lowercasing query and keywords in line)
+        const regex = new RegExp(SearchStore.escapeRegex(searchQuery), "gi");
+        const matches = item.matchAll(regex);
 
-      pieces.forEach((piece, index) => {
-        const active = isActiveOverlay(rowIndex, index);
-        const lastItem = index === pieces.length - 1;
-        const overlayValue = matches.next().value;
-        const overlay = !lastItem
-          ? (
-            <span
-              className={cssNames("overlay", { active })}
-              dangerouslySetInnerHTML={{ __html: ansiToHtml(overlayValue) }}
-            />
-          )
-          : null;
+        // Splitting text line by keyword
+        return item.replace(regex, match => match.toLowerCase())
+          .split(searchQuery.toLowerCase())
+          .map((piece, index) => {
+            const active = isActiveOverlay(rowIndex, index);
+            const overlayValue = (() => {
+              const next = matches.next();
 
-        contents.push(
-          <React.Fragment key={piece + index}>
-            <span dangerouslySetInnerHTML={{ __html: ansiToHtml(piece) }} />
-            {overlay}
-          </React.Fragment>,
-        );
-      });
-    }
+              return next.done === true ? undefined : next.value;
+            })();
+            const overlay = overlayValue
+              ? (
+                <span
+                  className={cssNames("overlay", { active })}
+                  dangerouslySetInnerHTML={{ __html: ansiToHtml(overlayValue[0]) }}
+                />
+              )
+              : null;
+
+            return (
+              <React.Fragment key={`${piece}${index}`}>
+                <span dangerouslySetInnerHTML={{ __html: ansiToHtml(piece) }} />
+                {overlay}
+              </React.Fragment>
+            );
+          });
+      })()
+      : [];
 
     return (
       <div className={cssNames("LogRow")}>

@@ -24,7 +24,7 @@ describe("<RenderDelay/>", () => {
     testUsingFakeTime("2020-01-17 12:18:19");
 
     di.override(cancelIdleCallbackInjectable, () => clearTimeout);
-    di.override(requestIdleCallbackInjectable, () => (callback, opts) => setTimeout(callback, opts.timeout) as any);
+    di.override(requestIdleCallbackInjectable, () => (callback, opts) => setTimeout(callback, opts.timeout) as unknown as number);
     di.override(idleCallbackTimeoutInjectable, () => 5);
   });
 

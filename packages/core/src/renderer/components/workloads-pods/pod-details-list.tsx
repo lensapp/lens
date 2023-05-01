@@ -51,7 +51,7 @@ class NonInjectedPodDetailsList extends React.Component<PodDetailsListProps & De
   }
 
   private metricsWatcher = interval(120, () => {
-    this.props.podStore.loadKubeMetrics(this.props.owner.getNs());
+    void this.props.podStore.loadKubeMetrics(this.props.owner.getNs());
   });
 
   componentDidMount() {
@@ -182,7 +182,7 @@ class NonInjectedPodDetailsList extends React.Component<PodDetailsListProps & De
           }}
           sortByDefault={{ sortBy: sortBy.cpu, orderBy: "desc" }}
           sortSyncWithUrl={false}
-          getTableRow={this.getTableRow}
+          getTableRow={(id) => this.getTableRow(id)}
           renderRow={(
             virtual
               ? undefined

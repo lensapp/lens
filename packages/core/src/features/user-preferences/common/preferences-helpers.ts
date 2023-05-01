@@ -7,12 +7,10 @@ import type { editor } from "monaco-editor";
 import { defaultFontSize, defaultTerminalFontFamily, defaultEditorFontFamily } from "../../../common/vars";
 import type { PreferenceDescriptors } from "./preference-descriptors.injectable";
 
-export interface KubeconfigSyncEntry extends KubeconfigSyncValue {
+export interface KubeconfigSyncEntry {
   filePath: string;
 }
 
-export interface KubeconfigSyncValue {
-}
 export interface TerminalConfig {
   fontSize: number;
   fontFamily: string;
@@ -24,6 +22,7 @@ export const defaultTerminalConfig: TerminalConfig = {
 };
 
 export interface BaseEditorConfiguration extends Required<Pick<editor.IStandaloneEditorConstructionOptions, "minimap" | "tabSize" | "fontSize" | "fontFamily">> {
+  // eslint-disable-next-line @typescript-eslint/ban-types
   lineNumbers: NonNullable<Exclude<editor.IStandaloneEditorConstructionOptions["lineNumbers"], Function>>;
 }
 
@@ -87,8 +86,8 @@ export type ExtensionRegistry = {
 export const defaultExtensionRegistryUrlLocation = "default";
 export const defaultExtensionRegistryUrl = "https://registry.npmjs.org";
 
-type PreferencesModelType<field extends keyof PreferenceDescriptors> = PreferenceDescriptors[field] extends PreferenceDescription<infer T, any> ? T : never;
-type UserStoreModelType<field extends keyof PreferenceDescriptors> = PreferenceDescriptors[field] extends PreferenceDescription<any, infer T> ? T : never;
+type PreferencesModelType<field extends keyof PreferenceDescriptors> = PreferenceDescriptors[field] extends PreferenceDescription<infer T, unknown> ? T : never;
+type UserStoreModelType<field extends keyof PreferenceDescriptors> = PreferenceDescriptors[field] extends PreferenceDescription<unknown, infer T> ? T : never;
 
 export type UserStoreFlatModel = {
   [field in keyof PreferenceDescriptors]: UserStoreModelType<field>;

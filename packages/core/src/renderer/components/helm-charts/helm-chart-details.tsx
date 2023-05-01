@@ -56,14 +56,13 @@ class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Depe
     return this.props.chart;
   }
 
-  install() {
+  install = () => {
     const chart = this.props.versionSelection.value.get();
 
     assert(chart);
-
     this.props.createInstallChartTab(chart);
     this.props.hideDetails();
-  }
+  };
 
   renderIntroduction(selectedChart: HelmChart) {
     const testId = selectedChart.getFullName("-");

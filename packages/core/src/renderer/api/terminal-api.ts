@@ -67,7 +67,7 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
       this.emitStatus("Connecting ...");
     }
 
-    const authTokenArray = await ipcRenderer.invoke("cluster:shell-api", this.dependencies.hostedClusterId, this.query.id);
+    const authTokenArray = (await ipcRenderer.invoke("cluster:shell-api", this.dependencies.hostedClusterId, this.query.id)) as unknown;
 
     if (!(authTokenArray instanceof Uint8Array)) {
       throw new TypeError("ShellApi token is not a Uint8Array");

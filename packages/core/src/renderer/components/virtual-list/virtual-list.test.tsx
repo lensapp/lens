@@ -3,17 +3,19 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import { array } from "@k8slens/utilities";
 import type { RenderResult } from "@testing-library/react";
 import { render } from "@testing-library/react";
 import React from "react";
 import { VirtualList } from "./virtual-list";
 
-const generateListOfIdObjects = (count: number) => [...new Array(count)].map((v, index) => ({
+const generateListOfIdObjects = (count: number) => array.filledWith(count, (index) => ({
   getId() {
     return `some-id-${index}`;
   },
 }));
-const generateListOfRowHeights = (count: number, size: number) => [...new Array(count)].map(() => size);
+
+const generateListOfRowHeights = (count: number, size: number) => array.filled(count, size);
 const renderList = (selectedId?: string) => (
   <VirtualList
     items={generateListOfIdObjects(100)}

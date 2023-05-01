@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import React from "react";
-import "@testing-library/jest-dom/extend-expect";
 import type { SelectOption } from "./select";
 import { Select } from "./select";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
@@ -27,7 +26,7 @@ describe("<Select />", () => {
     di.override(rendererExtensionsInjectable, () => computed(() => [] as LensRendererExtension[]));
   });
 
-  it("should render the select", async () => {
+  it("should render the select", () => {
     const options = [
       {
         label: "Option one label",
@@ -52,7 +51,7 @@ describe("<Select />", () => {
     expect(container).toBeInstanceOf(HTMLElement);
   });
 
-  it("should show selected option", async () => {
+  it("should show selected option", () => {
     const options = [
       {
         label: "Option one label",
@@ -78,7 +77,7 @@ describe("<Select />", () => {
     expect(selectedValueContainer?.textContent).toBe(options[0].label);
   });
 
-  it("should reflect to change value", async () => {
+  it("should reflect to change value", () => {
     const options = [
       {
         label: "Option one label",
@@ -114,7 +113,7 @@ describe("<Select />", () => {
     expect(container.querySelector(".Select__single-value")?.textContent).toBe(options[1].label);
   });
 
-  it("should unselect value if null is passed as a value", async () => {
+  it("should unselect value if null is passed as a value", () => {
     const options = [
       {
         label: "Option one label",
@@ -150,7 +149,7 @@ describe("<Select />", () => {
     expect(container.querySelector(".Select__single-value")).not.toBeInTheDocument();
   });
 
-  it("should unselect value if undefined is passed as a value", async () => {
+  it("should unselect value if undefined is passed as a value", () => {
     const options = [
       {
         label: "Option one label",

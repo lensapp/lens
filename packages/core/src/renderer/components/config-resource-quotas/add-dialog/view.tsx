@@ -28,8 +28,7 @@ import resourceQuotaApiInjectable from "../../../../common/k8s-api/endpoints/res
 import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
 
-export interface AddQuotaDialogProps extends DialogProps {
-}
+export type AddQuotaDialogProps = DialogProps;
 
 interface Dependencies {
   resourceQuotaApi: ResourceQuotaApi;

@@ -6,6 +6,7 @@ import type { AppPaths } from "../../common/app-paths/app-path-injection-token";
 import appPathsStateInjectable from "../../common/app-paths/app-paths-state.injectable";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { KubernetesCluster } from "../../common/catalog-entities";
+import type { ClusterMetadata } from "../../common/cluster-types";
 import { ClusterMetadataKey } from "../../common/cluster-types";
 import { Cluster } from "../../common/cluster/cluster";
 import { replaceObservableObject } from "../../common/utils/replace-observable-object";
@@ -17,7 +18,7 @@ describe("update-entity-metadata", () => {
   let cluster: Cluster;
   let entity: KubernetesCluster;
   let updateEntityMetadata: UpdateEntityMetadata;
-  let detectedMetadata: Record<ClusterMetadataKey, any>;
+  let detectedMetadata: ClusterMetadata;
 
   beforeEach(() => {
     const di = getDiForUnitTesting();
@@ -30,7 +31,7 @@ describe("update-entity-metadata", () => {
 
     updateEntityMetadata = di.inject(updateEntityMetadataInjectable);
 
-    cluster = new Cluster({
+    cluster = Cluster.createForTestingOnly({
       id: "some-id",
       contextName: "some-context",
       kubeConfigPath: "minikube-config.yml",

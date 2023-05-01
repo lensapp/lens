@@ -3,9 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { array } from "@k8slens/utilities";
 import autoBind from "auto-bind";
-import Joi from "joi";
+import { z } from "zod";
 
 export interface RawHelmChart {
   apiVersion: string;
@@ -31,132 +30,51 @@ export interface RawHelmChart {
   annotations?: Record<string, string>;
 }
 
-const helmChartMaintainerValidator = Joi.object<HelmChartMaintainer>({
-  name: Joi
-    .string()
-    .required(),
-  email: Joi
-    .string()
-    .required(),
-  url: Joi
-    .string()
-    .optional(),
+const helmChartMaintainerSchema = z.object({
+  name: z.string(),
+  email: z.string(),
+  url: z.string().optional(),
 });
 
-const helmChartDependencyValidator = Joi.object<HelmChartDependency, true, RawHelmChartDependency>({
-  name: Joi
-    .string()
-    .required(),
-  repository: Joi
-    .string()
-    .required(),
-  condition: Joi
-    .string()
-    .optional(),
-  version: Joi
-    .string()
-    .required(),
-  tags: Joi
-    .array()
-    .items(Joi.string())
-    .default(() => ([])),
+const helmChartDependencySchema = z.object({
+  name: z.string(),
+  repository: z.string(),
+  condition: z.string().optional(),
+  version: z.string(),
+  tags: z.array(z.string()).default(() => []),
 });
 
-const helmChartValidator = Joi.object<HelmChart, true, RawHelmChart>({
-  apiVersion: Joi
-    .string()
-    .required(),
-  name: Joi
-    .string()
-    .required(),
-  version: Joi
-    .string()
-    .required(),
-  repo: Joi
-    .string()
-    .required(),
-  created: Joi
-    .string()
-    .required(),
-  digest: Joi
-    .string()
+const helmChartValidator = z.object({
+  apiVersion: z.string(),
+  name: z.string(),
+  version: z.string(),
+  repo: z.string(),
+  created: z.string(),
+  digest: z.string().optional(),
+  kubeVersion: z.string()
     .optional(),
-  kubeVersion: Joi
-    .string()
-    .optional(),
-  description: Joi
-    .string()
+  description: z.string()
     .default(""),
-  home: Joi
-    .string()
+  home: z.string()
     .optional(),
-  engine: Joi
-    .string()
+  engine: z.string()
     .optional(),
-  icon: Joi
-    .string()
+  icon: z.string()
     .optional(),
-  appVersion: Joi
-    .string()
+  appVersion: z.string()
     .optional(),
-  tillerVersion: Joi
-    .string()
+  tillerVersion: z.string()
     .optional(),
-  type: Joi
-    .string()
+  type: z.string()
     .optional(),
-  deprecated: Joi
-    .boolean()
+  deprecated: z.boolean()
     .default(false),
-  keywords: Joi
-    .array()
-    .items(Joi.string())
-    .options({
-      stripUnknown: {
-        arrays: true,
-      },
-    })
-    .default(() => ([])),
-  sources: Joi
-    .array()
-    .items(Joi.string())
-    .options({
-      stripUnknown: {
-        arrays: true,
-      },
-    })
-    .default(() => ([])),
-  urls: Joi
-    .array()
-    .items(Joi.string())
-    .options({
-      stripUnknown: {
-        arrays: true,
-      },
-    })
-    .default(() => ([])),
-  maintainers: Joi
-    .array()
-    .items(helmChartMaintainerValidator)
-    .options({
-      stripUnknown: {
-        arrays: true,
-      },
-    })
-    .default(() => ([])),
-  dependencies: Joi
-    .array()
-    .items(helmChartDependencyValidator)
-    .options({
-      stripUnknown: {
-        arrays: true,
-      },
-    })
-    .default(() => ([])),
-  annotations: Joi
-    .object({})
-    .pattern(/.*/, Joi.string())
-    .default(() => ({})),
+  keywords: z.array(z.string()).default(() => ([])),
+  sources: z.array(z.string()).default(() => ([])),
+  urls: z.array(z.string()).default(() => ([])),
+  maintainers: z.array(helmChartMaintainerSchema).default(() => ([])),
+  dependencies: z.array(helmChartDependencySchema).default(() => ([])),
+  annotations: z.record(z.string()).default(() => ({})),
 });
 
 export interface HelmChartCreateOpts {
@@ -256,31 +174,17 @@ export class HelmChart implements HelmChartData {
   static create(data: RawHelmChart): HelmChart;
   static create(data: RawHelmChart, opts?: HelmChartCreateOpts): HelmChart | undefined;
   static create(data: RawHelmChart, { onError = "throw" }: HelmChartCreateOpts = {}): HelmChart | undefined {
-    const result = helmChartValidator.validate(data, {
-      abortEarly: false,
-    });
+    const result = helmChartValidator.safeParse(data);
 
-    if (!result.error) {
-      return new HelmChart(result.value);
+    if (result.success) {
+      return new HelmChart(result.data);
     }
-
-    const [actualErrors, unknownDetails] = array.bifurcate(result.error.details, ({ type }) => type === "object.unknown");
-
-    if (unknownDetails.length > 0) {
-      console.warn("HelmChart data has unexpected fields", { original: data, unknownFields: unknownDetails.flatMap(d => d.path) });
-    }
-
-    if (actualErrors.length === 0) {
-      return new HelmChart(result.value as unknown as HelmChartData);
-    }
-
-    const validationError = new Joi.ValidationError(actualErrors.map(er => er.message).join(". "), actualErrors, result.error._original);
 
     if (onError === "throw") {
-      throw validationError;
+      throw result.error;
     }
 
-    console.warn("[HELM-CHART]: failed to validate data", data, validationError);
+    console.warn("[HELM-CHART]: failed to validate data", data, result.error);
 
     return undefined;
   }
@@ -289,16 +193,20 @@ export class HelmChart implements HelmChartData {
     const digestPart = this.digest
       ? `+${this.digest}`
       : "";
+    const version = this.getAppVersion();
+    const versionId = version
+      ? `@${version}`
+      : "";
 
-    return `${this.repo}:${this.apiVersion}/${this.name}@${this.getAppVersion()}${digestPart}`;
+    return `${this.repo}:${this.apiVersion}/${this.name}${versionId}${digestPart}`;
   }
 
   getName(): string {
     return this.name;
   }
 
-  getFullName(seperator = "/"): string {
-    return [this.getRepository(), this.getName()].join(seperator);
+  getFullName(separator = "/"): string {
+    return [this.getRepository(), this.getName()].join(separator);
   }
 
   getDescription(): string {

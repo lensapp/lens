@@ -36,10 +36,10 @@ const memoryLikeOptions: ChartOptions = {
           return "";
         }
 
-        const { label, data } = datasets[datasetIndex];
+        const { label = "", data } = datasets[datasetIndex];
 
         if (!data) {
-          return label ?? "";
+          return label;
         }
 
         const value = data[index] as { y: number };
@@ -78,10 +78,10 @@ export const metricTabOptions: Record<MetricsTab, ChartOptions> = {
             return "";
           }
 
-          const { label, data } = datasets[datasetIndex];
+          const { label = "", data } = datasets[datasetIndex];
 
           if (!data) {
-            return label ?? "";
+            return label;
           }
 
           const value = data[index] as ChartPoint;
@@ -106,15 +106,15 @@ export const metricTabOptions: Record<MetricsTab, ChartOptions> = {
             return "";
           }
 
-          const { label, data } = datasets[datasetIndex];
+          const { label = "", data } = datasets[datasetIndex];
 
           if (!data) {
-            return label ?? "";
+            return label;
           }
 
           const value = data[index] as ChartPoint;
 
-          return `${label}: ${value.y}`;
+          return `${label}: ${String(value.y)}`;
         },
       },
     },
@@ -134,10 +134,10 @@ export const metricTabOptions: Record<MetricsTab, ChartOptions> = {
             return "";
           }
 
-          const { label, data } = datasets[datasetIndex];
+          const { label = "", data } = datasets[datasetIndex];
 
           if (!data) {
-            return label ?? "";
+            return label;
           }
 
           const value = data[index] as { y: string };

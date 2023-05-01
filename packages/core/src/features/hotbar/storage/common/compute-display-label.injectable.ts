@@ -13,7 +13,7 @@ const computeHotbarDisplayLabelInjectable = getInjectable({
   instantiate: (di): ComputeHotbarDisplayLabel => {
     const computeDisplayIndex = di.inject(computeDisplayIndexInjectable);
 
-    return (hotbar) => `${computeDisplayIndex(hotbar.id)}: ${hotbar.name}`;
+    return (hotbar) => `${computeDisplayIndex(hotbar.id)}: ${hotbar.name.get()}`;
   },
 });
 

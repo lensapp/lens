@@ -26,8 +26,8 @@ const activeHelmRepositoriesInjectable = getInjectable({
           getActiveHelmRepositoriesChannel,
         );
 
-        if (result.callWasSuccessful) {
-          return result.response;
+        if (result.isOk) {
+          return result.value;
         } else {
           showErrorNotification(result.error);
 

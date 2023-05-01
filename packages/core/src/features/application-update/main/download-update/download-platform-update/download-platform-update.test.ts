@@ -84,10 +84,12 @@ describe("download-platform-update", () => {
       beforeEach(() => {
         onDownloadProgressMock.mockClear();
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const [, callback] = electronUpdaterOnMock.mock.calls.find(
           ([event]) => event === "download-progress",
         );
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         callback({
           percent: 42,
           total: 0,
@@ -126,7 +128,7 @@ describe("download-platform-update", () => {
         });
 
         it("when starting download again, resets progress of download", () => {
-          downloadPlatformUpdate(onDownloadProgressMock);
+          void downloadPlatformUpdate(onDownloadProgressMock);
 
           expect(onDownloadProgressMock).toHaveBeenCalledWith({ percentage: 0 });
         });
@@ -138,7 +140,7 @@ describe("download-platform-update", () => {
         beforeEach(() => {
           errorStub = new Error("Some error");
 
-          downloadUpdateMock.reject(errorStub);
+          void downloadUpdateMock.reject(errorStub);
         });
 
         it("logs error", () => {

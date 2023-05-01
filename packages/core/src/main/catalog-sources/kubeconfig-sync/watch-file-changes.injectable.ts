@@ -55,7 +55,7 @@ const watchKubeconfigFileChangesInjectable = getInjectable({
 
       let watcher: Watcher<true>;
 
-      (async () => {
+      void (async () => {
         try {
           const stats = await stat(filePath);
           const isFolderSync = stats.isDirectory();
@@ -118,14 +118,14 @@ const watchKubeconfigFileChangesInjectable = getInjectable({
               cleanupFns.delete(childFilePath);
               rootSource.delete(childFilePath);
             })
-            .on("error", error => logger.error(`watching file/folder failed: ${error}`, { filePath }));
+            .on("error", error => logger.error(`watching file/folder failed: ${String(error)}`, { filePath }));
         } catch (error) {
-          logger.warn(`failed to start watching changes: ${error}`);
+          logger.warn(`failed to start watching changes: ${String(error)}`);
         }
       })();
 
-      return [derivedSource, () => {
-        watcher?.close();
+      return [derivedSource, async () => {
+        await watcher?.close();
       }];
     };
   },

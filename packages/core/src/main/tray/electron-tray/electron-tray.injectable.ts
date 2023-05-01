@@ -18,7 +18,7 @@ export interface MinimalTrayMenuItem {
   parentId: string | null;
   enabled: boolean;
   label?: string;
-  click?: () => Promise<void> | void;
+  click?: () => void;
   tooltip?: string;
   separator?: boolean;
 }
@@ -52,7 +52,7 @@ const electronTrayInjectable = getInjectable({
         if (isWindows) {
           tray.on("click", () => {
             showApplicationWindow()
-              .catch(error => logger.error(`${TRAY_LOG_PREFIX}: Failed to open lens`, { error }));
+              .catch((error: unknown) => logger.error(`${TRAY_LOG_PREFIX}: Failed to open lens`, { error }));
           });
         }
       },

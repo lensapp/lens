@@ -17,9 +17,6 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import { loggerInjectionToken } from "@k8slens/logger";
 import type { StrictReactNode } from "@k8slens/utilities";
 
-export interface PodSecurityPolicyDetailsProps extends KubeObjectDetailsProps<PodSecurityPolicy> {
-}
-
 interface RuleGroup {
   rule: string;
   ranges?: {
@@ -33,7 +30,7 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedPodSecurityPolicyDetails extends React.Component<PodSecurityPolicyDetailsProps & Dependencies> {
+class NonInjectedPodSecurityPolicyDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
   renderRuleGroup(title: StrictReactNode, group: RuleGroup | undefined) {
     if (!group) return null;
     const { rule, ranges } = group;
@@ -233,7 +230,7 @@ class NonInjectedPodSecurityPolicyDetails extends React.Component<PodSecurityPol
   }
 }
 
-export const PodSecurityPolicyDetails = withInjectables<Dependencies, PodSecurityPolicyDetailsProps>(NonInjectedPodSecurityPolicyDetails, {
+export const PodSecurityPolicyDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedPodSecurityPolicyDetails, {
   getProps: (di, props) => ({
     ...props,
     logger: di.inject(loggerInjectionToken),

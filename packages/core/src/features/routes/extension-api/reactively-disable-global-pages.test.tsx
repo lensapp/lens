@@ -38,7 +38,7 @@ describe("reactively disable global pages", () => {
 
     rendered = await builder.render();
 
-    builder.extensions.enable(testExtension);
+    await builder.extensions.enable(testExtension);
 
     rendererTestExtension = builder.extensions.get("test-extension-id").applicationWindows.only;
   });

@@ -4,6 +4,7 @@
  */
 
 import type { Runnable } from "@k8slens/run-many";
+import { isArray } from "@k8slens/utilities";
 import type { DiContainerForInjection, Injectable, InjectionToken } from "@ogre-tools/injectable";
 import { getInjectionToken, getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
@@ -67,7 +68,7 @@ export const getInjectablesForInitializable = <T>({
       runAfter: rest.runAfter,
     }),
     injectionToken: (() => {
-      if (rest.runAfter && !Array.isArray(rest.runAfter)) {
+      if (rest.runAfter && !isArray(rest.runAfter)) {
         return rest.runAfter.injectionToken;
       }
 

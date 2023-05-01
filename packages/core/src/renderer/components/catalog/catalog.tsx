@@ -98,7 +98,7 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
     return catalogPreviousActiveTabStorage.get() || browseCatalogTab;
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const {
       catalogEntityStore,
       catalogPreviousActiveTabStorage,
@@ -109,30 +109,32 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
 
     disposeOnUnmount(this, [
       catalogEntityStore.watch(),
-      reaction(() => this.routeActiveTab, async (routeTab) => {
+      reaction(() => this.routeActiveTab, (routeTab) => {
         catalogPreviousActiveTabStorage.set(this.routeActiveTab);
 
-        try {
-          if (routeTab !== browseCatalogTab) {
-            // we need to wait because extensions might take a while to load
-            await when(() => Boolean(catalogCategoryRegistry.filteredItems.find(i => i.getId() === routeTab)), { timeout: 5_000 });
+        void (async () => {
+          try {
+            if (routeTab !== browseCatalogTab) {
+              // we need to wait because extensions might take a while to load
+              await when(() => Boolean(catalogCategoryRegistry.filteredItems.find(i => i.getId() === routeTab)), { timeout: 5_000 });
+            }
+
+            const item = catalogCategoryRegistry.filteredItems.find(i => i.getId() === routeTab);
+
+            runInAction(() => {
+              this.activeTab = routeTab;
+              catalogEntityStore.activeCategory.set(item);
+            });
+          } catch (error) {
+            logger.warn("Failed to find route tab", error);
+            showErrorNotification((
+              <p>
+                {"Unknown category: "}
+                {routeTab}
+              </p>
+            ));
           }
-
-          const item = catalogCategoryRegistry.filteredItems.find(i => i.getId() === routeTab);
-
-          runInAction(() => {
-            this.activeTab = routeTab;
-            catalogEntityStore.activeCategory.set(item);
-          });
-        } catch (error) {
-          logger.warn("Failed to find route tab", error);
-          showErrorNotification((
-            <p>
-              {"Unknown category: "}
-              {routeTab}
-            </p>
-          ));
-        }
+        })();
       }, { fireImmediately: true }),
       // If active category is filtered out, automatically switch to the first category
       reaction(() => [...catalogCategoryRegistry.filteredItems], (categories) => {

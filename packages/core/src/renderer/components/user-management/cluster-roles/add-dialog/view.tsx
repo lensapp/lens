@@ -23,8 +23,7 @@ import addClusterRoleDialogStateInjectable from "./state.injectable";
 import type { ShowCheckedErrorNotification } from "../../../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../../../notifications/show-checked-error.injectable";
 
-export interface AddClusterRoleDialogProps extends Partial<DialogProps> {
-}
+export type AddClusterRoleDialogProps = Partial<DialogProps>;
 
 interface Dependencies {
   state: AddClusterRoleDialogState;
@@ -57,6 +56,9 @@ class NonInjectedAddClusterRoleDialog extends React.Component<AddClusterRoleDial
 
   render() {
     const { closeAddClusterRoleDialog, clusterRoleStore, showDetails, state, ...dialogProps } = this.props;
+
+    void clusterRoleStore;
+    void showDetails;
 
     return (
       <Dialog

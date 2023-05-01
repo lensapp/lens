@@ -9,14 +9,14 @@ import type { Discover } from "@k8slens/react-testing-library-discovery";
 import { discoverFor } from "@k8slens/react-testing-library-discovery";
 
 describe("show-about-using-tray", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let rendered: RenderResult;
   let discover: Discover;
 
   beforeEach(async () => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
-    rendered = await applicationBuilder.render();
+    rendered = await builder.render();
     discover = discoverFor(() => rendered);
   });
 
@@ -34,8 +34,8 @@ describe("show-about-using-tray", () => {
   });
 
   describe("when navigating using tray", () => {
-    beforeEach(async () => {
-      await applicationBuilder.tray.click("open-preferences");
+    beforeEach(() => {
+      builder.tray.click("open-preferences");
     });
 
     it("renders", () => {

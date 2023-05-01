@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { KubeObjectStatusLevel } from "../../../common/k8s-api/kube-object-status";
-import { KubeObject } from "@k8slens/kube-object";
 import React from "react";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
@@ -20,6 +19,7 @@ import { observer } from "mobx-react";
 import { kubeObjectStatusTextInjectionToken } from "../../../renderer/components/kube-object-status-icon/kube-object-status-text-injection-token";
 import { KubeObjectStatusIcon } from "../../../renderer/components/kube-object-status-icon";
 import { testUsingFakeTime } from "../../../test-utils/use-fake-time";
+import { createKubeObject } from "@k8slens/kube-object";
 
 describe("show status for a kube object", () => {
   let builder: ApplicationBuilder;
@@ -27,7 +27,7 @@ describe("show status for a kube object", () => {
   let warningStatusIsShown: boolean;
   let criticalStatusIsShown: boolean;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     testUsingFakeTime("2015-10-21T07:28:00Z");
 
     builder = getApplicationBuilder();
@@ -93,7 +93,7 @@ describe("show status for a kube object", () => {
       }),
     });
 
-    builder.beforeWindowStart(({ windowDi }) => {
+    await builder.beforeWindowStart(({ windowDi }) => {
       runInAction(() => {
         windowDi.register(
           testRouteInjectable,
@@ -107,7 +107,7 @@ describe("show status for a kube object", () => {
       });
     });
 
-    builder.setEnvironmentToClusterFrame();
+    await builder.setEnvironmentToClusterFrame();
   });
 
   describe("given application starts and in test page", () => {
@@ -311,7 +311,7 @@ const someAtomInjectable = getInjectable({
 });
 
 const getKubeObjectStub = (kind: string, apiVersion: string) =>
-  KubeObject.create({
+  createKubeObject({
     apiVersion,
     kind,
     metadata: {

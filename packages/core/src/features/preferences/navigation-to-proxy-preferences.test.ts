@@ -9,10 +9,10 @@ import type { Discover } from "@k8slens/react-testing-library-discovery";
 import { discoverFor } from "@k8slens/react-testing-library-discovery";
 
 describe("preferences - navigation to proxy preferences", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
 
   beforeEach(() => {
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
   });
 
   describe("given in preferences, when rendered", () => {
@@ -20,11 +20,11 @@ describe("preferences - navigation to proxy preferences", () => {
     let discover: Discover;
 
     beforeEach(async () => {
-      applicationBuilder.beforeWindowStart(() => {
-        applicationBuilder.preferences.navigate();
+      await builder.beforeWindowStart(() => {
+        builder.preferences.navigate();
       });
 
-      rendered = await applicationBuilder.render();
+      rendered = await builder.render();
       discover = discoverFor(() => rendered);
     });
 
@@ -43,7 +43,7 @@ describe("preferences - navigation to proxy preferences", () => {
 
     describe("when navigating to proxy preferences using navigation", () => {
       beforeEach(() => {
-        applicationBuilder.preferences.navigation.click("proxy");
+        builder.preferences.navigation.click("proxy");
       });
 
       it("renders", () => {

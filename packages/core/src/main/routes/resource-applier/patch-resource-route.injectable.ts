@@ -4,46 +4,30 @@
  */
 import { getRouteInjectable } from "../../router/router.injectable";
 import { apiPrefix } from "../../../common/vars";
-import { payloadValidatedClusterRoute } from "../../router/route";
-import Joi from "joi";
-import type { Patch } from "rfc6902";
+import { payloadWithSchemaClusterRoute } from "../../router/route";
 import resourceApplierInjectable from "../../resource-applier/create-resource-applier.injectable";
+import { z } from "zod";
+import type { Patch } from "rfc6902";
 
-interface PatchResourcePayload {
-  name: string;
-  kind: string;
-  patch: Patch;
-  ns?: string;
-}
-
-const patchResourcePayloadValidator = Joi.object<PatchResourcePayload, true, PatchResourcePayload>({
-  name: Joi
-    .string()
-    .required(),
-  kind: Joi
-    .string()
-    .required(),
-  ns: Joi
-    .string()
-    .optional(),
-  patch: Joi
-    .array()
-    .allow(
-      Joi.object({
-        op: Joi
-          .string()
-          .required(),
-      }).unknown(true),
-    ),
+const patchResourcePayloadSchema = z.object({
+  name: z.string(),
+  kind: z.string(),
+  ns: z.string().optional(),
+  patch: z.array(z.object({
+    op: z.string(),
+    path: z.string(),
+    value: z.any().optional(),
+    from: z.string().optional(),
+  })),
 });
 
 const patchResourceRouteInjectable = getRouteInjectable({
   id: "patch-resource-route",
 
-  instantiate: (di) => payloadValidatedClusterRoute({
+  instantiate: (di) => payloadWithSchemaClusterRoute({
     method: "patch",
     path: `${apiPrefix}/stack`,
-    payloadValidator: patchResourcePayloadValidator,
+    payloadSchema: patchResourcePayloadSchema,
   })(async ({ cluster, payload }) => {
     const resourceApplier = di.inject(resourceApplierInjectable, cluster);
 
@@ -51,7 +35,7 @@ const patchResourceRouteInjectable = getRouteInjectable({
       response: await resourceApplier.patch(
         payload.name,
         payload.kind,
-        payload.patch,
+        payload.patch as Patch,
         payload.ns,
       ),
     });

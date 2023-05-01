@@ -11,7 +11,7 @@ import { cssNames } from "@k8slens/utilities";
 import { Button } from "@k8slens/button";
 import { Icon } from "@k8slens/icon";
 
-export interface AddRemoveButtonsProps extends React.HTMLAttributes<any> {
+export interface AddRemoveButtonsProps extends React.HTMLAttributes<Element> {
   onAdd?: () => void;
   onRemove?: () => void;
   addTooltip?: StrictReactNode;

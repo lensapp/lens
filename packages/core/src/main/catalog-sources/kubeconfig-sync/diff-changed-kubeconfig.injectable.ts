@@ -66,7 +66,7 @@ const diffChangedKubeconfigInjectable = getInjectable({
           try {
             fileString += decoder.decode(chunk, { stream: true });
           } catch (error) {
-            logger.warn(`skipping ${filePath}: ${error}`);
+            logger.warn(`skipping ${filePath}: ${String(error)}`);
             source.clear();
             cleanup();
           }
@@ -74,7 +74,7 @@ const diffChangedKubeconfigInjectable = getInjectable({
         .on("close", () => cleanup())
         .on("error", error => {
           cleanup();
-          logger.warn(`failed to read file: ${error}`, { filePath });
+          logger.warn(`failed to read file: ${String(error)}`, { filePath });
         })
         .on("end", () => {
           if (!closed) {

@@ -82,6 +82,10 @@ class NonInjectedDockTab extends React.Component<DockTabProps & Dependencies> {
       return;
     }
 
+    void dockStore;
+    void active;
+    void isMac;
+
     const { title, pinned, id } = tabProps.value;
     const close = prevDefault(() => this.close(id));
 

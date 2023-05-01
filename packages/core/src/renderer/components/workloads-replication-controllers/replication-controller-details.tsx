@@ -11,15 +11,12 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import type { ReplicationController } from "@k8slens/kube-object";
 import replicationControllerApiInjectable from "../../../common/k8s-api/endpoints/replication-controller.api.injectable";
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
 import type { ShowNotification } from "../notifications";
 import { Slider } from "../slider";
 import type { ReplicationControllerApi } from "@k8slens/kube-api";
-
-export interface ReplicationControllerDetailsProps extends KubeObjectDetailsProps<ReplicationController> {
-}
+import { ReplicationController } from "@k8slens/kube-object";
 
 interface Dependencies {
   api: ReplicationControllerApi;
@@ -27,18 +24,18 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedReplicationControllerDetails<Props extends ReplicationControllerDetailsProps & Dependencies> extends React.Component<Props> {
-  @observable sliderReplicasValue = this.props.object.getDesiredReplicas();
+class NonInjectedReplicationControllerDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
+  @observable sliderReplicasValue = (this.props.object as ReplicationController).getDesiredReplicas();
   @observable sliderReplicasDisabled = false;
 
-  constructor(props: Props) {
+  constructor(props: KubeObjectDetailsProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
 
   @action
-  async scale(replicas: number) {
-    const { object: resource, api, showNotificationError } = this.props;
+  async scale(resource: ReplicationController, replicas: number) {
+    const { api, showNotificationError } = this.props;
 
     try {
       await api.scale({
@@ -51,15 +48,22 @@ class NonInjectedReplicationControllerDetails<Props extends ReplicationControlle
     }
   }
 
-  @action
-  async onScaleSliderChangeCommitted(evt: React.FormEvent<any>, replicas: number) {
+  async onScaleSliderChangeCommitted(resource: ReplicationController, replicas: number) {
     this.sliderReplicasDisabled = true;
-    await this.scale(replicas);
+    await this.scale(resource, replicas);
     this.sliderReplicasDisabled = false;
   }
 
   render() {
     const { object: resource } = this.props;
+
+    if (!resource) {
+      return null;
+    }
+
+    if (!(resource instanceof ReplicationController)) {
+      return null;
+    }
 
     return (
       <div className={styles.ReplicationControllerDetails}>
@@ -77,7 +81,7 @@ class NonInjectedReplicationControllerDetails<Props extends ReplicationControlle
               disabled={this.sliderReplicasDisabled}
               value={this.sliderReplicasValue}
               onChange={(evt, value) => this.sliderReplicasValue = value}
-              onChangeCommitted={(event, value) => this.onScaleSliderChangeCommitted(event, value as number)}
+              onChangeCommitted={(event, value) => void this.onScaleSliderChangeCommitted(resource, value as number)}
             />
           </div>
         </DrawerItem>
@@ -110,7 +114,7 @@ class NonInjectedReplicationControllerDetails<Props extends ReplicationControlle
   }
 }
 
-export const ReplicationControllerDetails = withInjectables<Dependencies, ReplicationControllerDetailsProps>(NonInjectedReplicationControllerDetails, {
+export const ReplicationControllerDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedReplicationControllerDetails, {
   getProps: (di, props) => ({
     ...props,
     api: di.inject(replicationControllerApiInjectable),

@@ -6,9 +6,9 @@
 import type { AsyncFnMock } from "@async-fn/jest";
 
 type GetMockedType<T> =
-  T extends (...args: any[]) => Promise<any>
+  T extends (...args: unknown[]) => Promise<unknown>
     ? AsyncFnMock<T>
-    : T extends (...args: any[]) => any
+    : T extends (...args: unknown[]) => unknown
       ? jest.MockedFunction<T>
       : T;
 

@@ -21,10 +21,8 @@ const openSupportItemInjectable = getInjectable({
       id: "open-support",
       orderNumber: 30,
       label: "Support",
-
-      // TODO: Convert to async/await
       onClick: () => {
-        openLinkInBrowser(supportUrl).catch((error) => {
+        openLinkInBrowser(supportUrl).catch((error: unknown) => {
           logger.error("[MENU]: failed to open browser", { error });
         });
       },

@@ -10,10 +10,10 @@ const showDockForFirstOpenedWindowInjectable = getInjectable({
   id: "show-dock-for-first-opened-window",
 
   instantiate: (di) => ({
-    run: () => {
+    run: async () => {
       const app = di.inject(electronAppInjectable);
 
-      app.dock?.show();
+      await app.dock?.show();
     },
   }),
 

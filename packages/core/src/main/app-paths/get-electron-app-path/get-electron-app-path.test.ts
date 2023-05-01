@@ -15,7 +15,6 @@ describe("get-electron-app-path", () => {
 
     const appStub = {
       name: "some-app-name",
-
       getPath: (name: string) => {
         if (name !== "some-existing-name") {
           throw new Error("irrelevant");
@@ -23,10 +22,8 @@ describe("get-electron-app-path", () => {
 
         return "some-existing-app-path";
       },
-
-      // eslint-disable-next-line unused-imports/no-unused-vars-ts
-      setPath: (_, __) => undefined,
-    } as App;
+      setPath: () => undefined,
+    } as Partial<App> as App;
 
     di.override(electronAppInjectable, () => appStub);
 

@@ -17,17 +17,17 @@ const stopCurrentPortForwardRouteInjectable = getRouteInjectable({
     return clusterRoute({
       method: "delete",
       path: `${apiPrefix}/pods/port-forward/{namespace}/{resourceType}/{resourceName}`,
-    })(async ({ params, query, cluster }) => {
+    })(({ params, query, cluster }) => {
       const { namespace, resourceType, resourceName } = params;
       const port = Number(query.get("port"));
       const forwardPort = Number(query.get("forwardPort"));
-      const portForward = PortForward.getPortforward({
+      const portForward = PortForward.getPortForward({
         clusterId: cluster.id, kind: resourceType, name: resourceName,
         namespace, port, forwardPort,
       });
 
       try {
-        await portForward?.stop();
+        portForward?.stop();
 
         return { response: { status: true }};
       } catch (error) {

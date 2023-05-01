@@ -3,9 +3,9 @@ export interface EventEmitterOptions {
   prepend?: boolean; // put listener to the beginning
 }
 
-export type EventEmitterCallback<D extends any[]> = (...data: D) => void | boolean;
+export type EventEmitterCallback<D extends unknown[]> = (...data: D) => void | boolean;
 
-export class EventEmitter<D extends any[]> {
+export class EventEmitter<D extends unknown[]> {
   protected listeners: [EventEmitterCallback<D>, EventEmitterOptions][] = [];
 
   addListener(callback: EventEmitterCallback<D>, options: EventEmitterOptions = {}) {

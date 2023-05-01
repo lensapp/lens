@@ -26,7 +26,7 @@ export class WebLink extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus,
   public readonly apiVersion = WebLink.apiVersion;
   public readonly kind = WebLink.kind;
 
-  async onRun() {
+  onRun() {
     window.open(this.spec.url, "_blank");
   }
 

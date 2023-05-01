@@ -12,6 +12,9 @@ import type { IComputedValue } from "mobx";
 import { getApplicationBuilder } from "../renderer/components/test-utils/get-application-builder";
 import type { FakeExtensionOptions } from "../renderer/components/test-utils/get-extension-fake";
 import type { LensRendererExtension } from "../extensions/lens-renderer-extension";
+import { getParamsRegistration, getPageRegistration } from "../extensions/lens-renderer-extension";
+import { getPageParamDeclaration } from "../renderer/navigation/page-param";
+import type { PageRegistration } from "../renderer/routes/page-registration";
 
 describe("navigate to extension page", () => {
   let rendered: RenderResult;
@@ -22,7 +25,7 @@ describe("navigate to extension page", () => {
   beforeEach(async () => {
     const builder = getApplicationBuilder();
 
-    builder.extensions.enable(extensionWithPagesHavingParameters);
+    await builder.extensions.enable(extensionWithPagesHavingParameters);
 
     rendered = await builder.render();
 
@@ -123,60 +126,61 @@ describe("navigate to extension page", () => {
   });
 });
 
+const globalPageWithParams = getPageRegistration({
+  components: {
+    Page: ({ params }) => (
+      <div>
+        <ul>
+          <li>{params.someStringParameter.get()}</li>
+          <li>{params.someNumberParameter.get()}</li>
+          <li>{params.someArrayParameter.get().join(",")}</li>
+        </ul>
+
+        <button
+          type="button"
+          data-testid="button-to-change-page-parameters"
+          onClick={() => {
+            params.someStringParameter.set("some-changed-string-value");
+            params.someNumberParameter.set(84);
+            params.someArrayParameter.set([
+              "some-changed-array-value",
+              "some-other-changed-array-value",
+            ]);
+          }}
+        >
+          Some button
+        </button>
+      </div>
+    ),
+  },
+
+  params: getParamsRegistration({
+    someStringParameter: "some-string-value",
+    someNumberParameter: getPageParamDeclaration<number>({
+      defaultValue: 42,
+      stringify: (value) => String(value),
+      parse: (value) => (value ? Number(value) : undefined),
+    }),
+    someArrayParameter: getPageParamDeclaration<string[]>({
+      defaultValue: ["some-array-value", "some-other-array-value"],
+      stringify: (value) => value.join(","),
+      parse: (value: string[]) => (!isEmpty(value) ? value : undefined),
+    }),
+  }),
+});
 const extensionWithPagesHavingParameters: FakeExtensionOptions = {
   id: "some-extension-id",
   name: "some-extension-name",
 
   rendererOptions: {
     globalPages: [
-      {
-        components: {
-          Page: ({ params }) => (
-            <div>
-              <ul>
-                <li>{params.someStringParameter.get()}</li>
-                <li>{params.someNumberParameter.get()}</li>
-                <li>{params.someArrayParameter.get().join(",")}</li>
-              </ul>
-
-              <button
-                type="button"
-                data-testid="button-to-change-page-parameters"
-                onClick={() => {
-                  params.someStringParameter.set("some-changed-string-value");
-                  params.someNumberParameter.set(84);
-                  params.someArrayParameter.set([
-                    "some-changed-array-value",
-                    "some-other-changed-array-value",
-                  ]);
-                }}
-              >
-                Some button
-              </button>
-            </div>
-          ),
-        },
-
-        params: {
-          someStringParameter: "some-string-value",
-          someNumberParameter: {
-            defaultValue: 42,
-            stringify: (value) => value.toString(),
-            parse: (value) => (value ? Number(value) : undefined),
-          },
-          someArrayParameter: {
-            defaultValue: ["some-array-value", "some-other-array-value"],
-            stringify: (value) => value.join(","),
-            parse: (value: string[]) => (!isEmpty(value) ? value : undefined),
-          },
-        },
-      },
+      globalPageWithParams,
       {
         id: "some-child-page-id",
         components: {
           Page: () => <div>Child page</div>,
         },
       },
-    ],
+    ] as PageRegistration<unknown>[],
   },
 };

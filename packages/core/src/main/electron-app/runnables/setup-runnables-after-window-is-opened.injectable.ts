@@ -17,7 +17,7 @@ const setupRunnablesAfterWindowIsOpenedInjectable = getInjectable({
       const app = di.inject(electronAppInjectable);
 
       app.on("browser-window-created", () => {
-        afterWindowIsOpened();
+        void afterWindowIsOpened();
       });
 
       return undefined;

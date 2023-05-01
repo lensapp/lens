@@ -38,7 +38,7 @@ describe("app-paths", () => {
       sessionData: "/some-irrelevant-user-data", //  By default this points to userData
     };
 
-    builder.beforeApplicationStart(({ mainDi }) => {
+    await builder.beforeApplicationStart(({ mainDi }) => {
       mainDi.override(
         getElectronAppPathInjectable,
         () =>
@@ -120,7 +120,7 @@ describe("app-paths", () => {
     let windowDi: DiContainer;
 
     beforeEach(async () => {
-      builder.beforeApplicationStart(({ mainDi }) => {
+      await builder.beforeApplicationStart(({ mainDi }) => {
         mainDi.override(
           directoryForIntegrationTestingInjectable,
           () => "/some-integration-testing-app-data",

@@ -29,6 +29,8 @@ const createTestPrometheusProvider = (kind: string, alwaysFail: ServiceResult): 
     throw new Error("getQuery is not implemented.");
   },
   getPrometheusService: async () => {
+    await Promise.resolve();
+
     switch (alwaysFail) {
       case ServiceResult.Success:
         return {
@@ -83,7 +85,7 @@ describe("PrometheusHandler", () => {
       }],
     });
 
-    cluster = new Cluster({
+    cluster = Cluster.createForTestingOnly({
       contextName,
       id: "some-cluster-id",
       kubeConfigPath,
@@ -107,7 +109,7 @@ describe("PrometheusHandler", () => {
         }
       });
 
-      expect(() => di.inject(prometheusHandlerInjectable, cluster).getPrometheusDetails()).rejects.toThrowError();
+      await expect(() => di.inject(prometheusHandlerInjectable, cluster).getPrometheusDetails()).rejects.toThrowError();
     });
 
     it.each([

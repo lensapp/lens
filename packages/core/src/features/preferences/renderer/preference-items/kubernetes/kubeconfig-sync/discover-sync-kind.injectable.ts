@@ -35,7 +35,7 @@ const discoverKubeconfigSyncKindInjectable = getInjectable({
 
         return [path, { type: "unknown" }];
       } catch (error) {
-        logger.warn(`[KUBECONFIG-SYNCS]: failed to stat entry: ${error}`, { error });
+        logger.warn(`[KUBECONFIG-SYNCS]: failed to stat entry: ${String(error)}`, { error });
 
         return [path, { type: "unknown" }];
       }

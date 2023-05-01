@@ -34,21 +34,21 @@ const listHelmReleasesInjectable = getInjectable({
 
       const result = await execHelm(args);
 
-      if (!result.callWasSuccessful) {
+      if (!result.isOk) {
         return {
-          callWasSuccessful: false,
+          isOk: false,
           error: `Failed to list helm releases: ${result.error}`,
         };
       }
 
-      const rawOutput = JSON.parse(result.response);
+      const rawOutput = JSON.parse(result.value);
       const output = Array.isArray(rawOutput)
         ? rawOutput.filter(isObject)
         : [];
 
       return {
-        callWasSuccessful: true,
-        response: output as unknown as ListedHelmRelease[],
+        isOk: true,
+        value: output as unknown as ListedHelmRelease[],
       };
     };
   },

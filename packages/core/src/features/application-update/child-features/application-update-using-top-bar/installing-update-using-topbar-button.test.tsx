@@ -23,17 +23,17 @@ function daysToMilliseconds(days: number) {
 }
 
 describe("encourage user to update when sufficient time passed since update was downloaded", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let checkForPlatformUpdatesMock: AsyncFnMock<CheckForPlatformUpdates>;
   let downloadPlatformUpdateMock: AsyncFnMock<DownloadPlatformUpdate>;
   let quitAndInstallUpdateMock: jest.MockedFunction<() => void>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     testUsingFakeTime("2015-10-21T07:28:00Z");
 
-    applicationBuilder = getApplicationBuilder();
+    builder = getApplicationBuilder();
 
-    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+    await builder.beforeApplicationStart(({ mainDi }) => {
       checkForPlatformUpdatesMock = asyncFn();
       downloadPlatformUpdateMock = asyncFn();
 
@@ -59,7 +59,7 @@ describe("encourage user to update when sufficient time passed since update was 
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      rendered = await applicationBuilder.render();
+      rendered = await builder.render();
     });
 
     it("renders", () => {
@@ -75,12 +75,10 @@ describe("encourage user to update when sufficient time passed since update was 
     describe("given the update check", () => {
       let processCheckingForUpdates: (source: string) => Promise<{ updateIsReadyToBeInstalled: boolean }>;
 
-      beforeEach(async () => {
-        processCheckingForUpdates = applicationBuilder.mainDi.inject(
-          processCheckingForUpdatesInjectable,
-        );
+      beforeEach(() => {
+        processCheckingForUpdates = builder.mainDi.inject(processCheckingForUpdatesInjectable);
 
-        processCheckingForUpdates("irrelevant");
+        void processCheckingForUpdates("irrelevant");
       });
 
       describe("when update downloaded", () => {
@@ -106,9 +104,9 @@ describe("encourage user to update when sufficient time passed since update was 
         });
 
         it("given closing the application window, when starting the application window again, still shows the button", async () => {
-          applicationBuilder.applicationWindow.closeAll();
+          builder.applicationWindow.closeAll();
 
-          const window = applicationBuilder.applicationWindow.create("some-window-id");
+          const window = builder.applicationWindow.create("some-window-id");
 
           await window.start();
 
@@ -121,7 +119,7 @@ describe("encourage user to update when sufficient time passed since update was 
           beforeEach(() => {
             advanceFakeTime(daysToMilliseconds(2));
 
-            processCheckingForUpdates("irrelevant");
+            void processCheckingForUpdates("irrelevant");
           });
 
           describe("when checking for updates resolves with same version that was previously downloaded", () => {

@@ -15,11 +15,10 @@ const loadPodsFromAllNamespacesInjectable = getInjectable({
     const context = di.inject(clusterFrameContextForNamespacedResourcesInjectable);
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
 
-    return () => {
-      podStore.loadAll({
+    return async () => {
+      await podStore.loadAll({
         namespaces: context.allNamespaces,
-        onLoadFailure: error =>
-          showErrorNotification(`Can not load Pods. ${String(error)}`),
+        onLoadFailure: error => showErrorNotification(`Can not load Pods. ${String(error)}`),
       });
     };
   },

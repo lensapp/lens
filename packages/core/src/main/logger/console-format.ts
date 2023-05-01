@@ -45,7 +45,10 @@ export interface ConsoleFormatOptions {
 interface TransformableInfo {
   level: string;
   message: string;
-  [key: string | symbol]: any;
+  ms: string;
+  stack?: string;
+  [SPLAT]: unknown;
+  [key: string | symbol]: unknown;
 }
 
 export class ConsoleFormat {

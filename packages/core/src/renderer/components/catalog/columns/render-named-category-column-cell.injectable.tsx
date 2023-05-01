@@ -10,6 +10,7 @@ import { Avatar } from "../../avatar";
 import type { RegisteredAdditionalCategoryColumn } from "../custom-category-columns";
 import { Icon } from "@k8slens/icon";
 import { prevDefault } from "@k8slens/utilities";
+import type { KubernetesCluster } from "../../../../common/catalog-entities";
 
 const renderNamedCategoryColumnCellInjectable = getInjectable({
   id: "render-named-category-column-cell",
@@ -35,12 +36,12 @@ const renderNamedCategoryColumnCellInjectable = getInjectable({
           <Avatar
             title={entity.getName()}
             colorHash={`${entity.getName()}-${entity.getSource()}`}
-            src={entity.spec.icon?.src}
-            background={entity.spec.icon?.background}
+            src={(entity as KubernetesCluster).spec.icon?.src}
+            background={(entity as KubernetesCluster).spec.icon?.background}
             className={styles.catalogAvatar}
             size={24}
           >
-            {entity.spec.icon?.material && <Icon material={entity.spec.icon?.material} small/>}
+            {(entity as KubernetesCluster).spec.icon?.material && <Icon material={(entity as KubernetesCluster).spec.icon?.material} small/>}
           </Avatar>
           <span>{entity.getName()}</span>
           <Icon

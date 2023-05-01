@@ -24,11 +24,11 @@ const createJsonApiInjectable = getInjectable({
 
     return (config, reqInit) => {
       if (!config.getRequestOptions) {
-        config.getRequestOptions = async () => {
+        config.getRequestOptions = () => {
           const agent = new Agent({
             ca: lensProxyCert.get().cert,
           });
-  
+
           return {
             agent,
           };

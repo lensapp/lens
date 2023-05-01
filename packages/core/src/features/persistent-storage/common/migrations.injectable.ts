@@ -7,7 +7,7 @@ import { lifecycleEnum, getInjectable } from "@ogre-tools/injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
 import { getOrInsert, iter, object } from "@k8slens/utilities";
 
-export type AllowedSetValue<T> = T extends (...args: any[]) => any
+export type AllowedSetValue<T> = T extends (...args: unknown[]) => unknown
   ? never
   : T extends undefined | symbol
     ? never
@@ -26,7 +26,7 @@ export type Migrations = Partial<Record<string, (store: MigrationStore) => void>
 
 export interface MigrationDeclaration {
   version: string;
-  run(store: MigrationStore): void;
+  run: (store: MigrationStore) => void;
 }
 
 const persistentStorageMigrationsInjectable = getInjectable({

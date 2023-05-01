@@ -29,7 +29,7 @@ const installApplicationUpdateTrayItemInjectable = getInjectable({
       label: computed(() => {
         const versionToBeInstalled = discoveredVersionState.value.get()?.version;
 
-        return `Install update ${versionToBeInstalled}`;
+        return `Install update ${versionToBeInstalled ?? ""}`;
       }),
 
       enabled: computed(() => true),
@@ -38,12 +38,8 @@ const installApplicationUpdateTrayItemInjectable = getInjectable({
 
       click: pipeline(
         quitAndInstallUpdate,
-
         withErrorLoggingFor(() => "[TRAY]: Update installation failed."),
-
-        // TODO: Find out how to improve typing so that instead of
-        // x => withErrorSuppression(x) there could only be withErrorSuppression
-        (x) => withErrorSuppression(x),
+        withErrorSuppression,
       ),
     };
   },

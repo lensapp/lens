@@ -6,4 +6,4 @@
 import { getGlobalOverride } from "@k8slens/test-utils";
 import validateWeblinkInjectable from "./validate-weblink.injectable";
 
-export default getGlobalOverride(validateWeblinkInjectable, () => async () => "available");
+export default getGlobalOverride(validateWeblinkInjectable, () => () => Promise.resolve("available"));

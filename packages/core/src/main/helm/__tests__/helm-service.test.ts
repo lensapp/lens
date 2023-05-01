@@ -10,10 +10,12 @@ import type { AsyncResult } from "@k8slens/utilities";
 import type { HelmRepo } from "../../../common/helm/helm-repo";
 import { sortBySemverVersion } from "@k8slens/utilities";
 import helmChartManagerInjectable from "../helm-chart-manager.injectable";
+import type { RepoHelmChartList } from "../../../common/k8s-api/endpoints/helm-charts.api/request-charts.injectable";
+import type { HelmChartManager } from "../helm-chart-manager";
 
 describe("Helm Service tests", () => {
-  let listHelmCharts: () => Promise<any>;
-  let getActiveHelmRepositoriesMock: jest.Mock<AsyncResult<HelmRepo[]>>;
+  let listHelmCharts: () => Promise<Record<string, RepoHelmChartList>>;
+  let getActiveHelmRepositoriesMock: jest.MockedFunction<() => AsyncResult<HelmRepo[], Error>>;
 
   beforeEach(() => {
     const di = getDiForUnitTesting();
@@ -22,7 +24,7 @@ describe("Helm Service tests", () => {
 
     di.override(
       helmChartManagerInjectable,
-      (di, repo) => new HelmChartManagerFake(repo) as unknown,
+      (di, repo) => new HelmChartManagerFake(repo) as unknown as HelmChartManager,
     );
 
     di.override(getActiveHelmRepositoriesInjectable, () => getActiveHelmRepositoriesMock);
@@ -39,8 +41,8 @@ describe("Helm Service tests", () => {
   it("list charts with deprecated entries", async () => {
     getActiveHelmRepositoriesMock.mockReturnValue(
       Promise.resolve({
-        callWasSuccessful: true,
-        response: [
+        isOk: true,
+        value: [
           {
             name: "stable",
             url: "stableurl",
@@ -157,8 +159,8 @@ describe("Helm Service tests", () => {
   it("list charts sorted by version in descending order", async () => {
     getActiveHelmRepositoriesMock.mockReturnValue(
       Promise.resolve({
-        callWasSuccessful: true,
-        response: [{
+        isOk: true,
+        value: [{
           name: "bitnami",
           url: "bitnamiurl",
           cacheFilePath: "/some-cache-file-path-for-bitnami",
@@ -348,7 +350,7 @@ const charts = new Map([
 class HelmChartManagerFake {
   constructor(private repo: HelmRepo){ }
 
-  public async charts(): Promise<any> {
-    return charts.get(this.repo.name) ?? {};
+  public async charts(): Promise<RepoHelmChartList> {
+    return Promise.resolve(charts.get(this.repo.name) ?? {});
   }
 }

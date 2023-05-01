@@ -60,7 +60,7 @@ describe("sessionCertificateVerifier", () => {
 
     sessionCertificateVerifier({
       certificate: { data: lensProxyCertificate.cert },
-    } as any, callback);
+    } as Electron.Request, callback);
 
     expect(callback).toHaveBeenCalledWith(ChromiumNetError.SUCCESS);
   });
@@ -71,7 +71,7 @@ describe("sessionCertificateVerifier", () => {
 
     sessionCertificateVerifier({
       certificate: { data: externalCertificate },
-    } as any, callback);
+    } as Electron.Request, callback);
 
     expect(callback).toHaveBeenCalledWith(ChromiumNetError.RESULT_FROM_CHROMIUM);
   });

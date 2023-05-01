@@ -26,7 +26,7 @@ describe("installing helm chart from previously opened tab", () => {
   beforeEach(() => {
     builder = getApplicationBuilder();
 
-    builder.setEnvironmentToClusterFrame();
+    await builder.setEnvironmentToClusterFrame();
 
     requestHelmChartVersionsMock = asyncFn();
     requestHelmChartValuesMock = asyncFn();
@@ -34,7 +34,7 @@ describe("installing helm chart from previously opened tab", () => {
     builder.namespaces.add("default");
     builder.namespaces.add("some-other-namespace");
 
-    builder.beforeWindowStart(({ windowDi }) => {
+    await builder.beforeWindowStart(({ windowDi }) => {
       windowDi.override(directoryForLensLocalStorageInjectable, () => "/some-directory-for-lens-local-storage");
       windowDi.override(requestHelmChartVersionsInjectable, () => requestHelmChartVersionsMock);
       windowDi.override(requestHelmChartValuesInjectable, () => requestHelmChartValuesMock);
@@ -52,7 +52,7 @@ describe("installing helm chart from previously opened tab", () => {
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      builder.beforeWindowStart(async ({ windowDi }) => {
+      await builder.beforeWindowStart(async ({ windowDi }) => {
         const writeJsonFile = windowDi.inject(writeJsonFileInjectable);
 
         await writeJsonFile(
@@ -129,8 +129,8 @@ describe("installing helm chart from previously opened tab", () => {
     describe("when configuration and version resolves", () => {
       beforeEach(async () => {
         await requestHelmChartValuesMock.resolve({
-          callWasSuccessful: true,
-          response: "some-default-configuration",
+          isOk: true,
+          value: "some-default-configuration",
         });
 
         await requestHelmChartVersionsMock.resolve([

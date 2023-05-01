@@ -12,19 +12,17 @@ import checkForPlatformUpdatesInjectable from "../../main/check-for-updates/chec
 import type { RenderResult } from "@testing-library/react";
 import showMessagePopupInjectable from "../../../../main/electron-app/features/show-message-popup.injectable";
 import type { ShowMessagePopup } from "../../../../main/electron-app/features/show-message-popup.injectable";
-import electronUpdaterIsActiveInjectable
-  from "../../../../main/electron-app/features/electron-updater-is-active.injectable";
-import publishIsConfiguredInjectable
-  from "../../child-features/updating-is-enabled/main/publish-is-configured.injectable";
+import electronUpdaterIsActiveInjectable from "../../../../main/electron-app/features/electron-updater-is-active.injectable";
+import publishIsConfiguredInjectable from "../updating-is-enabled/main/publish-is-configured.injectable";
 
 describe("installing update using application menu", () => {
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
   let checkForPlatformUpdatesMock: AsyncFnMock<CheckForPlatformUpdates>;
   let showMessagePopupMock: AsyncFnMock<ShowMessagePopup>;
 
-  beforeEach(() => {
-    applicationBuilder = getApplicationBuilder();
-    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
+  beforeEach(async () => {
+    builder = getApplicationBuilder();
+    await builder.beforeApplicationStart(({ mainDi }) => {
       checkForPlatformUpdatesMock = asyncFn();
       showMessagePopupMock = asyncFn();
 
@@ -47,7 +45,7 @@ describe("installing update using application menu", () => {
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      rendered = await applicationBuilder.render();
+      rendered = await builder.render();
     });
 
     it("renders", () => {
@@ -56,7 +54,7 @@ describe("installing update using application menu", () => {
 
     describe("when user checks for updates using application menu", () => {
       beforeEach(() => {
-        applicationBuilder.applicationMenu.click(
+        builder.applicationMenu.click(
           "root",
           "mac",
           "check-for-updates",

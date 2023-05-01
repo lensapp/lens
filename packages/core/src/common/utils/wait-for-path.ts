@@ -38,7 +38,7 @@ export async function waitForPath(pathname: string): Promise<void> {
           .catch(reject);
       }
     };
-    const onError = (error: any) => {
+    const onError = (error: unknown) => {
       watcher.unwatch(dirOfPath);
       watcher
         .close()

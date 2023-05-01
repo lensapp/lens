@@ -89,7 +89,7 @@ export interface CatalogCategorySpec {
 /**
  * If the filter return a thruthy value, the menu item is displayed
  */
-export type AddMenuFilter = (menu: CatalogEntityAddMenu) => any;
+export type AddMenuFilter = (menu: CatalogEntityAddMenu) => unknown;
 
 export interface CatalogCategoryEvents {
   /**
@@ -291,7 +291,7 @@ export interface CatalogEntitySettingsMenu {
   group?: string;
   title: string;
   components: {
-    View: React.ComponentType<any>;
+    View: React.ComponentType<Record<string, never>>;
   };
 }
 
@@ -323,7 +323,7 @@ export interface CatalogEntityAddMenuContext {
   menuItems: CatalogEntityAddMenu[];
 }
 
-export type CatalogEntitySpec = Record<string, any>;
+export type CatalogEntitySpec = Record<string, unknown>;
 
 
 export interface CatalogEntityData<
@@ -409,7 +409,17 @@ export abstract class CatalogEntity<
     return this.status.enabled ?? true;
   }
 
-  public onRun?(context: CatalogEntityActionContext): void | Promise<void>;
-  public onContextMenuOpen?(context: CatalogEntityContextMenuContext): void | Promise<void>;
-  public onSettingsOpen?(context: CatalogEntitySettingsContext): void | Promise<void>;
+  public onRun(context: CatalogEntityActionContext): void | Promise<void> {
+    void context;
+  }
+  public onContextMenuOpen(context: CatalogEntityContextMenuContext): void | Promise<void> {
+    void context;
+  }
+
+  /**
+   * @deprecated This has never been used
+   */
+  public onSettingsOpen(context: CatalogEntitySettingsContext): void | Promise<void> {
+    void context;
+  }
 }

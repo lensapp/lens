@@ -76,17 +76,17 @@ describe("Deleting a cluster", () => {
     config = new KubeConfig();
     builder = getApplicationBuilder();
 
-    builder.beforeApplicationStart(({ mainDi }) => {
+    await builder.beforeApplicationStart(({ mainDi }) => {
       mainDi.override(kubectlBinaryNameInjectable, () => "kubectl");
       mainDi.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
       mainDi.override(normalizedPlatformInjectable, () => "darwin");
     });
 
-    builder.beforeWindowStart(({ windowDi }) => {
+    await builder.beforeWindowStart(({ windowDi }) => {
       openDeleteClusterDialog = windowDi.inject(openDeleteClusterDialogInjectable);
     });
 
-    builder.afterWindowStart(({ windowDi }) => {
+    await builder.afterWindowStart(({ windowDi }) => {
       const navigateToCatalog = windowDi.inject(navigateToCatalogInjectable);
 
       navigateToCatalog();
@@ -102,7 +102,7 @@ describe("Deleting a cluster", () => {
     beforeEach(() => {
       config.loadFromString(multiClusterConfig);
 
-      currentCluster = new Cluster({
+      currentCluster = Cluster.createForTestingOnly({
         id: "some-current-context-cluster",
         contextName: "some-current-context",
         preferences: {
@@ -110,7 +110,7 @@ describe("Deleting a cluster", () => {
         },
         kubeConfigPath: "./temp-kube-config",
       });
-      nonCurrentCluster = new Cluster({
+      nonCurrentCluster = Cluster.createForTestingOnly({
         id: "some-non-current-context-cluster",
         contextName: "some-non-current-context",
         preferences: {
@@ -186,7 +186,7 @@ describe("Deleting a cluster", () => {
       const directoryForKubeConfigs = builder.applicationWindow.only.di.inject(directoryForKubeConfigsInjectable);
       const joinPaths = builder.applicationWindow.only.di.inject(joinPathsInjectable);
 
-      currentCluster = new Cluster({
+      currentCluster = Cluster.createForTestingOnly({
         id: "some-cluster",
         contextName: "some-context",
         preferences: {
@@ -220,7 +220,7 @@ describe("Deleting a cluster", () => {
     beforeEach(() => {
       config.loadFromString(singleClusterConfig);
 
-      currentCluster = new Cluster({
+      currentCluster = Cluster.createForTestingOnly({
         id: "some-cluster",
         contextName: "some-context",
         preferences: {

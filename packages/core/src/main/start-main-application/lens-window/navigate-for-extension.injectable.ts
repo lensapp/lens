@@ -14,7 +14,7 @@ import { navigateForExtensionChannel } from "../../../features/extensions/naviga
 export type NavigateForExtension = (
   extId: string,
   pageId?: string,
-  params?: Record<string, any>,
+  params?: Record<string, unknown>,
   frameId?: number
 ) => Promise<void>;
 
@@ -26,12 +26,7 @@ const navigateForExtensionInjectable = getInjectable({
     const clusterFrames = di.inject(clusterFramesInjectable);
     const showApplicationWindow = di.inject(showApplicationWindowInjectable);
 
-    return async (
-      extId: string,
-      pageId?: string,
-      params?: Record<string, any>,
-      frameId?: number,
-    ) => {
+    return async (extId, pageId, params, frameId) => {
       await showApplicationWindow();
 
       const applicationWindow = getApplicationWindow();

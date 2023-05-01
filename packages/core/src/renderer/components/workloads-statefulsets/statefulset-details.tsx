@@ -25,9 +25,6 @@ import podStoreInjectable from "../workloads-pods/store.injectable";
 import statefulSetStoreInjectable from "./store.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
 
-export interface StatefulSetDetailsProps extends KubeObjectDetailsProps<StatefulSet> {
-}
-
 interface Dependencies {
   subscribeStores: SubscribeStores;
   podStore: PodStore;
@@ -36,7 +33,7 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedStatefulSetDetails extends React.Component<StatefulSetDetailsProps & Dependencies> {
+class NonInjectedStatefulSetDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
   componentDidMount() {
     disposeOnUnmount(this, [
       this.props.subscribeStores([
@@ -99,7 +96,7 @@ class NonInjectedStatefulSetDetails extends React.Component<StatefulSetDetailsPr
   }
 }
 
-export const StatefulSetDetails = withInjectables<Dependencies, StatefulSetDetailsProps>(NonInjectedStatefulSetDetails, {
+export const StatefulSetDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedStatefulSetDetails, {
   getProps: (di, props) => ({
     ...props,
     subscribeStores: di.inject(subscribeStoresInjectable),

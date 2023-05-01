@@ -69,11 +69,11 @@ const installHelmChartInjectable = getInjectable({
       try {
         const result = await execHelm(args);
 
-        if (!result.callWasSuccessful) {
+        if (!result.isOk) {
           throw result.error;
         }
 
-        const output = result.response;
+        const output = result.value;
         const releaseName = output.split("\n")[0].split(" ")[1].trim();
 
         return {

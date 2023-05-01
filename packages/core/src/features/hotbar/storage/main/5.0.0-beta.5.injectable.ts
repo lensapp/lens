@@ -15,7 +15,7 @@ const v500Beta5HotbarStoreMigrationInjectable = getInjectable({
     run(store) {
       const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
       const rawHotbars = store.get("hotbars");
-      const hotbars: HotbarData[] = Array.isArray(rawHotbars) ? rawHotbars : [];
+      const hotbars = (Array.isArray(rawHotbars) ? rawHotbars : []) as HotbarData[];
 
       for (const hotbar of hotbars) {
         for (let i = 0; i < hotbar.items.length; i += 1) {

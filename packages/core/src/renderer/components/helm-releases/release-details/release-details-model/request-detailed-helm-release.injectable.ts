@@ -38,20 +38,20 @@ const requestDetailedHelmReleaseInjectable = getInjectable({
 
       if (!release) {
         return {
-          callWasSuccessful: false,
+          isOk: false,
           error: `Release ${releaseName} didn't exist in ${namespace} namespace.`,
         };
       }
 
-      if (!detailsResult.callWasSuccessful) {
+      if (!detailsResult.isOk) {
         return detailsResult;
       }
 
       return {
-        callWasSuccessful: true,
-        response: {
+        isOk: true,
+        value: {
           release: toHelmRelease(release),
-          details: detailsResult.response,
+          details: detailsResult.value,
         },
       };
     };

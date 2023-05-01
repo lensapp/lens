@@ -41,23 +41,23 @@ describe("listing active helm repositories in preferences", () => {
       warn: noop,
     };
 
-    builder.beforeApplicationStart(({ mainDi }) => {
+    await builder.beforeApplicationStart(({ mainDi }) => {
       mainDi.override(readYamlFileInjectable, () => readYamlFileMock);
       mainDi.override(execFileInjectable, () => execFileMock);
       mainDi.override(helmBinaryPathInjectable, () => "some-helm-binary-path");
       mainDi.override(loggerInjectionToken, () => loggerStub);
     });
 
-    builder.beforeWindowStart(({ windowDi }) => {
+    await builder.beforeWindowStart(({ windowDi }) => {
       windowDi.override(showErrorNotificationInjectable, () => showErrorNotificationMock);
-      windowDi.override(requestPublicHelmRepositoriesInjectable, () => async () => []);
+      windowDi.override(requestPublicHelmRepositoriesInjectable, () => () => Promise.resolve([]));
     });
 
     rendered = await builder.render();
   });
 
   describe("when navigating to preferences containing helm repositories", () => {
-    beforeEach(async () => {
+    beforeEach(() => {
       builder.preferences.navigate();
       builder.preferences.navigation.click("kubernetes");
     });
@@ -97,7 +97,7 @@ describe("listing active helm repositories in preferences", () => {
     describe("when getting configuration rejects", () => {
       beforeEach(async () => {
         await execFileMock.resolve({
-          callWasSuccessful: false,
+          isOk: false,
           error: Object.assign(new Error("Some error"), {
             stderr: "some-error",
           }),
@@ -134,8 +134,8 @@ describe("listing active helm repositories in preferences", () => {
         await execFileMock.resolveSpecific(
           ["some-helm-binary-path", ["env"]],
           {
-            callWasSuccessful: true,
-            response: "HELM_REPOSITORY_CACHE=some-helm-repository-cache-path",
+            isOk: true,
+            value: "HELM_REPOSITORY_CACHE=some-helm-repository-cache-path",
           },
         );
       });
@@ -176,8 +176,8 @@ describe("listing active helm repositories in preferences", () => {
         await execFileMock.resolveSpecific(
           ["some-helm-binary-path", ["env"]],
           {
-            callWasSuccessful: true,
-            response: "HELM_REPOSITORY_CONFIG=some-helm-repository-config-file.yaml",
+            isOk: true,
+            value: "HELM_REPOSITORY_CONFIG=some-helm-repository-config-file.yaml",
           },
         );
       });
@@ -218,8 +218,8 @@ describe("listing active helm repositories in preferences", () => {
         await execFileMock.resolveSpecific(
           ["some-helm-binary-path", ["env"]],
           {
-            callWasSuccessful: true,
-            response: [
+            isOk: true,
+            value: [
               "HELM_REPOSITORY_CONFIG=some-helm-repository-config-file.yaml",
               "HELM_REPOSITORY_CACHE=some-helm-repository-cache-path",
             ].join("\n"),
@@ -249,7 +249,7 @@ describe("listing active helm repositories in preferences", () => {
       describe("when updating repositories reject with any other error", () => {
         beforeEach(async () => {
           await execFileMock.resolve({
-            callWasSuccessful: false,
+            isOk: false,
             error: Object.assign(new Error("Some error"), {
               stderr: "Some error",
             }),
@@ -284,7 +284,7 @@ describe("listing active helm repositories in preferences", () => {
           execFileMock.mockClear();
 
           await execFileMock.resolve({
-            callWasSuccessful: false,
+            isOk: false,
             error: Object.assign(new Error("no repositories found. You must add one before updating"), {
               stderr: "no repositories found. You must add one before updating",
             }),
@@ -315,7 +315,7 @@ describe("listing active helm repositories in preferences", () => {
         describe("when adding default repository reject", () => {
           beforeEach(async () => {
             await execFileMock.resolve({
-              callWasSuccessful: false,
+              isOk: false,
               error: Object.assign(new Error("Some error"), {
                 stderr: "Some error",
               }),
@@ -360,8 +360,8 @@ describe("listing active helm repositories in preferences", () => {
                 ],
               ],
               {
-                callWasSuccessful: true,
-                response: "",
+                isOk: true,
+                value: "",
               },
             );
           });
@@ -427,8 +427,8 @@ describe("listing active helm repositories in preferences", () => {
           await execFileMock.resolveSpecific(
             ["some-helm-binary-path", ["repo", "update"]],
             {
-              callWasSuccessful: true,
-              response: "",
+              isOk: true,
+              value: "",
             },
           );
         });

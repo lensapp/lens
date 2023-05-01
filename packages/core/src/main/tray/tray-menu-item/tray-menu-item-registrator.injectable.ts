@@ -71,15 +71,10 @@ const toItemInjectablesFor = (extension: LensMainExtension, withErrorLoggingFor:
         click: () => {
           const decorated = pipeline(
             registration.click || (() => {}),
-
             withErrorLoggingFor(
-              () =>
-                `[TRAY]: Clicking of tray item "${trayItemId}" from extension "${extension.sanitizedExtensionId}" failed.`,
+              () => `[TRAY]: Clicking of tray item "${trayItemId}" from extension "${extension.sanitizedExtensionId}" failed.`,
             ),
-
-            // TODO: Find out how to improve typing so that instead of
-            // x => withErrorSuppression(x) there could only be withErrorSuppression
-            (x) => withErrorSuppression(x),
+            withErrorSuppression,
           );
 
           return decorated(registration);

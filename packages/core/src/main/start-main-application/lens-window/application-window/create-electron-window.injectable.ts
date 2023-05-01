@@ -101,7 +101,7 @@ const createElectronWindowInjectable = getInjectable({
           try {
             browserWindow.setIcon(iconFileName);
           } catch (err) {
-            logger.warn(`Error while setting window icon ${err}`);
+            logger.warn(`Error while setting window icon ${String(err)}`);
           }
         } else {
           logger.warn(`No suitable icon found for task bar.`);
@@ -141,11 +141,15 @@ const createElectronWindowInjectable = getInjectable({
           );
         })
         .setWindowOpenHandler((details) => {
-          openLinkInBrowser(details.url).catch((error) => {
-            logger.error("[CREATE-ELECTRON-WINDOW]: failed to open browser", {
-              error,
-            });
-          });
+          void (async () => {
+            try {
+              await openLinkInBrowser(details.url);
+            } catch (error) {
+              logger.error("[CREATE-ELECTRON-WINDOW]: failed to open browser", {
+                error,
+              });
+            }
+          })();
 
           return { action: "deny" };
         });

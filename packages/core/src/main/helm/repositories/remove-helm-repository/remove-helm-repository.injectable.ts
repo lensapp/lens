@@ -24,14 +24,14 @@ const removeHelmRepositoryInjectable = getInjectable({
         repo.name,
       ]);
 
-      if (result.callWasSuccessful) {
+      if (result.isOk) {
         return {
-          callWasSuccessful: true,
+          isOk: true,
         };
       }
 
       return {
-        callWasSuccessful: false,
+        isOk: false,
         error: result.error.stderr,
       };
     };

@@ -9,7 +9,7 @@ import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 
-import type { ClusterRoleBinding } from "@k8slens/kube-object";
+import { ClusterRoleBinding } from "@k8slens/kube-object";
 import { ObservableHashSet, prevDefault } from "@k8slens/utilities";
 import { AddRemoveButtons } from "../../add-remove-buttons";
 import { DrawerTitle } from "../../drawer";
@@ -25,9 +25,6 @@ import openClusterRoleBindingDialogInjectable from "./dialog/open.injectable";
 import clusterRoleBindingStoreInjectable from "./store.injectable";
 import autoBindReact from "auto-bind/react";
 
-export interface ClusterRoleBindingDetailsProps extends KubeObjectDetailsProps<ClusterRoleBinding> {
-}
-
 interface Dependencies {
   openConfirmDialog: OpenConfirmDialog;
   openClusterRoleBindingDialog: OpenClusterRoleBindingDialog;
@@ -35,15 +32,15 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedClusterRoleBindingDetails extends React.Component<ClusterRoleBindingDetailsProps & Dependencies> {
+class NonInjectedClusterRoleBindingDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
   selectedSubjects = new ObservableHashSet([], hashSubject);
 
-  constructor(props: ClusterRoleBindingDetailsProps & Dependencies) {
+  constructor(props: KubeObjectDetailsProps & Dependencies) {
     super(props);
     autoBindReact(this);
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     disposeOnUnmount(this, [
       reaction(() => this.props.object, () => {
         this.selectedSubjects.clear();
@@ -51,8 +48,8 @@ class NonInjectedClusterRoleBindingDetails extends React.Component<ClusterRoleBi
     ]);
   }
 
-  removeSelectedSubjects() {
-    const { object: clusterRoleBinding, openConfirmDialog, clusterRoleBindingStore } = this.props;
+  removeSelectedSubjects(clusterRoleBinding: ClusterRoleBinding) {
+    const { openConfirmDialog, clusterRoleBindingStore } = this.props;
     const { selectedSubjects } = this;
 
     openConfirmDialog({
@@ -75,6 +72,11 @@ class NonInjectedClusterRoleBindingDetails extends React.Component<ClusterRoleBi
     if (!clusterRoleBinding) {
       return null;
     }
+
+    if (!(clusterRoleBinding instanceof ClusterRoleBinding)) {
+      return null;
+    }
+
     const { roleRef } = clusterRoleBinding;
     const subjects = clusterRoleBinding.getSubjects();
 
@@ -127,7 +129,7 @@ class NonInjectedClusterRoleBindingDetails extends React.Component<ClusterRoleBi
 
         <AddRemoveButtons
           onAdd={() => openClusterRoleBindingDialog(clusterRoleBinding)}
-          onRemove={selectedSubjects.size ? this.removeSelectedSubjects : undefined}
+          onRemove={selectedSubjects.size ? () => this.removeSelectedSubjects(clusterRoleBinding) : undefined}
           addTooltip={`Add bindings to ${roleRef.name}`}
           removeTooltip={`Remove selected bindings from ${roleRef.name}`}
         />
@@ -136,7 +138,7 @@ class NonInjectedClusterRoleBindingDetails extends React.Component<ClusterRoleBi
   }
 }
 
-export const ClusterRoleBindingDetails = withInjectables<Dependencies, ClusterRoleBindingDetailsProps>(NonInjectedClusterRoleBindingDetails, {
+export const ClusterRoleBindingDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedClusterRoleBindingDetails, {
   getProps: (di, props) => ({
     ...props,
     openConfirmDialog: di.inject(openConfirmDialogInjectable),

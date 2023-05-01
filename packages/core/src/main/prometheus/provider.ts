@@ -63,7 +63,7 @@ export async function findFirstNamespacedService(client: CoreV1Api, ...selectors
       }
     }
   } catch (error) {
-    throw new Error(`Failed to list services in all namespaces: ${isRequestError(error) ? error.response?.body.message : error}`);
+    throw new Error(`Failed to list services in all namespaces: ${isRequestError(error) ? (error.response?.body as { message: string }).message : String(error)}`);
   }
 
   throw new Error(`No service found from any namespace`);
@@ -83,7 +83,7 @@ export async function findNamespacedService(client: CoreV1Api, name: string, nam
       port: service.spec.ports[0].port,
     };
   } catch(error) {
-    throw new Error(`Failed to list services in namespace="${namespace}": ${isRequestError(error) ? error.response?.body.message : error}`);
+    throw new Error(`Failed to list services in namespace="${namespace}": ${isRequestError(error) ? (error.response?.body as { message: string }).message : String(error)}`);
   }
 }
 

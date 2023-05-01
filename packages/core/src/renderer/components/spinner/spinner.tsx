@@ -8,21 +8,19 @@ import "./spinner.scss";
 import React from "react";
 import { cssNames } from "@k8slens/utilities";
 
-export interface SpinnerProps extends React.HTMLProps<any> {
+export interface SpinnerProps extends React.HTMLProps<HTMLDivElement> {
   singleColor?: boolean;
   center?: boolean;
 }
 
-export class Spinner extends React.Component<SpinnerProps, {}> {
-  static defaultProps = {
-    singleColor: true,
-    center: false,
-  };
+export const Spinner = (props: SpinnerProps) => {
+  const {
+    singleColor = true,
+    center = false,
+    className,
+    ...divProps
+  } = props;
+  const classNames = cssNames("Spinner", className, { singleColor, center });
 
-  render() {
-    const { center, singleColor, className, ...props } = this.props;
-    const classNames = cssNames("Spinner", className, { singleColor, center });
-
-    return <div {...props} className={classNames} />;
-  }
-}
+  return <div {...divProps} className={classNames} />;
+};

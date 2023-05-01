@@ -20,7 +20,7 @@ const onCatalogEntityListClickInjectable = getInjectable({
       if (selectedCatalogEntityParam.get() === entity.getId()) {
         selectedCatalogEntityParam.clear();
       } else if (selectedCatalogEntityParam.get() === undefined) {
-        catalogEntityRegistry.onRun(entity);
+        void catalogEntityRegistry.onRun(entity);
       } else {
         selectedCatalogEntityParam.set(entity.getId());
       }

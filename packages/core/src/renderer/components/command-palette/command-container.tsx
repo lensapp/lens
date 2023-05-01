@@ -15,17 +15,14 @@ import commandOverlayInjectable from "./command-overlay.injectable";
 import type { ipcRendererOn } from "../../../common/ipc";
 import { broadcastMessage } from "../../../common/ipc";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { AddWindowEventListener } from "../../window/event-listener.injectable";
-import windowAddEventListenerInjectable from "../../window/event-listener.injectable";
 import type { IComputedValue } from "mobx";
 import matchedClusterIdInjectable from "../../navigation/matched-cluster-id.injectable";
 import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
 import isMacInjectable from "../../../common/vars/is-mac.injectable";
 import legacyOnChannelListenInjectable from "../../ipc/legacy-channel-listen.injectable";
-import { onKeyboardShortcut } from "@k8slens/utilities";
+import { addWindowEventListener, onKeyboardShortcut } from "@k8slens/utilities";
 
 interface Dependencies {
-  addWindowEventListener: AddWindowEventListener;
   commandOverlay: CommandOverlay;
   clusterId: ClusterId | undefined;
   matchedClusterId: IComputedValue<ClusterId | undefined>;
@@ -36,7 +33,7 @@ interface Dependencies {
 @observer
 class NonInjectedCommandContainer extends React.Component<Dependencies> {
   componentDidMount() {
-    const { clusterId, addWindowEventListener, commandOverlay, matchedClusterId, isMac } = this.props;
+    const { clusterId, commandOverlay, matchedClusterId, isMac } = this.props;
 
     const action = clusterId
       ? () => commandOverlay.open(<CommandDialog />)
@@ -44,7 +41,7 @@ class NonInjectedCommandContainer extends React.Component<Dependencies> {
         const matchedId = matchedClusterId.get();
 
         if (matchedId) {
-          broadcastMessage(`command-palette:${matchedClusterId}:open`);
+          void broadcastMessage(`command-palette:${matchedId}:open`);
         } else {
           commandOverlay.open(<CommandDialog />);
         }
@@ -92,7 +89,6 @@ export const CommandContainer = withInjectables<Dependencies>(NonInjectedCommand
   getProps: (di, props) => ({
     ...props,
     clusterId: di.inject(hostedClusterIdInjectable),
-    addWindowEventListener: di.inject(windowAddEventListenerInjectable),
     commandOverlay: di.inject(commandOverlayInjectable),
     matchedClusterId: di.inject(matchedClusterIdInjectable),
     isMac: di.inject(isMacInjectable),

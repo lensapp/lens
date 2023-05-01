@@ -51,7 +51,7 @@ describe("check-for-platform-updates", () => {
   });
 
   describe("when called", () => {
-    let actualPromise: Promise<any>;
+    let actualPromise: Promise<unknown>;
 
     beforeEach(() => {
       const testUpdateChannel: UpdateChannel = {
@@ -119,7 +119,7 @@ describe("check-for-platform-updates", () => {
       beforeEach(() => {
         errorStub = new Error("Some error");
 
-        checkForUpdatesMock.reject(errorStub);
+        void checkForUpdatesMock.reject(errorStub);
       });
 
       it("logs errors", () => {

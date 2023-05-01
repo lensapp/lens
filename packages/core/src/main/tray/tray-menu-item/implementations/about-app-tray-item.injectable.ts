@@ -32,7 +32,7 @@ const aboutAppTrayItemInjectable = getInjectable({
       click: pipeline(
         async () => {
           await showApplicationWindow();
-          showAbout();
+          await showAbout();
         },
         withErrorLoggingFor(() => "[TRAY]: Opening of show about failed."),
         withErrorSuppression,

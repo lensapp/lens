@@ -9,7 +9,7 @@ import apiBaseInjectable from "../../api-base.injectable";
 
 const requestValuesEndpoint = urlBuilderFor("/v2/charts/:repo/:name/values");
 
-export type RequestHelmChartValues = (repo: string, name: string, version: string) => AsyncResult<string>;
+export type RequestHelmChartValues = (repo: string, name: string, version: string) => AsyncResult<string, string>;
 
 const requestHelmChartValuesInjectable = getInjectable({
   id: "request-helm-chart-values",

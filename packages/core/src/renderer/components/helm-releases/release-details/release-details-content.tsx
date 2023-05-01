@@ -167,7 +167,7 @@ const ReleaseValues = observer(({ releaseId, configuration, onlyUserSuppliedValu
         <Checkbox
           label="User-supplied values only"
           value={onlyUserSuppliedValuesAreShown.value.get()}
-          onChange={onlyUserSuppliedValuesAreShown.toggle}
+          onChange={() => void onlyUserSuppliedValuesAreShown.toggle()}
           disabled={configurationIsLoading}
           data-testid="user-supplied-values-only-checkbox"
         />
@@ -184,7 +184,7 @@ const ReleaseValues = observer(({ releaseId, configuration, onlyUserSuppliedValu
           label="Save"
           waiting={configuration.isSaving.get()}
           disabled={configurationIsLoading}
-          onClick={configuration.save}
+          onClick={() => void configuration.save()}
           data-testid="helm-release-configuration-save-button"
         />
       </div>

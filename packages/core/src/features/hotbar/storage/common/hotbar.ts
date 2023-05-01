@@ -151,7 +151,7 @@ export class Hotbar {
           this.items[emptyCellIndex] = newItem;
         });
       } else {
-        broadcastMessage(hotbarTooManyItemsChannel);
+        void broadcastMessage(hotbarTooManyItemsChannel);
       }
     } else if (0 <= cellIndex && cellIndex < this.items.length) {
       runInAction(() => {

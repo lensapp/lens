@@ -227,7 +227,7 @@ class NonInjectedSelect<
         isMulti={isMulti}
         options={convertedOptions}
         value={this.findSelectedPropsValue(value, convertedOptions, isMulti)}
-        onKeyDown={this.onKeyDown}
+        onKeyDown={(...args) => this.onKeyDown(...args)}
         className={cssNames("Select", this.themeClass, className)}
         classNamePrefix="Select"
         onChange={action(onChange)} // This is done so that all changes are actionable
@@ -237,7 +237,7 @@ class NonInjectedSelect<
             <WrappedMenu
               {...props}
               className={cssNames(menuClass, this.themeClass, className, {
-                [`${inputId}-options`]: !!inputId,
+                [`${inputId ?? ""}-options`]: !!inputId,
               })}
             />
           ),

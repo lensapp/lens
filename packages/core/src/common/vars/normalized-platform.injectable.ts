@@ -21,7 +21,7 @@ const normalizedPlatformInjectable = getInjectable({
       case "win32":
         return "windows";
       default:
-        throw new Error(`platform=${platform} is unsupported`);
+        throw new Error(`platform=${platform as string} is unsupported`);
     }
   },
 });

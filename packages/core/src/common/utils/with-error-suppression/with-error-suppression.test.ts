@@ -10,7 +10,7 @@ import { withErrorSuppression } from "./with-error-suppression";
 
 describe("with-error-suppression", () => {
   describe("given decorated sync function", () => {
-    let toBeDecorated: jest.Mock<void, [string, string]>;
+    let toBeDecorated: jest.MockedFunction<(a: string, b: string) => void>;
     let decorated: (a: string, b: string) => void;
 
     beforeEach(() => {
@@ -39,8 +39,7 @@ describe("with-error-suppression", () => {
       let returnValue: void;
 
       beforeEach(() => {
-        // eslint-disable-next-line unused-imports/no-unused-vars-ts
-        toBeDecorated.mockImplementation((_, __) => {
+        toBeDecorated.mockImplementation(() => {
           throw new Error("some-error");
         });
 

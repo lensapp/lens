@@ -4,6 +4,7 @@
  */
 
 import { noop, chunk } from "lodash/fp";
+import type { Injectable } from "@ogre-tools/injectable";
 import { createContainer, isInjectable } from "@ogre-tools/injectable";
 import { getOverrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
 import terminalSpawningPoolInjectable from "./components/dock/terminal/terminal-spawning-pool.injectable";
@@ -50,9 +51,10 @@ export const getDiForUnitTesting = () => {
 
   runInAction(() => {
     const injectables = global.injectablePaths.renderer.paths
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       .map(path => require(path))
       .flatMap(Object.values)
-      .filter(isInjectable);
+      .filter(isInjectable) as Injectable<unknown, unknown, unknown>[];
 
     for (const block of chunk(100)(injectables)) {
       di.register(...block);
@@ -60,6 +62,7 @@ export const getDiForUnitTesting = () => {
   });
 
   for (const globalOverridePath of global.injectablePaths.renderer.globalOverridePaths) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
     const globalOverride = require(globalOverridePath).default as GlobalOverride<unknown, unknown, unknown>;
 
     di.override(globalOverride.injectable, globalOverride.overridingInstantiate);

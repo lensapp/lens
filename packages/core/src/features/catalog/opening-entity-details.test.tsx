@@ -25,7 +25,7 @@ describe("opening catalog entity details panel", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.afterWindowStart(async ({ windowDi }) => {
+    await builder.afterWindowStart(async ({ windowDi }) => {
       clusterEntity = new KubernetesCluster({
         metadata: {
           labels: {},
@@ -116,7 +116,7 @@ describe("opening catalog entity details panel", () => {
   });
 
   describe("when navigated to the catalog", () => {
-    beforeEach(async () => {
+    beforeEach(() => {
       const navigateToCatalog = windowDi.inject(navigateToCatalogInjectable);
 
       navigateToCatalog();
@@ -234,14 +234,14 @@ describe("opening catalog entity details panel", () => {
   });
 
   describe("when not navigated to the catalog and showEntityDetails is called from someplace", () => {
-    beforeEach(async () => {
+    beforeEach(() => {
       const showEntityDetails = windowDi.inject(showEntityDetailsInjectable);
 
       showEntityDetails("some-weblink-id");
       advanceFakeTime(1000);
     });
 
-    it("renders", async () => {
+    it("renders", () => {
       expect(rendered.baseElement).toMatchSnapshot();
     });
 

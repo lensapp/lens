@@ -19,7 +19,7 @@ import { observer } from "mobx-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 
 interface Dependencies {
-  currentRouteComponent: IComputedValue<React.ElementType<any> | undefined>;
+  currentRouteComponent: IComputedValue<React.ElementType<object> | undefined>;
   startUrl: IComputedValue<string>;
   currentPath: IComputedValue<string>;
 }

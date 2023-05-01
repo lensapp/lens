@@ -9,7 +9,7 @@ export interface ShowMessagePopupOptions {
   textWidth?: number;
 }
 
-export type ShowMessagePopup = (title: string, message: string, detail: string, options?: ShowMessagePopupOptions) => void;
+export type ShowMessagePopup = (title: string, message: string, detail: string, options?: ShowMessagePopupOptions) => Promise<void>;
 
 const showMessagePopupInjectable = getInjectable({
   id: "show-message-popup",

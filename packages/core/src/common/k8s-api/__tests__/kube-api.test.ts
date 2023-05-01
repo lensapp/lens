@@ -14,7 +14,6 @@ import asyncFn from "@async-fn/jest";
 import { flushPromises } from "@k8slens/test-utils";
 import createKubeJsonApiInjectable from "../create-kube-json-api.injectable";
 import type { KubeStatusData } from "@k8slens/kube-object";
-import setupAutoRegistrationInjectable from "../../../renderer/before-frame-starts/runnables/setup-auto-registration.injectable";
 import { createMockResponseFromString } from "../../../test-utils/mock-responses";
 import storesAndApisCanBeCreatedInjectable from "../../../renderer/stores-apis-can-be-created.injectable";
 import directoryForUserDataInjectable from "../../app-paths/directory-for-user-data/directory-for-user-data.injectable";
@@ -40,7 +39,7 @@ describe("createKubeApiForRemoteCluster", () => {
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
-    di.override(hostedClusterInjectable, () => new Cluster({
+    di.override(hostedClusterInjectable, () => Cluster.createForTestingOnly({
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some-path-to-a-kubeconfig",
@@ -144,7 +143,7 @@ describe("KubeApi", () => {
 
     const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
 
-    di.override(hostedClusterInjectable, () => new Cluster({
+    di.override(hostedClusterInjectable, () => Cluster.createForTestingOnly({
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some-path-to-a-kubeconfig",
@@ -154,10 +153,6 @@ describe("KubeApi", () => {
       serverAddress: `http://127.0.0.1:9999`,
       apiBase: "/api-kube",
     }));
-
-    const setupAutoRegistration = di.inject(setupAutoRegistrationInjectable);
-
-    setupAutoRegistration.run();
   });
 
   describe("deleting pods (namespace scoped resource)", () => {

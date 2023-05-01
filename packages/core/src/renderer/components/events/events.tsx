@@ -148,6 +148,8 @@ class NonInjectedEvents extends React.Component<Dependencies & EventsProps> {
   render() {
     const { apiManager, eventStore, compact, compactLimit, className, ...layoutProps } = this.props;
 
+    void compactLimit;
+
     const events = (
       <KubeObjectListLayout
         {...layoutProps}

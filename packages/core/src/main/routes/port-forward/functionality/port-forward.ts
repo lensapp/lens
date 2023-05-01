@@ -32,7 +32,7 @@ export interface PortForwardDependencies {
 export class PortForward {
   public static portForwards: PortForward[] = [];
 
-  static getPortforward(forward: PortForwardArgs) {
+  static getPortForward(forward: PortForwardArgs) {
     return PortForward.portForwards.find((pf) => (
       pf.clusterId == forward.clusterId &&
       pf.kind == forward.kind &&
@@ -82,7 +82,7 @@ export class PortForward {
     });
 
     this.process.stderr.on("data", (data) => {
-      this.dependencies.logger.debug(`[PORT-FORWARD-ROUTE]: kubectl port-forward process stderr: ${data}`);
+      this.dependencies.logger.debug(`[PORT-FORWARD-ROUTE]: kubectl port-forward process stderr: ${String(data)}`);
     });
 
     const internalPort = await this.dependencies.getPortFromStream(this.process.stdout, {
@@ -103,7 +103,7 @@ export class PortForward {
     }
   }
 
-  public async stop() {
+  public stop() {
     this.process?.kill();
   }
 }

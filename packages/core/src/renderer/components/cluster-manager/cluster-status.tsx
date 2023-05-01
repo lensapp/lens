@@ -143,7 +143,7 @@ class NonInjectedClusterStatus extends React.Component<ClusterStatusProps & Depe
             primary
             label="Reconnect"
             className="box center"
-            onClick={this.reconnect}
+            onClick={() => void this.reconnect()}
             waiting={this.isReconnecting}
           />
           <a

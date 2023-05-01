@@ -8,7 +8,8 @@ import { getApplicationBuilder } from "../../../../renderer/components/test-util
 import type { IObservableValue } from "mobx";
 import { runInAction, computed, observable } from "mobx";
 import React from "react";
-import { KubeObject } from "@k8slens/kube-object";
+import type { KubeObject } from "@k8slens/kube-object";
+import { createKubeObject } from "@k8slens/kube-object";
 import apiManagerInjectable from "../../../../common/k8s-api/api-manager/manager.injectable";
 import type { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 import type { KubeApi } from "@k8slens/kube-api";
@@ -24,9 +25,9 @@ describe("reactively hide kube object detail item", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.setEnvironmentToClusterFrame();
+    await builder.setEnvironmentToClusterFrame();
 
-    builder.afterWindowStart(({ windowDi }) => {
+    await builder.afterWindowStart(({ windowDi }) => {
       const apiManager = windowDi.inject(apiManagerInjectable);
       const api = {
         apiBase: "/api/some-api-version/some-kind",
@@ -75,7 +76,7 @@ describe("reactively hide kube object detail item", () => {
 
     showDetails("/api/some-api-version/namespaces/some-namespace/some-kind/some-name");
 
-    builder.extensions.enable(testExtension);
+    await builder.extensions.enable(testExtension);
   });
 
   it("renders", () => {
@@ -112,7 +113,7 @@ describe("reactively hide kube object detail item", () => {
 });
 
 const getKubeObjectStub = (kind: string, apiVersion: string) =>
-  KubeObject.create({
+  createKubeObject({
     apiVersion,
     kind,
     metadata: {

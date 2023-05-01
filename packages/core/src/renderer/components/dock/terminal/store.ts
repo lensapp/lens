@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { action, observable } from "mobx";
+import { observable, runInAction } from "mobx";
 import type { Terminal } from "./terminal";
 import type { TerminalApi } from "../../../api/terminal-api";
 import type { DockTab, TabId } from "../dock/store";
@@ -21,38 +21,42 @@ interface Dependencies {
 }
 
 export class TerminalStore {
-  protected terminals = new Map<TabId, Terminal>();
-  protected connections = observable.map<TabId, TerminalApi>();
+  protected readonly terminals = new Map<TabId, Terminal>();
+  protected readonly connections = observable.map<TabId, TerminalApi>();
 
-  constructor(private dependencies: Dependencies) {
-  }
+  constructor(private readonly dependencies: Dependencies) {}
 
-  @action
   connect(tab: ITerminalTab) {
     if (this.isConnected(tab.id)) {
       return;
     }
-    const api = this.dependencies.createTerminalApi({
-      id: tab.id,
-      node: tab.node,
+
+    const api = runInAction(() => {
+      const api = this.dependencies.createTerminalApi({
+        id: tab.id,
+        node: tab.node,
+      });
+      const terminal = this.dependencies.createTerminal(tab.id, api);
+
+      this.connections.set(tab.id, api);
+      this.terminals.set(tab.id, terminal);
+
+      return api;
     });
-    const terminal = this.dependencies.createTerminal(tab.id, api);
 
-    this.connections.set(tab.id, api);
-    this.terminals.set(tab.id, terminal);
-
-    api.connect();
+    return api.connect();
   }
 
-  @action
   destroy(tabId: TabId) {
-    const terminal = this.terminals.get(tabId);
-    const terminalApi = this.connections.get(tabId);
+    runInAction(() => {
+      const terminal = this.terminals.get(tabId);
+      const terminalApi = this.connections.get(tabId);
 
-    terminal?.destroy();
-    terminalApi?.destroy();
-    this.connections.delete(tabId);
-    this.terminals.delete(tabId);
+      terminal?.destroy();
+      terminalApi?.destroy();
+      this.connections.delete(tabId);
+      this.terminals.delete(tabId);
+    });
   }
 
   /**
@@ -62,8 +66,8 @@ export class TerminalStore {
     this.destroy(tabId);
   }
 
-  reconnect(tabId: TabId) {
-    this.connections.get(tabId)?.connect();
+  async reconnect(tabId: TabId) {
+    await this.connections.get(tabId)?.connect();
   }
 
   isConnected(tabId: TabId) {

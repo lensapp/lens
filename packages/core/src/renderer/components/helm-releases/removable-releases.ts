@@ -10,7 +10,7 @@ import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-release
 interface Dependencies {
   releases: IAsyncComputed<HelmRelease[]>;
   releaseSelectionStatus: ObservableMap<string, boolean>;
-  deleteRelease: (release: HelmRelease) => Promise<any>;
+  deleteRelease: (release: HelmRelease) => Promise<void>;
 }
 
 export interface RemovableHelmRelease extends HelmRelease {

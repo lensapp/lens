@@ -31,9 +31,6 @@ import { loggerInjectionToken } from "@k8slens/logger";
 import { PodDetailsContainers } from "./details/containers/pod-details-containers";
 import { PodDetailsInitContainers } from "./details/containers/pod-details-init-containers";
 
-export interface PodDetailsProps extends KubeObjectDetailsProps<Pod> {
-}
-
 interface Dependencies {
   getDetailsUrl: GetDetailsUrl;
   nodeApi: NodeApi;
@@ -44,7 +41,7 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedPodDetails extends React.Component<PodDetailsProps & Dependencies> {
+class NonInjectedPodDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
   render() {
     const { object: pod, getDetailsUrl, nodeApi, logger } = this.props;
 
@@ -172,7 +169,7 @@ class NonInjectedPodDetails extends React.Component<PodDetailsProps & Dependenci
   }
 }
 
-export const PodDetails = withInjectables<Dependencies, PodDetailsProps>(NonInjectedPodDetails, {
+export const PodDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedPodDetails, {
   getProps: (di, props) => ({
     ...props,
     getDetailsUrl: di.inject(getDetailsUrlInjectable),

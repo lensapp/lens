@@ -19,7 +19,7 @@ describe("disable sidebar items when cluster is not relevant", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.setEnvironmentToClusterFrame();
+    await builder.setEnvironmentToClusterFrame();
 
     isEnabledForClusterMock = asyncFn();
 
@@ -51,7 +51,7 @@ describe("disable sidebar items when cluster is not relevant", () => {
 
     rendered = await builder.render();
 
-    builder.extensions.enable(testExtension);
+    await builder.extensions.enable(testExtension);
   });
 
   describe("given not yet known if extension should be enabled for the cluster", () => {

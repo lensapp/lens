@@ -104,7 +104,7 @@ const upgradeChartModelInjectable = getInjectable({
 
         if (!selectedVersion) {
           return {
-            callWasSuccessful: false,
+            isOk: false,
             error: "No selected version",
           };
         }
@@ -113,7 +113,7 @@ const upgradeChartModelInjectable = getInjectable({
 
         if (editError) {
           return {
-            callWasSuccessful: false,
+            isOk: false,
             error: editError,
           };
         }
@@ -128,14 +128,14 @@ const upgradeChartModelInjectable = getInjectable({
           },
         );
 
-        if (result.callWasSuccessful === true) {
+        if (result.isOk === true) {
           storedConfiguration.invalidate();
 
-          return { callWasSuccessful: true };
+          return { isOk: true };
         }
 
         return {
-          callWasSuccessful: false,
+          isOk: false,
           error: String(result.error),
         };
       },

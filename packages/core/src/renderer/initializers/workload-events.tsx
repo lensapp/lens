@@ -10,13 +10,11 @@ import React from "react";
 import { shouldShowResourceInjectionToken } from "../../features/cluster/showing-kube-resources/common/allowed-resources-injection-token";
 import { Events } from "../components/events/events";
 
-export interface WorkloadEventsProps {}
-
 interface Dependencies {
   workloadEventsAreAllowed: IComputedValue<boolean>;
 }
 
-const NonInjectedWorkloadEvents = observer(({ workloadEventsAreAllowed }: Dependencies & WorkloadEventsProps) => {
+const NonInjectedWorkloadEvents = observer(({ workloadEventsAreAllowed }: Dependencies) => {
   if (!workloadEventsAreAllowed.get()) {
     return null;
   }
@@ -30,7 +28,7 @@ const NonInjectedWorkloadEvents = observer(({ workloadEventsAreAllowed }: Depend
   );
 });
 
-export const WorkloadEvents = withInjectables<Dependencies, WorkloadEventsProps>(NonInjectedWorkloadEvents, {
+export const WorkloadEvents = withInjectables<Dependencies>(NonInjectedWorkloadEvents, {
   getProps: (di, props) => ({
     workloadEventsAreAllowed: di.inject(shouldShowResourceInjectionToken, {
       apiName: "events",

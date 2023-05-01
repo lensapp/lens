@@ -12,7 +12,7 @@ import { observer } from "mobx-react";
 
 interface Dependencies {
   nextEnabled: IComputedValue<boolean>;
-  goForward: () => void;
+  goForward: () => Promise<void>;
 }
 
 const NonInjectedNavigationToForward = observer(({
@@ -22,7 +22,7 @@ const NonInjectedNavigationToForward = observer(({
   <Icon
     data-testid="history-forward"
     material="arrow_forward"
-    onClick={goForward}
+    onClick={() => void goForward()}
     disabled={!nextEnabled.get()}
   />
 ));

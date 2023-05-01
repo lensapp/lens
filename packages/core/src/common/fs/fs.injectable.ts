@@ -3,8 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import type { WriteFileOptions } from "fs";
 import type { ReadOptions } from "fs-extra";
 import fse from "fs-extra";
+
+export type FileSystemFunctions = ReturnType<(typeof fsInjectable)["instantiate"]>;
 
 /**
  * NOTE: Add corresponding override of this injectable in `src/test-utils/override-fs-with-fakes.ts`
@@ -40,13 +43,13 @@ const fsInjectable = getInjectable({
 
     return {
       readFile,
-      readJson: readJson as (file: string, options?: ReadOptions | BufferEncoding) => Promise<any>,
+      readJson: readJson as (file: string, options?: ReadOptions | BufferEncoding) => Promise<unknown>,
       writeFile,
-      writeJson,
+      writeJson: writeJson as (file: string, value: unknown, options?: string | WriteFileOptions) => Promise<void>,
       pathExists,
       readdir,
       readFileSync,
-      readJsonSync,
+      readJsonSync: readJsonSync as (file: string, options?: ReadOptions | BufferEncoding) => unknown,
       writeFileSync,
       writeJsonSync,
       pathExistsSync,

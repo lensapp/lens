@@ -58,7 +58,7 @@ describe("<NamespaceSelectFilter />", () => {
     fetchMock = asyncFn();
     di.override(fetchInjectable, () => fetchMock);
 
-    di.override(hostedClusterInjectable, () => new Cluster({
+    di.override(hostedClusterInjectable, () => Cluster.createForTestingOnly({
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some-path-to-a-kubeconfig",

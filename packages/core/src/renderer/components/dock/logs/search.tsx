@@ -17,7 +17,12 @@ export interface PodLogSearchProps {
   model: LogTabViewModel;
 }
 
-export const LogSearch = observer(({ onSearch, scrollToOverlay, model: { logTabData, searchStore, ...model }}: PodLogSearchProps) => {
+export const LogSearch = observer((props: PodLogSearchProps) => {
+  const { onSearch, scrollToOverlay, model: { logTabData, searchStore, ...model }} = props;
+  const { setNextOverlayActive, setPrevOverlayActive, searchQuery, occurrences } = searchStore;
+  const activeOverlayLine = searchStore.activeOverlayLine.get();
+  const activeFind = searchStore.activeFind.get();
+  const totalFinds = searchStore.totalFinds.get();
   const tabData = logTabData.get();
 
   if (!tabData) {
@@ -27,30 +32,29 @@ export const LogSearch = observer(({ onSearch, scrollToOverlay, model: { logTabD
   const logs = tabData.showTimestamps
     ? model.logs.get()
     : model.logsWithoutTimestamps.get();
-  const { setNextOverlayActive, setPrevOverlayActive, searchQuery, occurrences, activeFind, totalFinds } = searchStore;
   const jumpDisabled = !searchQuery || !occurrences.length;
 
   const setSearch = (query: string) => {
     searchStore.onSearch(logs, query);
     onSearch?.(query);
-    scrollToOverlay(searchStore.activeOverlayLine);
+    scrollToOverlay(activeOverlayLine);
   };
 
   const onPrevOverlay = () => {
     setPrevOverlayActive();
-    scrollToOverlay(searchStore.activeOverlayLine);
+    scrollToOverlay(activeOverlayLine);
   };
 
   const onNextOverlay = () => {
     setNextOverlayActive();
-    scrollToOverlay(searchStore.activeOverlayLine);
+    scrollToOverlay(activeOverlayLine);
   };
 
   const onClear = () => {
     setSearch("");
   };
 
-  const onKeyDown = (evt: React.KeyboardEvent<any>) => {
+  const onKeyDown = (evt: React.KeyboardEvent) => {
     if (evt.key === "Enter") {
       if (evt.shiftKey) {
         onPrevOverlay();
@@ -68,7 +72,7 @@ export const LogSearch = observer(({ onSearch, scrollToOverlay, model: { logTabD
   return (
     <div className="LogSearch flex box grow justify-flex-end gaps align-center">
       <SearchInput
-        value={searchQuery}
+        value={searchQuery.get()}
         onChange={setSearch}
         showClearIcon={true}
         contentRight={totalFinds > 0 && (

@@ -7,64 +7,55 @@ import { KubeConfig } from "@kubernetes/client-node";
 import yaml from "js-yaml";
 import type { Cluster, Context, User } from "@kubernetes/client-node/dist/config_types";
 import { newClusters, newContexts, newUsers } from "@kubernetes/client-node/dist/config_types";
+import type { Result } from "@k8slens/utilities";
 import { isDefined } from "@k8slens/utilities";
-import Joi from "joi";
 import type { PartialDeep } from "type-fest";
+import z from "zod";
+import type { ZodError } from "zod";
 
-const clusterSchema = Joi.object({
-  name: Joi
+const userSchema = z.object({
+  name: z.string()
+    .min(1),
+});
+
+const clusterSchema = z.object({
+  name: z
     .string()
-    .min(1)
-    .required(),
-  cluster: Joi
+    .min(1),
+  cluster: z
     .object({
-      server: Joi
+      server: z
         .string()
-        .min(1)
-        .required(),
-    })
-    .required(),
+        .min(1),
+    }),
 });
 
-const userSchema = Joi.object({
-  name: Joi.string()
-    .min(1)
-    .required(),
-});
-
-const contextSchema = Joi.object({
-  name: Joi.string()
-    .min(1)
-    .required(),
-  context: Joi.object({
-    cluster: Joi.string()
-      .min(1)
-      .required(),
-    user: Joi.string()
-      .min(1)
-      .required(),
+const contextSchema = z.object({
+  name: z.string()
+    .min(1),
+  context: z.object({
+    cluster: z.string()
+      .min(1),
+    user: z.string()
+      .min(1),
   }),
 });
 
-const kubeConfigSchema = Joi.object({
-  users: Joi
-    .array()
-    .items(userSchema)
+const kubeConfigSchema = z.object({
+  users: z
+    .array(userSchema)
     .optional(),
-  clusters: Joi
-    .array()
-    .items(clusterSchema)
+  clusters: z
+    .array(clusterSchema)
     .optional(),
-  contexts: Joi
-    .array()
-    .items(contextSchema)
+  contexts: z
+    .array(contextSchema)
     .optional(),
-  "current-context": Joi
+  "current-context": z
     .string()
     .min(1)
     .optional(),
-})
-  .required();
+});
 
 interface KubeConfigOptions {
   clusters: Cluster[];
@@ -73,37 +64,25 @@ interface KubeConfigOptions {
   currentContext?: string;
 }
 
-interface OptionsResult {
-  options: KubeConfigOptions;
-  error: Joi.ValidationError | undefined;
-}
-
-function loadToOptions(rawYaml: string): OptionsResult {
+function loadToOptions(rawYaml: string): Result<KubeConfigOptions, ZodError<unknown>> {
   const parsed = yaml.load(rawYaml);
-  const { error } = kubeConfigSchema.validate(parsed, {
-    abortEarly: false,
-    allowUnknown: true,
-  });
-  const { value } = kubeConfigSchema.validate(parsed, {
-    abortEarly: false,
-    allowUnknown: true,
-    stripUnknown: {
-      arrays: true,
-    },
-  });
-  const {
-    clusters: rawClusters,
-    users: rawUsers,
-    contexts: rawContexts,
-    "current-context": currentContext,
-  } = value ?? {};
-  const clusters = newClusters(rawClusters);
-  const users = newUsers(rawUsers);
-  const contexts = newContexts(rawContexts);
+  const configParseResult = kubeConfigSchema.safeParse(parsed);
+
+  if (configParseResult.success === false) {
+    return {
+      isOk: false,
+      error: configParseResult.error,
+    };
+  }
 
   return {
-    options: { clusters, users, contexts, currentContext },
-    error,
+    isOk: true,
+    value: {
+      clusters: newClusters(configParseResult.data.clusters),
+      users: newUsers(configParseResult.data.users),
+      contexts: newContexts(configParseResult.data.contexts),
+      currentContext: configParseResult.data["current-context"],
+    },
   };
 }
 
@@ -116,33 +95,32 @@ export function loadFromOptions(options: KubeConfigOptions): KubeConfig {
   return kc;
 }
 
-export interface ConfigResult {
-  config: KubeConfig;
-  error: Joi.ValidationError | undefined;
-}
+export function loadConfigFromString(content: string): Result<KubeConfig, ZodError<unknown>> {
+  const loadResult = loadToOptions(content);
 
-export function loadConfigFromString(content: string): ConfigResult {
-  const { options, error } = loadToOptions(content);
+  if (loadResult.isOk === false) {
+    return loadResult;
+  }
 
   return {
-    config: loadFromOptions(options),
-    error,
+    isOk: true,
+    value: loadFromOptions(loadResult.value),
   };
 }
 
-export function loadValidatedConfig(content: string, contextName: string): ValidateKubeConfigResult {
-  const { options, error } = loadToOptions(content);
+export function loadValidatedConfig(content: string, contextName: string): Result<PartialKubeConfig, ZodError<unknown> | string> {
+  const result = loadToOptions(content);
 
-  if (error) {
-    return { error };
+  if (result.isOk === false) {
+    return result;
   }
 
-  return validateKubeConfig(loadFromOptions(options), contextName);
+  return validateKubeConfig(loadFromOptions(result.value), contextName);
 }
 
 export interface SplitConfigEntry {
   config: KubeConfig;
-  validationResult: ValidateKubeConfigResult;
+  validationResult: Result<PartialKubeConfig, ZodError<unknown> | string>;
 }
 
 /**
@@ -212,8 +190,8 @@ export function dumpConfigYaml(kubeConfig: PartialDeep<KubeConfig>): string {
         "client-certificate": user.certFile,
         "client-key-data": user.keyData,
         "client-key": user.keyFile,
-        "auth-provider": user.authProvider,
-        exec: user.exec,
+        "auth-provider": user.authProvider as unknown,
+        exec: user.exec as unknown,
         token: user.token,
         username: user.username,
         password: user.password,
@@ -233,26 +211,24 @@ export function dumpConfigYaml(kubeConfig: PartialDeep<KubeConfig>): string {
   return yaml.dump(config, { skipInvalid: true });
 }
 
-export type ValidateKubeConfigResult = {
-  error: Error;
-} | {
-  error?: undefined;
-  context: Context;
-  cluster: Cluster;
-  user: User;
-};
+export interface PartialKubeConfig {
+  readonly context: Context;
+  readonly cluster: Cluster;
+  readonly user: User;
+}
 
 /**
  * Checks if `config` has valid `Context`, `User`, `Cluster`, and `exec` fields (if present when required)
  *
  * Note: This function returns an error instead of throwing it, returning `undefined` if the validation passes
  */
-export function validateKubeConfig(config: KubeConfig, contextName: string): ValidateKubeConfigResult {
+export function validateKubeConfig(config: KubeConfig, contextName: string): Result<PartialKubeConfig, string> {
   const context = config.getContextObject(contextName);
 
   if (!context) {
     return {
-      error: new Error(`No valid context object provided in kubeconfig for context '${contextName}'`),
+      isOk: false,
+      error: `No valid context object provided in kubeconfig for context '${contextName}'`,
     };
   }
 
@@ -260,7 +236,8 @@ export function validateKubeConfig(config: KubeConfig, contextName: string): Val
 
   if (!cluster) {
     return {
-      error: new Error(`No valid cluster object provided in kubeconfig for context '${contextName}'`),
+      isOk: false,
+      error: `No valid cluster object provided in kubeconfig for context '${contextName}'`,
     };
   }
 
@@ -268,9 +245,13 @@ export function validateKubeConfig(config: KubeConfig, contextName: string): Val
 
   if (!user) {
     return {
-      error: new Error(`No valid user object provided in kubeconfig for context '${contextName}'`),
+      isOk: false,
+      error: `No valid user object provided in kubeconfig for context '${contextName}'`,
     };
   }
 
-  return { cluster, user, context };
+  return {
+    isOk: true,
+    value: { cluster, user, context },
+  };
 }

@@ -9,7 +9,10 @@ import type { DiContainerForInjection, Injectable } from "@ogre-tools/injectable
 // Register new injectables and deregister removed injectables by id
 
 export const injectableDifferencingRegistratorWith = (di: DiContainerForInjection) => (
-  (rawCurrent: Injectable<any, any, any>[], rawPrevious: Injectable<any, any, any>[] = []) => {
+  <InjectionInstance extends InjectionTokenInstance, InjectionTokenInstance, InstantiationParam>(
+    rawCurrent: Injectable<InjectionInstance, InjectionTokenInstance, InstantiationParam>[],
+    rawPrevious: Injectable<InjectionInstance, InjectionTokenInstance, InstantiationParam>[] = [],
+  ) => {
     const current = new Map(rawCurrent.map(inj => [inj.id, inj]));
     const previous = new Map(rawPrevious.map(inj => [inj.id, inj]));
     const toAdd = iter.chain(current.entries())

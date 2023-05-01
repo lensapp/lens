@@ -22,7 +22,7 @@ export interface HelmReleaseMenuProps extends MenuActionsProps {
 }
 
 interface Dependencies {
-  deleteRelease: (release: HelmRelease) => Promise<any>;
+  deleteRelease: (release: HelmRelease) => Promise<void>;
   createUpgradeChartTab: (release: HelmRelease) => void;
   openRollbackDialog: OpenHelmReleaseRollbackDialog;
 }

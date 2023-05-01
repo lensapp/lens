@@ -9,18 +9,24 @@ import React from "react";
 import { observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import type { RuntimeClass } from "@k8slens/kube-object";
+import { RuntimeClass } from "@k8slens/kube-object";
 import { Badge } from "../badge";
 import { RuntimeClassDetailsTolerations } from "./runtime-classes-details-tolerations";
 
-export interface RuntimeClassesDetailsProps extends KubeObjectDetailsProps<RuntimeClass> {
-}
-
 @observer
-export class RuntimeClassesDetails extends React.Component<RuntimeClassesDetailsProps> {
+export class RuntimeClassesDetails extends React.Component<KubeObjectDetailsProps> {
 
   render() {
     const { object: rc } = this.props;
+
+    if (!rc) {
+      return null;
+    }
+
+    if (!(rc instanceof RuntimeClass)) {
+      return null;
+    }
+
     const nodeSelector = rc.getNodeSelectors();
 
     return (

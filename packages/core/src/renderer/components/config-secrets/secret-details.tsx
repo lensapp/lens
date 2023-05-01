@@ -25,9 +25,6 @@ import showSuccessNotificationInjectable from "../notifications/show-success-not
 import type { ShowCheckedErrorNotification } from "../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../notifications/show-checked-error.injectable";
 
-export interface SecretDetailsProps extends KubeObjectDetailsProps<Secret> {
-}
-
 interface Dependencies {
   secretStore: SecretStore;
   logger: Logger;
@@ -36,12 +33,12 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedSecretDetails extends React.Component<SecretDetailsProps & Dependencies> {
+class NonInjectedSecretDetails extends React.Component<KubeObjectDetailsProps & Dependencies> {
   @observable isSaving = false;
   @observable data: Partial<Record<string, string>> = {};
   @observable revealSecret = observable.set<string>();
 
-  constructor(props: SecretDetailsProps & Dependencies) {
+  constructor(props: KubeObjectDetailsProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -49,7 +46,7 @@ class NonInjectedSecretDetails extends React.Component<SecretDetailsProps & Depe
   componentDidMount() {
     disposeOnUnmount(this, [
       autorun(() => {
-        const { object: secret } = this.props;
+        const secret = this.props.object as Secret;
 
         if (secret) {
           this.data = secret.data;
@@ -59,9 +56,7 @@ class NonInjectedSecretDetails extends React.Component<SecretDetailsProps & Depe
     ]);
   }
 
-  saveSecret = () => {
-    const { object: secret } = this.props;
-
+  saveSecret = (secret: Secret) => {
     void (async () => {
       this.isSaving = true;
 
@@ -125,7 +120,7 @@ class NonInjectedSecretDetails extends React.Component<SecretDetailsProps & Depe
     );
   };
 
-  renderData() {
+  renderData(secret: Secret) {
     const secrets = Object.entries(this.data);
 
     if (secrets.length === 0) {
@@ -141,7 +136,7 @@ class NonInjectedSecretDetails extends React.Component<SecretDetailsProps & Depe
           label="Save"
           waiting={this.isSaving}
           className="save-btn"
-          onClick={this.saveSecret}
+          onClick={() => this.saveSecret(secret)}
         />
       </>
     );
@@ -165,13 +160,13 @@ class NonInjectedSecretDetails extends React.Component<SecretDetailsProps & Depe
         <DrawerItem name="Type">
           {secret.type}
         </DrawerItem>
-        {this.renderData()}
+        {this.renderData(secret)}
       </div>
     );
   }
 }
 
-export const SecretDetails = withInjectables<Dependencies, SecretDetailsProps>(NonInjectedSecretDetails, {
+export const SecretDetails = withInjectables<Dependencies, KubeObjectDetailsProps>(NonInjectedSecretDetails, {
   getProps: (di, props) => ({
     ...props,
     logger: di.inject(loggerInjectionToken),

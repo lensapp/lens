@@ -6,6 +6,6 @@
 import { getGlobalOverride } from "@k8slens/test-utils";
 import computeUnixShellEnvironmentInjectable from "./compute-unix-shell-environment.injectable";
 
-export default getGlobalOverride(computeUnixShellEnvironmentInjectable, () => async () => {
-  throw new Error("Tried to get unix shell env without override");
-});
+export default getGlobalOverride(computeUnixShellEnvironmentInjectable, () => () => Promise.reject(
+  new Error("Tried to get unix shell env without override"),
+));
