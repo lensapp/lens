@@ -32,13 +32,7 @@ export function withTooltip<TargetProps>(
     const [defaultTooltipId] = useState(uniqueId("tooltip_target_"));
 
     let { id: targetId, children: targetChildren } = props;
-    const {
-      tooltip,
-      tooltipOverrideDisabled,
-      id: _unusedId,
-      children: _unusedTargetChildren,
-      ...targetProps
-    } = props;
+    const { tooltip, tooltipOverrideDisabled, id: _unusedId, children: _unusedTargetChildren, ...targetProps } = props;
 
     if (tooltip) {
       const tooltipProps: TooltipProps = {

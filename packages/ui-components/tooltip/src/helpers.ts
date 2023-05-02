@@ -115,8 +115,7 @@ export const computeNextPosition = ({
       tooltipBounds,
       targetBounds,
     });
-    const fitsToWindow =
-      left >= 0 && top >= 0 && right <= viewportWidth && bottom <= viewportHeight;
+    const fitsToWindow = left >= 0 && top >= 0 && right <= viewportWidth && bottom <= viewportHeight;
 
     if (fitsToWindow) {
       return {
