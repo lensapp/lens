@@ -28,6 +28,7 @@ export * from "./probe";
 export * from "./resource-field-selector";
 export * from "./resource-requirements";
 export * from "./role-ref";
+export * from "./scale";
 export * from "./se-linux-options";
 export * from "./seccomp-profile";
 export * from "./subject";
