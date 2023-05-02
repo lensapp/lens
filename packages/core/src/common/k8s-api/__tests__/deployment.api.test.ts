@@ -32,8 +32,8 @@ describe("DeploymentApi", () => {
   });
 
   describe("scale", () => {
-    it("requests Kubernetes API with PATCH verb and correct amount of replicas", () => {
-      void deploymentApi.scale({ namespace: "default", name: "deployment-1" }, 5);
+    it("requests Kubernetes API with PATCH verb and correct amount of replicas", async () => {
+      await deploymentApi.scale({ namespace: "default", name: "deployment-1" }, 5);
 
       expect(kubeJsonApi.patch).toHaveBeenCalledWith("/apis/apps/v1/namespaces/default/deployments/deployment-1/scale", {
         data: {
