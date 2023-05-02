@@ -28,4 +28,5 @@ jobs:
           npm run create-release-pr
         env:
           BUMP_PACKAGE_ARGS: -- --conventional-commits --conventional-prerelease --yes
+          PICK_ALL_PRS: "true"
           GH_TOKEN: ${{ secrets.GH_TOKEN }}

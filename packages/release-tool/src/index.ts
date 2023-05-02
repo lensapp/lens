@@ -206,7 +206,7 @@ function sortExtendedGithubPrData(left: ExtendedGithubPrData, right: ExtendedGit
 }
 
 async function getRelevantPRs(previousReleasedVersion: string, baseBranch: string): Promise<ExtendedGithubPrData[]> {
-  console.log("retrieving previous 200 PRs...");
+  console.log(`retrieving previous 200 PRs from ${baseBranch}...`);
 
   const milestone = formatVersionForPickingPrs(await getCurrentVersionOfSubPackage("core"));
   const getMergedPrsArgs = [
@@ -334,7 +334,7 @@ async function pickRelevantPrs(prs: ExtendedGithubPrData[], isMasterBranch: bool
     throw new Error("Cannot pick relevant PRs for release if there are none. Are the milestones on github correct?");
   }
 
-  if (isMasterBranch) {
+  if (isMasterBranch || process.env.PICK_ALL_PRS === "true") {
     return prs;
   }
 
