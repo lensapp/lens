@@ -25,4 +25,5 @@ export const loggerInjectable = getInjectable({
   },
 
   decorable: false,
+  injectionToken: loggerInjectionToken,
 });
