@@ -48,6 +48,10 @@ module.exports = {
             "allowTemplateLiterals": true
           }
         ],
+        "@typescript-eslint/no-use-before-define": ["error", {
+          "functions": false,
+          "classes": false,
+        }],
         "padding-line-between-statements": [
           "error",
           {
