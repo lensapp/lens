@@ -16,7 +16,7 @@ import { cssNames } from "@k8slens/utilities";
 import { ContainerScalingMode, ControlledValues, ResourceName, UpdateMode, VerticalPodAutoscaler } from "@k8slens/kube-object";
 import type { PodUpdatePolicy, PodResourcePolicy, VerticalPodAutoscalerStatus } from "@k8slens/kube-object";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import type { Logger } from "@k8slens/logger";
 import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -213,6 +213,6 @@ export const VpaDetails = withInjectables<Dependencies, VpaDetailsProps>(NonInje
     ...props,
     apiManager: di.inject(apiManagerInjectable),
     getDetailsUrl: di.inject(getDetailsUrlInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });

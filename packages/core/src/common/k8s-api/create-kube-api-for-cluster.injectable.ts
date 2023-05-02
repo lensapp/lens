@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import { apiKubePrefix } from "../vars";
 import isDevelopmentInjectable from "../vars/is-development.injectable";
 import apiBaseInjectable from "./api-base.injectable";
@@ -37,7 +37,7 @@ const createKubeApiForClusterInjectable = getInjectable({
     const apiBase = di.inject(apiBaseInjectable);
     const isDevelopment = di.inject(isDevelopmentInjectable);
     const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
 
     return (
       cluster: CreateKubeApiForLocalClusterConfig,

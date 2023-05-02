@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 
 const logErrorInjectable = getInjectable({
   id: "log-error",
-  instantiate: (di) => di.inject(loggerInjectable).error,
+  instantiate: (di) => di.inject(loggerInjectionToken).error,
   decorable: false,
 });
 

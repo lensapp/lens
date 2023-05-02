@@ -16,7 +16,7 @@ import { when } from "mobx";
 import React from "react";
 import type { InstallRequestValidated } from "./create-temp-files-and-validate.injectable";
 import extractTarInjectable from "../../../../common/fs/extract-tar.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import showInfoNotificationInjectable from "../../notifications/show-info-notification.injectable";
 import showErrorNotificationInjectable from "../../notifications/show-error-notification.injectable";
 
@@ -29,7 +29,7 @@ const unpackExtensionInjectable = getInjectable({
     const getExtensionDestFolder = di.inject(getExtensionDestFolderInjectable);
     const extensionInstallationStateStore = di.inject(extensionInstallationStateStoreInjectable);
     const extractTar = di.inject(extractTarInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
     const showInfoNotification = di.inject(showInfoNotificationInjectable);
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
 

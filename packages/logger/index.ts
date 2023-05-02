@@ -4,7 +4,7 @@
  */
 
 export type { Logger } from "./src/logger";
-export { loggerInjectable } from "./src/logger.injectable";
+export { loggerInjectionToken } from "./src/logger.injectable";
 export { prefixedLoggerInjectable } from "./src/prefixed-logger.injectable";
 export { loggerTransportInjectionToken } from "./src/transports";
 export { winstonLoggerInjectable } from "./src/winston-logger.injectable";

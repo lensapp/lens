@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import statInjectable from "../../../../../../common/fs/stat.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 
 export interface SyncKind {
   type: "file" | "folder" | "unknown";
@@ -16,7 +16,7 @@ const discoverKubeconfigSyncKindInjectable = getInjectable({
   id: "discover-kubeconfig-sync-kind",
   instantiate: (di): DiscoverKubeconfigSyncKind => {
     const stat = di.inject(statInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
 
     return async (path) => {
       try {

@@ -10,7 +10,7 @@ import shellApiRequestInjectable from "./proxy-functions/shell-api-request.injec
 import lensProxyPortInjectable from "./lens-proxy-port.injectable";
 import contentSecurityPolicyInjectable from "../../common/vars/content-security-policy.injectable";
 import emitAppEventInjectable from "../../common/app-event-bus/emit-event.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import lensProxyCertificateInjectable from "../../common/certificate/lens-proxy-certificate.injectable";
 import getClusterForRequestInjectable from "./get-cluster-for-request.injectable";
 import kubeAuthProxyServerInjectable from "../cluster/kube-auth-proxy-server.injectable";
@@ -28,7 +28,7 @@ const lensProxyInjectable = getInjectable({
     lensProxyPort: di.inject(lensProxyPortInjectable),
     contentSecurityPolicy: di.inject(contentSecurityPolicyInjectable),
     emitAppEvent: di.inject(emitAppEventInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
     certificate: di.inject(lensProxyCertificateInjectable).get(),
     getKubeAuthProxyServer: (cluster) => di.inject(kubeAuthProxyServerInjectable, cluster),
   }),

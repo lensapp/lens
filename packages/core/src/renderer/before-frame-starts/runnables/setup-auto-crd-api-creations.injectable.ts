@@ -9,7 +9,7 @@ import type { CustomResourceDefinition } from "@k8slens/kube-object";
 import { KubeApi } from "../../../common/k8s-api/kube-api";
 import { KubeObject } from "@k8slens/kube-object";
 import maybeKubeApiInjectable from "../../../common/k8s-api/maybe-kube-api.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import { injectableDifferencingRegistratorWith } from "../../../common/utils/registrator-helper";
 import customResourceDefinitionStoreInjectable from "../../components/custom-resources/definition.store.injectable";
 import { beforeClusterFrameStartsSecondInjectionToken } from "../tokens";
@@ -45,7 +45,7 @@ const toCrdApiInjectable = (crd: CustomResourceDefinition) => getInjectable({
     };
 
     return new KubeApi({
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
       maybeKubeApi: di.inject(maybeKubeApiInjectable),
     }, { objectConstructor });
   },

@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type React from "react";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import showCheckedErrorNotificationInjectable from "../notifications/show-checked-error.injectable";
 import kubeconfigDialogStateInjectable from "./state.injectable";
 
@@ -20,7 +20,7 @@ const openKubeconfigDialogInjectable = getInjectable({
   instantiate: (di): OpenKubeconfigDialog => {
     const state = di.inject(kubeconfigDialogStateInjectable);
     const showCheckedErrorNotification = di.inject(showCheckedErrorNotificationInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
 
     return ({ title, loader }) => {
       (async () => {

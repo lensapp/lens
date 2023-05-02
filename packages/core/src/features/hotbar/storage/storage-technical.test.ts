@@ -12,7 +12,7 @@ import type { IComputedValue } from "mobx";
 import { computed } from "mobx";
 import hasCategoryForEntityInjectable from "../../../common/catalog/has-category-for-entity.injectable";
 import catalogCatalogEntityInjectable from "../../../common/catalog-entities/general-catalog-entities/implementations/catalog-catalog-entity.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import type { Logger } from "@k8slens/logger";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import storeMigrationVersionInjectable from "../../../common/vars/store-migration-version.injectable";
@@ -109,7 +109,7 @@ describe("Hotbars technical tests", () => {
       silly: jest.fn(),
     };
 
-    di.override(loggerInjectable, () => loggerMock);
+    di.override(loggerInjectionToken, () => loggerMock);
 
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
 

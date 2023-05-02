@@ -10,7 +10,7 @@ import type { LensApiRequest } from "../../router/route";
 import path from "path";
 import type { SupportedFileExtension } from "../../router/router-content-types";
 import { contentTypes } from "../../router/router-content-types";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import { publicPath } from "../../../common/vars";
 
 const prodStaticFileRouteHandlerInjectable = getInjectable({
@@ -19,7 +19,7 @@ const prodStaticFileRouteHandlerInjectable = getInjectable({
     const readFileBuffer = di.inject(readFileBufferInjectable);
     const joinPaths = di.inject(joinPathsInjectable);
     const staticFilesDirectory = di.inject(staticFilesDirectoryInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
 
     return async ({ params }: LensApiRequest<"/{path*}">) => {
       let filePath = params.path;

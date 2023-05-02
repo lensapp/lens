@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import { beforeFrameStartsSecondInjectionToken } from "../before-frame-starts/tokens";
 import { observableHistoryInjectionToken } from "@k8slens/routing";
 
@@ -11,7 +11,7 @@ const setupLoggingForNavigationInjectable = getInjectable({
   id: "setup-logging-for-navigation",
   instantiate: (di) => ({
     run: () => {
-      const logger = di.inject(loggerInjectable);
+      const logger = di.inject(loggerInjectionToken);
       const observableHistory = di.inject(observableHistoryInjectionToken);
 
       observableHistory.listen((location, action) => {

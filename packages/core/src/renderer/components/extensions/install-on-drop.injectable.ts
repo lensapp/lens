@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import attemptInstallsInjectable from "./attempt-installs.injectable";
 
 export type InstallOnDrop = (files: File[]) => Promise<void>;
@@ -13,7 +13,7 @@ const installOnDropInjectable = getInjectable({
 
   instantiate: (di): InstallOnDrop => {
     const attemptInstalls = di.inject(attemptInstallsInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
 
     return (files) => {
       logger.info("Install from D&D");

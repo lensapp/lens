@@ -7,7 +7,7 @@ import { apiPrefix } from "../../../common/vars";
 import { PortForward } from "./functionality/port-forward";
 import createPortForwardInjectable from "./functionality/create-port-forward.injectable";
 import { clusterRoute } from "../../router/route";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import kubeconfigManagerInjectable from "../../kubeconfig-manager/kubeconfig-manager.injectable";
 
 const startPortForwardRouteInjectable = getRouteInjectable({
@@ -15,7 +15,7 @@ const startPortForwardRouteInjectable = getRouteInjectable({
 
   instantiate: (di) => {
     const createPortForward = di.inject(createPortForwardInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
 
     return clusterRoute({
       method: "post",

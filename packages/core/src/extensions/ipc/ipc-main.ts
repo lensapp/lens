@@ -11,7 +11,7 @@ import { once } from "lodash";
 import { ipcMainHandle } from "../../common/ipc";
 import type { Logger } from "@k8slens/logger";
 import { getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "@k8slens/legacy-global-di";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 
 interface Dependencies {
   readonly logger: Logger;
@@ -26,7 +26,7 @@ export abstract class IpcMain extends IpcRegistrar {
     const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi("main");
 
     this.dependencies = {
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
     };
 
     // Call the static method on the bottom child class.

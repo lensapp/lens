@@ -5,7 +5,7 @@
 import { getMessageFromError } from "../get-message-from-error/get-message-from-error";
 import { getInjectable } from "@ogre-tools/injectable";
 import showErrorNotificationInjectable from "../../notifications/show-error-notification.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import readFileBufferInjectable from "../../../../common/fs/read-file-buffer.injectable";
 
 export type ReadFileNotify = (filePath: string, showError?: boolean) => Promise<Buffer | null>;
@@ -14,7 +14,7 @@ const readFileNotifyInjectable = getInjectable({
   id: "read-file-notify",
   instantiate: (di): ReadFileNotify => {
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
     const readFileBuffer = di.inject(readFileBufferInjectable);
 
     return async (filePath, showError = true) => {

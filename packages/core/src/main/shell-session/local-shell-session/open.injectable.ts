@@ -11,7 +11,7 @@ import directoryForBinariesInjectable from "../../../common/app-paths/directory-
 import isMacInjectable from "../../../common/vars/is-mac.injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import type WebSocket from "ws";
 import getDirnameOfPathInjectable from "../../../common/path/get-dirname.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
@@ -45,7 +45,7 @@ const openLocalShellSessionInjectable = getInjectable({
       directoryForBinaries: di.inject(directoryForBinariesInjectable),
       isMac: di.inject(isMacInjectable),
       isWindows: di.inject(isWindowsInjectable),
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
       state: di.inject(userPreferencesStateInjectable),
       userShellSetting: di.inject(userShellSettingInjectable),
       appName: di.inject(appNameInjectable),

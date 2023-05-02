@@ -16,7 +16,7 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import type { Logger } from "@k8slens/logger";
 import { isEmpty } from "lodash";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 
 export interface NetworkPolicyDetailsProps extends KubeObjectDetailsProps<NetworkPolicy> {
 }
@@ -213,6 +213,6 @@ class NonInjectedNetworkPolicyDetails extends React.Component<NetworkPolicyDetai
 export const NetworkPolicyDetails = withInjectables<Dependencies, NetworkPolicyDetailsProps>(NonInjectedNetworkPolicyDetails, {
   getProps: (di, props) => ({
     ...props,
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });

@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import electronUpdaterInjectable from "../../../../../main/electron-app/features/electron-updater.injectable";
 import type { UpdateChannel } from "../../../common/update-channels";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import type { UpdateCheckResult } from "electron-updater";
 
 export type CheckForUpdatesResult = {
@@ -22,7 +22,7 @@ const checkForPlatformUpdatesInjectable = getInjectable({
 
   instantiate: (di): CheckForPlatformUpdates => {
     const electronUpdater = di.inject(electronUpdaterInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
 
     return async (updateChannel, { allowDowngrade }) => {
       electronUpdater.channel = updateChannel.id;

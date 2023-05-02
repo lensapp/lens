@@ -7,7 +7,7 @@ import type { PortForwardArgs, PortForwardDependencies } from "./port-forward";
 import { PortForward } from "./port-forward";
 import bundledKubectlInjectable from "../../../kubectl/bundled-kubectl.injectable";
 import getPortFromStreamInjectable from "../../../utils/get-port-from-stream.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 
 export type CreatePortForward = (pathToKubeConfig: string, args: PortForwardArgs) => PortForward;
 
@@ -18,7 +18,7 @@ const createPortForwardInjectable = getInjectable({
     const dependencies: PortForwardDependencies = {
       getKubectlBinPath: di.inject(bundledKubectlInjectable).getPath,
       getPortFromStream: di.inject(getPortFromStreamInjectable),
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
     };
 
     return (pathToKubeConfig, args) => new PortForward(dependencies, pathToKubeConfig, args);

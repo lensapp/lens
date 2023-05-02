@@ -7,7 +7,7 @@ import assert from "assert";
 import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
 import { NetworkPolicyApi } from "./network-policy.api";
 import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 
 const networkPolicyApiInjectable = getInjectable({
@@ -16,7 +16,7 @@ const networkPolicyApiInjectable = getInjectable({
     assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "networkPolicyApi is only available in certain environments");
 
     return new NetworkPolicyApi({
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
       maybeKubeApi: di.inject(maybeKubeApiInjectable),
     });
   },

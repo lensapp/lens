@@ -21,7 +21,7 @@ import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.inject
 import { withInjectables } from "@ogre-tools/injectable-react";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import getHorizontalPodAutoscalerMetrics from "./get-metrics.injectable";
 import { getMetricName } from "./get-metric-name";
 
@@ -182,7 +182,7 @@ export const HorizontalPodAutoscalerDetails = withInjectables<Dependencies, HpaD
     ...props,
     apiManager: di.inject(apiManagerInjectable),
     getDetailsUrl: di.inject(getDetailsUrlInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
     getMetrics: di.inject(getHorizontalPodAutoscalerMetrics),
   }),
 });

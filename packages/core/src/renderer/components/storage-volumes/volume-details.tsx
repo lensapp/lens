@@ -17,7 +17,7 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import type { Logger } from "@k8slens/logger";
 import { stopPropagation } from "@k8slens/utilities";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import persistentVolumeClaimApiInjectable from "../../../common/k8s-api/endpoints/persistent-volume-claim.api.injectable";
@@ -144,7 +144,7 @@ class NonInjectedPersistentVolumeDetails extends React.Component<PersistentVolum
 export const PersistentVolumeDetails = withInjectables<Dependencies, PersistentVolumeDetailsProps>(NonInjectedPersistentVolumeDetails, {
   getProps: (di, props) => ({
     ...props,
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
     getDetailsUrl: di.inject(getDetailsUrlInjectable),
     persistentVolumeClaimApi: di.inject(persistentVolumeClaimApiInjectable),
     storageClassApi: di.inject(storageClassApiInjectable),

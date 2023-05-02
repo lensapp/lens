@@ -7,7 +7,7 @@ import assert from "assert";
 import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
 import { VerticalPodAutoscalerApi } from "./vertical-pod-autoscaler.api";
 import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 
 const verticalPodAutoscalerApiInjectable = getInjectable({
@@ -16,7 +16,7 @@ const verticalPodAutoscalerApiInjectable = getInjectable({
     assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "verticalPodAutoscalerApi is only available in certain environments");
 
     return new VerticalPodAutoscalerApi({
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
       maybeKubeApi: di.inject(maybeKubeApiInjectable),
     });
   },

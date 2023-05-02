@@ -7,7 +7,7 @@ import assert from "assert";
 import getPersistentVolumesByStorageClassInjectable from "../storage-volumes/get-persistent-volumes-by-storage-class.injectable";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/kube-object-store-token";
 import storageClassApiInjectable from "../../../common/k8s-api/endpoints/storage-class.api.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import clusterFrameContextForClusterScopedResourcesInjectable from "../../cluster-frame-context/for-cluster-scoped-resources.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { StorageClassStore } from "./store";
@@ -22,7 +22,7 @@ const storageClassStoreInjectable = getInjectable({
     return new StorageClassStore({
       getPersistentVolumesByStorageClass: di.inject(getPersistentVolumesByStorageClassInjectable),
       context: di.inject(clusterFrameContextForClusterScopedResourcesInjectable),
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
     }, api);
   },
   injectionToken: kubeObjectStoreInjectionToken,

@@ -7,7 +7,7 @@ import assert from "assert";
 import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
 import { PriorityClassApi } from "./priority-class.api";
 import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 
 const priorityClassApiInjectable = getInjectable({
@@ -16,7 +16,7 @@ const priorityClassApiInjectable = getInjectable({
     assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "PriorityClassApi is only available in certain environments");
 
     return new PriorityClassApi({
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
       maybeKubeApi: di.inject(maybeKubeApiInjectable),
     });
   },

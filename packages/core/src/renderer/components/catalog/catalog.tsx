@@ -29,7 +29,7 @@ import visitEntityContextMenuInjectable from "../../../common/catalog/visit-enti
 import type { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import type { Logger } from "@k8slens/logger";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import type { NormalizeCatalogEntityContextMenu } from "../../catalog/normalize-menu-item.injectable";
 import normalizeCatalogEntityContextMenuInjectable from "../../catalog/normalize-menu-item.injectable";
 import type { Navigate } from "../../navigation/navigate.injectable";
@@ -331,7 +331,7 @@ export const Catalog = withInjectables<Dependencies>(NonInjectedCatalog, {
     visitEntityContextMenu: di.inject(visitEntityContextMenuInjectable),
     navigate: di.inject(navigateInjectable),
     normalizeMenuItem: di.inject(normalizeCatalogEntityContextMenuInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
     showErrorNotification: di.inject(showErrorNotificationInjectable),
     showEntityDetails: di.inject(showEntityDetailsInjectable),
     onCatalogEntityListClick: di.inject(onCatalogEntityListClickInjectable),

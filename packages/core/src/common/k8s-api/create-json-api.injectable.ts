@@ -7,7 +7,7 @@ import { Agent } from "https";
 import type { RequestInit } from "@k8slens/node-fetch";
 import lensProxyCertificateInjectable from "../certificate/lens-proxy-certificate.injectable";
 import fetchInjectable from "../fetch/fetch.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import type { JsonApiConfig, JsonApiData, JsonApiDependencies, JsonApiParams } from "./json-api";
 import { JsonApi } from "./json-api";
 
@@ -18,7 +18,7 @@ const createJsonApiInjectable = getInjectable({
   instantiate: (di): CreateJsonApi => {
     const deps: JsonApiDependencies = {
       fetch: di.inject(fetchInjectable),
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
     };
     const lensProxyCert = di.inject(lensProxyCertificateInjectable);
 

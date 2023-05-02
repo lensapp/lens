@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { setupIpcMainHandlers } from "./setup-ipc-main-handlers";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 import applicationMenuItemCompositeInjectable from "../../../../features/application-menu/main/application-menu-item-composite.injectable";
 import pushCatalogToRendererInjectable from "../../../catalog-sync-to-renderer/push-catalog-to-renderer.injectable";
@@ -17,7 +17,7 @@ const setupIpcMainHandlersInjectable = getInjectable({
 
   instantiate: (di) => ({
     run: () => {
-      const logger = di.inject(loggerInjectable);
+      const logger = di.inject(loggerInjectionToken);
 
       logger.debug("[APP-MAIN] initializing ipc main handlers");
 

@@ -4,12 +4,12 @@
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import type { Logger } from "./logger";
-import { loggerInjectable } from "./logger.injectable";
+import { loggerInjectionToken } from "./logger.injectable";
 
 export const prefixedLoggerInjectable = getInjectable({
   id: "prefixed-logger",
   instantiate: (di, prefix): Logger => {
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
 
     return {
       debug: (message, ...args) => {

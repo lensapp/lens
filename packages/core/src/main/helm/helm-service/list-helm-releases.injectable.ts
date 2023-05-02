@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import kubeconfigManagerInjectable from "../../kubeconfig-manager/kubeconfig-manager.injectable";
 import listHelmReleasesInjectable from "../list-helm-releases.injectable";
 
@@ -12,7 +12,7 @@ const listClusterHelmReleasesInjectable = getInjectable({
   id: "list-cluster-helm-releases",
 
   instantiate: (di) => {
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
     const listHelmReleases = di.inject(listHelmReleasesInjectable);
 
     return async (cluster: Cluster, namespace?: string) => {
