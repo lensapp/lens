@@ -13,7 +13,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { userPreferencesMigrationInjectionToken } from "../../../features/user-preferences/common/migrations-token";
 import readJsonSyncInjectable from "../../../common/fs/read-json-sync.injectable";
 import homeDirectoryPathInjectable from "../../../common/os/home-directory-path.injectable";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import pathExistsSyncInjectable from "../../../common/fs/path-exists-sync.injectable";
 import type { ClusterStoreModel } from "../../../features/cluster/storage/common/storage.injectable";
 import type { UserPreferencesModel, KubeconfigSyncEntry } from "../common/preferences-helpers";

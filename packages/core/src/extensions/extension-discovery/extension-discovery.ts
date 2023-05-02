@@ -15,7 +15,7 @@ import type { ExtensionInstallationStateStore } from "../extension-installation-
 import { extensionDiscoveryStateChannel } from "../../common/ipc/extension-handling";
 import { requestInitialExtensionDiscovery } from "../../renderer/ipc";
 import type { ReadJson } from "../../common/fs/read-json-file.injectable";
-import type { Logger } from "../../common/logger";
+import type { Logger } from "@k8slens/logger";
 import type { PathExists } from "../../common/fs/path-exists.injectable";
 import type { Watch, Watcher } from "../../common/fs/watch/watch.injectable";
 import type { Stats } from "fs";

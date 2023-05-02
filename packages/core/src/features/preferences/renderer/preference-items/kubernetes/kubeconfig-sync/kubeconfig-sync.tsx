@@ -13,8 +13,8 @@ import { PathPicker } from "../../../../../../renderer/components/path-picker/pa
 import { Spinner } from "../../../../../../renderer/components/spinner";
 import { RemovableItem } from "../../../removable-item/removable-item";
 import isWindowsInjectable from "../../../../../../common/vars/is-windows.injectable";
-import loggerInjectable from "../../../../../../common/logger.injectable";
-import type { Logger } from "../../../../../../common/logger";
+import { loggerInjectable } from "@k8slens/logger";
+import type { Logger } from "@k8slens/logger";
 import type { DiscoverAllKubeconfigSyncKinds } from "./discover-all-sync-kinds.injectable";
 import type { DiscoverKubeconfigSyncKind, SyncKind } from "./discover-sync-kind.injectable";
 import discoverKubeconfigSyncKindInjectable from "./discover-sync-kind.injectable";

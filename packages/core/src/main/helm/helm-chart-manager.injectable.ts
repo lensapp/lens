@@ -6,7 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import type { HelmRepo } from "../../common/helm/helm-repo";
 import { HelmChartManager } from "./helm-chart-manager";
 import helmChartManagerCacheInjectable from "./helm-chart-manager-cache.injectable";
-import loggerInjectable from "../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import execHelmInjectable from "./exec-helm/exec-helm.injectable";
 import readFileInjectable from "../../common/fs/read-file.injectable";
 import statInjectable from "../../common/fs/stat.injectable";

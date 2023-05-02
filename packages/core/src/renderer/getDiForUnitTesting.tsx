@@ -20,6 +20,7 @@ import { registerInjectableReact } from "@ogre-tools/injectable-react";
 import { registerFeature } from "@k8slens/feature-core";
 import { messagingFeature, testUtils as messagingTestUtils } from "@k8slens/messaging";
 import { routingFeature } from "@k8slens/routing";
+import { loggerFeature } from "@k8slens/logger";
 
 export const getDiForUnitTesting = () => {
   const environment = "renderer";
@@ -32,7 +33,11 @@ export const getDiForUnitTesting = () => {
   setLegacyGlobalDiForExtensionApi(di, environment);
 
   runInAction(() => {
-    registerFeature(di, messagingFeature, messagingTestUtils.messagingFeatureForUnitTesting, routingFeature);
+    registerFeature(di,
+        messagingFeature,
+        messagingTestUtils.messagingFeatureForUnitTesting,
+        routingFeature,
+        loggerFeature);
   });
 
   di.preventSideEffects();

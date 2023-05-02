@@ -10,7 +10,7 @@ import type { LensApiRequest } from "../../router/route";
 import path from "path";
 import type { SupportedFileExtension } from "../../router/router-content-types";
 import { contentTypes } from "../../router/router-content-types";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import { publicPath } from "../../../common/vars";
 
 const prodStaticFileRouteHandlerInjectable = getInjectable({

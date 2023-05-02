@@ -9,9 +9,9 @@ import type { IClassName } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import type { Logger } from "../../../common/logger";
+import type { Logger } from "@k8slens/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import autoBindReact from "auto-bind/react";
 
 export interface DropFileInputProps<T extends HTMLElement> extends React.DOMAttributes<T> {

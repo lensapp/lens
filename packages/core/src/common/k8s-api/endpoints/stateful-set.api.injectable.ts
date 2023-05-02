@@ -7,7 +7,7 @@ import assert from "assert";
 import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
 import { StatefulSetApi } from "./stateful-set.api";
 import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
-import loggerInjectable from "../../logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 
 const statefulSetApiInjectable = getInjectable({

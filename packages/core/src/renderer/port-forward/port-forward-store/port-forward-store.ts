@@ -10,7 +10,7 @@ import { disposer } from "@k8slens/utilities";
 import type { ForwardedPort } from "../port-forward-item";
 import { PortForwardItem } from "../port-forward-item";
 import { waitUntilFree } from "tcp-port-used";
-import type { Logger } from "../../../common/logger";
+import type { Logger } from "@k8slens/logger";
 import type { JsonApi } from "../../../common/k8s-api/json-api";
 import type { RequestActivePortForward } from "./request-active-port-forward.injectable";
 import autoBind from "auto-bind";

@@ -7,7 +7,7 @@ import assert from "assert";
 import getJobsByOwnerInjectable from "../workloads-jobs/get-jobs-by-owner.injectable";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/kube-object-store-token";
 import cronJobApiInjectable from "../../../common/k8s-api/endpoints/cron-job.api.injectable";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { CronJobStore } from "./store";

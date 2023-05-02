@@ -6,7 +6,7 @@
 import type { Readable } from "stream";
 import URLParse from "url-parse";
 import { getInjectable } from "@ogre-tools/injectable";
-import loggerInjectable from "../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 
 export interface GetPortFromStreamArgs {
   /**

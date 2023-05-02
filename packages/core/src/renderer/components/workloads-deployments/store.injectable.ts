@@ -10,7 +10,7 @@ import { storesAndApisCanBeCreatedInjectionToken } from "../../../common/k8s-api
 import deploymentApiInjectable from "../../../common/k8s-api/endpoints/deployment.api.injectable";
 import { DeploymentStore } from "./store";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 
 const deploymentStoreInjectable = getInjectable({
   id: "deployment-store",

@@ -15,7 +15,7 @@ import type { LensExtension } from "../../extensions/lens-extension";
 import type { RouteHandler, RouteParams } from "./registration";
 import { when } from "mobx";
 import { ipcRenderer } from "electron";
-import type { Logger } from "../logger";
+import type { Logger } from "@k8slens/logger";
 import type { IsExtensionEnabled } from "../../features/extensions/enabled/common/is-enabled.injectable";
 
 // IPC channel for protocol actions. Main broadcasts the open-url events to this channel.

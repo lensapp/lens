@@ -7,7 +7,7 @@ import assert from "assert";
 import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
 import { PodDisruptionBudgetApi } from "./pod-disruption-budget.api";
 import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
-import loggerInjectable from "../../logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 
 const podDisruptionBudgetApiInjectable = getInjectable({

@@ -9,9 +9,9 @@ import type { LensMainExtension } from "../lens-main-extension";
 import type { Disposer } from "@k8slens/utilities";
 import { once } from "lodash";
 import { ipcMainHandle } from "../../common/ipc";
-import type { Logger } from "../common-api";
+import type { Logger } from "@k8slens/logger";
 import { getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "@k8slens/legacy-global-di";
-import loggerInjectable from "../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 
 interface Dependencies {
   readonly logger: Logger;

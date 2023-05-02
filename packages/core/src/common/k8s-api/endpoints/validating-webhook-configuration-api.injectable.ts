@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
 import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
-import loggerInjectable from "../../logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 import { ValidatingWebhookConfigurationApi } from "./validating-webhook-configuration.api";
 

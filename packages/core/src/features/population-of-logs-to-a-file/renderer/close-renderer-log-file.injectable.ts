@@ -4,7 +4,7 @@
  */
 import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
 import { getInjectable } from "@ogre-tools/injectable";
-import winstonLoggerInjectable from "../../../common/winston-logger.injectable";
+import { winstonLoggerInjectable } from "@k8slens/logger";
 import { closeIpcFileLoggerChannel } from "../common/ipc-file-logger-channel";
 import rendererLogFileIdInjectable from "./renderer-log-file-id.injectable";
 import ipcLogTransportInjectable from "./ipc-transport.injectable";

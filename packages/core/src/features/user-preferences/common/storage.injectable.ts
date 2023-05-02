@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { action } from "mobx";
-import prefixedLoggerInjectable from "../../../common/logger/prefixed-logger.injectable";
+import { prefixedLoggerInjectable } from "@k8slens/logger";
 import createPersistentStorageInjectable from "../../../common/persistent-storage/create.injectable";
 import persistentStorageMigrationsInjectable from "../../../common/persistent-storage/migrations.injectable";
 import { userPreferencesMigrationInjectionToken } from "./migrations-token";

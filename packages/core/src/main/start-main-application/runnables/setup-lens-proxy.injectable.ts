@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import forceAppExitInjectable from "../../electron-app/features/force-app-exit.injectable";
 import lensProxyInjectable from "../../lens-proxy/lens-proxy.injectable";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import lensProxyPortInjectable from "../../lens-proxy/lens-proxy-port.injectable";
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
 import showErrorPopupInjectable from "../../electron-app/features/show-error-popup.injectable";

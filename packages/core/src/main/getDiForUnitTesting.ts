@@ -39,8 +39,10 @@ export function getDiForUnitTesting() {
   setLegacyGlobalDiForExtensionApi(di, environment);
 
   runInAction(() => {
-    registerFeature(di, messagingFeature, messagingTestUtils.messagingFeatureForUnitTesting);
-
+    registerFeature(di,
+        messagingFeature,
+        messagingTestUtils.messagingFeatureForUnitTesting
+    );
   });
 
   di.preventSideEffects();

@@ -16,7 +16,7 @@ import { when } from "mobx";
 import React from "react";
 import type { InstallRequestValidated } from "./create-temp-files-and-validate.injectable";
 import extractTarInjectable from "../../../../common/fs/extract-tar.injectable";
-import loggerInjectable from "../../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import showInfoNotificationInjectable from "../../notifications/show-info-notification.injectable";
 import showErrorNotificationInjectable from "../../notifications/show-error-notification.injectable";
 

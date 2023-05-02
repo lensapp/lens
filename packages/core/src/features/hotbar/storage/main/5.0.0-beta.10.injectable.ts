@@ -11,7 +11,7 @@ import joinPathsInjectable from "../../../../common/path/join-paths.injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import { hotbarStoreMigrationInjectionToken } from "../common/migrations-token";
 import readJsonSyncInjectable from "../../../../common/fs/read-json-sync.injectable";
-import loggerInjectable from "../../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import { generateNewIdFor } from "../../../../common/utils/generate-new-id-for";
 import type { ClusterModel } from "../../../../common/cluster-types";
 import { defaultHotbarCells } from "../common/types";

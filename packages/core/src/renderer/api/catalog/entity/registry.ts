@@ -15,7 +15,7 @@ import { ipcRenderer } from "electron";
 import { catalogInitChannel, catalogItemsChannel, catalogEntityRunListener } from "../../../../common/ipc/catalog";
 import { isMainFrame } from "process";
 import type { Navigate } from "../../../navigation/navigate.injectable";
-import type { Logger } from "../../../../common/logger";
+import type { Logger } from "@k8slens/logger";
 
 export type EntityFilter = (entity: CatalogEntity) => any;
 export type CatalogEntityOnBeforeRun = (event: CatalogRunEvent) => void | Promise<void>;

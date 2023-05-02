@@ -22,6 +22,7 @@ import { messagingFeatureForRenderer } from "@k8slens/messaging-for-renderer";
 import { keyboardShortcutsFeature } from "@k8slens/keyboard-shortcuts";
 import { reactApplicationFeature } from "@k8slens/react-application";
 import { routingFeature } from "@k8slens/routing";
+import { loggerFeature } from "@k8slens/logger";
 
 const environment = "renderer";
 
@@ -33,6 +34,11 @@ runInAction(() => {
   registerMobX(di);
   registerInjectableReact(di);
   registerLensCore(di, environment);
+
+  registerFeature(
+    di,
+    loggerFeature,
+  );
 
   registerFeature(
     di,
