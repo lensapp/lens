@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { nodeEnvInjectionToken } from "../../../common/vars/node-env-injection-token";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 
 const setupDeveloperToolsInDevelopmentEnvironmentInjectable = getInjectable({
@@ -12,7 +12,7 @@ const setupDeveloperToolsInDevelopmentEnvironmentInjectable = getInjectable({
 
   instantiate: (di) => ({
     run: () => {
-      const logger = di.inject(loggerInjectable);
+      const logger = di.inject(loggerInjectionToken);
       const nodeEnv = di.inject(nodeEnvInjectionToken);
 
       if (nodeEnv !== "development") {

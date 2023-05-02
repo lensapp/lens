@@ -16,7 +16,7 @@ import type { AdditionalPrinterColumnsV1, KubeObjectMetadata, KubeObjectStatus }
 import { CustomResourceDefinition, KubeObject } from "@k8slens/kube-object";
 import type { Logger } from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 
 export interface CustomResourceDetailsProps extends KubeObjectDetailsProps<KubeObject> {
   crd?: CustomResourceDefinition;
@@ -141,6 +141,6 @@ class NonInjectedCustomResourceDetails extends React.Component<CustomResourceDet
 export const CustomResourceDetails = withInjectables<Dependencies, CustomResourceDetailsProps>(NonInjectedCustomResourceDetails, {
   getProps: (di, props) => ({
     ...props,
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });

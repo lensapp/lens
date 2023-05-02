@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import { getGlobalOverride } from "@k8slens/test-utils";
 
-export default getGlobalOverride(loggerInjectable, () => ({
+export default getGlobalOverride(loggerInjectionToken, () => ({
   warn: () => {},
   debug: () => {},
   error: () => {},

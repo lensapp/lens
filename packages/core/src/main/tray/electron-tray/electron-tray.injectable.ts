@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { Menu, Tray } from "electron";
 import showApplicationWindowInjectable from "../../start-main-application/lens-window/show-application-window.injectable";
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import { convertToElectronMenuTemplate } from "../reactive-tray-menu-items/converters";
 import trayIconInjectable from "../menu-icon/tray-icon.injectable";
 import applicationDescriptionInjectable from "../../../common/vars/application-description.injectable";
@@ -37,7 +37,7 @@ const electronTrayInjectable = getInjectable({
     const applicationDescription = di.inject(applicationDescriptionInjectable);
     const showApplicationWindow = di.inject(showApplicationWindowInjectable);
     const isWindows = di.inject(isWindowsInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
     const trayIcon = di.inject(trayIconInjectable);
 
     let tray: Tray;

@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import electronAppInjectable from "../electron-app.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 import showApplicationWindowInjectable from "../../start-main-application/lens-window/show-application-window.injectable";
 
@@ -15,7 +15,7 @@ const setupMainWindowVisibilityAfterActivationInjectable = getInjectable({
     run: () => {
       const app = di.inject(electronAppInjectable);
       const showApplicationWindow = di.inject(showApplicationWindowInjectable);
-      const logger = di.inject(loggerInjectable);
+      const logger = di.inject(loggerInjectionToken);
 
       app.on("activate", (_, windowIsVisible) => {
         logger.info("APP:ACTIVATE", { hasVisibleWindows: windowIsVisible });

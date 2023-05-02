@@ -18,7 +18,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import activeThemeInjectable from "../../themes/active.injectable";
 import getEditorHeightFromLinesCountInjectable from "./get-editor-height-from-lines-number.injectable";
 import type { Logger } from "@k8slens/logger";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import autoBindReact from "auto-bind/react";
 import type { UserPreferencesState } from "../../../features/user-preferences/common/state.injectable";
 import userPreferencesStateInjectable from "../../../features/user-preferences/common/state.injectable";
@@ -333,6 +333,6 @@ export const MonacoEditor = withInjectables<Dependencies, MonacoEditorProps, Mon
     state: di.inject(userPreferencesStateInjectable),
     activeTheme: di.inject(activeThemeInjectable),
     getEditorHeightFromLinesCount: di.inject(getEditorHeightFromLinesCountInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });

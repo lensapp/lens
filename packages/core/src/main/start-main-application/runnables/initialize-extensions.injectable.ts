@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import extensionDiscoveryInjectable from "../../../extensions/extension-discovery/extension-discovery.injectable";
 import extensionLoaderInjectable from "../../../extensions/extension-loader/extension-loader.injectable";
 import showErrorPopupInjectable from "../../electron-app/features/show-error-popup.injectable";
@@ -15,7 +15,7 @@ const initializeExtensionsInjectable = getInjectable({
 
   instantiate: (di) => ({
     run: async () => {
-      const logger = di.inject(loggerInjectable);
+      const logger = di.inject(loggerInjectionToken);
       const extensionDiscovery = di.inject(extensionDiscoveryInjectable);
       const extensionLoader = di.inject(extensionLoaderInjectable);
       const showErrorPopup = di.inject(showErrorPopupInjectable);

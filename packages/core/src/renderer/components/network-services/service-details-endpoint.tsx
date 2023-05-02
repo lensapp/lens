@@ -11,7 +11,7 @@ import type { Logger } from "@k8slens/logger";
 import { Endpoints } from "@k8slens/kube-object";
 import type { ShowDetails } from "../kube-detail-params/show-details.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import showDetailsInjectable from "../kube-detail-params/show-details.injectable";
 
 export interface ServiceDetailsEndpointProps {
@@ -67,7 +67,7 @@ class NonInjectedServiceDetailsEndpoint extends React.Component<ServiceDetailsEn
 export const ServiceDetailsEndpoint = withInjectables<Dependencies, ServiceDetailsEndpointProps>(NonInjectedServiceDetailsEndpoint, {
   getProps: (di, props) => ({
     ...props,
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
     showDetails: di.inject(showDetailsInjectable),
   }),
 });

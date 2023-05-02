@@ -21,7 +21,7 @@ import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import storageClassStoreInjectable from "./store.injectable";
 import persistentVolumeStoreInjectable from "../storage-volumes/store.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 
 export interface StorageClassDetailsProps extends KubeObjectDetailsProps<StorageClass> {
 }
@@ -102,7 +102,7 @@ export const StorageClassDetails = withInjectables<Dependencies, StorageClassDet
     subscribeStores: di.inject(subscribeStoresInjectable),
     storageClassStore: di.inject(storageClassStoreInjectable),
     persistentVolumeStore: di.inject(persistentVolumeStoreInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });
 

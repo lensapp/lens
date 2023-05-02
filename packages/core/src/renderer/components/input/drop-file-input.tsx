@@ -11,7 +11,7 @@ import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import type { Logger } from "@k8slens/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import autoBindReact from "auto-bind/react";
 
 export interface DropFileInputProps<T extends HTMLElement> extends React.DOMAttributes<T> {
@@ -109,7 +109,7 @@ class NonInjectedDropFileInput<T extends HTMLElement> extends React.Component<Dr
 const InjectedDropFileInput = withInjectables<Dependencies, DropFileInputProps<HTMLElement>>(NonInjectedDropFileInput, {
   getProps: (di, props) => ({
     ...props,
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });
 

@@ -11,7 +11,7 @@ import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
 import storesAndApisCanBeCreatedInjectable from "../../../renderer/stores-apis-can-be-created.injectable";
 import directoryForKubeConfigsInjectable from "../../app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import directoryForUserDataInjectable from "../../app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import type { ApiManager } from "../api-manager";
 import apiManagerInjectable from "../api-manager/manager.injectable";
 import { KubeApi } from "../kube-api";
@@ -61,7 +61,7 @@ describe("ApiManager", () => {
       const apiBase = "apis/v1/foo";
       const fallbackApiBase = "/apis/extensions/v1beta1/foo";
       const kubeApi = new TestApi({
-        logger: di.inject(loggerInjectable),
+        logger: di.inject(loggerInjectionToken),
         maybeKubeApi: di.inject(maybeKubeApiInjectable),
       }, {
         objectConstructor: KubeObject,
@@ -72,7 +72,7 @@ describe("ApiManager", () => {
       });
       const kubeStore = new TestStore({
         context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
-        logger: di.inject(loggerInjectable),
+        logger: di.inject(loggerInjectionToken),
       }, kubeApi);
 
       apiManager.registerApi(kubeApi);
@@ -136,7 +136,7 @@ describe("ApiManager", () => {
 
             return Object.assign(
               new KubeApi({
-                logger: di.inject(loggerInjectable),
+                logger: di.inject(loggerInjectionToken),
                 maybeKubeApi: di.inject(maybeKubeApiInjectable),
               }, { objectConstructor }),
               {
@@ -189,7 +189,7 @@ describe("ApiManager", () => {
           apiManager.registerStore(Object.assign(
             new KubeObjectStore({
               context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
-              logger: di.inject(loggerInjectable),
+              logger: di.inject(loggerInjectionToken),
             }, api),
             {
               someField: 2,

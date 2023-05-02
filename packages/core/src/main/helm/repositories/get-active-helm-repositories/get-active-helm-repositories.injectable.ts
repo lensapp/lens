@@ -8,7 +8,7 @@ import type { ReadYamlFile } from "../../../../common/fs/read-yaml-file.injectab
 import readYamlFileInjectable from "../../../../common/fs/read-yaml-file.injectable";
 import getHelmEnvInjectable from "../../get-helm-env/get-helm-env.injectable";
 import execHelmInjectable from "../../exec-helm/exec-helm.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import type { AsyncResult } from "@k8slens/utilities";
 
 interface HelmRepositoryFromYaml {
@@ -34,7 +34,7 @@ const getActiveHelmRepositoriesInjectable = getInjectable({
     const readYamlFile = di.inject(readYamlFileInjectable);
     const execHelm = di.inject(execHelmInjectable);
     const getHelmEnv = di.inject(getHelmEnvInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
 
     const getRepositories = getRepositoriesFor(readYamlFile);
 

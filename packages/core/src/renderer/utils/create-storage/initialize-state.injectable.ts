@@ -8,7 +8,7 @@ import { comparer, reaction, runInAction, toJS } from "mobx";
 import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import readJsonFileInjectable from "../../../common/fs/read-json-file.injectable";
 import writeJsonFileInjectable from "../../../common/fs/write-json-file.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import setupAppPathsInjectable from "../../app-paths/setup-app-paths.injectable";
 import { beforeApplicationIsLoadingInjectionToken } from "@k8slens/application";
@@ -27,7 +27,7 @@ const initializeStateInjectable = getInjectable({
       const lensLocalStorageState = di.inject(lensLocalStorageStateInjectable);
       const readJsonFile = di.inject(readJsonFileInjectable);
       const writeJsonFile = di.inject(writeJsonFileInjectable);
-      const logger = di.inject(loggerInjectable);
+      const logger = di.inject(loggerInjectionToken);
       const storageSaveDelay = di.inject(storageSaveDelayInjectable);
       const lock = new AwaitLock();
 

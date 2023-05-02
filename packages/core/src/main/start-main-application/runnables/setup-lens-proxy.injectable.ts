@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import forceAppExitInjectable from "../../electron-app/features/force-app-exit.injectable";
 import lensProxyInjectable from "../../lens-proxy/lens-proxy.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import lensProxyPortInjectable from "../../lens-proxy/lens-proxy-port.injectable";
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
 import showErrorPopupInjectable from "../../electron-app/features/show-error-popup.injectable";
@@ -23,7 +23,7 @@ const setupLensProxyInjectable = getInjectable({
     run: async () => {
       const lensProxy = di.inject(lensProxyInjectable);
       const forceAppExit = di.inject(forceAppExitInjectable);
-      const logger = di.inject(loggerInjectable);
+      const logger = di.inject(loggerInjectionToken);
       const lensProxyPort = di.inject(lensProxyPortInjectable);
       const isWindows = di.inject(isWindowsInjectable);
       const showErrorPopup = di.inject(showErrorPopupInjectable);

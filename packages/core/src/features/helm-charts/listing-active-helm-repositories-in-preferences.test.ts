@@ -12,7 +12,7 @@ import asyncFn from "@async-fn/jest";
 import type { HelmRepositoriesFromYaml } from "../../main/helm/repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
 import execFileInjectable, { type ExecFile } from "../../common/fs/exec-file.injectable";
 import helmBinaryPathInjectable from "../../main/helm/helm-binary-path.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import type { Logger } from "@k8slens/logger";
 import requestPublicHelmRepositoriesInjectable from "./child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/request-public-helm-repositories.injectable";
 import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
@@ -45,7 +45,7 @@ describe("listing active helm repositories in preferences", () => {
       mainDi.override(readYamlFileInjectable, () => readYamlFileMock);
       mainDi.override(execFileInjectable, () => execFileMock);
       mainDi.override(helmBinaryPathInjectable, () => "some-helm-binary-path");
-      mainDi.override(loggerInjectable, () => loggerStub);
+      mainDi.override(loggerInjectionToken, () => loggerStub);
     });
 
     builder.beforeWindowStart(({ windowDi }) => {

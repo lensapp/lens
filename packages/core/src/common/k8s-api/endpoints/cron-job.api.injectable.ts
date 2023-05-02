@@ -7,7 +7,7 @@ import assert from "assert";
 import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
 import { CronJobApi } from "./cron-job.api";
 import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 
 const cronJobApiInjectable = getInjectable({
@@ -16,7 +16,7 @@ const cronJobApiInjectable = getInjectable({
     assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "cronJobApi is only available in certain environments");
 
     return new CronJobApi({
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
       maybeKubeApi: di.inject(maybeKubeApiInjectable),
     }, {
       checkPreferredVersion: true,

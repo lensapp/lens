@@ -24,7 +24,7 @@ import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import replicaSetStoreInjectable from "../workloads-replicasets/store.injectable";
 import deploymentStoreInjectable from "./store.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 
 export interface DeploymentDetailsProps extends KubeObjectDetailsProps<Deployment> {
 }
@@ -130,7 +130,7 @@ export const DeploymentDetails = withInjectables<Dependencies, DeploymentDetails
     subscribeStores: di.inject(subscribeStoresInjectable),
     replicaSetStore: di.inject(replicaSetStoreInjectable),
     deploymentStore: di.inject(deploymentStoreInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });
 

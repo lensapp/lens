@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import { asLegacyGlobalForExtensionApi } from "@k8slens/legacy-global-di";
 
 // APIs
@@ -20,4 +20,4 @@ export type { LensExtension } from "../lens-extension";
 export type { PackageJson } from "type-fest";
 export type { LensExtensionManifest, InstalledExtension } from "@k8slens/legacy-extensions";
 
-export const logger = asLegacyGlobalForExtensionApi(loggerInjectable);
+export const logger = asLegacyGlobalForExtensionApi(loggerInjectionToken);

@@ -8,7 +8,7 @@ import { Cluster } from "../../common/cluster/cluster";
 import kubeconfigManagerInjectable from "../kubeconfig-manager/kubeconfig-manager.injectable";
 import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import type { Logger } from "@k8slens/logger";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
@@ -73,7 +73,7 @@ describe("kubeconfig manager tests", () => {
       silly: jest.fn(),
     };
 
-    di.override(loggerInjectable, () => loggerMock);
+    di.override(loggerInjectionToken, () => loggerMock);
 
     ensureServerMock = asyncFn();
 

@@ -7,7 +7,7 @@ import type { Cluster } from "../../../common/cluster/cluster";
 import { createClusterPrometheusHandler } from "./prometheus-handler";
 import getPrometheusProviderByKindInjectable from "../../prometheus/get-by-kind.injectable";
 import prometheusProvidersInjectable from "../../prometheus/providers.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import loadProxyKubeconfigInjectable from "../load-proxy-kubeconfig.injectable";
 
 const prometheusHandlerInjectable = getInjectable({
@@ -17,7 +17,7 @@ const prometheusHandlerInjectable = getInjectable({
     {
       getPrometheusProviderByKind: di.inject(getPrometheusProviderByKindInjectable),
       prometheusProviders: di.inject(prometheusProvidersInjectable),
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
       loadProxyKubeconfig: di.inject(loadProxyKubeconfigInjectable, cluster),
     },
     cluster,

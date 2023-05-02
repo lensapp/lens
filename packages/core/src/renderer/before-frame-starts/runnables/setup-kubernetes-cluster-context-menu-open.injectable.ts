@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import catalogCategoryRegistryInjectable from "../../../common/catalog/category-registry.injectable";
 import loadKubeconfigInjectable from "../../../common/cluster/load-kubeconfig.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import getClusterByIdInjectable from "../../../features/cluster/storage/common/get-by-id.injectable";
 import openDeleteClusterDialogInjectable from "../../components/delete-cluster-dialog/open.injectable";
 import { beforeFrameStartsSecondInjectionToken } from "../tokens";
@@ -17,7 +17,7 @@ const setupKubernetesClusterContextMenuOpenInjectable = getInjectable({
       const catalogCategoryRegistry = di.inject(catalogCategoryRegistryInjectable);
       const openDeleteClusterDialog = di.inject(openDeleteClusterDialogInjectable);
       const getClusterById = di.inject(getClusterByIdInjectable);
-      const logger = di.inject(loggerInjectable);
+      const logger = di.inject(loggerInjectionToken);
 
       catalogCategoryRegistry
         .getForGroupKind("entity.k8slens.dev", "KubernetesCluster")

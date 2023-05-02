@@ -4,7 +4,7 @@
  */
 import type { InjectionToken } from "@ogre-tools/injectable";
 import { lifecycleEnum, getInjectable } from "@ogre-tools/injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import { getOrInsert, iter, object } from "@k8slens/utilities";
 
 export type AllowedSetValue<T> = T extends (...args: any[]) => any
@@ -32,7 +32,7 @@ export interface MigrationDeclaration {
 const persistentStorageMigrationsInjectable = getInjectable({
   id: "persistent-storage-migrations",
   instantiate: (di, token) => {
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
     const declarations = di.injectMany(token);
     const migrations = new Map<string, MigrationDeclaration["run"][]>();
 

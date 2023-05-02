@@ -22,7 +22,7 @@ import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import cronJobStoreInjectable from "./store.injectable";
 import jobStoreInjectable from "../workloads-jobs/store.injectable";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectionToken } from "@k8slens/logger";
 import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 
@@ -127,7 +127,7 @@ export const CronJobDetails = withInjectables<Dependencies, CronJobDetailsProps>
     subscribeStores: di.inject(subscribeStoresInjectable),
     cronJobStore: di.inject(cronJobStoreInjectable),
     jobStore: di.inject(jobStoreInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
     getDetailsUrl: di.inject(getDetailsUrlInjectable),
   }),
 });

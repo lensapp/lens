@@ -19,7 +19,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import configMapStoreInjectable from "./store.injectable";
 import showSuccessNotificationInjectable from "../notifications/show-success-notification.injectable";
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import { MonacoEditor } from "../monaco-editor";
 
 export interface ConfigMapDetailsProps extends KubeObjectDetailsProps<ConfigMap> {
@@ -145,6 +145,6 @@ export const ConfigMapDetails = withInjectables<Dependencies, ConfigMapDetailsPr
     configMapStore: di.inject(configMapStoreInjectable),
     showSuccessNotification: di.inject(showSuccessNotificationInjectable),
     showErrorNotification: di.inject(showErrorNotificationInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });

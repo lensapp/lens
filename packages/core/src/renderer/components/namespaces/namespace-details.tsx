@@ -25,7 +25,7 @@ import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injec
 import limitRangeStoreInjectable from "../config-limit-ranges/store.injectable";
 import resourceQuotaStoreInjectable from "../config-resource-quotas/store.injectable";
 import type { Logger } from "@k8slens/logger";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import { NamespaceTreeView } from "./namespace-tree-view";
 import namespaceStoreInjectable from "./store.injectable";
 import type { NamespaceStore } from "./store";
@@ -124,7 +124,7 @@ export const NamespaceDetails = withInjectables<Dependencies, NamespaceDetailsPr
     limitRangeStore: di.inject(limitRangeStoreInjectable),
     resourceQuotaStore: di.inject(resourceQuotaStoreInjectable),
     namespaceStore: di.inject(namespaceStoreInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });
 

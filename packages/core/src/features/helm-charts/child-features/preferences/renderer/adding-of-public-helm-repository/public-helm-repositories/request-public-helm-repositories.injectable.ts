@@ -7,7 +7,7 @@ import { sortBy } from "lodash/fp";
 import proxyDownloadJsonInjectable from "../../../../../../../common/fetch/download-json/proxy.injectable";
 import { withTimeout } from "../../../../../../../common/fetch/timeout-controller";
 import type { HelmRepo } from "../../../../../../../common/helm/helm-repo";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 
 const publicHelmReposUrl = "https://github.com/lensapp/artifact-hub-repositories/releases/download/latest/repositories.json";
 
@@ -16,7 +16,7 @@ const requestPublicHelmRepositoriesInjectable = getInjectable({
 
   instantiate: (di) => {
     const downloadJson = di.inject(proxyDownloadJsonInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
 
     return async (): Promise<HelmRepo[]> => {
       const controller = withTimeout(10_000);

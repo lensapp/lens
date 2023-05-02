@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import clusterFrameContextForNamespacedResourcesInjectable from "../cluster-frame-context/for-namespaced-resources.injectable";
 import { KubeWatchApi } from "./kube-watch-api";
 
@@ -12,7 +12,7 @@ const kubeWatchApiInjectable = getInjectable({
 
   instantiate: (di) => new KubeWatchApi({
     clusterContext: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });
 

@@ -16,7 +16,7 @@ import kubectlVersionMapInjectable from "./version-map.injectable";
 import getDirnameOfPathInjectable from "../../common/path/get-dirname.injectable";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import getBasenameOfPathInjectable from "../../common/path/get-basename.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import execFileInjectable from "../../common/fs/exec-file.injectable";
 import unlinkInjectable from "../../common/fs/unlink.injectable";
 import userPreferencesStateInjectable from "../../features/user-preferences/common/state.injectable";
@@ -37,7 +37,7 @@ const createKubectlInjectable = getInjectable({
       baseBundledBinariesDirectory: di.inject(baseBundledBinariesDirectoryInjectable),
       bundledKubectlVersion: di.inject(bundledKubectlVersionInjectable),
       kubectlVersionMap: di.inject(kubectlVersionMapInjectable),
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
       getDirnameOfPath: di.inject(getDirnameOfPathInjectable),
       joinPaths: di.inject(joinPathsInjectable),
       getBasenameOfPath: di.inject(getBasenameOfPathInjectable),

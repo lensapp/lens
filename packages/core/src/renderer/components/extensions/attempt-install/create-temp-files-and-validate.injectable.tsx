@@ -8,7 +8,7 @@ import { validatePackage } from "./validate-package";
 import { getMessageFromError } from "../get-message-from-error/get-message-from-error";
 import React from "react";
 import type { InstallRequest } from "./attempt-install.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import writeFileInjectable from "../../../../common/fs/write-file.injectable";
 import joinPathsInjectable from "../../../../common/path/join-paths.injectable";
 import tempDirectoryPathInjectable from "../../../../common/os/temp-directory-path.injectable";
@@ -29,7 +29,7 @@ const createTempFilesAndValidateInjectable = getInjectable({
   id: "create-temp-files-and-validate",
   instantiate: (di): CreateTempFilesAndValidate => {
     const extensionDiscovery = di.inject(extensionDiscoveryInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
     const writeFile = di.inject(writeFileInjectable);
     const joinPaths = di.inject(joinPathsInjectable);
     const showErrorNotification = di.inject(showErrorNotificationInjectable);

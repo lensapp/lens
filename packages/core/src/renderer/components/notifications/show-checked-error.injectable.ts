@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { JsonApiErrorParsed } from "../../../common/k8s-api/json-api";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import type { Disposer } from "@k8slens/utilities";
 import type { CreateNotificationOptions } from "./notifications.store";
 import showErrorNotificationInjectable from "./show-error-notification.injectable";
@@ -15,7 +15,7 @@ const showCheckedErrorNotificationInjectable = getInjectable({
   id: "show-checked-error-notififcation",
   instantiate: (di): ShowCheckedErrorNotification => {
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
 
     return (message, fallback, opts) => {
       if (typeof message === "string" || message instanceof Error || message instanceof JsonApiErrorParsed) {

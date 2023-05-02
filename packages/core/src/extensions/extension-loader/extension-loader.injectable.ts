@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { ExtensionLoader } from "./extension-loader";
 import extensionInstancesInjectable from "./extension-instances.injectable";
 import extensionInjectable from "./extension/extension.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import getDirnameOfPathInjectable from "../../common/path/get-dirname.injectable";
 import { bundledExtensionInjectionToken } from "@k8slens/legacy-extensions";
@@ -22,7 +22,7 @@ const extensionLoaderInjectable = getInjectable({
     getExtension: (instance) => di.inject(extensionInjectable, instance),
     bundledExtensions: di.injectMany(bundledExtensionInjectionToken),
     extensionEntryPointName: di.inject(extensionEntryPointNameInjectionToken),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
     joinPaths: di.inject(joinPathsInjectable),
     getDirnameOfPath: di.inject(getDirnameOfPathInjectable),
   }),

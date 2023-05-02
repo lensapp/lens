@@ -36,7 +36,7 @@ import Wheel from "./wheel.svg";
 import Workloads from "./workloads.svg";
 import type { Logger } from "@k8slens/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 
 const hrefValidation = /https?:\/\//;
 
@@ -279,7 +279,7 @@ const RawIcon = (props: IconProps & Dependencies) => {
 const InjectedIcon = withInjectables<Dependencies, IconProps>(RawIcon, {
   getProps: (di, props) => ({
     ...props,
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });
 

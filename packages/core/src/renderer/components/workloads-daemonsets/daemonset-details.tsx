@@ -23,7 +23,7 @@ import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import daemonSetStoreInjectable from "./store.injectable";
 import podStoreInjectable from "../workloads-pods/store.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 
 export interface DaemonSetDetailsProps extends KubeObjectDetailsProps<DaemonSet> {
 }
@@ -107,6 +107,6 @@ export const DaemonSetDetails = withInjectables<Dependencies, DaemonSetDetailsPr
     subscribeStores: di.inject(subscribeStoresInjectable),
     daemonSetStore: di.inject(daemonSetStoreInjectable),
     podStore: di.inject(podStoreInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });

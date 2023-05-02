@@ -13,7 +13,7 @@ import { isObject } from "lodash";
 import { isRequestError, object } from "@k8slens/utilities";
 import type { GetMetrics } from "../../get-metrics.injectable";
 import getMetricsInjectable from "../../get-metrics.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import prometheusHandlerInjectable from "../../cluster/prometheus-handler/prometheus-handler.injectable";
 import { runInAction } from "mobx";
 
@@ -60,7 +60,7 @@ const addMetricsRouteInjectable = getRouteInjectable({
   instantiate: (di) => {
     const getMetrics = di.inject(getMetricsInjectable);
     const loadMetrics = loadMetricsFor(getMetrics);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
 
     return clusterRoute({
       method: "post",

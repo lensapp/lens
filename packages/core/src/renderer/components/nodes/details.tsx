@@ -22,7 +22,7 @@ import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import type { PodStore } from "../workloads-pods/store";
 import podStoreInjectable from "../workloads-pods/store.injectable";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import loadPodsFromAllNamespacesInjectable
   from "../workloads-pods/load-pods-from-all-namespaces.injectable";
 
@@ -150,7 +150,7 @@ export const NodeDetails = withInjectables<Dependencies, NodeDetailsProps>(NonIn
     ...props,
     subscribeStores: di.inject(subscribeStoresInjectable),
     podStore: di.inject(podStoreInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
     loadPodsFromAllNamespaces: di.inject(loadPodsFromAllNamespacesInjectable),
   }),
 });

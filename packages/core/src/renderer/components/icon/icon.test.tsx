@@ -5,7 +5,7 @@
 
 import React from "react";
 import type { Logger } from "@k8slens/logger";
-import { loggerInjectable } from "@k8slens/logger";
+import { loggerInjectionToken } from "@k8slens/logger";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
@@ -26,7 +26,7 @@ describe("<Icon> href technical tests", () => {
       warn: jest.fn(),
     };
 
-    di.override(loggerInjectable, () => logger);
+    di.override(loggerInjectionToken, () => logger);
 
     render = renderFor(di);
   });
