@@ -12,7 +12,7 @@ import type { Response, RequestInit } from "@k8slens/node-fetch";
 import { stringify } from "querystring";
 import type { Patch } from "rfc6902";
 import type { PartialDeep, ValueOf } from "type-fest";
-import { EventEmitter } from "../../common/event-emitter";
+import { EventEmitter } from "@k8slens/event-emitter";
 import type { Logger } from "../../common/logger";
 import type { Fetch } from "../fetch/fetch.injectable";
 import type { Defaulted } from "@k8slens/utilities";

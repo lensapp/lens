@@ -1,10 +1,3 @@
-/**
- * Copyright (c) OpenLens Authors. All rights reserved.
- * Licensed under MIT License. See LICENSE in root directory for more information.
- */
-
-// Custom event emitter
-
 export interface EventEmitterOptions {
   once?: boolean; // call once and remove
   prepend?: boolean; // put listener to the beginning
