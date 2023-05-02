@@ -25,7 +25,6 @@ jobs:
 
       - name: Create PR
         run: |
-          git fetch
           npm run create-release-pr
         env:
           BUMP_PACKAGE_ARGS: -- --conventional-commits --conventional-prerelease --yes
