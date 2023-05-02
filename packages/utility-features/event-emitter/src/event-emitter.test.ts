@@ -1,9 +1,4 @@
-/**
- * Copyright (c) OpenLens Authors. All rights reserved.
- * Licensed under MIT License. See LICENSE in root directory for more information.
- */
-
-import { EventEmitter } from "../event-emitter";
+import { EventEmitter } from "./event-emitter";
 
 describe("EventEmitter", () => {
   it("should stop early if a listener returns false", () => {
@@ -11,7 +6,9 @@ describe("EventEmitter", () => {
     const e = new EventEmitter<[]>();
 
     e.addListener(() => false, {});
-    e.addListener(() => { called = true; }, {});
+    e.addListener(() => {
+      called = true;
+    }, {});
     e.emit();
 
     expect(called).toBe(false);
@@ -22,7 +19,9 @@ describe("EventEmitter", () => {
     const e = new EventEmitter<[]>();
 
     e.addListener(() => 0 as never, {});
-    e.addListener(() => { called = true; }, {});
+    e.addListener(() => {
+      called = true;
+    }, {});
     e.emit();
 
     expect(called).toBe(true);
@@ -32,9 +31,18 @@ describe("EventEmitter", () => {
     const callOrder: number[] = [];
     const e = new EventEmitter<[]>();
 
-    e.addListener(() => { callOrder.push(1); }, {});
-    e.addListener(() => { callOrder.push(2); }, {});
-    e.addListener(() => { callOrder.push(3); }, { prepend: true });
+    e.addListener(() => {
+      callOrder.push(1);
+    }, {});
+    e.addListener(() => {
+      callOrder.push(2);
+    }, {});
+    e.addListener(
+      () => {
+        callOrder.push(3);
+      },
+      { prepend: true },
+    );
     e.emit();
 
     expect(callOrder).toStrictEqual([3, 1, 2]);
@@ -44,9 +52,18 @@ describe("EventEmitter", () => {
     const callOrder: number[] = [];
     const e = new EventEmitter<[]>();
 
-    e.addListener(() => { callOrder.push(1); }, {});
-    e.addListener(() => { callOrder.push(2); }, {});
-    e.addListener(() => { callOrder.push(3); }, { once: true });
+    e.addListener(() => {
+      callOrder.push(1);
+    }, {});
+    e.addListener(() => {
+      callOrder.push(2);
+    }, {});
+    e.addListener(
+      () => {
+        callOrder.push(3);
+      },
+      { once: true },
+    );
     e.emit();
     e.emit();
 
@@ -56,10 +73,16 @@ describe("EventEmitter", () => {
   it("removeListener should stop the listener from being called", () => {
     const callOrder: number[] = [];
     const e = new EventEmitter<[]>();
-    const r = () => { callOrder.push(3); };
+    const r = () => {
+      callOrder.push(3);
+    };
 
-    e.addListener(() => { callOrder.push(1); }, {});
-    e.addListener(() => { callOrder.push(2); }, {});
+    e.addListener(() => {
+      callOrder.push(1);
+    }, {});
+    e.addListener(() => {
+      callOrder.push(2);
+    }, {});
     e.addListener(r);
 
     e.emit();
@@ -73,9 +96,15 @@ describe("EventEmitter", () => {
     const callOrder: number[] = [];
     const e = new EventEmitter<[]>();
 
-    e.addListener(() => { callOrder.push(1); });
-    e.addListener(() => { callOrder.push(2); });
-    e.addListener(() => { callOrder.push(3); });
+    e.addListener(() => {
+      callOrder.push(1);
+    });
+    e.addListener(() => {
+      callOrder.push(2);
+    });
+    e.addListener(() => {
+      callOrder.push(3);
+    });
 
     e.emit();
     e.removeAllListeners();

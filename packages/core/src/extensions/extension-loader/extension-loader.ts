@@ -14,7 +14,7 @@ import type { LensExtension } from "../lens-extension";
 import { extensionLoaderFromMainChannel, extensionLoaderFromRendererChannel } from "../../common/ipc/extension-handling";
 import { requestExtensionLoaderInitialState } from "../../renderer/ipc";
 import assert from "assert";
-import { EventEmitter } from "../../common/event-emitter";
+import { EventEmitter } from "@k8slens/event-emitter";
 import type { Extension } from "./extension/extension.injectable";
 import type { Logger } from "../../common/logger";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
