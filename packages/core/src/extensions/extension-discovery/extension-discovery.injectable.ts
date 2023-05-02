@@ -10,7 +10,7 @@ import extensionInstallationStateStoreInjectable from "../extension-installation
 import installExtensionInjectable from "../install-extension/install-extension.injectable";
 import extensionPackageRootDirectoryInjectable from "../install-extension/extension-package-root-directory.injectable";
 import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
-import loggerInjectable from "../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import watchInjectable from "../../common/fs/watch/watch.injectable";
 import accessPathInjectable from "../../common/fs/access-path.injectable";

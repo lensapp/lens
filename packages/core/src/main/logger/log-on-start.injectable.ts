@@ -4,7 +4,7 @@
  */
 import { beforeApplicationIsLoadingInjectionToken } from "@k8slens/application";
 import { getInjectable } from "@ogre-tools/injectable";
-import loggerInjectable from "../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import appNameInjectable from "../../common/vars/app-name.injectable";
 import { buildVersionInitializable } from "../../features/vars/build-version/common/token";
 import { buildVersionInitializationInjectable } from "../../features/vars/build-version/main/init.injectable";

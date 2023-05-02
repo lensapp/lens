@@ -5,7 +5,7 @@
 
 import type { AuthorizationV1Api, V1ResourceAttributes } from "@kubernetes/client-node";
 import { getInjectable } from "@ogre-tools/injectable";
-import loggerInjectable from "../logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 
 /**
  * Requests the permissions for actions on the kube cluster

@@ -16,7 +16,7 @@ import type { InstalledExtension } from "./common-api";
 import type { CatalogEntityRegistry } from "../main/catalog";
 import type { NavigateForExtension } from "../main/start-main-application/lens-window/navigate-for-extension.injectable";
 import catalogEntityRegistryInjectable from "../main/catalog/entity-registry.injectable";
-import loggerInjectable from "../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import navigateForExtensionInjectable from "../main/start-main-application/lens-window/navigate-for-extension.injectable";
 import ensureHashedDirectoryForExtensionInjectable from "./extension-loader/file-system-provisioner-store/ensure-hashed-directory-for-extension.injectable";
 

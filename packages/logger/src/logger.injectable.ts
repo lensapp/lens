@@ -4,9 +4,9 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Logger } from "./logger";
-import winstonLoggerInjectable from "./winston-logger.injectable";
+import { winstonLoggerInjectable } from "./winston-logger.injectable";
 
-const loggerInjectable = getInjectable({
+export const loggerInjectable = getInjectable({
   id: "logger",
   instantiate: (di): Logger => {
     const baseLogger = di.inject(winstonLoggerInjectable);
@@ -22,5 +22,3 @@ const loggerInjectable = getInjectable({
 
   decorable: false,
 });
-
-export default loggerInjectable;

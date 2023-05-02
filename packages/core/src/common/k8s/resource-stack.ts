@@ -8,7 +8,7 @@ import yaml from "js-yaml";
 import { getLegacyGlobalDiForExtensionApi } from "@k8slens/legacy-global-di";
 import productNameInjectable from "../vars/product-name.injectable";
 import type { AsyncResult } from "@k8slens/utilities";
-import type { Logger } from "../logger";
+import type { Logger } from "@k8slens/logger";
 import type { KubectlApplyAll, KubectlDeleteAll } from "../kube-helpers/channels";
 import type { ReadDirectory } from "../fs/read-directory.injectable";
 import type { JoinPaths } from "../path/join-paths.injectable";

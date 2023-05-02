@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import electronUpdaterInjectable from "../../../../../main/electron-app/features/electron-updater.injectable";
 import type { UpdateChannel } from "../../../common/update-channels";
-import loggerInjectable from "../../../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import type { UpdateCheckResult } from "electron-updater";
 
 export type CheckForUpdatesResult = {

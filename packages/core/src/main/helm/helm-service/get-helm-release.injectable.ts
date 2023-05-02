@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import kubeconfigManagerInjectable from "../../kubeconfig-manager/kubeconfig-manager.injectable";
 import { isObject, json } from "@k8slens/utilities";
 import execHelmInjectable from "../exec-helm/exec-helm.injectable";

@@ -9,7 +9,7 @@ import storesAndApisCanBeCreatedInjectable from "../../../stores-apis-can-be-cre
 import { kubeObjectStoreInjectionToken } from "../../../../common/k8s-api/api-manager/kube-object-store-token";
 import { RoleStore } from "./store";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../../cluster-frame-context/for-namespaced-resources.injectable";
-import loggerInjectable from "../../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 
 const roleStoreInjectable = getInjectable({
   id: "role-store",

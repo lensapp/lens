@@ -15,7 +15,7 @@ import type { JoinPaths } from "../../common/path/join-paths.injectable";
 import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable";
 import type { GetBasenameOfPath } from "../../common/path/get-basename.injectable";
 import type { NormalizedPlatform } from "../../common/vars/normalized-platform.injectable";
-import type { Logger } from "../../common/logger";
+import type { Logger } from "@k8slens/logger";
 import type { ExecFile } from "../../common/fs/exec-file.injectable";
 import { hasTypedProperty, isObject, isString, json } from "@k8slens/utilities";
 import type { Unlink } from "../../common/fs/unlink.injectable";

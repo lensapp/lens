@@ -13,9 +13,9 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { ResourceQuota } from "@k8slens/kube-object";
 import { LineProgress } from "../line-progress";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import type { Logger } from "../../../common/logger";
+import type { Logger } from "@k8slens/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 
 export interface ResourceQuotaDetailsProps extends KubeObjectDetailsProps<ResourceQuota> {
 }

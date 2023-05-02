@@ -7,7 +7,7 @@ import { Agent } from "https";
 import type { RequestInit } from "@k8slens/node-fetch";
 import lensProxyCertificateInjectable from "../certificate/lens-proxy-certificate.injectable";
 import fetchInjectable from "../fetch/fetch.injectable";
-import loggerInjectable from "../logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import type { JsonApiConfig, JsonApiData, JsonApiDependencies, JsonApiParams } from "./json-api";
 import { JsonApi } from "./json-api";
 

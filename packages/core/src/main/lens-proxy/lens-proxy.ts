@@ -15,7 +15,7 @@ import { getBoolean } from "../utils/parse-query";
 import assert from "assert";
 import type { SetRequired } from "type-fest";
 import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";
-import type { Logger } from "../../common/logger";
+import type { Logger } from "@k8slens/logger";
 import type { SelfSignedCert } from "selfsigned";
 import type { KubeAuthProxyServer } from "../cluster/kube-auth-proxy-server.injectable";
 import stoppable from "stoppable";

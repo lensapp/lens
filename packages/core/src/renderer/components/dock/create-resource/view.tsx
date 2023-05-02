@@ -14,7 +14,7 @@ import type { CreateResourceTabStore } from "./store";
 import { EditorPanel } from "../editor-panel";
 import { InfoPanel } from "../info-panel";
 import type { ShowNotification } from "../../notifications";
-import type { Logger } from "../../../../common/logger";
+import type { Logger } from "@k8slens/logger";
 import type { ApiManager } from "../../../../common/k8s-api/api-manager";
 import { isObject, prevDefault } from "@k8slens/utilities";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -29,7 +29,7 @@ import getDetailsUrlInjectable from "../../kube-detail-params/get-details-url.in
 import navigateInjectable from "../../../navigation/navigate.injectable";
 import type { RequestKubeObjectCreation } from "../../../../common/k8s-api/endpoints/resource-applier.api/request-update.injectable";
 import requestKubeObjectCreationInjectable from "../../../../common/k8s-api/endpoints/resource-applier.api/request-update.injectable";
-import loggerInjectable from "../../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
 import showSuccessNotificationInjectable from "../../notifications/show-success-notification.injectable";
 import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";

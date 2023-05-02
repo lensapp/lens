@@ -10,7 +10,7 @@ import { renderFor } from "../../test-utils/renderFor";
 import { PodDisruptionBudgets } from "../pod-disruption-budgets";
 import storesAndApisCanBeCreatedInjectable from "../../../stores-apis-can-be-created.injectable";
 import selectedNamespacesStorageInjectable from "../../../../features/namespace-filtering/renderer/storage.injectable";
-import loggerInjectable from "../../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import maybeKubeApiInjectable from "../../../../common/k8s-api/maybe-kube-api.injectable";
 import podDisruptionBudgetStoreInjectable from "../store.injectable";
 import siblingTabsInjectable from "../../../routes/sibling-tabs.injectable";

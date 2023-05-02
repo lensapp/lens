@@ -17,13 +17,13 @@ import type { PodStore } from "../workloads-pods/store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { DaemonSet } from "@k8slens/kube-object";
 import { PodDetailsList } from "../workloads-pods/pod-details-list";
-import type { Logger } from "../../../common/logger";
+import type { Logger } from "@k8slens/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import daemonSetStoreInjectable from "./store.injectable";
 import podStoreInjectable from "../workloads-pods/store.injectable";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 
 export interface DaemonSetDetailsProps extends KubeObjectDetailsProps<DaemonSet> {
 }

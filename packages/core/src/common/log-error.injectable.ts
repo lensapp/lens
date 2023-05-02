@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import loggerInjectable from "./logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 
 const logErrorInjectable = getInjectable({
   id: "log-error",

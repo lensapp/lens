@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import tempy from "tempy";
 import getHelmReleaseInjectable from "./get-helm-release.injectable";
 import writeFileInjectable from "../../../common/fs/write-file.injectable";

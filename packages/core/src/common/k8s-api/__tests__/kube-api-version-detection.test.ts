@@ -21,7 +21,7 @@ import directoryForKubeConfigsInjectable from "../../app-paths/directory-for-kub
 import apiManagerInjectable from "../api-manager/manager.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import ingressApiInjectable from "../endpoints/ingress.api.injectable";
-import loggerInjectable from "../../logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 import { Cluster } from "../../cluster/cluster";
 

@@ -5,7 +5,7 @@
 
 import type { AuthorizationV1Api } from "@kubernetes/client-node";
 import { getInjectable } from "@ogre-tools/injectable";
-import loggerInjectable from "../logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import type { KubeApiResource } from "../rbac";
 
 export type CanListResource = (resource: KubeApiResource) => boolean;

@@ -13,7 +13,7 @@ import type { TerminalApi } from "../../../api/terminal-api";
 import { disposer } from "@k8slens/utilities";
 import { once } from "lodash";
 import { clipboard } from "electron";
-import type { Logger } from "../../../../common/logger";
+import type { Logger } from "@k8slens/logger";
 import assert from "assert";
 import { TerminalChannels } from "../../../../common/terminal/channels";
 import { LinkProvider } from "xterm-link-provider";

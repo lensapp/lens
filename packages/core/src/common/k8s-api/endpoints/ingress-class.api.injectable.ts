@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { IngressClassApi } from "./ingress-class.api";
 import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
-import loggerInjectable from "../../logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 
 const ingressClassApiInjectable = getInjectable({

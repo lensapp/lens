@@ -9,7 +9,7 @@ import { ClusterStatus } from "../../common/cluster-types";
 import type { CreateListNamespaces } from "../../common/cluster/list-namespaces.injectable";
 import type { BroadcastMessage } from "../../common/ipc/broadcast-message.injectable";
 import { clusterListNamespaceForbiddenChannel } from "../../common/ipc/cluster";
-import type { Logger } from "../../common/logger";
+import type { Logger } from "@k8slens/logger";
 import type { KubeApiResource } from "../../common/rbac";
 import { formatKubeApiResource } from "../../common/rbac";
 import { disposer, isDefined, isRequestError, withConcurrencyLimit } from "@k8slens/utilities";
@@ -25,7 +25,7 @@ import broadcastMessageInjectable from "../../common/ipc/broadcast-message.injec
 import createListNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
 import kubeAuthProxyServerInjectable from "./kube-auth-proxy-server.injectable";
 import loadProxyKubeconfigInjectable from "./load-proxy-kubeconfig.injectable";
-import loggerInjectable from "../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import prometheusHandlerInjectable from "./prometheus-handler/prometheus-handler.injectable";
 import removeProxyKubeconfigInjectable from "./remove-proxy-kubeconfig.injectable";
 import requestApiResourcesInjectable from "./request-api-resources.injectable";

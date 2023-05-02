@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import execFileInjectable from "../../../common/fs/exec-file.injectable";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logger";
 import type { AsyncResult } from "@k8slens/utilities";
 import { platformSpecificRequestSystemCAsInjectionToken } from "../common/request-system-cas-token";
 

@@ -19,7 +19,7 @@ import type { RequestInit, Response } from "@k8slens/node-fetch";
 import type { Patch } from "rfc6902";
 import assert from "assert";
 import type { PartialDeep } from "type-fest";
-import type { Logger } from "../logger";
+import type { Logger } from "@k8slens/logger";
 import { matches } from "lodash/fp";
 import { makeObservable, observable } from "mobx";
 import type { ScaleCreateOptions } from "@k8slens/kube-object/src/types/scale";
