@@ -25,6 +25,8 @@ jobs:
 
       - name: Create PR
         run: |
+          git config --local user.email "info@k8slens.dev"
+          git config --local user.name "K8s Lens Bot"
           npm run create-release-pr
         env:
           BUMP_PACKAGE_ARGS: -- --conventional-commits --conventional-prerelease --yes
