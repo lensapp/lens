@@ -42,6 +42,6 @@
   "devDependencies": {
     "@async-fn/jest": "^1.6.4",
     "@k8slens/eslint-config": "^6.5.0-alpha.2",
-    "@ogre-tools/test-utils": "^15.1.2"
+    "@ogre-tools/test-utils": "^15.7.0"
   }
 }
