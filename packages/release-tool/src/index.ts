@@ -5,7 +5,7 @@
  */
 import assert from "assert";
 import chalk from "chalk";
-import child_process, { spawn } from "child_process";
+import child_process, { ExecFileOptions, spawn as _spawn } from "child_process";
 import { readFile } from "fs/promises";
 import inquirer from "inquirer";
 import { createInterface, ReadLine } from "readline";
@@ -15,8 +15,26 @@ import { promisify } from "util";
 type SemVer = semver.SemVer;
 
 const { SemVer } = semver;
-const exec = promisify(child_process.exec);
-const execFile = promisify(child_process.execFile);
+const _exec = promisify(child_process.exec);
+const _execFile = promisify(child_process.execFile);
+
+const exec = ((cmd, ...args) => {
+  console.log("EXEC", cmd);
+
+  return _exec(cmd, ...args as any[]);
+}) as typeof _exec;
+
+const execFile = (file: string, args: string[], opts?: ExecFileOptions) => {
+  console.log("EXEC", file, args);
+
+  return _execFile(file, args, opts);
+};
+
+const spawn = ((file, ...args) => {
+  console.log("SPAWN", file);
+
+  return _spawn(file, ...args as any[]);
+}) as typeof _spawn;
 
 async function pipeExecFile(file: string, args: string[], opts?: { stdin: string }) {
   const p = execFile(file, args);
@@ -188,7 +206,7 @@ function sortExtendedGithubPrData(left: ExtendedGithubPrData, right: ExtendedGit
 }
 
 async function getRelevantPRs(previousReleasedVersion: string, baseBranch: string): Promise<ExtendedGithubPrData[]> {
-  console.log("retrieving previous 200 PRs...");
+  console.log(`retrieving previous 200 PRs from ${baseBranch}...`);
 
   const milestone = formatVersionForPickingPrs(await getCurrentVersionOfSubPackage("core"));
   const getMergedPrsArgs = [
@@ -316,7 +334,7 @@ async function pickRelevantPrs(prs: ExtendedGithubPrData[], isMasterBranch: bool
     throw new Error("Cannot pick relevant PRs for release if there are none. Are the milestones on github correct?");
   }
 
-  if (isMasterBranch) {
+  if (isMasterBranch || process.env.PICK_ALL_PRS === "true") {
     return prs;
   }
 

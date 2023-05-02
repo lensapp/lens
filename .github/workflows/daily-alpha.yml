@@ -8,6 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -26,8 +28,10 @@ jobs:
 
       - name: Create PR
         run: |
-          git fetch
+          git config --local user.email "info@k8slens.dev"
+          git config --local user.name "K8s Lens Bot"
           npm run create-release-pr
         env:
           BUMP_PACKAGE_ARGS: -- --conventional-commits --conventional-prerelease --yes
+          PICK_ALL_PRS: "true"
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
