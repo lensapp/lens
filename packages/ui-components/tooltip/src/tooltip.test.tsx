@@ -11,9 +11,7 @@ import React from "react";
 import { computeNextPosition, RectangleDimensions } from "./helpers";
 import { Tooltip, TooltipPosition } from "./tooltip";
 
-const getRectangle = (
-  parts: Omit<RectangleDimensions, "width" | "height">,
-): RectangleDimensions => {
+const getRectangle = (parts: Omit<RectangleDimensions, "width" | "height">): RectangleDimensions => {
   assert(parts.right >= parts.left);
   assert(parts.bottom >= parts.top);
 
@@ -382,33 +380,30 @@ describe("computeNextPosition technical tests", () => {
       TooltipPosition.TOP_LEFT,
       TooltipPosition.BOTTOM_RIGHT,
       TooltipPosition.BOTTOM_LEFT,
-    ])(
-      "computes to the %p if there is space and it is specified as a preferred position",
-      (position) => {
-        expect(
-          computeNextPosition({
-            preferredPositions: position,
-            offset: 10,
-            target: {
-              getBoundingClientRect: () =>
-                getRectangle({
-                  top: 50,
-                  left: 50,
-                  bottom: 100,
-                  right: 100,
-                }),
-            },
-            tooltip: {
-              getBoundingClientRect: () => ({
-                height: 20,
-                width: 20,
+    ])("computes to the %p if there is space and it is specified as a preferred position", (position) => {
+      expect(
+        computeNextPosition({
+          preferredPositions: position,
+          offset: 10,
+          target: {
+            getBoundingClientRect: () =>
+              getRectangle({
+                top: 50,
+                left: 50,
+                bottom: 100,
+                right: 100,
               }),
-            },
-          }),
-        ).toMatchObject({
-          position,
-        });
-      },
-    );
+          },
+          tooltip: {
+            getBoundingClientRect: () => ({
+              height: 20,
+              width: 20,
+            }),
+          },
+        }),
+      ).toMatchObject({
+        position,
+      });
+    });
   });
 });

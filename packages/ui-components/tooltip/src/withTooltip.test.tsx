@@ -16,14 +16,12 @@ type MyComponentProps = {
   "data-testid"?: string;
 };
 
-const MyComponent = withTooltip(
-  ({ text, "data-testid": testId, id, children }: MyComponentProps) => (
-    <div id={id} data-testid={testId}>
-      {text}
-      {children}
-    </div>
-  ),
-);
+const MyComponent = withTooltip(({ text, "data-testid": testId, id, children }: MyComponentProps) => (
+  <div id={id} data-testid={testId}>
+    {text}
+    {children}
+  </div>
+));
 
 describe("withTooltip tests", () => {
   it("does not render a tooltip when not specified", () => {
@@ -42,9 +40,7 @@ describe("withTooltip tests", () => {
     let result: RenderResult;
 
     beforeEach(() => {
-      result = render(
-        <MyComponent text="foobar" data-testid="my-test-id" tooltip="my-tooltip" id="bat" />,
-      );
+      result = render(<MyComponent text="foobar" data-testid="my-test-id" tooltip="my-tooltip" id="bat" />);
     });
 
     it("renders", () => {
@@ -71,12 +67,7 @@ describe("withTooltip tests", () => {
 
     beforeEach(() => {
       result = render(
-        <MyComponent
-          text="foobar"
-          data-testid="my-test-id"
-          tooltip={{ children: "my-tooltip" }}
-          id="bat"
-        />,
+        <MyComponent text="foobar" data-testid="my-test-id" tooltip={{ children: "my-tooltip" }} id="bat" />,
       );
     });
 
