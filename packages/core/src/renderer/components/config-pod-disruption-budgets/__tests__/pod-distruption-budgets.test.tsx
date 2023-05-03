@@ -73,13 +73,13 @@ describe("<PodDisruptionBudgets />", () => {
     });
 
     it("should display minAvailable as 0", () => {
-      const result = renderFor(di)(<PodDisruptionBudgets object={pdb}/>);
+      const result = renderFor(di)(<PodDisruptionBudgets />);
 
       expect(result.container.querySelector(".TableRow .min-available")?.textContent).toEqual("0");
     });
 
     it("should display maxUnavailable as N/A", () => {
-      const result = renderFor(di)(<PodDisruptionBudgets object={pdb}/>);
+      const result = renderFor(di)(<PodDisruptionBudgets />);
 
       expect(result.container.querySelector(".TableRow .max-unavailable")?.textContent).toEqual("N/A");
     });
@@ -98,13 +98,13 @@ describe("<PodDisruptionBudgets />", () => {
     });
 
     it("should display minAvailable as N/A", () => {
-      const result = renderFor(di)(<PodDisruptionBudgets object={pdb}/>);
+      const result = renderFor(di)(<PodDisruptionBudgets />);
 
       expect(result.container.querySelector(".TableRow .min-available")?.textContent).toEqual("N/A");
     });
 
     it("should display maxUnavailable as 0", () => {
-      const result = renderFor(di)(<PodDisruptionBudgets object={pdb}/>);
+      const result = renderFor(di)(<PodDisruptionBudgets />);
 
       expect(result.container.querySelector(".TableRow .max-unavailable")?.textContent).toEqual("0");
     });
