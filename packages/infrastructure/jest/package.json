@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/jest",
   "private": false,
-  "version": "6.5.0-alpha.4",
+  "version": "6.5.0-alpha.5",
   "description": "Jest configuration and scripts for Lens packages.",
   "type": "commonjs",
   "publishConfig": {
