@@ -12,7 +12,7 @@ describe("workload overview", () => {
   let builder: ApplicationBuilder;
 
   beforeEach(async () => {
-    builder = getApplicationBuilder().setEnvironmentToClusterFrame();
+    builder = await getApplicationBuilder().setEnvironmentToClusterFrame();
 
     await builder.afterWindowStart(() => {
       builder.allowKubeResource({

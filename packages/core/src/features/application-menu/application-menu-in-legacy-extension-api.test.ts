@@ -38,7 +38,7 @@ describe("application-menu-in-legacy-extension-api", () => {
     let onClickMock: jest.Mock;
     let testExtensionOptions: FakeExtensionOptions;
 
-    beforeEach(() => {
+    beforeEach(async () => {
       onClickMock = jest.fn();
 
       testExtensionOptions = {
@@ -112,7 +112,7 @@ describe("application-menu-in-legacy-extension-api", () => {
     });
 
     describe("when the extension is disabled", () => {
-      beforeEach(() => {
+      beforeEach(async () => {
         await builder.extensions.disable(testExtensionOptions);
       });
 
@@ -125,7 +125,7 @@ describe("application-menu-in-legacy-extension-api", () => {
         expect(menuItemPathsForExtension).toEqual([]);
       });
 
-      it("when the extension is enabled again, also related menu items exist again", () => {
+      it("when the extension is enabled again, also related menu items exist again", async () => {
         await builder.extensions.enable(testExtensionOptions);
 
         const menuItemPathsForExtension = builder.applicationMenu.items.filter(
@@ -146,7 +146,7 @@ describe("application-menu-in-legacy-extension-api", () => {
 
   describe("when extension with unrecognizable application menu items is enabled", () => {
 
-    beforeEach(() => {
+    beforeEach(async () => {
       const testExtensionOptions: FakeExtensionOptions = {
         id: "some-test-extension",
         name: "some-extension-name",

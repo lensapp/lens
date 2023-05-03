@@ -14,7 +14,7 @@ describe("legacy extension adding cluster frame components", () => {
   let builder: ApplicationBuilder;
   let rendered: RenderResult;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     builder = getApplicationBuilder();
     await builder.setEnvironmentToClusterFrame();
   });

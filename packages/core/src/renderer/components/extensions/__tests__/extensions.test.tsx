@@ -78,7 +78,7 @@ describe("Extensions", () => {
   });
 
   it("disables uninstall and disable buttons while uninstalling", async () => {
-    extensionDiscovery.isLoaded = true;
+    extensionDiscovery.isLoaded.set(true);
 
     render((
       <>
@@ -154,14 +154,14 @@ describe("Extensions", () => {
   });
 
   it("displays spinner while extensions are loading", () => {
-    extensionDiscovery.isLoaded = false;
+    extensionDiscovery.isLoaded.set(false);
     const { container } = render(<Extensions />);
 
     expect(container.querySelector(".Spinner")).toBeInTheDocument();
   });
 
   it("does not display the spinner while extensions are not loading", () => {
-    extensionDiscovery.isLoaded = true;
+    extensionDiscovery.isLoaded.set(true);
     const { container } = render(<Extensions />);
 
     expect(container.querySelector(".Spinner")).not.toBeInTheDocument();

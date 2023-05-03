@@ -46,7 +46,7 @@ describe("download logs options in logs dock tab", () => {
     image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
   };
 
-  beforeEach(() => {
+  beforeEach(async () => {
     const selectedPod = dockerPod;
 
     builder = getApplicationBuilder();

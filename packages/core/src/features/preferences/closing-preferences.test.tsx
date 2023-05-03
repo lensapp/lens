@@ -22,7 +22,7 @@ import { preferenceItemInjectionToken } from "./renderer/preference-items/prefer
 describe("preferences - closing-preferences", () => {
   let builder: ApplicationBuilder;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     builder = getApplicationBuilder();
 
     await builder.beforeWindowStart(({ windowDi }) => {

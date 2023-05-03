@@ -35,7 +35,7 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
   let showSuccessNotificationMock: jest.MockedFunction<ShowNotification>;
   let showErrorNotificationMock: jest.MockedFunction<ShowNotification>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     builder = getApplicationBuilder();
 
     await builder.setEnvironmentToClusterFrame();

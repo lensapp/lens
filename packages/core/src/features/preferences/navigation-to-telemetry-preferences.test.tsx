@@ -56,7 +56,7 @@ describe("preferences - navigation to telemetry preferences", () => {
     });
 
     describe("when extension with telemetry preference items gets enabled", () => {
-      beforeEach(() => {
+      beforeEach(async () => {
         await builder.extensions.enable(
           extensionStubWithTelemetryPreferenceItems,
         );
@@ -104,7 +104,7 @@ describe("preferences - navigation to telemetry preferences", () => {
       });
     });
 
-    it("given extensions but no telemetry preference items, does not show link for telemetry preferences", () => {
+    it("given extensions but no telemetry preference items, does not show link for telemetry preferences", async () => {
       await builder.extensions.enable({
         id: "some-test-extension-id",
         name: "some-test-extension-name",

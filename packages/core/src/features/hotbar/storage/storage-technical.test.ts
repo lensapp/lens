@@ -37,6 +37,7 @@ function getMockCatalogEntity(data: Partial<CatalogEntityData> & CatalogEntityKi
     isEnabled: jest.fn(() => data.status?.enabled ?? true),
     onContextMenuOpen: jest.fn(),
     onSettingsOpen: jest.fn(),
+    onRun: jest.fn(),
     metadata: {},
     spec: {},
     status: {},

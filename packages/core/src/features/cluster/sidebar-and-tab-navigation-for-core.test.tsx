@@ -27,7 +27,7 @@ describe("cluster - sidebar and tab navigation for core", () => {
   let builder: ApplicationBuilder;
   let rendered: RenderResult;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     testUsingFakeTime("2015-10-21T07:28:00Z");
 
     builder = getApplicationBuilder();
@@ -40,7 +40,7 @@ describe("cluster - sidebar and tab navigation for core", () => {
   });
 
   describe("given core registrations", () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       await builder.beforeWindowStart(({ windowDi }) => {
         runInAction(() => {
           windowDi.register(

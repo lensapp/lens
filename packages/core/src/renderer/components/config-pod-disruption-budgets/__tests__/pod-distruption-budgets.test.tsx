@@ -67,15 +67,18 @@ describe("<PodDisruptionBudgets />", () => {
       },
     );
 
+    beforeEach(() => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any
+      di.override(podDisruptionBudgetStoreInjectable, () => getPodDisruptionBudgetStoreInjectableMock(pdb) as any);
+    });
+
     it("should display minAvailable as 0", () => {
-      di.override(podDisruptionBudgetStoreInjectable, () => getPodDisruptionBudgetStoreInjectableMock(pdb));
       const result = renderFor(di)(<PodDisruptionBudgets object={pdb}/>);
 
       expect(result.container.querySelector(".TableRow .min-available")?.textContent).toEqual("0");
     });
 
     it("should display maxUnavailable as N/A", () => {
-      di.override(podDisruptionBudgetStoreInjectable, () => getPodDisruptionBudgetStoreInjectableMock(pdb));
       const result = renderFor(di)(<PodDisruptionBudgets object={pdb}/>);
 
       expect(result.container.querySelector(".TableRow .max-unavailable")?.textContent).toEqual("N/A");
@@ -89,15 +92,18 @@ describe("<PodDisruptionBudgets />", () => {
       },
     );
 
+    beforeEach(() => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any
+      di.override(podDisruptionBudgetStoreInjectable, () => getPodDisruptionBudgetStoreInjectableMock(pdb) as any);
+    });
+
     it("should display minAvailable as N/A", () => {
-      di.override(podDisruptionBudgetStoreInjectable, () => getPodDisruptionBudgetStoreInjectableMock(pdb));
       const result = renderFor(di)(<PodDisruptionBudgets object={pdb}/>);
 
       expect(result.container.querySelector(".TableRow .min-available")?.textContent).toEqual("N/A");
     });
 
     it("should display maxUnavailable as 0", () => {
-      di.override(podDisruptionBudgetStoreInjectable, () => getPodDisruptionBudgetStoreInjectableMock(pdb));
       const result = renderFor(di)(<PodDisruptionBudgets object={pdb}/>);
 
       expect(result.container.querySelector(".TableRow .max-unavailable")?.textContent).toEqual("0");

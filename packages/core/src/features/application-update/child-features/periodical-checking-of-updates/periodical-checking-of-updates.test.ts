@@ -17,7 +17,7 @@ describe("periodical checking of updates", () => {
   let builder: ApplicationBuilder;
   let processCheckingForUpdatesMock: jest.Mock;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     testUsingFakeTime("2015-10-21T07:28:00Z");
 
     builder = getApplicationBuilder();

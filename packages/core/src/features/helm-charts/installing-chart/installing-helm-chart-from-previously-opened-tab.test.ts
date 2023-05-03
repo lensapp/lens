@@ -23,7 +23,7 @@ describe("installing helm chart from previously opened tab", () => {
   let requestHelmChartVersionsMock: AsyncFnMock<RequestHelmChartVersions>;
   let requestHelmChartValuesMock: AsyncFnMock<RequestHelmChartValues>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     builder = getApplicationBuilder();
 
     await builder.setEnvironmentToClusterFrame();

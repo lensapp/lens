@@ -111,7 +111,7 @@ const userPreferenceDescriptorsInjectable = getInjectable({
           return res.length ? res : undefined;
         },
       }),
-      syncKubeconfigEntries: getPreferenceDescriptor<KubeconfigSyncEntry[], ObservableMap<string, Record<string, never>>>({
+      syncKubeconfigEntries: getPreferenceDescriptor<KubeconfigSyncEntry[], ObservableMap<string, object>>({
         fromStore: val => observable.map(
           val?.map(({ filePath, ...rest }) => [filePath, rest])
           ?? [[mainKubeFolderPath, {}]],

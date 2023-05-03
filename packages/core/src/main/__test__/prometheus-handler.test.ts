@@ -142,7 +142,7 @@ describe("PrometheusHandler", () => {
 
       const details = await di.inject(prometheusHandlerInjectable, cluster).getPrometheusDetails();
 
-      expect(details.provider.kind === `id_failure_${failures}`);
+      expect(details?.provider.kind === `id_failure_${failures}`);
     });
 
     it.each([
@@ -175,7 +175,7 @@ describe("PrometheusHandler", () => {
 
       const details = await di.inject(prometheusHandlerInjectable, cluster).getPrometheusDetails();
 
-      expect(details.provider.kind === "id_failure_0");
+      expect(details?.provider.kind === "id_failure_0");
     });
 
     it.each([
@@ -218,7 +218,7 @@ describe("PrometheusHandler", () => {
 
       const details = await di.inject(prometheusHandlerInjectable, cluster).getPrometheusDetails();
 
-      expect(details.provider.kind === "id_success_0");
+      expect(details?.provider.kind === "id_success_0");
     });
   });
 });

@@ -46,7 +46,7 @@ describe("preferences - navigation to application preferences", () => {
     });
 
     describe("when extension with application preference items gets enabled", () => {
-      beforeEach(() => {
+      beforeEach(async () => {
         await builder.extensions.enable(
           extensionStubWithApplicationPreferenceItems,
         );

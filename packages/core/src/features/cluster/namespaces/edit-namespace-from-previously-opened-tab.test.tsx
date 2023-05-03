@@ -19,7 +19,7 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
   let builder: ApplicationBuilder;
   let requestKubeResourceMock: AsyncFnMock<RequestKubeResource>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     builder = getApplicationBuilder();
 
     await builder.setEnvironmentToClusterFrame();

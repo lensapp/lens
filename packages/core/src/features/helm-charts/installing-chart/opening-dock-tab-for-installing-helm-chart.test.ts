@@ -30,7 +30,7 @@ describe("opening dock tab for installing helm chart", () => {
   let requestHelmChartReadmeMock: AsyncFnMock<RequestHelmChartReadme>;
   let requestHelmChartValuesMock: jest.Mock;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     builder = getApplicationBuilder();
 
     requestHelmChartsMock = asyncFn();

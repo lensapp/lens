@@ -19,7 +19,7 @@ describe("Banners from extensions", () => {
     renderResult = await builder.render();
   });
 
-  it("initially renderes welcome page", () => {
+  it("initially renders welcome page", () => {
     expect(renderResult.queryByTestId("welcome-page")).toBeInTheDocument();
   });
 
@@ -28,7 +28,7 @@ describe("Banners from extensions", () => {
   });
 
   describe("when an extension is enabled with a single welcome banner", () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       await builder.extensions.enable({
         id: "some-id",
         name: "some-name",
@@ -52,7 +52,7 @@ describe("Banners from extensions", () => {
   });
 
   describe("when an extension is enabled with multiple banners with custom widths", () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       await builder.extensions.enable({
         id: "some-id",
         name: "some-name",
