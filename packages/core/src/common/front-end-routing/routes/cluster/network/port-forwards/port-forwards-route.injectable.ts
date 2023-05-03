@@ -8,14 +8,14 @@ import type { Route } from "../../../../front-end-route-injection-token";
 import { frontEndRouteInjectionToken } from "../../../../front-end-route-injection-token";
 
 export interface PortForwardsPathParameters {
-  forwardport?: string;
+  forwardPort?: string;
 }
 
 const portForwardsRouteInjectable = getInjectable({
   id: "port-forwards-route",
 
   instantiate: (): Route<PortForwardsPathParameters> => ({
-    path: "/port-forwards/:forwardport?",
+    path: "/port-forwards/:forwardPort?",
     clusterFrame: true,
     isEnabled: computed(() => true),
   }),

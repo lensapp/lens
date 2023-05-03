@@ -33,7 +33,7 @@ enum columnId {
 
 interface Dependencies {
   portForwardStore: PortForwardStore;
-  forwardport: IComputedValue<string>;
+  forwardPort: IComputedValue<string>;
   navigateToPortForwards: NavigateToPortForwards;
 }
 
@@ -54,13 +54,13 @@ class NonInjectedPortForwards extends React.Component<Dependencies> {
 
   @computed
   get selectedPortForward() {
-    const forwardport = this.props.forwardport.get();
+    const forwardPort = this.props.forwardPort.get();
 
-    if (!forwardport) {
+    if (!forwardPort) {
       return undefined;
     }
 
-    return this.props.portForwardStore.getById(forwardport);
+    return this.props.portForwardStore.getById(forwardPort);
   }
 
   onDetails = (item: PortForwardItem) => {
@@ -73,7 +73,7 @@ class NonInjectedPortForwards extends React.Component<Dependencies> {
 
   showDetails = (item: PortForwardItem) => {
     this.props.navigateToPortForwards({
-      forwardport: item.getId(),
+      forwardPort: item.getId(),
     });
   };
 
