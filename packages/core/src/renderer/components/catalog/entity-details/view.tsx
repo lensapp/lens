@@ -55,13 +55,13 @@ class NonInjectedCatalogEntityDetails<Entity extends CatalogEntity> extends Comp
               title={entity.getName()}
               colorHash={`${entity.getName()}-${entity.getSource()}`}
               size={128}
-              src={(entity as KubernetesCluster).spec.icon?.src}
+              src={(entity as unknown as KubernetesCluster).spec.icon?.src}
               data-testid="detail-panel-hot-bar-icon"
-              background={(entity as KubernetesCluster).spec.icon?.background}
+              background={(entity as unknown as KubernetesCluster).spec.icon?.background}
               onClick={onRun}
               className={styles.avatar}
             >
-              {(entity as KubernetesCluster).spec.icon?.material && <Icon material={(entity as KubernetesCluster).spec.icon?.material}/>}
+              {(entity as unknown as KubernetesCluster).spec.icon?.material && <Icon material={(entity as unknown as KubernetesCluster).spec.icon?.material}/>}
             </Avatar>
             {entity.isEnabled() && (
               <div className={styles.hint}>
