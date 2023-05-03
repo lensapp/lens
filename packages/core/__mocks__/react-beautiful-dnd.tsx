@@ -7,9 +7,13 @@ import React from "react";
 import type {
   DragDropContextProps,
   DraggableProps,
+  DraggableProvided,
   DraggableProvidedDraggableProps,
+  DraggableStateSnapshot,
   DroppableProps,
+  DroppableProvided,
   DroppableProvidedProps,
+  DroppableStateSnapshot,
 } from "react-beautiful-dnd";
 
 export const DragDropContext = ({ children }: DragDropContextProps) => <>{ children }</>;
@@ -20,14 +24,14 @@ export const Draggable = ({ children }: DraggableProps) => (
         {
           draggableProps: {} as DraggableProvidedDraggableProps,
           innerRef: () => {},
-        },
+        } as unknown as DraggableProvided,
         {
           isDragging: false,
           isDropAnimating: false,
-        },
+        } as DraggableStateSnapshot,
         {
           draggableId: "some-mock-draggable-id",
-          mode: "FLUID",
+          type: "FLUID",
           source: {
             droppableId: "some-mock-droppable-id",
             index: 0,
@@ -44,11 +48,11 @@ export const Droppable = ({ children }: DroppableProps) => (
         {
           droppableProps: {} as DroppableProvidedProps,
           innerRef: () => {},
-        },
+        } as unknown as DroppableProvided,
         {
           isDraggingOver: false,
           isUsingPlaceholder: false,
-        },
+        } as DroppableStateSnapshot,
       )
     }
   </>

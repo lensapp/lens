@@ -6,6 +6,7 @@
 import { getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "@k8slens/legacy-global-di";
 import removeWeblinkInjectable from "../../features/weblinks/common/remove.injectable";
 import type { CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
+import type { CatalogEntitySpec } from "../catalog/catalog-entity";
 import { CatalogCategory, CatalogEntity, categoryVersion } from "../catalog/catalog-entity";
 import productNameInjectable from "../vars/product-name.injectable";
 
@@ -15,7 +16,7 @@ export interface WebLinkStatus extends CatalogEntityStatus {
   phase: WebLinkStatusPhase;
 }
 
-export interface WebLinkSpec {
+export interface WebLinkSpec extends CatalogEntitySpec {
   url: string;
 }
 

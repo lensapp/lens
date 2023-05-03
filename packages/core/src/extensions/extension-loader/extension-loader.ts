@@ -182,8 +182,8 @@ export class ExtensionLoader {
 
     ipcMainHandle(extensionLoaderFromMainChannel, () => [...this.toJSON()]);
 
-    ipcMainOn(extensionLoaderFromRendererChannel, (event, extensions: [LensExtensionId, InstalledExtension][]) => {
-      this.syncExtensions(extensions);
+    ipcMainOn(extensionLoaderFromRendererChannel, (event, extensions) => {
+      this.syncExtensions(extensions as [LensExtensionId, InstalledExtension][]);
     });
   }
 
@@ -205,8 +205,8 @@ export class ExtensionLoader {
     };
 
     void requestExtensionLoaderInitialState().then(extensionListHandler);
-    ipcRendererOn(extensionLoaderFromMainChannel, (event, extensions: [LensExtensionId, InstalledExtension][]) => {
-      extensionListHandler(extensions);
+    ipcRendererOn(extensionLoaderFromMainChannel, (event, extensions) => {
+      extensionListHandler(extensions as [LensExtensionId, InstalledExtension][]);
     });
   }
 

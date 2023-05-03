@@ -31,7 +31,7 @@ const requestCreateHelmReleaseInjectable = getInjectable({
       return apiBase.post(requestCreateEndpoint.compile({}), {
         data: {
           chart: `${repo}/${chart}`,
-          values: yaml.load(values),
+          values: yaml.load(values) as object,
           ...data,
         },
       });

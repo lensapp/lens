@@ -15,7 +15,7 @@ import appPathsInjectable from "./app-paths.injectable";
 describe("app-paths", () => {
   let builder: ApplicationBuilder;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     builder = getApplicationBuilder();
 
     const defaultAppPathsStub: AppPaths = {

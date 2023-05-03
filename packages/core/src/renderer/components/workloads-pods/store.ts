@@ -9,10 +9,11 @@ import type { KubeObjectStoreDependencies, KubeObjectStoreOptions } from "../../
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { cpuUnitsToNumber, unitsToBytes } from "@k8slens/utilities";
 import type { Pod, PodMetrics, KubeObject, NamespaceScopedMetadata } from "@k8slens/kube-object";
-import type { PodApi, PodMetricsApi } from "@k8slens/kube-api";
+import type { PodApi } from "@k8slens/kube-api";
+import type { RequestPodMetricsByNamespace } from "./list-pod-metrics.injectable";
 
 export interface PodStoreDependencies extends KubeObjectStoreDependencies {
-  readonly podMetricsApi: PodMetricsApi;
+  requestPodMetricsByNamespace: RequestPodMetricsByNamespace;
 }
 
 export class PodStore extends KubeObjectStore<Pod, PodApi> {
@@ -28,7 +29,7 @@ export class PodStore extends KubeObjectStore<Pod, PodApi> {
 
   async loadKubeMetrics(namespace?: string) {
     try {
-      const metrics = await this.dependencies.podMetricsApi.list({ namespace });
+      const metrics = await this.dependencies.requestPodMetricsByNamespace(namespace);
 
       this.kubeMetrics.replace(metrics ?? []);
     } catch (error) {

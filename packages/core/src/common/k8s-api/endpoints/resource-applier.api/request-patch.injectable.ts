@@ -6,9 +6,10 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { Patch } from "rfc6902";
 import apiBaseInjectable from "../../api-base.injectable";
 import type { AsyncResult, Result } from "@k8slens/utilities";
+import { result } from "@k8slens/utilities";
 import type { KubeJsonApiData } from "@k8slens/kube-object";
 
-export type RequestKubeObjectPatch = (name: string, kind: string, ns: string | undefined, patch: Patch) => AsyncResult<KubeJsonApiData, string>;
+export type RequestKubeObjectPatch = (name: string, kind: string, ns: string | undefined, patch: Patch) => AsyncResult<KubeJsonApiData, Error>;
 
 const requestKubeObjectPatchInjectable = getInjectable({
   id: "request-kube-object-patch",
@@ -16,7 +17,7 @@ const requestKubeObjectPatchInjectable = getInjectable({
     const apiBase = di.inject(apiBaseInjectable);
 
     return async (name, kind, ns, patch) => {
-      const result = (await apiBase.patch("/stack", {
+      const patchResult = (await apiBase.patch("/stack", {
         data: {
           name,
           kind,
@@ -25,22 +26,14 @@ const requestKubeObjectPatchInjectable = getInjectable({
         },
       })) as Result<string, string>;
 
-      if (!result.isOk) {
-        return result;
+      if (!patchResult.isOk) {
+        return result.wrapError("Failed to patch kube object", patchResult);
       }
 
       try {
-        const response = JSON.parse(result.value) as KubeJsonApiData;
-
-        return {
-          isOk: true,
-          response,
-        };
+        return result.ok(JSON.parse(patchResult.value) as KubeJsonApiData);
       } catch (error) {
-        return {
-          isOk: false,
-          error: String(error),
-        };
+        return result.error(new Error("Failed to parse response from patching kube object", { cause: error }));
       }
     };
   },

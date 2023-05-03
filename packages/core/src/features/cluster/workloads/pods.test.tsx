@@ -11,6 +11,7 @@ import type { PodStatus } from "@k8slens/kube-object";
 import { Pod } from "@k8slens/kube-object";
 import type { RequestMetrics } from "../../../common/k8s-api/endpoints/metrics.api/request-metrics.injectable";
 import requestMetricsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-metrics.injectable";
+import requestPodMetricsByNamespaceInjectable from "../../../renderer/components/workloads-pods/list-pod-metrics.injectable";
 
 describe("workloads / pods", () => {
   let rendered: RenderResult;
@@ -19,7 +20,10 @@ describe("workloads / pods", () => {
   beforeEach(async () => {
     builder = await getApplicationBuilder().setEnvironmentToClusterFrame();
     builder.namespaces.add("default");
-    await builder.beforeWindowStart(() => {
+    await builder.beforeWindowStart(({ windowDi }) => {
+      windowDi.override(requestPodMetricsByNamespaceInjectable, () => () => Promise.resolve([]));
+    });
+    await builder.afterWindowStart(() => {
       builder.allowKubeResource({
         apiName: "pods",
         group: "",

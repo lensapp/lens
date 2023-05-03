@@ -13,10 +13,12 @@ import { parseKubeApi, createKubeApiURL } from "@k8slens/kube-api";
 import { getOrInsertWith, iter } from "@k8slens/utilities";
 import type { CreateCustomResourceStore } from "./create-custom-resource-store.injectable";
 
-export type RegisterableStore<Store> = Store extends KubeObjectStore
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type RegisterableStore<Store> = Store extends KubeObjectStore<any, any, any>
   ? Store
   : never;
-export type RegisterableApi<Api> = Api extends KubeApi
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type RegisterableApi<Api> = Api extends KubeApi<any, any>
   ? Api
   : never;
 export type KubeObjectStoreFrom<Api> = Api extends KubeApi<infer KubeObj, infer ApiData>

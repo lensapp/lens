@@ -3,38 +3,17 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectionToken } from "@ogre-tools/injectable";
+import type { RequiredKeysOf } from "type-fest";
 import type { Route } from "./front-end-route-injection-token";
 
-type InferParametersFrom<TRoute> = TRoute extends Route<infer TParameters>
+type InferParametersFrom<TRoute> = TRoute extends Route<infer TParameters extends object>
   ? TParameters
   : never;
 
-type RequiredKeys<T> = Exclude<
-  {
-    [K in keyof T]: T extends Record<K, T[K]> ? K : never;
-  }[keyof T],
-  undefined
->;
-
-type ObjectContainingNoRequired<T> = T extends void
-  ? never
-  : (
-    RequiredKeys<T> extends []
-      ? Record<string, never>
-      : never
-  );
-
-type ObjectContainsNoRequired<T> = T extends ObjectContainingNoRequired<T>
-  ? true
-  : false;
-
-// TODO: Missing types for:
-// - Navigating to route without parameters, with parameters
-// - Navigating to route with required parameters, without parameters
-type Parameters<TParameters> = TParameters extends void
+type Parameters<TParameters extends object> = TParameters extends void
   ? { parameters?: undefined }
   : (
-    ObjectContainsNoRequired<TParameters> extends true
+    RequiredKeysOf<TParameters> extends never
       ? { parameters?: TParameters }
       : { parameters: TParameters }
   );

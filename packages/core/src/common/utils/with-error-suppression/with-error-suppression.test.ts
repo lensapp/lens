@@ -57,7 +57,7 @@ describe("with-error-suppression", () => {
   });
 
   describe("given decorated async function", () => {
-    let decorated: (a: string, b: string) => Promise<number> | Promise<void>;
+    let decorated: (a: string, b: string) => Promise<number | undefined>;
     let toBeDecorated: AsyncFnMock<(a: string, b: string) => Promise<number>>;
 
     beforeEach(() => {
@@ -67,7 +67,7 @@ describe("with-error-suppression", () => {
     });
 
     describe("when called", () => {
-      let returnValuePromise: Promise<number> | Promise<void>;
+      let returnValuePromise: Promise<number | undefined>;
 
       beforeEach(() => {
         returnValuePromise = decorated("some-parameter", "some-other-parameter");

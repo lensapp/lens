@@ -3,8 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { WriteFileOptions } from "fs";
-import type { ReadOptions } from "fs-extra";
+import type { CopyOptions, EnsureOptions, ReadOptions, WriteOptions } from "fs-extra";
 import fse from "fs-extra";
 
 export type FileSystemFunctions = ReturnType<(typeof fsInjectable)["instantiate"]>;
@@ -45,7 +44,7 @@ const fsInjectable = getInjectable({
       readFile,
       readJson: readJson as (file: string, options?: ReadOptions | BufferEncoding) => Promise<unknown>,
       writeFile,
-      writeJson: writeJson as (file: string, value: unknown, options?: string | WriteFileOptions) => Promise<void>,
+      writeJson: writeJson as (file: string, value: unknown, options?: string | WriteOptions) => Promise<void>,
       pathExists,
       readdir,
       readFileSync,
@@ -56,8 +55,8 @@ const fsInjectable = getInjectable({
       lstat,
       rm,
       access,
-      copy: copy as (src: string, dest: string, options?: fse.CopyOptions) => Promise<void>,
-      ensureDir: ensureDir as (path: string, options?: number | fse.EnsureOptions ) => Promise<void>,
+      copy: copy as (src: string, dest: string, options?: CopyOptions) => Promise<void>,
+      ensureDir: ensureDir as (path: string, options?: number | EnsureOptions ) => Promise<void>,
       ensureDirSync,
       createReadStream,
       stat,

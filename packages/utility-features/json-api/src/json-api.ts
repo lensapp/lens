@@ -7,7 +7,6 @@ import { Agent as HttpAgent } from "http";
 import { Agent as HttpsAgent } from "https";
 import { merge } from "lodash";
 import { stringify } from "querystring";
-import type { Patch } from "rfc6902";
 import type { PartialDeep, ValueOf } from "type-fest";
 import { EventEmitter } from "@k8slens/event-emitter";
 import type { Logger } from "@k8slens/logger";
@@ -15,8 +14,6 @@ import type Fetch from "@k8slens/node-fetch";
 import type { RequestInit, Response } from "@k8slens/node-fetch";
 import type { Defaulted } from "@k8slens/utilities";
 import { isArray, isObject, isString, json } from "@k8slens/utilities";
-
-export type JsonApiData = Record<string, never>;
 
 export interface JsonApiError {
   code?: number;
@@ -106,7 +103,7 @@ export class JsonApiErrorParsed {
   }
 }
 
-export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = JsonApiParams<Data>> {
+export class JsonApi<Data = unknown, Params extends { data?: unknown } = { data?: unknown }> {
   static readonly reqInitDefault = {
     headers: {
       "content-type": "application/json",
@@ -188,7 +185,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
 
   patch<OutData = Data, Query = QueryParams>(
     path: string,
-    params?: ParamsAndQuery<Omit<Params, "data">, Query> & { data?: Patch | PartialDeep<Data> },
+    params?: ParamsAndQuery<Params, Query>,
     reqInit: RequestInit = {},
   ) {
     return this.request<OutData, Query>(path, params, { ...reqInit, method: "patch" });
@@ -204,7 +201,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
 
   protected async request<OutData, Query = QueryParams>(
     path: string,
-    params: (ParamsAndQuery<Omit<Params, "data">, Query> & { data?: unknown }) | undefined,
+    params: ParamsAndQuery<Params, Query> | undefined,
     init: Defaulted<RequestInit, "method">,
   ) {
     let reqUrl = `${this.config.serverAddress}${this.config.apiBase}${path}`;

@@ -7,9 +7,9 @@ import podApiInjectable from "../../../common/k8s-api/endpoints/pod.api.injectab
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { getKubeStoreInjectable } from "../../../common/k8s-api/api-manager/kube-object-store-token";
 import { PodStore } from "./store";
-import podMetricsApiInjectable from "../../../common/k8s-api/endpoints/pod-metrics.api.injectable";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
+import requestPodMetricsByNamespaceInjectable from "./list-pod-metrics.injectable";
 
 const podStoreInjectable = getKubeStoreInjectable({
   id: "pod-store",
@@ -19,7 +19,7 @@ const podStoreInjectable = getKubeStoreInjectable({
     const api = di.inject(podApiInjectable);
 
     return new PodStore({
-      podMetricsApi: di.inject(podMetricsApiInjectable),
+      requestPodMetricsByNamespace: di.inject(requestPodMetricsByNamespaceInjectable),
       context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
       logger: di.inject(loggerInjectionToken),
     }, api);

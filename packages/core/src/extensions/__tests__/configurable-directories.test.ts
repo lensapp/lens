@@ -5,7 +5,6 @@
 import { runInAction } from "mobx";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
 import getHashInjectable from "../../extensions/extension-loader/file-system-provisioner-store/get-hash.injectable";
 import fsInjectable from "../../common/fs/fs.injectable";
 
@@ -30,11 +29,8 @@ describe("configurable directories for extension files", () => {
   });
 
   describe("when extension with a specific store name is enabled", () => {
-    let testExtensionOptions: FakeExtensionOptions;
-
-    beforeEach(() => {
-
-      testExtensionOptions = {
+    beforeEach(async () => {
+      await builder.extensions.enable({
         id: "some-extension",
         name: "some-extension-name",
 
@@ -48,9 +44,7 @@ describe("configurable directories for extension files", () => {
             },
           },
         },
-      };
-
-      await builder.extensions.enable(testExtensionOptions);
+      });
     });
 
     it("creates extension directory for specific store name", async () => {
@@ -65,11 +59,8 @@ describe("configurable directories for extension files", () => {
   });
 
   describe("when extension with no specific store name is enabled", () => {
-    let testExtensionOptions: FakeExtensionOptions;
-
-    beforeEach(() => {
-
-      testExtensionOptions = {
+    beforeEach(async () => {
+      await builder.extensions.enable({
         id: "some-extension",
         name: "some-extension-name",
 
@@ -83,9 +74,7 @@ describe("configurable directories for extension files", () => {
             },
           },
         },
-      };
-
-      await builder.extensions.enable(testExtensionOptions);
+      });
     });
 
     it("creates extension directory for package name", async () => {

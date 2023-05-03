@@ -8,10 +8,10 @@ import type { RequestInit } from "@k8slens/node-fetch";
 import lensProxyCertificateInjectable from "../certificate/lens-proxy-certificate.injectable";
 import fetchInjectable from "../fetch/fetch.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
-import type { JsonApiConfig, JsonApiData, JsonApiDependencies, JsonApiParams } from "@k8slens/json-api";
+import type { JsonApiConfig, JsonApiDependencies, JsonApiParams } from "@k8slens/json-api";
 import { JsonApi } from "@k8slens/json-api";
 
-export type CreateJsonApi = <Data = JsonApiData, Params extends JsonApiParams<Data> = JsonApiParams<Data>>(config: JsonApiConfig, reqInit?: RequestInit) => JsonApi<Data, Params>;
+export type CreateJsonApi = <Data = unknown, Params extends JsonApiParams<Data> = JsonApiParams<Data>>(config: JsonApiConfig, reqInit?: RequestInit) => JsonApi<Data, Params>;
 
 const createJsonApiInjectable = getInjectable({
   id: "create-json-api",
