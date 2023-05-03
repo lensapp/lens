@@ -24,7 +24,7 @@
   "license": "MIT",
   "homepage": "https://github.com/lensapp/lens",
   "scripts": {
-    "build": "webpack",
+    "build": "lens-webpack-build",
     "clean": "rimraf dist/",
     "test": "jest --coverage --runInBand",
     "lint": "lens-lint",
@@ -36,6 +36,7 @@
   "devDependencies": {
     "@k8slens/eslint-config": "^6.5.0-alpha.2",
     "@k8slens/jest": "^6.5.0-alpha.4",
-    "@k8slens/typescript": "^6.5.0-alpha.2"
+    "@k8slens/typescript": "^6.5.0-alpha.2",
+    "@k8slens/webpack": "6.5.0-alpha.4"
   }
 }
