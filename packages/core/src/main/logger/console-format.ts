@@ -8,6 +8,7 @@ import chalk from "chalk";
 import type { InspectOptions } from "util";
 import { inspect } from "util";
 import { omit } from "lodash";
+import type { Format, TransformableInfo } from "logform";
 
 // The following license was copied from https://github.com/duccio/winston-console-format/blob/master/LICENSE
 // This was modified to support formatting causes
@@ -42,7 +43,7 @@ export interface ConsoleFormatOptions {
   inspectOptions?: InspectOptions;
 }
 
-interface TransformableInfo {
+interface ConsoleTransformableInfo extends TransformableInfo {
   level: string;
   message: string;
   ms: string;
@@ -51,7 +52,7 @@ interface TransformableInfo {
   [key: string | symbol]: unknown;
 }
 
-export class ConsoleFormat {
+export class ConsoleFormat implements Format {
   private static readonly reSpaces = /^\s+/;
   private static readonly reSpacesOrEmpty = /^(\s*)/;
   // eslint-disable-next-line no-control-regex
@@ -78,7 +79,7 @@ export class ConsoleFormat {
     return inspect(value, this.inspectOptions).split("\n");
   }
 
-  private message(info: TransformableInfo, chr: string, color: string): string {
+  private message(info: ConsoleTransformableInfo, chr: string, color: string): string {
     const message = info.message.replace(
       ConsoleFormat.reSpacesOrEmpty,
       `$1${color}${chalk.dim(chr)}${chalk.reset(" ")}`,
@@ -91,7 +92,7 @@ export class ConsoleFormat {
     return message?.match(ConsoleFormat.reSpaces)?.[0] ?? "";
   }
 
-  private ms(info: TransformableInfo): string {
+  private ms(info: ConsoleTransformableInfo): string {
     if (info.ms) {
       return chalk.italic(chalk.dim(` ${info.ms}`));
     }
@@ -99,7 +100,7 @@ export class ConsoleFormat {
     return "";
   }
 
-  private stack(info: TransformableInfo): string[] {
+  private stack(info: ConsoleTransformableInfo): string[] {
     const messages: string[] = [];
 
     if (info.stack) {
@@ -124,7 +125,7 @@ export class ConsoleFormat {
     return messages;
   }
 
-  private cause(info: TransformableInfo): string[] {
+  private cause(info: ConsoleTransformableInfo): string[] {
     const splats = info[SPLAT];
 
     if (Array.isArray(splats)) {
@@ -134,7 +135,7 @@ export class ConsoleFormat {
     return [];
   }
 
-  private meta(info: TransformableInfo): string[] {
+  private meta(info: ConsoleTransformableInfo): string[] {
     const messages: string[] = [];
     const stripped = { ...info };
 
@@ -148,11 +149,11 @@ export class ConsoleFormat {
     return messages;
   }
 
-  private getColor(info: TransformableInfo): string {
+  private getColor(info: ConsoleTransformableInfo): string {
     return info.level.match(ConsoleFormat.reColor)?.[0] ?? "";
   }
 
-  private write(info: TransformableInfo, messages: string[], color: string): void {
+  private write(info: ConsoleTransformableInfo, messages: string[], color: string): void {
     const pad = this.pad(info.message);
 
     messages.forEach((line, index, arr) => {
@@ -167,7 +168,8 @@ export class ConsoleFormat {
     });
   }
 
-  public transform(info: TransformableInfo): TransformableInfo {
+  public transform(rawInfo: TransformableInfo): ConsoleTransformableInfo {
+    const info = rawInfo as ConsoleTransformableInfo;
     const messages: string[] = [];
 
     if (this.showMeta) {
