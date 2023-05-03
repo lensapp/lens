@@ -8,7 +8,7 @@ import { z } from "zod";
 /**
  * JSON serializable metadata type
  */
-export type ClusterMetadata = Partial<Record<string, Metadata>>;
+export type ClusterMetadata = { [key in string]?: Metadata };
 
 /**
  * Metadata for cluster's prometheus settings
@@ -32,7 +32,7 @@ export type UpdateClusterModel = Omit<ClusterModel, "id">;
 export type Literal = z.infer<typeof literalSchema>;
 export const literalSchema = z.string().or(z.number()).or(z.boolean());
 
-export type Metadata = Literal | { [key: string]: Metadata } | Metadata[];
+export type Metadata = Literal | { [key in string]?: Metadata } | Metadata[];
 export const metadataSchema: z.ZodType<Metadata> = z.lazy(() => z.union([literalSchema, z.array(metadataSchema), z.record(metadataSchema)]));
 
 export const prometheusPreferencesSchema = z.object({

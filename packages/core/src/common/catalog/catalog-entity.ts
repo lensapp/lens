@@ -10,6 +10,7 @@ import { once } from "lodash";
 import type { Disposer, StrictReactNode } from "@k8slens/utilities";
 import { iter } from "@k8slens/utilities";
 import type { CategoryColumnRegistration, TitleCellProps } from "../../renderer/components/catalog/custom-category-columns";
+import type { Literal, Metadata } from "../cluster-types";
 
 export type { CategoryColumnRegistration, TitleCellProps };
 
@@ -232,8 +233,8 @@ export abstract class CatalogCategory extends (EventEmitter as new () => TypedEm
   }
 }
 
-export type EntityMetadataObject = { [Key in string]?: EntityMetadataValue };
-export type EntityMetadataValue = string | number | boolean | EntityMetadataObject | undefined;
+export type EntityMetadataObject = { [key in string]?: Metadata };
+export type EntityMetadataValue = Literal;
 
 export interface CatalogEntityMetadata extends EntityMetadataObject {
   uid: string;
@@ -241,7 +242,7 @@ export interface CatalogEntityMetadata extends EntityMetadataObject {
   shortName?: string;
   description?: string;
   source?: string;
-  labels: Partial<Record<string, string>>;
+  labels: { [key in string]?: string };
 }
 
 export interface CatalogEntityStatus {
