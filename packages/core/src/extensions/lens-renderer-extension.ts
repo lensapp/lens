@@ -50,7 +50,7 @@ import type { PageParamInit } from "./renderer-api/navigation";
 interface LensRendererExtensionDependencies extends LensExtensionDependencies {
   navigateToRoute: NavigateToRoute;
   getExtensionPageParameters: GetExtensionPageParameters;
-  readonly routes: IComputedValue<Route<unknown>[]>;
+  readonly routes: IComputedValue<Route<string>[]>;
   readonly entityRegistry: CatalogEntityRegistry;
   readonly categoryRegistry: CatalogCategoryRegistry;
 }

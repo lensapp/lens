@@ -4,31 +4,31 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import helmChartsRouteParametersInjectable from "../helm-charts-route-parameters.injectable";
+import helmChartsRouteInjectable from "../../../../common/front-end-routing/routes/cluster/helm/charts/helm-charts-route.injectable";
+import routePathParametersInjectable from "../../../routes/route-path-parameters.injectable";
 import helmChartsInjectable from "./helm-charts.injectable";
 
 const selectedHelmChartInjectable = getInjectable({
   id: "selected-helm-chart",
 
   instantiate: (di) => {
-    const { chartName, repo } = di.inject(helmChartsRouteParametersInjectable);
+    const route = di.inject(helmChartsRouteInjectable);
+    const pathParameters = di.inject(routePathParametersInjectable)(route);
     const helmCharts = di.inject(helmChartsInjectable);
 
     return computed(() => {
-      const dereferencedChartName = chartName.get();
-      const deferencedRepository = repo.get();
+      const { chartName, repo } = pathParameters.get() ?? {};
 
-      if (!dereferencedChartName || !deferencedRepository) {
+      if (!chartName || !repo) {
         return undefined;
       }
 
       return helmCharts.value
         .get()
-        .find(
-          (chart) =>
-            chart.getName() === dereferencedChartName &&
-            chart.getRepository() === deferencedRepository,
-        );
+        .find((chart) => (
+          chart.getName() === chartName
+          && chart.getRepository() === repo
+        ));
     });
   },
 });

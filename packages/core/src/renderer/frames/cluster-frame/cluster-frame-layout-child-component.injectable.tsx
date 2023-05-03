@@ -14,27 +14,29 @@ import { computed } from "mobx";
 import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
 import { Redirect } from "react-router";
 import startUrlInjectable from "./start-url.injectable";
-import currentPathInjectable from "../../routes/current-path.injectable";
 import { observer } from "mobx-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
+import type { InferParamFromPath } from "../../../common/front-end-routing/front-end-route-injection-token";
+import type { MatchedRoute } from "../../routes/matching-route.injectable";
+import matchingRouteInjectable from "../../routes/matching-route.injectable";
 
 interface Dependencies {
-  currentRouteComponent: IComputedValue<React.ElementType<object> | undefined>;
+  currentRouteComponent: IComputedValue<React.ComponentType<{ params: InferParamFromPath<string> }> | undefined>;
   startUrl: IComputedValue<string>;
-  currentPath: IComputedValue<string>;
+  matchedRoute: IComputedValue<MatchedRoute | undefined>;
 }
 
 const NonInjectedClusterFrameLayout = observer((props: Dependencies) => {
   const Component = props.currentRouteComponent.get();
   const starting = props.startUrl.get();
-  const current = props.currentPath.get();
+  const matchedRoute = props.matchedRoute.get();
 
   return (
     <MainLayout sidebar={<Sidebar />} footer={<Dock />}>
-      {Component ? (
-        <Component />
+      {(Component && matchedRoute) ? (
+        <Component params={matchedRoute.pathParameters} />
       ) : // NOTE: this check is to prevent an infinite loop
-        starting !== current ? (
+        starting !== matchedRoute?.route.path ? (
           <Redirect to={starting} />
         ) : (
           <div className={styles.centering}>
@@ -53,7 +55,7 @@ const ClusterFrameLayout = withInjectables<Dependencies>(NonInjectedClusterFrame
     ...props,
     currentRouteComponent: di.inject(currentRouteComponentInjectable),
     startUrl: di.inject(startUrlInjectable),
-    currentPath: di.inject(currentPathInjectable),
+    matchedRoute: di.inject(matchingRouteInjectable),
   }),
 });
 

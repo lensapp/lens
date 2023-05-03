@@ -14,19 +14,13 @@ const currentPreferenceTabIdInjectable = getInjectable({
   instantiate: (di) => {
     const preferencesRoute = di.inject(preferencesRouteInjectable);
     const preferencesRouteForLegacyExtensions = di.inject(preferencesRouteForLegacyExtensionsInjectable);
+    const routePathParameters = di.inject(routePathParametersInjectable);
 
-    const nonLegacyRoutePathParameters = di.inject(
-      routePathParametersInjectable,
-      preferencesRoute,
-    );
-
-    const legacyRoutePathParameters = di.inject(
-      routePathParametersInjectable,
-      preferencesRouteForLegacyExtensions,
-    );
+    const nonLegacyRoutePathParameters = routePathParameters(preferencesRoute);
+    const legacyRoutePathParameters = routePathParameters(preferencesRouteForLegacyExtensions);
 
     return computed(() => {
-      const nonLegacyPreferenceTabId = nonLegacyRoutePathParameters.get().preferenceTabId;
+      const nonLegacyPreferenceTabId = nonLegacyRoutePathParameters.get()?.preferenceTabId;
 
       if (nonLegacyPreferenceTabId) {
         return nonLegacyPreferenceTabId;
@@ -34,7 +28,7 @@ const currentPreferenceTabIdInjectable = getInjectable({
 
       const legacyParameters = legacyRoutePathParameters.get();
 
-      if (legacyParameters.extensionId) {
+      if (legacyParameters?.extensionId) {
         if (legacyParameters.preferenceTabId) {
           return `extension-${legacyParameters.extensionId}-${legacyParameters.preferenceTabId}`;
         }

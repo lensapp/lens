@@ -16,9 +16,7 @@ const navigateToCatalogInjectable = getInjectable({
     const navigateToRoute = di.inject(navigateToRouteInjectionToken);
     const catalogRoute = di.inject(catalogRouteInjectable);
 
-    return (parameters) => navigateToRoute(catalogRoute, {
-      parameters,
-    });
+    return (parameters) => navigateToRoute(catalogRoute, { parameters });
   },
 });
 

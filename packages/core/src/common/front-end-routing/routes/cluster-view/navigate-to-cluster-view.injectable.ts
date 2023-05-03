@@ -15,8 +15,7 @@ const navigateToClusterViewInjectable = getInjectable({
     const navigateToRoute = di.inject(navigateToRouteInjectionToken);
     const route = di.inject(clusterViewRouteInjectable);
 
-    return (clusterId) =>
-      navigateToRoute(route, { parameters: { clusterId }});
+    return (clusterId) => navigateToRoute(route, { parameters: { clusterId }});
   },
 });
 

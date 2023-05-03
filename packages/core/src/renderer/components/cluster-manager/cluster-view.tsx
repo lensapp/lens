@@ -5,16 +5,13 @@
 
 import "./cluster-view.scss";
 import React from "react";
-import type { IComputedValue } from "mobx";
-import { computed, makeObservable, reaction } from "mobx";
+import { computed, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ClusterStatus } from "./cluster-status";
 import type { ClusterFrameHandler } from "./cluster-frame-handler";
-import type { Cluster } from "../../../common/cluster/cluster";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
-import clusterViewRouteParametersInjectable from "./cluster-view-route-parameters.injectable";
 import clusterFrameHandlerInjectable from "./cluster-frame-handler.injectable";
 import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
 import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
@@ -22,10 +19,14 @@ import type { RequestClusterActivation } from "../../../features/cluster/activat
 import requestClusterActivationInjectable from "../../../features/cluster/activation/renderer/request-activation.injectable";
 import type { GetClusterById } from "../../../features/cluster/storage/common/get-by-id.injectable";
 import getClusterByIdInjectable from "../../../features/cluster/storage/common/get-by-id.injectable";
-import type { StrictReactNode } from "@k8slens/utilities";
+import type { ParametersFromRouteInjectable } from "../../../common/front-end-routing/front-end-route-injection-token";
+import type clusterViewRouteInjectable from "../../../common/front-end-routing/routes/cluster-view/cluster-view-route.injectable";
+
+export interface ClusterViewProps {
+  params: ParametersFromRouteInjectable<typeof clusterViewRouteInjectable>;
+}
 
 interface Dependencies {
-  clusterId: IComputedValue<string>;
   clusterFrames: ClusterFrameHandler;
   navigateToCatalog: NavigateToCatalog;
   entityRegistry: CatalogEntityRegistry;
@@ -34,34 +35,27 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedClusterView extends React.Component<Dependencies> {
-  constructor(props: Dependencies) {
-    super(props);
-    makeObservable(this);
-  }
-
+class NonInjectedClusterView extends React.Component<Dependencies & ClusterViewProps> {
   get clusterId() {
-    return this.props.clusterId.get();
+    return this.props.params.clusterId;
   }
 
-  @computed get cluster(): Cluster | undefined {
-    return this.props.getClusterById(this.clusterId);
-  }
+  readonly cluster = computed(() => this.props.getClusterById(this.clusterId));
 
   private readonly isViewLoaded = computed(() => this.props.clusterFrames.hasLoadedView(this.clusterId), {
     keepAlive: true,
     requiresReaction: true,
   });
 
-  @computed get isReady(): boolean {
-    const { cluster } = this;
+  readonly isReady = computed(() => {
+    const cluster = this.cluster.get();
 
     if (!cluster) {
       return false;
     }
 
     return cluster.ready.get() && cluster.available.get() && this.isViewLoaded.get();
-  }
+  });
 
   componentDidMount() {
     this.bindEvents();
@@ -94,8 +88,9 @@ class NonInjectedClusterView extends React.Component<Dependencies> {
     ]);
   }
 
-  renderStatus(): StrictReactNode {
-    const { cluster, isReady } = this;
+  renderStatus() {
+    const cluster = this.cluster.get();
+    const isReady = this.isReady.get();
 
     if (cluster && !isReady) {
       return <ClusterStatus cluster={cluster} className="box center"/>;
@@ -113,9 +108,9 @@ class NonInjectedClusterView extends React.Component<Dependencies> {
   }
 }
 
-export const ClusterView = withInjectables<Dependencies>(NonInjectedClusterView, {
-  getProps: (di) => ({
-    ...di.inject(clusterViewRouteParametersInjectable),
+export const ClusterView = withInjectables<Dependencies, ClusterViewProps>(NonInjectedClusterView, {
+  getProps: (di, props) => ({
+    ...props,
     navigateToCatalog: di.inject(navigateToCatalogInjectable),
     clusterFrames: di.inject(clusterFrameHandlerInjectable),
     entityRegistry: di.inject(catalogEntityRegistryInjectable),

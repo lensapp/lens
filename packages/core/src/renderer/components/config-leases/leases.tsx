@@ -7,9 +7,7 @@ import "./leases.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
-import type { Lease } from "@k8slens/kube-object";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
@@ -25,14 +23,12 @@ enum columnId {
   age = "age",
 }
 
-export type LeaseProps = KubeObjectDetailsProps<Lease>;
-
 interface Dependencies {
   leaseStore: LeaseStore;
 }
 
 @observer
-class NonInjectedLease extends React.Component<LeaseProps & Dependencies> {
+class NonInjectedLease extends React.Component<Dependencies> {
   render() {
     const { leaseStore } = this.props;
 
@@ -76,7 +72,7 @@ class NonInjectedLease extends React.Component<LeaseProps & Dependencies> {
   }
 }
 
-export const Leases = withInjectables<Dependencies, LeaseProps>(NonInjectedLease, {
+export const Leases = withInjectables<Dependencies>(NonInjectedLease, {
   getProps: (di, props) => ({
     ...props,
     leaseStore: di.inject(leaseStoreInjectable),

@@ -9,8 +9,8 @@ import type { ApplicationBuilder } from "../../../../renderer/components/test-ut
 import type { KubernetesCluster } from "../../../../common/catalog-entities";
 import { getApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
 import { getInjectable } from "@ogre-tools/injectable";
-import { frontEndRouteInjectionToken } from "../../../../common/front-end-routing/front-end-route-injection-token";
-import { computed, runInAction } from "mobx";
+import { getFrontEndRouteInjectable } from "../../../../common/front-end-routing/front-end-route-injection-token";
+import { runInAction } from "mobx";
 import React from "react";
 import { navigateToRouteInjectionToken } from "../../../../common/front-end-routing/navigate-to-route-injection-token";
 import { routeSpecificComponentInjectionToken } from "../../../../renderer/routes/route-specific-component-injection-token";
@@ -116,16 +116,10 @@ describe("disable kube object statuses when cluster is not relevant", () => {
   });
 });
 
-const testRouteInjectable = getInjectable({
+const testRouteInjectable = getFrontEndRouteInjectable({
   id: "test-route",
-
-  instantiate: () => ({
-    path: "/test-route",
-    clusterFrame: true,
-    isEnabled: computed(() => true),
-  }),
-
-  injectionToken: frontEndRouteInjectionToken,
+  path: "/test-route",
+  clusterFrame: true,
 });
 
 const testRouteComponentInjectable = getInjectable({

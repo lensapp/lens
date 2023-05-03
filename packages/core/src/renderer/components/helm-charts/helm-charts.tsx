@@ -14,13 +14,14 @@ import type { IComputedValue } from "mobx";
 import type { IAsyncComputed } from "@ogre-tools/injectable-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
-import helmChartsRouteParametersInjectable from "./helm-charts-route-parameters.injectable";
 import type { NavigateToHelmCharts } from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import { HelmChartIcon } from "./icon";
 import helmChartsInjectable from "./helm-charts/helm-charts.injectable";
 import selectedHelmChartInjectable from "./helm-charts/selected-helm-chart.injectable";
 import { noop } from "lodash";
+import type { ParametersFromRouteInjectable } from "../../../common/front-end-routing/front-end-route-injection-token";
+import type helmChartsRouteInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/helm-charts-route.injectable";
 
 enum columnId {
   name = "name",
@@ -31,17 +32,17 @@ enum columnId {
 }
 
 interface Dependencies {
-  routeParameters: {
-    chartName: IComputedValue<string>;
-    repo: IComputedValue<string>;
-  };
   navigateToHelmCharts: NavigateToHelmCharts;
   charts: IAsyncComputed<HelmChart[]>;
   selectedChart: IComputedValue<HelmChart | undefined>;
 }
 
+export interface HelmChartsProps {
+  params: ParametersFromRouteInjectable<typeof helmChartsRouteInjectable>;
+}
+
 @observer
-class NonInjectedHelmCharts extends Component<Dependencies> {
+class NonInjectedHelmCharts extends Component<Dependencies & HelmChartsProps> {
   onDetails = (chart: HelmChart) => {
     if (chart === this.props.selectedChart.get()) {
       this.hideDetails();
@@ -144,9 +145,9 @@ class NonInjectedHelmCharts extends Component<Dependencies> {
   }
 }
 
-export const HelmCharts = withInjectables<Dependencies>(NonInjectedHelmCharts, {
-  getProps: (di) => ({
-    routeParameters: di.inject(helmChartsRouteParametersInjectable),
+export const HelmCharts = withInjectables<Dependencies, HelmChartsProps>(NonInjectedHelmCharts, {
+  getProps: (di, props) => ({
+    ...props,
     navigateToHelmCharts: di.inject(navigateToHelmChartsInjectable),
     charts: di.inject(helmChartsInjectable),
     selectedChart: di.inject(selectedHelmChartInjectable),

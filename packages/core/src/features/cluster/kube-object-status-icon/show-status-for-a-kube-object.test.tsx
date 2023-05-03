@@ -8,7 +8,7 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import type { IAtom } from "mobx";
 import { runInAction, createAtom, computed } from "mobx";
-import { frontEndRouteInjectionToken } from "../../../common/front-end-routing/front-end-route-injection-token";
+import { getFrontEndRouteInjectable } from "../../../common/front-end-routing/front-end-route-injection-token";
 import { routeSpecificComponentInjectionToken } from "../../../renderer/routes/route-specific-component-injection-token";
 import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
@@ -262,16 +262,10 @@ describe("show status for a kube object", () => {
   });
 });
 
-const testRouteInjectable = getInjectable({
+const testRouteInjectable = getFrontEndRouteInjectable({
   id: "test-route",
-
-  instantiate: () => ({
-    path: "/test-route",
-    clusterFrame: true,
-    isEnabled: computed(() => true),
-  }),
-
-  injectionToken: frontEndRouteInjectionToken,
+  path: "/test-route",
+  clusterFrame: true,
 });
 
 const rerenderParentFor = (atom: IAtom) => () => {

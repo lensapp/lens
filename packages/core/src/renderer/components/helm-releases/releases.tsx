@@ -6,7 +6,7 @@
 import "../item-object-list/item-list-layout.scss";
 import "./releases.scss";
 
-import React, { Component } from "react";
+import React from "react";
 import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { ItemListStore } from "../item-object-list";
@@ -20,10 +20,12 @@ import type { RemovableHelmRelease } from "./removable-releases";
 import type { IComputedValue } from "mobx";
 import releasesInjectable from "./releases.injectable";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
-import helmReleasesRouteParametersInjectable from "./helm-releases-route-parameters.injectable";
 import type { NavigateToHelmReleases } from "../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
 import navigateToHelmReleasesInjectable from "../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
 import { NamespaceSelectBadge } from "../namespaces/namespace-select-badge";
+import type { ParametersFromRouteInjectable } from "../../../common/front-end-routing/front-end-route-injection-token";
+import type helmReleasesRouteInjectable from "../../../common/front-end-routing/routes/cluster/helm/releases/helm-releases-route.injectable";
+import { observer } from "mobx-react";
 
 enum columnId {
   name = "name",
@@ -39,11 +41,15 @@ enum columnId {
 interface Dependencies {
   releases: IComputedValue<RemovableHelmRelease[]>;
   releasesArePending: IComputedValue<boolean>;
-  namespace: IComputedValue<string>;
   navigateToHelmReleases: NavigateToHelmReleases;
 }
 
-class NonInjectedHelmReleases extends Component<Dependencies> {
+export interface HelmReleasesProps {
+  params: ParametersFromRouteInjectable<typeof helmReleasesRouteInjectable>;
+}
+
+@observer
+class NonInjectedHelmReleases extends React.Component<Dependencies & HelmReleasesProps> {
   onDetails = (item: HelmRelease) => {
     this.showDetails(item);
   };
@@ -206,11 +212,11 @@ class NonInjectedHelmReleases extends Component<Dependencies> {
   }
 }
 
-export const HelmReleases = withInjectables<Dependencies>(NonInjectedHelmReleases, {
-  getProps: (di) => ({
+export const HelmReleases = withInjectables<Dependencies, HelmReleasesProps>(NonInjectedHelmReleases, {
+  getProps: (di, props) => ({
+    ...props,
     releases: di.inject(removableReleasesInjectable),
     releasesArePending: di.inject(releasesInjectable).pending,
     navigateToHelmReleases: di.inject(navigateToHelmReleasesInjectable),
-    ...di.inject(helmReleasesRouteParametersInjectable),
   }),
 });

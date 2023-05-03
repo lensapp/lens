@@ -4,16 +4,26 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
+import entitySettingsRouteInjectable from "../../../common/front-end-routing/routes/entity-settings/entity-settings-route.injectable";
 import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
-import entitySettingsRouteParametersInjectable from "./route-parameters.injectable";
+import routePathParametersInjectable from "../../routes/route-path-parameters.injectable";
 
 const currentCatalogEntityForSettingsInjectable = getInjectable({
   id: "current-catalog-entity-for-settings",
   instantiate: (di) => {
-    const { entityId } = di.inject(entitySettingsRouteParametersInjectable);
+    const route = di.inject(entitySettingsRouteInjectable);
+    const pathParameters = di.inject(routePathParametersInjectable)(route);
     const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
 
-    return computed(() => catalogEntityRegistry.getById(entityId.get()));
+    return computed(() => {
+      const params = pathParameters.get();
+
+      if (!params) {
+        return undefined;
+      }
+
+      return catalogEntityRegistry.getById(params.entityId);
+    });
   },
 });
 

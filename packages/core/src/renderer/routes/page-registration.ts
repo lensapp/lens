@@ -13,7 +13,8 @@ export interface PageRegistration<Params = unknown> {
    * When not provided, first registered page without "id" would be used for page-menus without target.pageId for same extension
    */
   id?: string;
-  params?: Params extends PageParams<string | PageParamDeclaration<unknown>> ? Params : never;
+  // eslint-disable-next-line unused-imports/no-unused-vars-ts, @typescript-eslint/no-unused-vars
+  params?: Params extends PageParams<string | PageParamDeclaration<infer P>> ? Params : never;
   components: PageComponents<Params>;
   enabled?: IComputedValue<boolean>;
 }

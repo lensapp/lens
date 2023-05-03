@@ -6,7 +6,7 @@ import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
 import { getInjectable } from "@ogre-tools/injectable";
-import { frontEndRouteInjectionToken } from "../../../../common/front-end-routing/front-end-route-injection-token";
+import { getFrontEndRouteInjectable } from "../../../../common/front-end-routing/front-end-route-injection-token";
 import type { IObservableValue } from "mobx";
 import { observable, runInAction, computed } from "mobx";
 import React from "react";
@@ -88,16 +88,10 @@ describe("reactively hide kube object status", () => {
   });
 });
 
-const testRouteInjectable = getInjectable({
+const testRouteInjectable = getFrontEndRouteInjectable({
   id: "test-route",
-
-  instantiate: () => ({
-    path: "/test-route",
-    clusterFrame: true,
-    isEnabled: computed(() => true),
-  }),
-
-  injectionToken: frontEndRouteInjectionToken,
+  path: "/test-route",
+  clusterFrame: true,
 });
 
 const testRouteComponentInjectable = getInjectable({

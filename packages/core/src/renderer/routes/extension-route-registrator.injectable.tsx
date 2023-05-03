@@ -15,7 +15,7 @@ import extensionPageParametersInjectable from "./extension-page-parameters.injec
 import { getRouteSpecificComponentInjectable } from "./route-specific-component-injection-token";
 import type { IComputedValue } from "mobx";
 import { computed } from "mobx";
-import { frontEndRouteInjectionToken } from "../../common/front-end-routing/front-end-route-injection-token";
+import { getFrontEndRouteInjectable } from "../../common/front-end-routing/front-end-route-injection-token";
 import { getExtensionRoutePath } from "./for-extension";
 import extensionShouldBeEnabledForClusterFrameInjectable from "../extension-loader/extension-should-be-enabled-for-cluster-frame.injectable";
 import type { PageRegistration } from "./page-registration";
@@ -65,17 +65,12 @@ export default extensionRouteRegistratorInjectable;
 const toRouteInjectableFor = (di: DiContainerForInjection, extension: LensRendererExtension) => (
   (clusterFrame: boolean, getIsEnabled: (registration: PageRegistration) => IComputedValue<boolean>) => (
     (registration: PageRegistration) => {
-      const routeInjectable = getInjectable({
+      const routeInjectable = getFrontEndRouteInjectable({
         id: `route-${registration.id ?? ""}-for-extension-${extension.sanitizedExtensionId}`,
-
-        instantiate: () => ({
-          path: getExtensionRoutePath(extension, registration.id),
-          clusterFrame,
-          isEnabled: getIsEnabled(registration),
-          extension,
-        }),
-
-        injectionToken: frontEndRouteInjectionToken,
+        path: getExtensionRoutePath(extension, registration.id),
+        clusterFrame,
+        isEnabled: getIsEnabled(registration),
+        extension,
       });
 
       const normalizedParams = di.inject(extensionPageParametersInjectable, {

@@ -5,12 +5,12 @@
 import type { DiContainer } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import React from "react";
-import { computed, runInAction } from "mobx";
+import { runInAction } from "mobx";
 import type { RenderResult } from "@testing-library/react";
 import { routeSpecificComponentInjectionToken } from "../renderer/routes/route-specific-component-injection-token";
 import { observer } from "mobx-react";
-import type { Route } from "../common/front-end-routing/front-end-route-injection-token";
-import { frontEndRouteInjectionToken } from "../common/front-end-routing/front-end-route-injection-token";
+import type { RouteFromInjectable } from "../common/front-end-routing/front-end-route-injection-token";
+import { getFrontEndRouteInjectable } from "../common/front-end-routing/front-end-route-injection-token";
 import type { ApplicationBuilder } from "../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../renderer/components/test-utils/get-application-builder";
 import currentRouteInjectable from "../renderer/routes/current-route.injectable";
@@ -44,7 +44,7 @@ describe("navigating between routes", () => {
     });
 
     describe("when navigating to route", () => {
-      let route: Route;
+      let route: RouteFromInjectable<typeof testRouteWithoutPathParametersInjectable>;
 
       beforeEach(() => {
         const navigateToRoute = windowDi.inject(navigateToRouteInjectionToken);
@@ -77,7 +77,7 @@ describe("navigating between routes", () => {
       });
 
       it("does not have path parameters", () => {
-        const pathParameters = windowDi.inject(routePathParametersInjectable, route);
+        const pathParameters = windowDi.inject(routePathParametersInjectable)(route);
 
         expect(pathParameters.get()).toEqual({});
       });
@@ -120,10 +120,7 @@ describe("navigating between routes", () => {
     });
 
     describe("when navigating to route with path parameters", () => {
-      let route: Route<{
-        someParameter?: string | undefined;
-        someOtherParameter?: string | undefined;
-      }>;
+      let route: RouteFromInjectable<typeof routeWithOptionalPathParametersInjectable>;
 
       beforeEach(() => {
         route = windowDi.inject(routeWithOptionalPathParametersInjectable);
@@ -157,7 +154,7 @@ describe("navigating between routes", () => {
       });
 
       it("knows path parameters", () => {
-        const pathParameters = windowDi.inject(routePathParametersInjectable, route);
+        const pathParameters = windowDi.inject(routePathParametersInjectable)(route);
 
         expect(pathParameters.get()).toEqual({
           someParameter: "some-value",
@@ -167,10 +164,7 @@ describe("navigating between routes", () => {
     });
 
     describe("when navigating to route without path parameters", () => {
-      let route: Route<{
-        someParameter?: string | undefined;
-        someOtherParameter?: string | undefined;
-      }>;
+      let route: RouteFromInjectable<typeof routeWithOptionalPathParametersInjectable>;
 
       beforeEach(() => {
         route = windowDi.inject(routeWithOptionalPathParametersInjectable);
@@ -193,7 +187,7 @@ describe("navigating between routes", () => {
       });
 
       it("knows path parameters", () => {
-        const pathParameters = windowDi.inject(routePathParametersInjectable, route);
+        const pathParameters = windowDi.inject(routePathParametersInjectable)(route);
 
         expect(pathParameters.get()).toEqual({
           someParameter: undefined,
@@ -204,15 +198,10 @@ describe("navigating between routes", () => {
   });
 });
 
-const testRouteWithoutPathParametersInjectable = getInjectable({
+const testRouteWithoutPathParametersInjectable = getFrontEndRouteInjectable({
   id: "some-route",
-  injectionToken: frontEndRouteInjectionToken,
-
-  instantiate: (): Route<void> => ({
-    path: "/some-path",
-    clusterFrame: false,
-    isEnabled: computed(() => true),
-  }),
+  path: "/some-path",
+  clusterFrame: false,
 });
 
 const testRouteWithoutPathParametersComponentInjectable = getInjectable({
@@ -226,15 +215,10 @@ const testRouteWithoutPathParametersComponentInjectable = getInjectable({
   injectionToken: routeSpecificComponentInjectionToken,
 });
 
-const routeWithOptionalPathParametersInjectable = getInjectable({
+const routeWithOptionalPathParametersInjectable = getFrontEndRouteInjectable({
   id: "some-route",
-  injectionToken: frontEndRouteInjectionToken,
-
-  instantiate: (): Route<{ someParameter?: string; someOtherParameter?: string }> => ({
-    path: "/some-path/:someParameter?/:someOtherParameter?",
-    clusterFrame: false,
-    isEnabled: computed(() => true),
-  }),
+  path: "/some-path/:someParameter?/:someOtherParameter?",
+  clusterFrame: false,
 });
 
 const routeWithOptionalPathParametersComponentInjectable = getInjectable({
@@ -242,7 +226,7 @@ const routeWithOptionalPathParametersComponentInjectable = getInjectable({
 
   instantiate: (di) => {
     const route = di.inject(routeWithOptionalPathParametersInjectable);
-    const pathParameters = di.inject(routePathParametersInjectable, route);
+    const pathParameters = di.inject(routePathParametersInjectable)(route);
 
     return {
       route,

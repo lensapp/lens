@@ -15,7 +15,7 @@ import type { Route } from "../../common/front-end-routing/front-end-route-injec
 describe("setting-welcome-page", () => {
   let builder: ApplicationBuilder;
   let rendered : RenderResult;
-  let welcomeRoute: Route;
+  let welcomeRoute: Route<string>;
 
   beforeEach(() => {
     builder = getApplicationBuilder();

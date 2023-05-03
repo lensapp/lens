@@ -8,8 +8,8 @@ import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import currentPathInjectable from "../../renderer/routes/current-path.injectable";
-import { frontEndRouteInjectionToken } from "../../common/front-end-routing/front-end-route-injection-token";
-import { computed, runInAction } from "mobx";
+import { getFrontEndRouteInjectable } from "../../common/front-end-routing/front-end-route-injection-token";
+import { runInAction } from "mobx";
 import React from "react";
 import { routeSpecificComponentInjectionToken } from "../../renderer/routes/route-specific-component-injection-token";
 import { observableHistoryInjectionToken, searchParamsOptions } from "@k8slens/routing";
@@ -210,16 +210,10 @@ describe("preferences - closing-preferences", () => {
   });
 });
 
-const testFrontPageRouteInjectable = getInjectable({
+const testFrontPageRouteInjectable = getFrontEndRouteInjectable({
   id: "some-front-page",
-
-  instantiate: () => ({
-    path: "/some-front-page",
-    clusterFrame: false,
-    isEnabled: computed(() => true),
-  }),
-
-  injectionToken: frontEndRouteInjectionToken,
+  path: "/some-front-page",
+  clusterFrame: false,
 });
 
 const testFrontPageRouteComponentInjectable = getInjectable({
@@ -233,16 +227,10 @@ const testFrontPageRouteComponentInjectable = getInjectable({
   injectionToken: routeSpecificComponentInjectionToken,
 });
 
-const testRouteInjectable = getInjectable({
+const testRouteInjectable = getFrontEndRouteInjectable({
   id: "some-page",
-
-  instantiate: () => ({
-    path: "/some-page",
-    clusterFrame: false,
-    isEnabled: computed(() => true),
-  }),
-
-  injectionToken: frontEndRouteInjectionToken,
+  path: "/some-page",
+  clusterFrame: false,
 });
 
 const testRouteComponentInjectable = getInjectable({

@@ -7,9 +7,7 @@ import "./pod-disruption-budgets.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
-import type { PodDisruptionBudget } from "@k8slens/kube-object";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
@@ -28,14 +26,12 @@ enum columnId {
   age = "age",
 }
 
-export type PodDisruptionBudgetsProps = KubeObjectDetailsProps<PodDisruptionBudget>;
-
 interface Dependencies {
   podDisruptionBudgetStore: PodDisruptionBudgetStore;
 }
 
 @observer
-class NonInjectedPodDisruptionBudgets extends React.Component<PodDisruptionBudgetsProps & Dependencies> {
+class NonInjectedPodDisruptionBudgets extends React.Component<Dependencies> {
   render() {
     return (
       <SiblingsInTabLayout>
@@ -86,7 +82,7 @@ class NonInjectedPodDisruptionBudgets extends React.Component<PodDisruptionBudge
   }
 }
 
-export const PodDisruptionBudgets = withInjectables<Dependencies, PodDisruptionBudgetsProps>(NonInjectedPodDisruptionBudgets, {
+export const PodDisruptionBudgets = withInjectables<Dependencies>(NonInjectedPodDisruptionBudgets, {
   getProps: (di, props) => ({
     ...props,
     podDisruptionBudgetStore: di.inject(podDisruptionBudgetStoreInjectable),

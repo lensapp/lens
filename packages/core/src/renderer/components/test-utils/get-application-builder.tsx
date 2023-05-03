@@ -32,8 +32,7 @@ import assert from "assert";
 import { openMenu } from "react-select-event";
 import userEvent from "@testing-library/user-event";
 import lensProxyPortInjectable from "../../../main/lens-proxy/lens-proxy-port.injectable";
-import type { Route } from "../../../common/front-end-routing/front-end-route-injection-token";
-import type { NavigateToRouteOptions } from "../../../common/front-end-routing/navigate-to-route-injection-token";
+import type { NavigateToRoute } from "../../../common/front-end-routing/navigate-to-route-injection-token";
 import { navigateToRouteInjectionToken } from "../../../common/front-end-routing/navigate-to-route-injection-token";
 import type { LensMainExtension } from "../../../extensions/lens-main-extension";
 import type { LensExtension } from "../../../extensions/lens-extension";
@@ -153,7 +152,7 @@ export interface ApplicationBuilder {
   preferences: {
     close: () => void;
     navigate: () => void;
-    navigateTo: <T>(route: Route<T>, params: NavigateToRouteOptions<Route<T>>) => void;
+    navigateTo: NavigateToRoute;
     navigation: {
       click: (id: string) => void;
     };
@@ -503,13 +502,12 @@ export const getApplicationBuilder = () => {
         navigateToPreferences();
       },
 
-      navigateTo: (route, params) => {
+      navigateTo: ((...args) => {
         const windowDi = builder.applicationWindow.only.di;
-
         const navigateToRoute = windowDi.inject(navigateToRouteInjectionToken);
 
-        navigateToRoute(route, params);
-      },
+        navigateToRoute(...args);
+      }) as NavigateToRoute,
 
       navigation: {
         click: (pathId: string) => {
@@ -562,6 +560,7 @@ export const getApplicationBuilder = () => {
         windowDi.override(activeKubernetesClusterInjectable, () => computed(() => catalogEntityFromCluster(cluster)));
 
         // TODO: Figure out a way to remove this stub.
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         windowDi.override(namespaceStoreInjectable, () => ({
           isLoaded: true,
           get contextNamespaces() {
@@ -580,7 +579,8 @@ export const getApplicationBuilder = () => {
           isSelectedAll: () => false,
           getTotalCount: () => namespaceItems.length,
           isSelected: () => false,
-        } as Partial<NamespaceStore> as NamespaceStore));
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as Partial<NamespaceStore> as any));
       });
 
       await builder.beforeApplicationStart(({ mainDi }) => {

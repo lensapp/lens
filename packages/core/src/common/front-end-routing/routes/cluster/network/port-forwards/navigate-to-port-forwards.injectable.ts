@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { PortForwardsPathParameters } from "./port-forwards-route.injectable";
 import portForwardsRouteInjectable from "./port-forwards-route.injectable";
+import type { NavigateToSpecificRoute } from "../../../../navigate-to-route-injection-token";
 import { navigateToRouteInjectionToken } from "../../../../navigate-to-route-injection-token";
 
-export type NavigateToPortForwards = (parameters?: PortForwardsPathParameters) => void;
+export type NavigateToPortForwards = NavigateToSpecificRoute<typeof portForwardsRouteInjectable>;
 
 const navigateToPortForwardsInjectable = getInjectable({
   id: "navigate-to-port-forwards",
@@ -16,8 +16,7 @@ const navigateToPortForwardsInjectable = getInjectable({
     const navigateToRoute = di.inject(navigateToRouteInjectionToken);
     const route = di.inject(portForwardsRouteInjectable);
 
-    return (parameters) =>
-      navigateToRoute(route, { parameters });
+    return (parameters) => navigateToRoute(route, { parameters });
   },
 });
 

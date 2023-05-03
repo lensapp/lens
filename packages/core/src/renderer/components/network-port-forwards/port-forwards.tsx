@@ -14,12 +14,12 @@ import { PortForwardDetails } from "./port-forward-details";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
-import type { IComputedValue } from "mobx";
-import { computed, makeObservable } from "mobx";
-import portForwardsRouteParametersInjectable from "./port-forwards-route-parameters.injectable";
+import { computed } from "mobx";
 import type { NavigateToPortForwards } from "../../../common/front-end-routing/routes/cluster/network/port-forwards/navigate-to-port-forwards.injectable";
 import navigateToPortForwardsInjectable from "../../../common/front-end-routing/routes/cluster/network/port-forwards/navigate-to-port-forwards.injectable";
 import { NamespaceSelectBadge } from "../namespaces/namespace-select-badge";
+import type { ParametersFromRouteInjectable } from "../../../common/front-end-routing/front-end-route-injection-token";
+import type portForwardsRouteInjectable from "../../../common/front-end-routing/routes/cluster/network/port-forwards/port-forwards-route.injectable";
 
 enum columnId {
   name = "name",
@@ -33,38 +33,33 @@ enum columnId {
 
 interface Dependencies {
   portForwardStore: PortForwardStore;
-  forwardPort: IComputedValue<string>;
   navigateToPortForwards: NavigateToPortForwards;
 }
 
+export interface PortForwardsProps {
+  params: ParametersFromRouteInjectable<typeof portForwardsRouteInjectable>;
+}
+
 @observer
-class NonInjectedPortForwards extends React.Component<Dependencies> {
-  constructor(props: Dependencies) {
-    super(props);
-
-    makeObservable(this);
-  }
-
+class NonInjectedPortForwards extends React.Component<Dependencies & PortForwardsProps> {
   componentDidMount() {
-
     disposeOnUnmount(this, [
       this.props.portForwardStore.watch(),
     ]);
   }
 
-  @computed
-  get selectedPortForward() {
-    const forwardPort = this.props.forwardPort.get();
+  readonly selectedPortForward = computed(() => {
+    const forwardPort = this.props.params.forwardPort;
 
     if (!forwardPort) {
       return undefined;
     }
 
     return this.props.portForwardStore.getById(forwardPort);
-  }
+  });
 
   onDetails = (item: PortForwardItem) => {
-    if (item === this.selectedPortForward) {
+    if (item === this.selectedPortForward.get()) {
       this.hideDetails();
     } else {
       this.showDetails(item);
@@ -97,6 +92,8 @@ class NonInjectedPortForwards extends React.Component<Dependencies> {
 
 
   render() {
+    const selectedPortForward = this.selectedPortForward.get();
+
     return (
       <SiblingsInTabLayout>
         <ItemListLayout<PortForwardItem, false>
@@ -149,12 +146,12 @@ class NonInjectedPortForwards extends React.Component<Dependencies> {
           customizeRemoveDialog={selectedItems => ({
             message: this.renderRemoveDialogMessage(selectedItems),
           })}
-          detailsItem={this.selectedPortForward}
+          detailsItem={selectedPortForward}
           onDetails={this.onDetails}
         />
-        {this.selectedPortForward && (
+        {selectedPortForward && (
           <PortForwardDetails
-            portForward={this.selectedPortForward}
+            portForward={selectedPortForward}
             hideDetails={this.hideDetails}
           />
         )}
@@ -163,10 +160,10 @@ class NonInjectedPortForwards extends React.Component<Dependencies> {
   }
 }
 
-export const PortForwards = withInjectables<Dependencies>(NonInjectedPortForwards, {
-  getProps: (di) => ({
+export const PortForwards = withInjectables<Dependencies, PortForwardsProps>(NonInjectedPortForwards, {
+  getProps: (di, props) => ({
+    ...props,
     portForwardStore: di.inject(portForwardStoreInjectable),
-    ...di.inject(portForwardsRouteParametersInjectable),
     navigateToPortForwards: di.inject(navigateToPortForwardsInjectable),
   }),
 });

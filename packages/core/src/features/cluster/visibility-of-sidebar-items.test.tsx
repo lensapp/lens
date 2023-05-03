@@ -8,7 +8,7 @@ import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import { runInAction } from "mobx";
 import { routeSpecificComponentInjectionToken } from "../../renderer/routes/route-specific-component-injection-token";
 import React from "react";
-import { frontEndRouteInjectionToken } from "../../common/front-end-routing/front-end-route-injection-token";
+import { getFrontEndRouteInjectable } from "../../common/front-end-routing/front-end-route-injection-token";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
@@ -68,19 +68,14 @@ describe("cluster - visibility of sidebar items", () => {
   });
 });
 
-const testRouteInjectable = getInjectable({
+const testRouteInjectable = getFrontEndRouteInjectable({
   id: "some-route-injectable-id",
-
-  instantiate: (di) => ({
-    path: "/some-child-page",
-    clusterFrame: true,
-    isEnabled: di.inject(shouldShowResourceInjectionToken, {
-      apiName: "namespaces",
-      group: "",
-    }),
+  path: "/some-child-page",
+  clusterFrame: true,
+  isEnabled: (di) => di.inject(shouldShowResourceInjectionToken, {
+    apiName: "namespaces",
+    group: "",
   }),
-
-  injectionToken: frontEndRouteInjectionToken,
 });
 
 const testRouteComponentInjectable = getInjectable({

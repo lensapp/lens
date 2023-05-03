@@ -2,20 +2,12 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable } from "@ogre-tools/injectable";
-import { computed } from "mobx";
-import { frontEndRouteInjectionToken } from "../../front-end-route-injection-token";
+import { getFrontEndRouteInjectable } from "../../front-end-route-injection-token";
 
-const extensionsRouteInjectable = getInjectable({
+const extensionsRouteInjectable = getFrontEndRouteInjectable({
   id: "extensions-route",
-
-  instantiate: () => ({
-    path: "/extensions",
-    clusterFrame: false,
-    isEnabled: computed(() => true),
-  }),
-
-  injectionToken: frontEndRouteInjectionToken,
+  path: "/extensions",
+  clusterFrame: false,
 });
 
 export default extensionsRouteInjectable;

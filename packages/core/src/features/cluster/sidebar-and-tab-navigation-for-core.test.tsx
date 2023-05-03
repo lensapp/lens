@@ -12,7 +12,7 @@ import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import { computed, runInAction } from "mobx";
 import { noop } from "lodash/fp";
 import routeIsActiveInjectable from "../../renderer/routes/route-is-active.injectable";
-import { frontEndRouteInjectionToken } from "../../common/front-end-routing/front-end-route-injection-token";
+import { getFrontEndRouteInjectable } from "../../common/front-end-routing/front-end-route-injection-token";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import writeJsonFileInjectable from "../../common/fs/write-json-file.injectable";
@@ -324,16 +324,10 @@ const someChildSidebarItemInjectable = getInjectable({
   injectionToken: sidebarItemInjectionToken,
 });
 
-const testRouteInjectable = getInjectable({
+const testRouteInjectable = getFrontEndRouteInjectable({
   id: "some-route-injectable-id",
-
-  instantiate: () => ({
-    path: "/some-child-page",
-    clusterFrame: true,
-    isEnabled: computed(() => true),
-  }),
-
-  injectionToken: frontEndRouteInjectionToken,
+  path: "/some-child-page",
+  clusterFrame: true,
 });
 
 const testRouteComponentInjectable = getInjectable({

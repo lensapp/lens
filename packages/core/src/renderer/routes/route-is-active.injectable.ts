@@ -11,7 +11,7 @@ import { matchPath } from "react-router-dom";
 const routeIsActiveInjectable = getInjectable({
   id: "route-is-active",
 
-  instantiate: (di, route: Route<unknown>) => {
+  instantiate: (di, route: Route<string>) => {
     const currentPath = di.inject(currentPathInjectable);
 
     return computed(() => !!matchPath(currentPath.get(), {
@@ -21,7 +21,7 @@ const routeIsActiveInjectable = getInjectable({
   },
 
   lifecycle: lifecycleEnum.keyedSingleton({
-    getInstanceKey: (di, route: Route<unknown>) => route.path,
+    getInstanceKey: (di, route: Route<string>) => route.path,
   }),
 });
 

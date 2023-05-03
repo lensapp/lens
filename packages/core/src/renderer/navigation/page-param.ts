@@ -36,9 +36,7 @@ export type PageParamDeclaration<Value> = (
   ? StringPageParamDeclaration<Value>
   : Value extends Array<infer InnerValue>
     ? ArrayPageParamDeclaration<InnerValue>
-    : Value extends unknown
-      ? FallthroughPageParamDeclaration
-      : DefaultPageParamDeclaration<Value>
+    : DefaultPageParamDeclaration<Value>
 );
 
 export function getPageParamDeclaration<Value>(decl: PageParamDeclaration<Value>): PageParamDeclaration<Value> {

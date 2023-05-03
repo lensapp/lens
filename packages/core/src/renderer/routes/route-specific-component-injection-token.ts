@@ -4,26 +4,26 @@
  */
 import type { Injectable } from "@ogre-tools/injectable";
 import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
-import type { Route } from "../../common/front-end-routing/front-end-route-injection-token";
+import type { InferParamFromPath, Route } from "../../common/front-end-routing/front-end-route-injection-token";
 
 export const routeSpecificComponentInjectionToken = getInjectionToken<{
-  route: Route<unknown>;
-  Component: React.ComponentType<unknown>;
+  route: Route<string>;
+  Component: React.ComponentType<{ params: InferParamFromPath<string> }>;
 }>({
   id: "route-specific-component-injection-token",
 });
 
-export interface GetRouteSpecificComponentOptions<Params> {
+export interface GetRouteSpecificComponentOptions<Path extends string> {
   id: string;
-  routeInjectable: Injectable<Route<Params>, Route<unknown>, void>;
-  Component: Params extends object ? React.ComponentType<Params> : React.ComponentType;
+  routeInjectable: Injectable<Route<Path>, Route<string>, void>;
+  Component: React.ComponentType<{ params?: InferParamFromPath<Path> }>;
 }
 
-export const getRouteSpecificComponentInjectable = <Params>(options: GetRouteSpecificComponentOptions<Params>) => getInjectable({
+export const getRouteSpecificComponentInjectable = <Path extends string>(options: GetRouteSpecificComponentOptions<Path>) => getInjectable({
   id: options.id,
   instantiate: (di) => ({
     route: di.inject(options.routeInjectable),
-    Component: options.Component as React.ComponentType<unknown>,
+    Component: options.Component as React.ComponentType<{ params: InferParamFromPath<string> }>,
   }),
   injectionToken: routeSpecificComponentInjectionToken,
 });

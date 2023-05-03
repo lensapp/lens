@@ -4,6 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { navigateToUrlInjectionToken } from "../../common/front-end-routing/navigate-to-url-injection-token";
+import type { NavigateToRoute } from "../../common/front-end-routing/navigate-to-route-injection-token";
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
 import { buildURL } from "@k8slens/utilities";
 
@@ -13,15 +14,15 @@ const navigateToRouteInjectable = getInjectable({
   instantiate: (di) => {
     const navigateToUrl = di.inject(navigateToUrlInjectionToken);
 
-    return async (route, options) => {
+    return ((route, options) => {
       const url = buildURL(route.path, {
         params: options?.parameters as object,
         query: options?.query,
         fragment: options?.fragment,
       });
 
-      await navigateToUrl(url, options);
-    };
+      void navigateToUrl(url, options);
+    }) as NavigateToRoute;
   },
 
   injectionToken: navigateToRouteInjectionToken,

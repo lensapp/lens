@@ -32,6 +32,8 @@ import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.inject
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import { NamespaceSelectBadge } from "../namespaces/namespace-select-badge";
 import type { KubeEventApi } from "@k8slens/kube-api";
+import type { ParametersFromRouteInjectable } from "../../../common/front-end-routing/front-end-route-injection-token";
+import type eventsRouteInjectable from "../../../common/front-end-routing/routes/cluster/events/events-route.injectable";
 
 enum columnId {
   message = "message",
@@ -48,6 +50,7 @@ export interface EventsProps extends Partial<KubeObjectListLayoutProps<KubeEvent
   className?: IClassName;
   compact?: boolean;
   compactLimit?: number;
+  params?: ParametersFromRouteInjectable<typeof eventsRouteInjectable>;
 }
 
 const defaultProps: Partial<EventsProps> = {

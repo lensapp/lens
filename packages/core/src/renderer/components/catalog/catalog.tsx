@@ -6,7 +6,7 @@
 import styles from "./catalog.module.scss";
 
 import type { IComputedValue } from "mobx";
-import { action, computed, makeObservable, observable, reaction, runInAction, when } from "mobx";
+import { action, computed, observable, reaction, runInAction, when } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import type { CatalogCategory, CatalogCategoryRegistry, CatalogEntity } from "../../../common/catalog";
@@ -39,7 +39,6 @@ import showErrorNotificationInjectable from "../notifications/show-error-notific
 import { browseCatalogTab } from "./catalog-browse-tab";
 import catalogEntityStoreInjectable from "./catalog-entity-store.injectable";
 import catalogPreviousActiveTabStorageInjectable from "./catalog-previous-active-tab-storage/catalog-previous-active-tab-storage.injectable";
-import catalogRouteParametersInjectable from "./catalog-route-parameters.injectable";
 import type { CategoryColumns, GetCategoryColumnsParams } from "./columns/get.injectable";
 import getCategoryColumnsInjectable from "./columns/get.injectable";
 import type { CustomCategoryViewComponents } from "./custom-views";
@@ -51,6 +50,12 @@ import type { ShowEntityDetails } from "./entity-details/show.injectable";
 import showEntityDetailsInjectable from "./entity-details/show.injectable";
 import type { Hotbar } from "../../../features/hotbar/storage/common/hotbar";
 import activeHotbarInjectable from "../../../features/hotbar/storage/common/active.injectable";
+import type { ParametersFromRouteInjectable } from "../../../common/front-end-routing/front-end-route-injection-token";
+import type catalogRouteInjectable from "../../../common/front-end-routing/routes/catalog/catalog-route.injectable";
+
+export interface CatalogProps {
+  params: ParametersFromRouteInjectable<typeof catalogRouteInjectable>;
+}
 
 interface Dependencies {
   catalogPreviousActiveTabStorage: StorageLayer<string | null>;
@@ -60,10 +65,6 @@ interface Dependencies {
   emitEvent: EmitAppEvent;
   showEntityDetails: ShowEntityDetails;
   onCatalogEntityListClick: OnCatalogEntityListClick;
-  routeParameters: {
-    group: IComputedValue<string>;
-    kind: IComputedValue<string>;
-  };
   navigateToCatalog: NavigateToCatalog;
   catalogCategoryRegistry: CatalogCategoryRegistry;
   visitEntityContextMenu: VisitEntityContextMenu;
@@ -75,28 +76,19 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedCatalog extends React.Component<Dependencies> {
+class NonInjectedCatalog extends React.Component<Dependencies & CatalogProps> {
   private readonly menuItems = observable.array<CatalogEntityContextMenu>();
-  @observable activeTab: string | undefined = undefined;
+  readonly activeTab = observable.box<string>();
 
-  constructor(props: Dependencies) {
-    super(props);
-    makeObservable(this);
-  }
+  readonly routeActiveTab = computed(() => {
+    const { params: { group, kind }, catalogPreviousActiveTabStorage } = this.props;
 
-  @computed
-  get routeActiveTab(): string {
-    const { routeParameters: { group, kind }, catalogPreviousActiveTabStorage } = this.props;
-
-    const dereferencedGroup = group.get();
-    const dereferencedKind = kind.get();
-
-    if (dereferencedGroup && dereferencedKind) {
-      return `${dereferencedGroup}/${dereferencedKind}`;
+    if (group && kind) {
+      return `${group}/${kind}`;
     }
 
     return catalogPreviousActiveTabStorage.get() || browseCatalogTab;
-  }
+  });
 
   componentDidMount() {
     const {
@@ -109,8 +101,8 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
 
     disposeOnUnmount(this, [
       catalogEntityStore.watch(),
-      reaction(() => this.routeActiveTab, (routeTab) => {
-        catalogPreviousActiveTabStorage.set(this.routeActiveTab);
+      reaction(() => this.routeActiveTab.get(), (routeTab) => {
+        catalogPreviousActiveTabStorage.set(routeTab);
 
         void (async () => {
           try {
@@ -122,7 +114,7 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
             const item = catalogCategoryRegistry.filteredItems.find(i => i.getId() === routeTab);
 
             runInAction(() => {
-              this.activeTab = routeTab;
+              this.activeTab.set(routeTab);
               catalogEntityStore.activeCategory.set(item);
             });
           } catch (error) {
@@ -141,14 +133,14 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
         const currentCategory = catalogEntityStore.activeCategory.get();
         const someCategory = categories[0];
 
-        if (this.routeActiveTab === browseCatalogTab || !someCategory) {
+        if (this.routeActiveTab.get() === browseCatalogTab || !someCategory) {
           return;
         }
 
         const currentCategoryShouldBeShown = Boolean(categories.find(item => item.getId() === someCategory.getId()));
 
         if (!currentCategory || !currentCategoryShouldBeShown) {
-          this.activeTab = someCategory.getId();
+          this.activeTab.set(someCategory.getId());
           this.props.catalogEntityStore.activeCategory.set(someCategory);
         }
       }),
@@ -296,7 +288,7 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
       <MainLayout
         sidebar={(
           <CatalogMenu
-            activeTab={this.activeTab}
+            activeTab={this.activeTab.get()}
             onItemClick={this.onTabChange}
           />
         )}
@@ -318,14 +310,13 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
   }
 }
 
-export const Catalog = withInjectables<Dependencies>(NonInjectedCatalog, {
+export const Catalog = withInjectables<Dependencies, CatalogProps>(NonInjectedCatalog, {
   getProps: (di, props) => ({
     ...props,
     catalogEntityStore: di.inject(catalogEntityStoreInjectable),
     catalogPreviousActiveTabStorage: di.inject(catalogPreviousActiveTabStorageInjectable),
     getCategoryColumns: di.inject(getCategoryColumnsInjectable),
     customCategoryViews: di.inject(customCategoryViewsInjectable),
-    routeParameters: di.inject(catalogRouteParametersInjectable),
     navigateToCatalog: di.inject(navigateToCatalogInjectable),
     emitEvent: di.inject(emitAppEventInjectable),
     activeHotbar: di.inject(activeHotbarInjectable),

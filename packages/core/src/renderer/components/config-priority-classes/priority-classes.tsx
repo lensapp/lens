@@ -7,16 +7,13 @@ import "./priority-classes.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
-import type { PriorityClass } from "@k8slens/kube-object";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import priorityClassStoreInjectable from "./store.injectable";
 import type { PriorityClassStore } from "./store";
-import autoBindReact from "auto-bind/react";
 
 enum columnId {
   name = "name",
@@ -25,19 +22,12 @@ enum columnId {
   age = "age",
 }
 
-export type PriorityClassesProps = KubeObjectDetailsProps<PriorityClass>;
-
 interface Dependencies {
   priorityClassStore: PriorityClassStore;
 }
 
 @observer
-class NonInjectedPriorityClasses extends React.Component<PriorityClassesProps & Dependencies> {
-  constructor(props: PriorityClassesProps & Dependencies) {
-    super(props);
-    autoBindReact(this);
-  }
-
+class NonInjectedPriorityClasses extends React.Component<Dependencies> {
   render() {
     const { priorityClassStore } = this.props;
 
@@ -78,7 +68,7 @@ class NonInjectedPriorityClasses extends React.Component<PriorityClassesProps & 
   }
 }
 
-export const PriorityClasses = withInjectables<Dependencies, PriorityClassesProps>(NonInjectedPriorityClasses, {
+export const PriorityClasses = withInjectables<Dependencies>(NonInjectedPriorityClasses, {
   getProps: (di, props) => ({
     ...props,
     priorityClassStore: di.inject(priorityClassStoreInjectable),
