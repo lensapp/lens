@@ -52,7 +52,7 @@ const convertPartialPageParamInitToFull = (key: string, value: FallthroughPagePa
 const convertStringToPageParamInit = (
   key: string,
   value: string,
-): PageParamInit<string> => ({
+): PageParamInit<unknown> => ({
   name: key,
   defaultValue: value,
 });

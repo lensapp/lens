@@ -5,6 +5,7 @@
 
 import { Disposers, LensExtension } from "./lens-extension";
 import type { Disposer } from "@k8slens/utilities";
+import { object } from "@k8slens/utilities";
 import type { LensExtensionDependencies } from "./lens-extension";
 import type { CatalogEntity, CategoryFilter, CatalogCategoryRegistry } from "../common/catalog";
 import type { EntityFilter, CatalogEntityRegistry } from "../renderer/api/catalog/entity/registry";
@@ -20,7 +21,7 @@ import type { StatusBarRegistration } from "../renderer/components/status-bar/st
 import type { KubeObjectMenuRegistration } from "../renderer/components/kube-object-menu/kube-object-menu-registration";
 import type { WorkloadsOverviewDetailRegistration } from "../renderer/components/workloads-overview/workloads-overview-detail-registration";
 import type { KubeObjectStatusRegistration } from "../renderer/components/kube-object-status-icon/kube-object-status-registration";
-import { fromPairs, map, matches, toPairs } from "lodash/fp";
+import { fromPairs, map, matches } from "lodash/fp";
 import { pipeline } from "@ogre-tools/fp";
 import { getExtensionRoutePath } from "../renderer/routes/for-extension";
 import type { KubeObjectHandlerRegistration } from "../renderer/kube-object/handler";
@@ -100,7 +101,7 @@ export class LensRendererExtension extends LensExtension {
     super(deps, extension);
   }
 
-  navigate(pageId?: string, params: object = {}) {
+  navigate(pageId?: string, params: Record<string, unknown> = {}) {
     const routes = this.dependencies.routes.get();
     const targetRegistration = [...this.globalPages, ...this.clusterPages]
       .find(registration => registration.id === (pageId || undefined));
@@ -121,8 +122,7 @@ export class LensRendererExtension extends LensExtension {
       registration: targetRegistration,
     });
     const query = pipeline(
-      params,
-      toPairs,
+      object.entries(params),
       map(([key, value]) => [
         key,
         normalizedParams[key].stringify(value),
@@ -132,7 +132,6 @@ export class LensRendererExtension extends LensExtension {
 
     this.dependencies.navigateToRoute(targetRoute, {
       query,
-      parameters: {},
     });
   }
 
