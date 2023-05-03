@@ -192,6 +192,7 @@
     "@k8slens/legacy-extension-example": "^1.0.0-alpha.6",
     "@k8slens/legacy-extensions": "^1.0.0-alpha.3",
     "@k8slens/legacy-global-di": "^1.0.0-alpha.0",
+    "@k8slens/logger": "^1.0.0-alpha.5",
     "@k8slens/messaging": "^1.0.0-alpha.3",
     "@k8slens/messaging-for-main": "^1.0.0-alpha.3",
     "@k8slens/messaging-for-renderer": "^1.0.0-alpha.3",
@@ -274,6 +275,6 @@
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.13.3",
     "webpack-node-externals": "^3.0.0",
-    "xterm-addon-fit": "^0.7.0"
+    "xterm-addon-fit": "^0.5.0"
   }
 }
