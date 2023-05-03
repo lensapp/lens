@@ -485,9 +485,9 @@ export class MenuItem extends React.Component<MenuItemProps> {
     };
 
     if (this.isLink) {
-      return <a {...elemProps}/>;
+      return <a {...elemProps as React.AllHTMLAttributes<HTMLAnchorElement>}/>;
     }
 
-    return <li {...elemProps}/>;
+    return <li {...elemProps as React.AllHTMLAttributes<HTMLLIElement>}/>;
   }
 }
