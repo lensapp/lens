@@ -14,7 +14,7 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Input } from "../input";
 import type { AdditionalPrinterColumnsV1, KubeObjectMetadata, KubeObjectStatus } from "@k8slens/kube-object";
 import { CustomResourceDefinition, KubeObject } from "@k8slens/kube-object";
-import type { Logger } from "../../../common/logger";
+import type { Logger } from "@k8slens/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { loggerInjectionToken } from "@k8slens/logger";
 

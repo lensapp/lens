@@ -16,7 +16,7 @@ import type { CronJobStore } from "./store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import type { Job } from "@k8slens/kube-object";
 import { CronJob } from "@k8slens/kube-object";
-import type { Logger } from "../../../common/logger";
+import type { Logger } from "@k8slens/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";

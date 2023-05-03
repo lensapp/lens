@@ -13,5 +13,4 @@ export const loggerFeature = getFeature({
       ],
     });
   },
-
 });

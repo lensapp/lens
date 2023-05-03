@@ -34,10 +34,11 @@ export const getDiForUnitTesting = () => {
 
   runInAction(() => {
     registerFeature(di,
-        messagingFeature,
-        messagingTestUtils.messagingFeatureForUnitTesting,
-        routingFeature,
-        loggerFeature);
+      messagingFeature,
+      messagingTestUtils.messagingFeatureForUnitTesting,
+      routingFeature,
+      loggerFeature,
+    );
   });
 
   di.preventSideEffects();

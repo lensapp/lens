@@ -28,6 +28,7 @@ import { setLegacyGlobalDiForExtensionApi } from "@k8slens/legacy-global-di";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { registerFeature } from "@k8slens/feature-core";
 import { messagingFeature, testUtils as messagingTestUtils } from "@k8slens/messaging";
+import { loggerFeature } from "@k8slens/logger";
 
 export function getDiForUnitTesting() {
   const environment = "main";
@@ -40,8 +41,9 @@ export function getDiForUnitTesting() {
 
   runInAction(() => {
     registerFeature(di,
-        messagingFeature,
-        messagingTestUtils.messagingFeatureForUnitTesting
+      messagingFeature,
+      messagingTestUtils.messagingFeatureForUnitTesting,
+      loggerFeature,
     );
   });
 
