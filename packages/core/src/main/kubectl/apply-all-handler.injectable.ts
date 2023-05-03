@@ -7,6 +7,7 @@ import { kubectlApplyAllChannel } from "../../common/kube-helpers/channels";
 import getClusterByIdInjectable from "../../features/cluster/storage/common/get-by-id.injectable";
 import resourceApplierInjectable from "../resource-applier/create-resource-applier.injectable";
 import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
+import { result } from "@k8slens/utilities";
 
 const kubectlApplyAllChannelHandlerInjectable = getRequestChannelListenerInjectable({
   id: "kubectl-apply-all-channel-handler-listener",
@@ -26,10 +27,7 @@ const kubectlApplyAllChannelHandlerInjectable = getRequestChannelListenerInjecta
       emitAppEvent({ name: "cluster", action: "kubectl-apply-all" });
 
       if (!cluster) {
-        return {
-          isOk: false,
-          error: `No cluster found for clusterId="${clusterId}"`,
-        };
+        return result.error(`No cluster found for clusterId="${clusterId}"`);
       }
 
       const resourceApplier = di.inject(resourceApplierInjectable, cluster);
