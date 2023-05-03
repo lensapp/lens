@@ -2,20 +2,14 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable } from "@ogre-tools/injectable";
 import { HelmCharts } from "./helm-charts";
 import helmChartsRouteInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/helm-charts-route.injectable";
-import { routeSpecificComponentInjectionToken } from "../../routes/route-specific-component-injection-token";
+import { getRouteSpecificComponentInjectable } from "../../routes/route-specific-component-injection-token";
 
-const helmChartsRouteComponentInjectable = getInjectable({
+const helmChartsRouteComponentInjectable = getRouteSpecificComponentInjectable({
   id: "helm-charts-route-component",
-
-  instantiate: (di) => ({
-    route: di.inject(helmChartsRouteInjectable),
-    Component: HelmCharts,
-  }),
-
-  injectionToken: routeSpecificComponentInjectionToken,
+  Component: HelmCharts,
+  routeInjectable: helmChartsRouteInjectable,
 });
 
 export default helmChartsRouteComponentInjectable;
