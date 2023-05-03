@@ -10,9 +10,13 @@ import type { LensApiResultContentType } from "./router-content-types";
 import type { URLSearchParams } from "url";
 import type { SafeParseReturnType } from "zod";
 
+declare const emptyObjectSymbol: unique symbol;
+
+export interface EmptyObject {[emptyObjectSymbol]?: never}
+
 export type InferParam<
   T extends string,
-  PathParams extends Record<string, string>,
+  PathParams,
 > =
   T extends `{${infer P}?}`
     ? PathParams & Partial<Record<P, string>>
@@ -27,12 +31,14 @@ export type InferParamFromPath<P extends string> =
       : never
     : P extends `${infer A}/${infer B}`
       ? InferParam<A, InferParamFromPath<B>>
-      : InferParam<P, Record<string, never>>;
+      : InferParam<P, EmptyObject>;
 
 export interface LensApiRequest<Path extends string> {
   path: Path;
   payload: unknown;
-  params: InferParamFromPath<Path>;
+  params: string extends Path
+    ? Partial<Record<string, string>>
+    : InferParamFromPath<Path>;
   cluster: Cluster | undefined;
   query: URLSearchParams;
   raw: {
