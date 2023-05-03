@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import type { KubeObjectDetailItem } from "../kube-object-detail-item-injection-token";
 import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-injection-token";
 import { computed } from "mobx";
 import { NetworkPolicyDetails } from "../../../network-policies";
@@ -19,7 +20,7 @@ const networkPolicyDetailItemInjectable = getInjectable({
       Component: NetworkPolicyDetails,
       enabled: computed(() => isNetworkPolicy(kubeObject.value.get()?.object)),
       orderNumber: 10,
-    };
+    } as KubeObjectDetailItem;
   },
 
   injectionToken: kubeObjectDetailItemInjectionToken,

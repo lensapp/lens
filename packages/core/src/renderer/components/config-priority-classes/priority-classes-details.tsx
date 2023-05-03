@@ -9,35 +9,24 @@ import React from "react";
 import { observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { PriorityClass } from "@k8slens/kube-object";
+import type { PriorityClass } from "@k8slens/kube-object";
 
-@observer
-export class PriorityClassesDetails extends React.Component<KubeObjectDetailsProps> {
-  render() {
-    const { object: pc } = this.props;
+export const PriorityClassesDetails = observer((props: KubeObjectDetailsProps) => {
+  const priorityClass = props.object as PriorityClass;
 
-    if (!pc) {
-      return null;
-    }
+  return (
+    <div className="PriorityClassesDetails">
+      <DrawerItem name="Description">
+        {priorityClass.getDescription()}
+      </DrawerItem>
 
-    if (!(pc instanceof PriorityClass)) {
-      return null;
-    }
+      <DrawerItem name="Value">
+        {priorityClass.getValue()}
+      </DrawerItem>
 
-    return (
-      <div className="PriorityClassesDetails">
-        <DrawerItem name="Description">
-          {pc.getDescription()}
-        </DrawerItem>
-
-        <DrawerItem name="Value">
-          {pc.getValue()}
-        </DrawerItem>
-
-        <DrawerItem name="Global Default">
-          {pc.getGlobalDefault()}
-        </DrawerItem>
-      </div>
-    );
-  }
-}
+      <DrawerItem name="Global Default">
+        {priorityClass.getGlobalDefault()}
+      </DrawerItem>
+    </div>
+  );
+});

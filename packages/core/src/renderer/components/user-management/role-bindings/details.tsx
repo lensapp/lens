@@ -46,7 +46,7 @@ class NonInjectedRoleBindingDetails extends React.Component<KubeObjectDetailsPro
     const { selectedSubjects } = this;
 
     openConfirmDialog({
-      ok: () => roleBindingStore.removeSubjects(roleBinding, selectedSubjects.toJSON()),
+      ok: () => void roleBindingStore.removeSubjects(roleBinding, selectedSubjects.toJSON()),
       labelOk: `Remove`,
       message: (
         <p>

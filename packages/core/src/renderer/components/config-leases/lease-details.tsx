@@ -9,41 +9,32 @@ import React from "react";
 import { observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { Lease } from "@k8slens/kube-object";
+import type { Lease } from "@k8slens/kube-object";
 
-@observer
-export class LeaseDetails extends React.Component<KubeObjectDetailsProps> {
+export const LeaseDetails = observer((props: KubeObjectDetailsProps) => {
+  const lease = props.object as Lease;
 
-  render() {
-    const { object: lease } = this.props;
+  return (
+    <div className="LeaseDetails">
+      <DrawerItem name="Holder Identity">
+        {lease.getHolderIdentity()}
+      </DrawerItem>
 
-    if (!(lease instanceof Lease)) {
-      return null;
-    }
+      <DrawerItem name="Lease Duration Seconds">
+        {lease.getLeaseDurationSeconds()}
+      </DrawerItem>
 
-    return (
-      <div className="LeaseDetails">
-        <DrawerItem name="Holder Identity">
-          {lease.getHolderIdentity()}
-        </DrawerItem>
+      <DrawerItem name="Lease Transitions" hidden={lease.getLeaseTransitions() === undefined}>
+        {lease.getLeaseTransitions()}
+      </DrawerItem>
 
-        <DrawerItem name="Lease Duration Seconds">
-          {lease.getLeaseDurationSeconds()}
-        </DrawerItem>
+      <DrawerItem name="Acquire Time" hidden={lease.getAcquireTime() === ""}>
+        {lease.getAcquireTime()}
+      </DrawerItem>
 
-        <DrawerItem name="Lease Transitions" hidden={lease.getLeaseTransitions() === undefined}>
-          {lease.getLeaseTransitions()}
-        </DrawerItem>
-
-        <DrawerItem name="Acquire Time" hidden={lease.getAcquireTime() === ""}>
-          {lease.getAcquireTime()}
-        </DrawerItem>
-
-        <DrawerItem name="Renew Time">
-          {lease.getRenewTime()}
-        </DrawerItem>
-
-      </div >
-    );
-  }
-}
+      <DrawerItem name="Renew Time">
+        {lease.getRenewTime()}
+      </DrawerItem>
+    </div >
+  );
+});

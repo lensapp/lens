@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import type { KubeObjectDetailItem } from "../kube-object-detail-item-injection-token";
 import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-injection-token";
 import { computed } from "mobx";
 import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
@@ -19,7 +20,7 @@ const replicationControllerDetailItemInjectable = getInjectable({
       Component: ReplicationControllerDetails,
       enabled: computed(() => isReplicationController(kubeObject.value.get()?.object)),
       orderNumber: 10,
-    };
+    } as KubeObjectDetailItem;
   },
 
   injectionToken: kubeObjectDetailItemInjectionToken,

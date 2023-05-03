@@ -9,43 +9,31 @@ import React from "react";
 import { observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { RuntimeClass } from "@k8slens/kube-object";
+import type { RuntimeClass } from "@k8slens/kube-object";
 import { Badge } from "../badge";
 import { RuntimeClassDetailsTolerations } from "./runtime-classes-details-tolerations";
 
-@observer
-export class RuntimeClassesDetails extends React.Component<KubeObjectDetailsProps> {
+export type RuntimeClassesDetailsProps = KubeObjectDetailsProps<RuntimeClass>;
 
-  render() {
-    const { object: rc } = this.props;
+export const RuntimeClassesDetails = observer((props: KubeObjectDetailsProps) => {
+  const runtimeClass = props.object as RuntimeClass;
+  const nodeSelector = runtimeClass.getNodeSelectors();
 
-    if (!rc) {
-      return null;
-    }
+  return (
+    <div className="RuntimeClassesDetails">
+      <DrawerItem name="Handler">
+        {runtimeClass.getHandler()}
+      </DrawerItem>
 
-    if (!(rc instanceof RuntimeClass)) {
-      return null;
-    }
+      <DrawerItem name="Pod Fixed" hidden={runtimeClass.getPodFixed() === ""}>
+        {runtimeClass.getPodFixed()}
+      </DrawerItem>
 
-    const nodeSelector = rc.getNodeSelectors();
+      <DrawerItem name="Node Selector" hidden={nodeSelector.length === 0}>
+        {nodeSelector.map(label => <Badge key={label} label={label} />)}
+      </DrawerItem>
 
-    return (
-      <div className="RuntimeClassesDetails">
-        <DrawerItem name="Handler">
-          {rc.getHandler()}
-        </DrawerItem>
-
-        <DrawerItem name="Pod Fixed" hidden={rc.getPodFixed() === ""}>
-          {rc.getPodFixed()}
-        </DrawerItem>
-
-        <DrawerItem name="Node Selector" hidden={nodeSelector.length === 0}>
-          {nodeSelector.map(label => <Badge key={label} label={label} />)}
-        </DrawerItem>
-
-        <RuntimeClassDetailsTolerations runtimeClass={rc} />
-
-      </div>
-    );
-  }
-}
+      <RuntimeClassDetailsTolerations runtimeClass={runtimeClass} />
+    </div>
+  );
+});

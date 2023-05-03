@@ -28,7 +28,7 @@ export const getMetricsKubeObjectDetailItemInjectable = getInjectable({
         Component: (props) => <DetailsMetricsContainer metrics={metrics} {...props} />,
         enabled: di.inject(metricsDetailsComponentEnabledInjectable, metricResourceType),
         orderNumber: -1,
-      };
+      } as KubeObjectDetailItem;
     };
   },
 });

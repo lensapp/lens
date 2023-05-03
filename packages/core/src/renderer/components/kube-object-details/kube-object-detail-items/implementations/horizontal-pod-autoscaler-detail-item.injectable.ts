@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import type { KubeObjectDetailItem } from "../kube-object-detail-item-injection-token";
 import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-injection-token";
 import { HorizontalPodAutoscalerDetails } from "../../../config-horizontal-pod-autoscalers";
 import { computed } from "mobx";
@@ -19,7 +20,7 @@ const horizontalPodAutoscalerDetailItemInjectable = getInjectable({
       Component: HorizontalPodAutoscalerDetails,
       enabled: computed(() => isHorizontalPodAutoscaler(kubeObject.value.get()?.object)),
       orderNumber: 10,
-    };
+    } as KubeObjectDetailItem;
   },
 
   injectionToken: kubeObjectDetailItemInjectionToken,

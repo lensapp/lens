@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import type { KubeObjectDetailItem } from "../kube-object-detail-item-injection-token";
 import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-injection-token";
 import { computed } from "mobx";
 import { NamespaceDetails } from "../../../namespaces";
@@ -19,7 +20,7 @@ const namespacesDetailItemInjectable = getInjectable({
       Component: NamespaceDetails,
       enabled: computed(() => isNamespace(kubeObject.value.get()?.object)),
       orderNumber: 10,
-    };
+    } as KubeObjectDetailItem;
   },
 
   injectionToken: kubeObjectDetailItemInjectionToken,

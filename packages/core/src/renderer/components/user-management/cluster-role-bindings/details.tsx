@@ -53,7 +53,7 @@ class NonInjectedClusterRoleBindingDetails extends React.Component<KubeObjectDet
     const { selectedSubjects } = this;
 
     openConfirmDialog({
-      ok: () => clusterRoleBindingStore.removeSubjects(clusterRoleBinding, selectedSubjects),
+      ok: () => void clusterRoleBindingStore.removeSubjects(clusterRoleBinding, selectedSubjects),
       labelOk: `Remove`,
       message: (
         <p>
