@@ -22,9 +22,12 @@ import type { GetDetailsUrl } from "../../kube-detail-params/get-details-url.inj
 import { withInjectables } from "@ogre-tools/injectable-react";
 import getDetailsUrlInjectable from "../../kube-detail-params/get-details-url.injectable";
 import secretStoreInjectable from "../../config-secrets/store.injectable";
+import type { RequestSecret } from "../../config-secrets/request-secret.injectable";
+import requestSecretInjectable from "../../config-secrets/request-secret.injectable";
 
 interface Dependencies {
   secretStore: SecretStore;
+  requestSecret: RequestSecret;
   getDetailsUrl: GetDetailsUrl;
 }
 
@@ -35,7 +38,7 @@ class NonInjectedServiceAccountsDetails extends React.Component<KubeObjectDetail
 
   private defensiveLoadSecretIn = (namespace: string) => (
     ({ name }: { name: string }) => (
-      this.props.secretStore.load({ name, namespace })
+      this.props.requestSecret({ name, namespace })
         .catch(() => name)
     )
   );
@@ -164,5 +167,6 @@ export const ServiceAccountsDetails = withInjectables<Dependencies, KubeObjectDe
     ...props,
     getDetailsUrl: di.inject(getDetailsUrlInjectable),
     secretStore: di.inject(secretStoreInjectable),
+    requestSecret: di.inject(requestSecretInjectable),
   }),
 });

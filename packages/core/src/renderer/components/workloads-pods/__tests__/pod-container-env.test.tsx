@@ -5,15 +5,15 @@
 
 import React from "react";
 import type { ConfigMapStore } from "../../config-maps/store";
-import configMapStoreInjectable from "../../config-maps/store.injectable";
 import type { SecretStore } from "../../config-secrets/store";
-import secretStoreInjectable from "../../config-secrets/store.injectable";
 import type { Container } from "@k8slens/kube-object";
 import { Secret, ConfigMap, Pod, SecretType } from "@k8slens/kube-object";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
 import { ContainerEnvironment } from "../pod-container-env";
+import requestSecretInjectable from "../../config-secrets/request-secret.injectable";
+import requestConfigMapInjectable from "../../config-maps/request-config-map.injectable";
 
 describe("<ContainerEnv />", () => {
   let render: DiRender;
@@ -36,8 +36,8 @@ describe("<ContainerEnv />", () => {
       getByName: jest.fn(),
     });
 
-    di.override(secretStoreInjectable, () => secretStore as jest.Mocked<SecretStore>);
-    di.override(configMapStoreInjectable, () => configMapStore as jest.Mocked<ConfigMapStore>);
+    di.override(requestSecretInjectable, () => () => Promise.resolve({} as Secret));
+    di.override(requestConfigMapInjectable, () => () => Promise.resolve({} as ConfigMap));
 
     render = renderFor(di);
   });

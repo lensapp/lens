@@ -10,11 +10,11 @@ import type { RenderResult } from "@testing-library/react";
 import { act } from "@testing-library/react";
 import React from "react";
 import type { SecretStore } from "../config-secrets/store";
-import secretStoreInjectable from "../config-secrets/store.injectable";
 import { Secret, SecretType } from "@k8slens/kube-object";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import { renderFor } from "../test-utils/renderFor";
 import { SecretKey } from "./secret-key";
+import requestSecretInjectable from "../config-secrets/request-secret.injectable";
 
 describe("SecretKey technical tests", () => {
   let loadSecretMock: AsyncFnMock<SecretStore["load"]>;
@@ -25,9 +25,7 @@ describe("SecretKey technical tests", () => {
     const render = renderFor(di);
 
     loadSecretMock = asyncFn();
-    di.override(secretStoreInjectable, () => ({
-      load: loadSecretMock,
-    } as Partial<SecretStore> as SecretStore));
+    di.override(requestSecretInjectable, () => loadSecretMock);
 
     result = render((
       <SecretKey

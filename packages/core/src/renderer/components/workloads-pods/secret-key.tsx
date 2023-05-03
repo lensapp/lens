@@ -6,10 +6,10 @@ import React, { useState } from "react";
 import type { EnvVarKeySelector } from "@k8slens/kube-object";
 import { Icon } from "@k8slens/icon";
 import { base64, cssNames, isObject } from "@k8slens/utilities";
-import type { SecretStore } from "../config-secrets/store";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import secretStoreInjectable from "../config-secrets/store.injectable";
 import type { SetRequired } from "type-fest";
+import type { RequestSecret } from "../config-secrets/request-secret.injectable";
+import requestSecretInjectable from "../config-secrets/request-secret.injectable";
 
 export interface SecretKeyProps {
   reference: SetRequired<EnvVarKeySelector, "name">;
@@ -17,12 +17,12 @@ export interface SecretKeyProps {
 }
 
 interface Dependencies {
-  secretStore: SecretStore;
+  requestSecret: RequestSecret;
 }
 
 const NonInjectedSecretKey = (props: SecretKeyProps & Dependencies) => {
   const {
-    reference: { name, key }, namespace, secretStore,
+    reference: { name, key }, namespace, requestSecret,
   } = props;
 
   const [loading, setLoading] = useState(false);
@@ -38,7 +38,7 @@ const NonInjectedSecretKey = (props: SecretKeyProps & Dependencies) => {
 
     void (async () => {
       try {
-        const secret = await secretStore.load({ name, namespace });
+        const secret = await requestSecret({ name, namespace });
 
         try {
           setSecretData(base64.decode(secret.data[key] ?? ""));
@@ -82,6 +82,6 @@ const NonInjectedSecretKey = (props: SecretKeyProps & Dependencies) => {
 export const SecretKey = withInjectables<Dependencies, SecretKeyProps>(NonInjectedSecretKey, {
   getProps: (di, props) => ({
     ...props,
-    secretStore: di.inject(secretStoreInjectable),
+    requestSecret: di.inject(requestSecretInjectable),
   }),
 });

@@ -5,19 +5,20 @@
 
 import "./pod-container-env.scss";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { observer } from "mobx-react";
-import type { Container } from "@k8slens/kube-object";
+import type { ConfigMap, Container, Secret } from "@k8slens/kube-object";
 import { DrawerItem } from "../drawer";
-import { autorun } from "mobx";
-import { object } from "@k8slens/utilities";
+import { autorun, observable } from "mobx";
+import { getOrInsertWith, object } from "@k8slens/utilities";
 import _ from "lodash";
-import { withInjectables } from "@ogre-tools/injectable-react";
-import type { ConfigMapStore } from "../config-maps/store";
-import type { SecretStore } from "../config-secrets/store";
-import configMapStoreInjectable from "../config-maps/store.injectable";
-import secretStoreInjectable from "../config-secrets/store.injectable";
+import type { IAsyncComputed } from "@ogre-tools/injectable-react";
+import { asyncComputed, withInjectables } from "@ogre-tools/injectable-react";
 import { SecretKey } from "./secret-key";
+import type { RequestSecret } from "../config-secrets/request-secret.injectable";
+import requestSecretInjectable from "../config-secrets/request-secret.injectable";
+import type { RequestConfigMap } from "../config-maps/request-config-map.injectable";
+import requestConfigMapInjectable from "../config-maps/request-config-map.injectable";
 
 export interface ContainerEnvironmentProps {
   container: Container;
@@ -25,32 +26,49 @@ export interface ContainerEnvironmentProps {
 }
 
 interface Dependencies {
-  configMapStore: ConfigMapStore;
-  secretStore: SecretStore;
+  requestConfigMap: RequestConfigMap;
+  requestSecret: RequestSecret;
 }
 
 const NonInjectedContainerEnvironment = observer((props: Dependencies & ContainerEnvironmentProps) => {
   const {
     container: { env, envFrom = [] },
     namespace,
-    configMapStore,
-    secretStore,
+    requestConfigMap,
+    requestSecret,
   } = props;
+
+  const secrets = useRef(observable.map<string, IAsyncComputed<Secret>>());
+  const configMaps = useRef(observable.map<string, IAsyncComputed<ConfigMap>>());
 
   useEffect( () => autorun(() => {
     for (const { valueFrom } of env ?? []) {
-      if (valueFrom?.configMapKeyRef?.name) {
-        void configMapStore.load({ name: valueFrom.configMapKeyRef.name, namespace });
+      const { configMapKeyRef: { name } = { name: undefined }} = valueFrom ?? {};
+
+      if (name) {
+        getOrInsertWith(configMaps.current, name, () => asyncComputed({
+          betweenUpdates: "show-latest-value",
+          valueWhenPending: undefined,
+          getValueFromObservedPromise: () => requestConfigMap({ name, namespace }),
+        }));
       }
     }
 
     for (const { configMapRef, secretRef } of envFrom ?? []) {
       if (secretRef?.name) {
-        void secretStore.load({ name: secretRef.name, namespace });
+        getOrInsertWith(secrets.current, secretRef.name, () => asyncComputed({
+          betweenUpdates: "show-latest-value",
+          valueWhenPending: undefined,
+          getValueFromObservedPromise: () => requestSecret({ name: secretRef.name, namespace }),
+        }));
       }
 
       if (configMapRef?.name) {
-        void configMapStore.load({ name: configMapRef.name, namespace });
+        getOrInsertWith(configMaps.current, configMapRef.name, () => asyncComputed({
+          betweenUpdates: "show-latest-value",
+          valueWhenPending: undefined,
+          getValueFromObservedPromise: () => requestConfigMap({ name: configMapRef.name, namespace }),
+        }));
       }
     }
   }), []);
@@ -83,7 +101,7 @@ const NonInjectedContainerEnvironment = observer((props: Dependencies & Containe
           );
         } else if (configMapKeyRef?.name) {
           const { name, key } = configMapKeyRef;
-          const configMap = configMapStore.getByName(name, namespace);
+          const configMap = configMaps.current.get(name)?.value.get();
 
           secretValue = configMap
             ? configMap.data[key]
@@ -117,7 +135,7 @@ const NonInjectedContainerEnvironment = observer((props: Dependencies & Containe
   );
 
   const renderEnvFromConfigMap = (configMapName: string, prefix: string | undefined) => {
-    const configMap = configMapStore.getByName(configMapName, namespace);
+    const configMap = configMaps.current.get(configMapName)?.value.get();
 
     if (!configMap) return null;
 
@@ -135,7 +153,7 @@ const NonInjectedContainerEnvironment = observer((props: Dependencies & Containe
   };
 
   const renderEnvFromSecret = (secretName: string, prefix: string | undefined) => {
-    const secret = secretStore.getByName(secretName, namespace);
+    const secret = secrets.current.get(secretName)?.value.get();
 
     if (!secret) return null;
 
@@ -169,7 +187,7 @@ const NonInjectedContainerEnvironment = observer((props: Dependencies & Containe
 export const ContainerEnvironment = withInjectables<Dependencies, ContainerEnvironmentProps>(NonInjectedContainerEnvironment, {
   getProps: (di, props) => ({
     ...props,
-    configMapStore: di.inject(configMapStoreInjectable),
-    secretStore: di.inject(secretStoreInjectable),
+    requestConfigMap: di.inject(requestConfigMapInjectable),
+    requestSecret: di.inject(requestSecretInjectable),
   }),
 });
