@@ -65,8 +65,8 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
     );
   }
 
-  loadAll() {
-    return this.loadItems(() => {
+  async loadAll() {
+    await this.loadItems(() => {
       const portForwards = this.getPortForwards();
 
       this.dependencies.storage.set(portForwards);

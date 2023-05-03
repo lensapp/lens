@@ -12,7 +12,7 @@ const emitTelemetryInjectable = getInjectable({
   instantiate: (di) => {
     const emitEvent = di.inject(emitEventInjectable);
 
-    return ({ action, params }: { action: string; params?: object }) => {
+    return ({ action, params }: { action: string; params?: Record<string, unknown> }) => {
       emitEvent({
         destination: "auto-capture",
         action: "telemetry-from-business-action",

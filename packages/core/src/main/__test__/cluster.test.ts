@@ -21,6 +21,7 @@ import createListNamespacesInjectable from "../../common/cluster/list-namespaces
 import prometheusHandlerInjectable from "../cluster/prometheus-handler/prometheus-handler.injectable";
 import writeJsonSyncInjectable from "../../common/fs/write-json-sync.injectable";
 import addClusterInjectable from "../../features/cluster/storage/common/add.injectable";
+import assert from "assert";
 
 describe("create clusters", () => {
   let cluster: Cluster;
@@ -75,11 +76,15 @@ describe("create clusters", () => {
 
     const addCluster = di.inject(addClusterInjectable);
 
-    cluster = addCluster({
+    const clusterResult = addCluster({
       id: "foo",
       contextName: "minikube",
       kubeConfigPath: "/minikube-config.yml",
     });
+
+    assert(clusterResult.isOk);
+
+    cluster = clusterResult.value;
     clusterConnection = di.inject(clusterConnectionInjectable, cluster);
   });
 

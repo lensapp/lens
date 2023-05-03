@@ -45,7 +45,7 @@ const NonInjectedAddingOfPublicHelmRepository = observer(({
       isLoading={valuesAreLoading}
       isDisabled={valuesAreLoading}
       options={repositoryOptions}
-      onChange={(...args) => void selectRepository(...args)}
+      onChange={(value) => void selectRepository(value)}
       value={dereferencesPublicRepositories}
       formatOptionLabel={formatOptionLabel}
       controlShouldRenderValue={false}

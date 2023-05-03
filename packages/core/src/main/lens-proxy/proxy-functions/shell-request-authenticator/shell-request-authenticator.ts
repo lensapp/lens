@@ -18,7 +18,7 @@ export class ShellRequestAuthenticator {
       const authToken = Uint8Array.from(await randomBytes(128));
       const forCluster = getOrInsertMap(this.tokens, clusterId);
 
-      forCluster.set(tabId, authToken);
+      forCluster.set(tabId as string, authToken);
 
       return authToken;
     });

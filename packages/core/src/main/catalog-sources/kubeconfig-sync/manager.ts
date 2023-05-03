@@ -10,12 +10,11 @@ import type { Disposer } from "@k8slens/utilities";
 import { iter } from "@k8slens/utilities";
 import type { Logger } from "@k8slens/logger";
 import type { WatchKubeconfigFileChanges } from "./watch-file-changes.injectable";
-import type { KubeconfigSyncValue } from "../../../features/user-preferences/common/preferences-helpers";
 
 interface KubeconfigSyncManagerDependencies {
   readonly directoryForKubeConfigs: string;
   readonly logger: Logger;
-  readonly kubeconfigSyncs: ObservableMap<string, KubeconfigSyncValue>;
+  readonly kubeconfigSyncs: ObservableMap<string, object>;
   watchKubeconfigFileChanges: WatchKubeconfigFileChanges;
 }
 
