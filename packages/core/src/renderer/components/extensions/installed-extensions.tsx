@@ -139,7 +139,8 @@ const NonInjectedInstalledExtensions = observer(({
               <MenuActions
                 id={`menu-actions-for-installed-extensions-for-${id}`}
                 usePortal
-                toolbar={false}>
+                toolbar={false}
+              >
                 {isCompatible && (
                   <MenuItem
                     disabled={isUninstalling}

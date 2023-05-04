@@ -46,22 +46,26 @@ const NonInjectedContainerStorageInterface = (props: PodVolumeVariantSpecificPro
         pod={pod}
         title="Controller Publish Secret"
         kubeRef={controllerPublishSecretRef}
-        api={secretApi} />
+        api={secretApi}
+      />
       <LocalRef
         pod={pod}
         title="Controller Expand Secret"
         kubeRef={controllerExpandSecretRef}
-        api={secretApi} />
+        api={secretApi}
+      />
       <LocalRef
         pod={pod}
         title="Node Publish Secret"
         kubeRef={nodePublishSecretRef}
-        api={secretApi} />
+        api={secretApi}
+      />
       <LocalRef
         pod={pod}
         title="Node Stage Secret"
         kubeRef={nodeStageSecretRef}
-        api={secretApi} />
+        api={secretApi}
+      />
       {Object.entries(volumeAttributes)
         .map(([key, value]) => (
           <DrawerItem key={key} name={key}>

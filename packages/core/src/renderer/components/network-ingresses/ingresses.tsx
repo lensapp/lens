@@ -93,7 +93,8 @@ const NonInjectedIngresses = observer((props: Dependencies) => {
 
             return lines * lineHeight + paddings;
           },
-        } } />
+        } }
+      />
     </SiblingsInTabLayout>
   );
 });

@@ -77,7 +77,8 @@ const NonInjectedReleaseDetailsContent = observer(({ model }: Dependencies & Rel
       <DrawerItem
         name="Status"
         className="status"
-        labelsOnly>
+        labelsOnly
+      >
         <Badge
           label={model.release.getStatus()}
           className={kebabCase(model.release.getStatus())}

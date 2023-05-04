@@ -42,7 +42,8 @@ export function NonInjectedIngressClassMenu(props: IngressClassMenuProps & Depen
         <Icon
           material="star"
           tooltip="Set as default"
-          interactive={toolbar} />
+          interactive={toolbar}
+        />
         <span className="title">Set as default</span>
       </MenuItem>
     </>

@@ -74,7 +74,8 @@ const formatOptionLabel = ({ value, isSelected }: SelectOption<HelmRepo>) => (
       <Icon
         small
         material="check"
-        className="box right" />
+        className="box right"
+      />
     )}
   </div>
 );

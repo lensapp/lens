@@ -41,7 +41,8 @@ const NonInjectedWindowControls = ({
           width="10"
           height="1"
           x="1"
-          y="9" />
+          y="9"
+        />
       </svg>
     </div>
 

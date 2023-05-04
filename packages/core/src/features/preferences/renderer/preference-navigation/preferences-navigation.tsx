@@ -66,7 +66,8 @@ const toNavigationHierarchy = (composite: Composite<PreferenceItemTypes | Prefer
               <Icon
                 material={value.iconName}
                 smallest
-                className="mr-3" />
+                className="mr-3"
+              />
             )}
             {value.label}
           </div>

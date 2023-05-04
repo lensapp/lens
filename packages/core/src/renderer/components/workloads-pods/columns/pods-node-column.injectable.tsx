@@ -35,7 +35,8 @@ export const podsNodeColumnInjectable = getInjectable({
             >
               <Link
                 to={getDetailsUrl(nodeApi.formatUrlForNotListing({ name: pod.getNodeName() }))}
-                onClick={stopPropagation}>
+                onClick={stopPropagation}
+              >
                 {pod.getNodeName()}
               </Link>
             </Badge>

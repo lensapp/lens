@@ -25,7 +25,8 @@ const NonInjectedTerminalFontSize = observer(({
       min={10}
       max={50}
       defaultValue={state.terminalConfig.fontSize.toString()}
-      onChange={(value) => state.terminalConfig.fontSize = Number(value)} />
+      onChange={(value) => state.terminalConfig.fontSize = Number(value)}
+    />
   </section>
 ));
 

@@ -127,7 +127,8 @@ const NonInjectedHotbarMenu = observer((props: Dependencies & HotbarMenuProps) =
                         className={cssNames({ isDragging: snapshot.isDragging })}
                         remove={removeItem}
                         add={addItem}
-                        size={40} />
+                        size={40}
+                      />
                     ) : (
                       <HotbarIcon
                         uid={`hotbar-icon-${item.entity.uid}`}
@@ -141,7 +142,8 @@ const NonInjectedHotbarMenu = observer((props: Dependencies & HotbarMenuProps) =
                           },
                         ]}
                         disabled
-                        size={40} />
+                        size={40}
+                      />
                     )}
                   </div>
                 )}
@@ -159,7 +161,8 @@ const NonInjectedHotbarMenu = observer((props: Dependencies & HotbarMenuProps) =
       <div className="HotbarItems flex column gaps">
         <DragDropContext
           onDragStart={() => onDragStart()}
-          onDragEnd={(result) => onDragEnd(result)}>
+          onDragEnd={(result) => onDragEnd(result)}
+        >
           {renderGrid()}
         </DragDropContext>
       </div>

@@ -9,6 +9,7 @@ import type { RegisteredAdditionalCategoryColumn } from "../custom-category-colu
 import { KubeObject } from "@k8slens/kube-object";
 import { getInjectable } from "@ogre-tools/injectable";
 import getLabelBadgesInjectable from "../get-label-badges.injectable";
+import { cssNames } from "@k8slens/utilities";
 
 const defaultCategoryColumnsInjectable = getInjectable({
   id: "default-category-columns",
@@ -37,7 +38,7 @@ const defaultCategoryColumnsInjectable = getInjectable({
         titleProps: {
           id: "labels",
           title: "Labels",
-          className: `${styles.labelsCell} scrollable`,
+          className: cssNames(styles.labelsCell, "scrollable"),
           "data-testid": "catalog-labels-column",
         },
         searchFilter: entity => KubeObject.stringifyLabels(entity.metadata.labels),

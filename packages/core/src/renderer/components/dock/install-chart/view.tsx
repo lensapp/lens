@@ -41,7 +41,8 @@ const NonInjectedInstallChart = observer(
             <Icon
               material="check"
               big
-              sticker />
+              sticker
+            />
           </p>
           <p>Installation complete!</p>
           <div className="flex gaps align-center">

@@ -71,7 +71,8 @@ const NonInjectedReplicationControllers = observer((props: Dependencies) => (
         item.getReplicas(),
         item.getDesiredReplicas(),
         item.getSelectorLabels().map(label => (<Badge key={label} label={label} />)),
-      ]} />
+      ]}
+    />
   </SiblingsInTabLayout>
 ));
 

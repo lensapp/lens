@@ -108,7 +108,8 @@ class NonInjectedPodDetailsContainer extends React.Component<PodDetailsContainer
               <ContainerMetrics.Component
                 key={ContainerMetrics.id}
                 container={container}
-                pod={pod}/>
+                pod={pod}
+              />
             ))}
           </>
         )}

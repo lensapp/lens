@@ -92,7 +92,8 @@ const NonInjectedClusterIconSetting = observer((props: ClusterIconSettingProps &
             <MenuItem
               onClick={() => item.onClick(cluster.preferences)}
               key={item.id}
-              disabled={item.disabled?.(cluster.preferences)}>
+              disabled={item.disabled?.(cluster.preferences)}
+            >
               {item.title}
             </MenuItem>
           ),

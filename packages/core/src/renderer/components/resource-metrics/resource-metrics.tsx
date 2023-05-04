@@ -61,7 +61,8 @@ export const ResourceMetrics = observer(<Keys extends string>({
               key={index}
               className="box grow"
               label={tab}
-              value={tab} />
+              value={tab}
+            />
           ))}
         </RadioGroup>
       </div>

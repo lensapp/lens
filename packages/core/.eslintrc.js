@@ -150,6 +150,7 @@ module.exports = {
             },
           ],
         }],
+        "react/jsx-closing-bracket-location": ["error", "line-aligned"],
         "@typescript-eslint/member-delimiter-style": ["error", {
           "multiline": {
             "delimiter": "semi",

@@ -104,7 +104,8 @@ class NonInjectedDeploymentDetails extends React.Component<KubeObjectDetailsProp
                         {`Last transition time: ${lastTransitionTime ?? "<unknown>"}`}
                       </p>
                     </>
-                  )} />
+                  )}
+                />
               ))
           }
         </DrawerItem>
