@@ -5,7 +5,7 @@
 import { createContainer, getInjectable, getInjectionToken } from "@ogre-tools/injectable";
 import { runManySyncFor } from "./run-many-sync-for";
 import type { RunnableSync } from "./types";
-
+// Trivial change to kick CI.
 describe("runManySyncFor", () => {
   describe("given hierarchy, when running many", () => {
     let runMock: jest.Mock;
