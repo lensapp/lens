@@ -8,7 +8,7 @@ import type { RequestInit } from "@k8slens/node-fetch";
 import lensProxyCertificateInjectable from "../certificate/lens-proxy-certificate.injectable";
 import fetchInjectable from "../fetch/fetch.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
-import type { JsonApiConfig, JsonApiDependencies } from "./json-api";
+import type { JsonApiConfig, JsonApiDependencies } from "@k8slens/json-api";
 import { KubeJsonApi } from "./kube-json-api";
 
 export type CreateKubeJsonApi = (config: JsonApiConfig, reqInit?: RequestInit) => KubeJsonApi;

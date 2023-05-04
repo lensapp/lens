@@ -24,7 +24,7 @@ import type { ApiKubeGet } from "../../../renderer/k8s/api-kube-get.injectable";
 import apiKubePatchInjectable from "../../../renderer/k8s/api-kube-patch.injectable";
 import apiKubeGetInjectable from "../../../renderer/k8s/api-kube-get.injectable";
 import type { BaseKubeJsonApiObjectMetadata, KubeObjectScope, KubeJsonApiData } from "@k8slens/kube-object";
-import { JsonApiErrorParsed } from "../../../common/k8s-api/json-api";
+import { JsonApiErrorParsed } from "@k8slens/json-api";
 import type { ShowNotification } from "../../../renderer/components/notifications";
 import React from "react";
 

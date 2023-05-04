@@ -3,18 +3,16 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-// Base http-service / json-api class
-
 import { Agent as HttpAgent } from "http";
 import { Agent as HttpsAgent } from "https";
 import { merge } from "lodash";
-import type { Response, RequestInit } from "@k8slens/node-fetch";
 import { stringify } from "querystring";
 import type { Patch } from "rfc6902";
 import type { PartialDeep, ValueOf } from "type-fest";
 import { EventEmitter } from "@k8slens/event-emitter";
 import type { Logger } from "@k8slens/logger";
-import type { Fetch } from "../fetch/fetch.injectable";
+import type Fetch from "@k8slens/node-fetch";
+import type { RequestInit, Response } from "@k8slens/node-fetch";
 import type { Defaulted } from "@k8slens/utilities";
 import { isObject, isString, json } from "@k8slens/utilities";
 
@@ -74,18 +72,38 @@ export interface JsonApiConfig {
 const httpAgent = new HttpAgent({ keepAlive: true });
 const httpsAgent = new HttpsAgent({ keepAlive: true });
 
-export type QueryParam = string | number | boolean | null | undefined | readonly string[] | readonly  number[] | readonly boolean[];
+export type QueryParam =
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | readonly string[]
+  | readonly number[]
+  | readonly boolean[];
 export type QueryParams = Partial<Record<string, QueryParam | undefined>>;
 
-export type ParamsAndQuery<Params, Query> = (
-  ValueOf<Query> extends QueryParam
-    ? Params & { query?: Query }
-    : Params & { query?: undefined }
-);
+export type ParamsAndQuery<Params, Query> = ValueOf<Query> extends QueryParam
+  ? Params & { query?: Query }
+  : Params & { query?: undefined };
 
 export interface JsonApiDependencies {
-  fetch: Fetch;
+  fetch: typeof Fetch;
   readonly logger: Logger;
+}
+
+export class JsonApiErrorParsed {
+  isUsedForNotification = false;
+
+  constructor(private error: JsonApiError | DOMException | KubeJsonApiError, private messages: string[]) {}
+
+  get isAborted() {
+    return this.error.code === DOMException.ABORT_ERR;
+  }
+
+  toString() {
+    return this.messages.join("\n");
+  }
 }
 
 export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = JsonApiParams<Data>> {
@@ -94,13 +112,18 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
       "content-type": "application/json",
     },
   };
-  protected readonly reqInit: Defaulted<RequestInit, keyof typeof JsonApi["reqInitDefault"]>;
+
+  protected readonly reqInit: Defaulted<RequestInit, keyof (typeof JsonApi)["reqInitDefault"]>;
 
   static readonly configDefault: Partial<JsonApiConfig> = {
     debug: false,
   };
 
-  constructor(protected readonly dependencies: JsonApiDependencies, public readonly config: JsonApiConfig, reqInit?: RequestInit) {
+  constructor(
+    protected readonly dependencies: JsonApiDependencies,
+    public readonly config: JsonApiConfig,
+    reqInit?: RequestInit,
+  ) {
     this.config = Object.assign({}, JsonApi.configDefault, config);
     this.reqInit = merge({}, JsonApi.reqInitDefault, reqInit);
     this.parseResponse = this.parseResponse.bind(this);
@@ -108,7 +131,9 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
   }
 
   public readonly onData = new EventEmitter<[Data, Response]>();
+
   public readonly onError = new EventEmitter<[JsonApiErrorParsed, Response]>();
+
   private readonly getRequestOptions: GetRequestOptions;
 
   async getResponse<Query>(
@@ -163,7 +188,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
 
   patch<OutData = Data, Query = QueryParams>(
     path: string,
-    params?: (ParamsAndQuery<Omit<Params, "data">, Query> & { data?: Patch | PartialDeep<Data> }),
+    params?: ParamsAndQuery<Omit<Params, "data">, Query> & { data?: Patch | PartialDeep<Data> },
     reqInit: RequestInit = {},
   ) {
     return this.request<OutData, Query>(path, params, { ...reqInit, method: "patch" });
@@ -183,12 +208,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
     init: Defaulted<RequestInit, "method">,
   ) {
     let reqUrl = `${this.config.serverAddress}${this.config.apiBase}${path}`;
-    const reqInit = merge(
-      {},
-      this.reqInit,
-      await this.getRequestOptions(),
-      init,
-    );
+    const reqInit = merge({}, this.reqInit, await this.getRequestOptions(), init);
     const { data, query } = params || {};
 
     if (data && !reqInit.body) {
@@ -208,7 +228,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
 
     const res = await this.dependencies.fetch(reqUrl, reqInit);
 
-    return await this.parseResponse(res, infoLog) as OutData;
+    return (await this.parseResponse(res, infoLog)) as OutData;
   }
 
   protected async parseResponse(res: Response, log: JsonApiLog): Promise<Data> {
@@ -216,9 +236,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
 
     const text = await res.text();
     const parseResponse = json.parse(text || "{}");
-    const data = parseResponse.callWasSuccessful
-      ? parseResponse.response as Data
-      : text as Data;
+    const data = parseResponse.callWasSuccessful ? (parseResponse.response as Data) : (text as Data);
 
     if (status >= 200 && status < 300) {
       this.onData.emit(data, res);
@@ -229,6 +247,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
 
     if (log.method === "GET" && res.status === 403) {
       this.writeLog({ ...log, error: data });
+      // eslint-disable-next-line @typescript-eslint/no-throw-literal
       throw data;
     }
 
@@ -237,6 +256,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
     this.onError.emit(error, res);
     this.writeLog({ ...log, error });
 
+    // eslint-disable-next-line @typescript-eslint/no-throw-literal
     throw error;
   }
 
@@ -252,7 +272,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
     const { errors, message } = error as { errors?: { title: string }[]; message?: string };
 
     if (Array.isArray(errors)) {
-      return errors.map(error => error.title);
+      return errors.map((error) => error.title);
     }
 
     if (isString(message)) {
@@ -266,20 +286,5 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
     const { method, reqUrl, ...params } = log;
 
     this.dependencies.logger.debug(`[JSON-API] request ${method} ${reqUrl}`, params);
-  }
-}
-
-export class JsonApiErrorParsed {
-  isUsedForNotification = false;
-
-  constructor(private error: JsonApiError | DOMException | KubeJsonApiError, private messages: string[]) {
-  }
-
-  get isAborted() {
-    return this.error.code === DOMException.ABORT_ERR;
-  }
-
-  toString() {
-    return this.messages.join("\n");
   }
 }
