@@ -34,7 +34,7 @@ jobs:
 
       - name: Generate Extensions API Reference using typedocs
         run: |
-          npm install
+          npm run all:install
           npm run build:docs
 
       - name: Verify that the markdown is valid

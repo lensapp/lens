@@ -17,7 +17,7 @@ jobs:
 
       - name: Install deps
         run: |
-          npm install
+          npm run all:install
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
