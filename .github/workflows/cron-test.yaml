@@ -27,6 +27,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Install specific npm version
+        run: npm install -g npm@9.6.5
+
       - name: Get npm cache directory path
         if: ${{ runner.os != 'Windows' }}
         id: npm-cache-dir-path

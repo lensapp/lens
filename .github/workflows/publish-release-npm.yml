@@ -30,6 +30,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Install specific npm version
+        run: npm install -g npm@9.6.5
+
       - name: Generate NPM packages
         run: |
           npm ci
