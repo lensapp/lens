@@ -32,7 +32,7 @@ jobs:
 
       - name: Generate NPM packages
         run: |
-          npm run all:install-in-ci
+          npm ci
           npm run build
 
       - name: Publish NPM packages

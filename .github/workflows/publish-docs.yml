@@ -34,7 +34,7 @@ jobs:
 
       - name: Generate Extensions API Reference using typedocs
         run: |
-          npm run all:install
+          npm install
           npm run build:docs
 
       - name: Verify that the markdown is valid
@@ -77,7 +77,7 @@ jobs:
 
       - name: Generate Extensions API Reference using typedocs
         run: |
-          npm run all:install-in-ci
+          npm ci
           npm run build:docs
 
       - name: mkdocs deploy master

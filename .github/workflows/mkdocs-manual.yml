@@ -37,7 +37,7 @@ jobs:
 
       - name: Generate Extensions API Reference using typedocs
         run: |
-          npm run all:install
+          npm install
           npm run typedocs-extensions-api
 
       - name: Checkout master branch from lens
