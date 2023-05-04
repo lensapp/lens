@@ -7,6 +7,7 @@
   ],
 
   "scripts": {
+    "all:reinstall": "npm run clean:node_modules && npm run all:install",
     "all:install": "npm install",
     "adr:create": "echo \"What is the title?\"; read title; adr new \"$title\"",
     "adr:change-status": "echo \"Decision number?:\"; read decision; adr status $decision",
