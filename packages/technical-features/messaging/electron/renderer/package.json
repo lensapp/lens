@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/messaging-for-renderer",
   "private": false,
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "description": "Implementations for 'messaging' in Electron renderer",
   "type": "commonjs",
   "publishConfig": {
@@ -42,6 +42,6 @@
     "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@k8slens/eslint-config": "^6.5.0-alpha.2"
+    "@k8slens/eslint-config": "^6.5.0-alpha.3"
   }
 }

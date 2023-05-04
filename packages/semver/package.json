@@ -1,6 +1,6 @@
 {
   "name": "@k8slens/semver",
-  "version": "6.5.0-alpha.4",
+  "version": "6.5.0-alpha.5",
   "description": "CLI over semver package for picking parts of a version",
   "license": "MIT",
   "private": true,
