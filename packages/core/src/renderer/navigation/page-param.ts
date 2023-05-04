@@ -122,7 +122,7 @@ export class PageParam<Value> {
         this.dependencies.history.searchParams.append(this.name, value);
       });
     } else {
-      this.dependencies.history.searchParams.set(this.name, values[0]);
+      this.dependencies.history.searchParams.set(this.name, values[0] ?? "");
     }
   }
 
@@ -132,7 +132,7 @@ export class PageParam<Value> {
   getRaw(): string | string[] {
     const values: string[] = this.dependencies.history.searchParams.getAll(this.name);
 
-    return this.isMulti ? values : values[0];
+    return this.isMulti ? values : values[0] ?? "";
   }
 
   @action

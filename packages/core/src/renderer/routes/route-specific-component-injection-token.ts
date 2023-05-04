@@ -16,14 +16,33 @@ export const routeSpecificComponentInjectionToken = getInjectionToken<{
 export interface GetRouteSpecificComponentOptions<Path extends string> {
   id: string;
   routeInjectable: Injectable<Route<Path>, Route<string>, void>;
-  Component: React.ComponentType<{ params?: InferParamFromPath<Path> }>;
+  Component: React.ComponentType<{ params: InferParamFromPath<Path> }>;
 }
 
-export const getRouteSpecificComponentInjectable = <Path extends string>(options: GetRouteSpecificComponentOptions<Path>) => getInjectable({
+export interface GetRouteSpecificComponentInjectable {
+  <Path extends string>(options: {
+  id: string;
+  routeInjectable: Injectable<Route<Path>, Route<string>, void>;
+  Component: React.ComponentType<{ params: InferParamFromPath<Path> }>;
+}): Injectable<{
+    route: Route<Path>;
+    Component: React.ComponentType<{ params: InferParamFromPath<Path> }>;
+  }, unknown, void>;
+  <Path extends string>(options: {
+  id: string;
+  routeInjectable: Injectable<Route<Path>, Route<string>, void>;
+  Component: React.ComponentType<{ params?: InferParamFromPath<Path> }>;
+}): Injectable<{
+    route: Route<Path>;
+    Component: React.ComponentType<{ params?: InferParamFromPath<Path> }>;
+  }, unknown, void>;
+}
+
+export const getRouteSpecificComponentInjectable = ((options) => getInjectable({
   id: options.id,
   instantiate: (di) => ({
     route: di.inject(options.routeInjectable),
     Component: options.Component as React.ComponentType<{ params: InferParamFromPath<string> }>,
   }),
   injectionToken: routeSpecificComponentInjectionToken,
-});
+})) as GetRouteSpecificComponentInjectable;

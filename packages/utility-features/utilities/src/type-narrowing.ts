@@ -79,15 +79,15 @@ export function isTypedArray<T>(val: unknown, isEntry: (entry: unknown) => entry
   return Array.isArray(val) && val.every(isEntry);
 }
 
-export function hasLengthGreaterThan<T, Len extends number>(x: T[], len: Len): x is Tuple<T, Len> & T[] {
+export function hasLengthAtLeast<T, Len extends number>(x: T[], len: Len): x is Tuple<T, Len> & T[] {
   return x.length > len;
 }
 
-export function isTruthy<T>(x: T): x is Exclude<T, Falsy> {
+export function isTruthy<T>(x: T): x is Exclude<T, Falsy | void> {
   return !!(x as unknown);
 }
 
-export function isFalsy<T>(x: T): x is Extract<T, Falsy> {
+export function isFalsy<T>(x: T): x is Extract<T, Falsy | void> {
   return !(x as unknown);
 }
 
@@ -120,6 +120,10 @@ export function isNumber(val: unknown): val is number {
  */
 export function isBoolean(val: unknown): val is boolean {
   return typeof val === "boolean";
+}
+
+export function extractObject<T>(val: T): val is Extract<T, object> {
+  return typeof val === "object" && val !== null;
 }
 
 /**

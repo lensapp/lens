@@ -19,7 +19,8 @@ const toSeparatedTupleUsing =
         return [leftItem];
       }
 
-      const rightItem = arr[index + 1];
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const rightItem = arr[index + 1]!;
       const separator = getSeparator(leftItem, rightItem);
 
       return [leftItem, separator];

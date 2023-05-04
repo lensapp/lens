@@ -5,6 +5,7 @@
 
 import assert from "assert";
 import { iter } from "./iter";
+import { TypedRegEx } from "typed-regex";
 
 // Helper to convert memory from units Ki, Mi, Gi, Ti, Pi to bytes and vise versa
 
@@ -18,25 +19,25 @@ const magnitudes = new Map([
   ["TiB", baseMagnitude ** 4] as const,
   maxMagnitude,
 ]);
-const unitRegex = /(?<value>[0-9]+(\.[0-9]*)?)(?<suffix>(B|[KMGTP]iB?))?/;
+const unitRegex = TypedRegEx("^(?<value>\\d+(\\.\\d+)?)\\s*(?<suffix>B|KiB|MiB|GiB|TiB|PiB)?$");
 
 type BinaryUnit = typeof magnitudes extends Map<infer Key, any> ? Key : never;
 
 export function unitsToBytes(value: string): number {
-  const unitsMatch = value.match(unitRegex);
+  const unitsMatch = unitRegex.captures(value.trim());
 
-  if (!unitsMatch?.groups) {
+  if (!unitsMatch?.value) {
     return NaN;
   }
 
-  const parsedValue = parseFloat(unitsMatch.groups.value);
+  const parsedValue = parseFloat(unitsMatch.value);
 
-  if (!unitsMatch.groups?.suffix) {
+  if (!unitsMatch.suffix) {
     return parsedValue;
   }
 
-  const magnitude = magnitudes.get(unitsMatch.groups.suffix as BinaryUnit)
-    ?? magnitudes.get(`${unitsMatch.groups.suffix}B` as BinaryUnit);
+  const magnitude = magnitudes.get(unitsMatch.suffix as BinaryUnit)
+    ?? magnitudes.get(`${unitsMatch.suffix}B` as BinaryUnit);
 
   assert(magnitude, "UnitRegex is wrong some how");
 

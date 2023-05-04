@@ -38,7 +38,7 @@ export const ScrollSpy = observer(({ render, htmlFor, rootMargin = "0px 0px -100
   };
 
   const getSectionsParentElement = () => {
-    return sections.current?.[0].parentElement;
+    return sections.current?.[0]?.parentElement;
   };
 
   const updateNavigation = () => {
@@ -76,9 +76,9 @@ export const ScrollSpy = observer(({ render, htmlFor, rootMargin = "0px 0px -100
   };
 
   const handleIntersect = ([entry]: IntersectionObserverEntry[]) => {
-    const closest = entry.target.closest("section[id]");
+    const closest = entry?.target.closest("section[id]");
 
-    if (entry.isIntersecting && closest) {
+    if (entry?.isIntersecting && closest) {
       setActiveElementId(closest.id);
     }
   };

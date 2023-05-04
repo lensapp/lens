@@ -18,8 +18,7 @@ interface Dependencies {
 export class TableModel {
   constructor(private dependencies: Dependencies) {}
 
-  getSortParams = (tableId: string): Partial<TableSortParams> =>
-    this.dependencies.storage.get().sortParams[tableId];
+  getSortParams = (tableId: string): Partial<TableSortParams> => this.dependencies.storage.get().sortParams[tableId] ?? {};
 
   setSortParams = (
     tableId: string,

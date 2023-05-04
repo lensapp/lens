@@ -48,7 +48,8 @@ function getOnePodViewModel(tabId: TabId, deps: Partial<LogTabViewModelDependenc
   return mockLogTabViewModel(tabId, {
     getLogTabData: () => ({
       selectedPodId: selectedPod.getId(),
-      selectedContainer: selectedPod.getContainers()[0].name,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      selectedContainer: selectedPod.getContainers()[0]!.name,
       namespace: selectedPod.getNs(),
       showPrevious: false,
       showTimestamps: false,
@@ -76,7 +77,8 @@ const getFewPodsTabData = (tabId: TabId, deps: Partial<LogTabViewModelDependenci
         name: "super-deployment",
       },
       selectedPodId: selectedPod.getId(),
-      selectedContainer: selectedPod.getContainers()[0].name,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      selectedContainer: selectedPod.getContainers()[0]!.name,
       namespace: selectedPod.getNs(),
       showPrevious: false,
       showTimestamps: false,

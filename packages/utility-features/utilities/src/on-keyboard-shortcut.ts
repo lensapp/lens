@@ -32,6 +32,10 @@ function parseKeyDownDescriptor(descriptor: string): (event: KeyboardEvent) => b
     throw new Error("only single key combinations are currently supported");
   }
 
+  if (!key) {
+    throw new Error("no key specified");
+  }
+
   return (event) => {
     return event.altKey === hasAlt
       && event.shiftKey === hasShift

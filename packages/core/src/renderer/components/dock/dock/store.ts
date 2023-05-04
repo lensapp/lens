@@ -169,10 +169,6 @@ export class DockStore implements DockStorageState {
     this.dependencies.storage.merge({ selectedTabId: tabId });
   }
 
-  @computed get tabsNumber() : number {
-    return this.tabs.length;
-  }
-
   @computed get selectedTab() {
     return this.tabs.find(tab => tab.id === this.selectedTabId);
   }
@@ -325,7 +321,11 @@ export class DockStore implements DockStorageState {
 
     if (this.selectedTabId === tab.id) {
       if (this.tabs.length) {
-        const newTab = tabIndex < this.tabsNumber ? this.tabs[tabIndex] : this.tabs[tabIndex - 1];
+        const newTab = (
+          tabIndex < this.tabs.length
+            ? this.tabs[tabIndex]
+            : this.tabs[this.tabs.length - 1]
+        ) as Required<DockTabCreate>;
 
         this.selectTab(newTab.id);
       } else {

@@ -93,7 +93,11 @@ const NonInjectedClusterLocalTerminalSetting = observer((props: Dependencies & C
       message: "Choose Working Directory",
       buttonLabel: "Pick",
       properties: ["openDirectory", "showHiddenFiles"],
-      onPick: ([directory]) => setAndCommitDirectory(directory),
+      onPick: ([directory]) => {
+        if (directory) {
+          setAndCommitDirectory(directory);
+        }
+      },
     });
   };
 

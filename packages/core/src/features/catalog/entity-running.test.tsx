@@ -140,13 +140,11 @@ describe("entity running technical tests", () => {
         });
 
         it("calls on before run event", () => {
-          const target = onBeforeRunMock.mock.calls[0][0].target;
-          const actual = { id: target.getId(), name: target.getName() };
-
-          expect(actual).toEqual({
+          expect(onBeforeRunMock).toHaveBeenCalled();
+          expect(onBeforeRunMock).toHaveBeenCalledWith(expect.objectContaining({
             id: "a_catalogEntity_uid",
             name: "a catalog entity",
-          });
+          }));
         });
 
         it("does not call onRun yet", () => {

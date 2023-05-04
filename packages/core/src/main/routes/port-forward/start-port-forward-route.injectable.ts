@@ -67,11 +67,7 @@ const startPortForwardRouteInjectable = getRouteInjectable({
             });
 
             return {
-              error: {
-                message: `Failed to forward port ${port} to ${
-                  thePort ? forwardPort : "random port"
-                }`,
-              },
+              error: `Failed to forward port ${port} to ${thePort ? forwardPort : "random port"}`,
             };
           }
         }
@@ -84,9 +80,7 @@ const startPortForwardRouteInjectable = getRouteInjectable({
         );
 
         return {
-          error: {
-            message: `Failed to forward port ${port}`,
-          },
+          error: `Failed to forward port ${port}`,
         };
       }
     });

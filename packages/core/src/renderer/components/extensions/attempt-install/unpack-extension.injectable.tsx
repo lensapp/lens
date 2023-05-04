@@ -7,7 +7,7 @@ import extensionLoaderInjectable from "../../../../extensions/extension-loader/e
 import getExtensionDestFolderInjectable from "./get-extension-dest-folder.injectable";
 import extensionInstallationStateStoreInjectable from "../../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import type { Disposer } from "@k8slens/utilities";
-import { noop } from "@k8slens/utilities";
+import { hasLengthAtLeast, noop } from "@k8slens/utilities";
 import { extensionDisplayName } from "../../../../extensions/lens-extension";
 import { getMessageFromError } from "../get-message-from-error/get-message-from-error";
 import path from "path";
@@ -63,7 +63,7 @@ const unpackExtensionInjectable = getInjectable({
         const unpackedFiles = await fse.readdir(unpackingTempFolder);
         let unpackedRootFolder = unpackingTempFolder;
 
-        if (unpackedFiles.length === 1) {
+        if (hasLengthAtLeast(unpackedFiles, 1)) {
         // check if %extension.tgz was packed with single top folder,
         // e.g. "npm pack %ext_name" downloads file with "package" root folder within tarball
           unpackedRootFolder = path.join(unpackingTempFolder, unpackedFiles[0]);

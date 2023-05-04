@@ -66,7 +66,7 @@ const getServiceAccountRouteInjectable = getRouteInjectable({
           {
             name: params.account,
             user: {
-              token: Buffer.from(token, "base64").toString("utf8"),
+              token: token ? Buffer.from(token, "base64").toString("utf8") : undefined,
             },
           },
         ],

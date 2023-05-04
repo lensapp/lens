@@ -220,11 +220,11 @@ describe("cluster storage technical tests", () => {
       const storedClusters = clusters.get();
 
       expect(storedClusters.length).toBe(3);
-      expect(storedClusters[0].id).toBe("cluster1");
-      expect(storedClusters[0].preferences.terminalCWD).toBe("/foo");
-      expect(storedClusters[1].id).toBe("cluster2");
-      expect(storedClusters[1].preferences.terminalCWD).toBe("/foo2");
-      expect(storedClusters[2].id).toBe("cluster3");
+      expect(storedClusters[0]?.id).toBe("cluster1");
+      expect(storedClusters[0]?.preferences.terminalCWD).toBe("/foo");
+      expect(storedClusters[1]?.id).toBe("cluster2");
+      expect(storedClusters[1]?.preferences.terminalCWD).toBe("/foo2");
+      expect(storedClusters[2]?.id).toBe("cluster3");
     });
   });
 
@@ -259,13 +259,13 @@ describe("cluster storage technical tests", () => {
     });
 
     it("migrates to modern format with kubeconfig in a file", () => {
-      const configPath = clusters.get()[0].kubeConfigPath.get();
+      const configPath = clusters.get()[0]?.kubeConfigPath.get() ?? "";
 
       expect(readFileSync(configPath)).toBe(minimalValidKubeConfig);
     });
 
     it("migrates to modern format with icon not in file", () => {
-      expect(clusters.get()[0].preferences.icon).toMatch(/data:;base64,/);
+      expect(clusters.get()[0]?.preferences.icon).toMatch(/data:;base64,/);
     });
   });
 });

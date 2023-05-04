@@ -199,7 +199,7 @@ class NonForwardedLogList extends React.Component<Dependencies & LogListProps & 
   getLogRow = (rowIndex: number) => {
     const { isActiveOverlay } = this.props.model.searchStore;
     const searchQuery = this.props.model.searchStore.searchQuery.get();
-    const item = this.logs[rowIndex];
+    const item = this.logs[rowIndex] ?? "";
 
     // If search is enabled, replace keyword with a background <span>
     const contents = searchQuery

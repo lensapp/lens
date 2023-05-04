@@ -49,7 +49,7 @@ export function ReactTable<Data extends object>({ columns, data, headless }: Rea
             <div
               {...cell.getCellProps()}
               key={cell.getCellProps().key}
-              className={cssNames(styles.td, columns[index].accessor)}
+              className={cssNames(styles.td, columns[index]?.accessor)}
             >
               {cell.render("Cell")}
             </div>

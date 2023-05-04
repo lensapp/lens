@@ -6,7 +6,7 @@
 import "./nodes.scss";
 import React from "react";
 import { observer } from "mobx-react";
-import { bytesToUnits, cssNames, hasLengthGreaterThan, interval } from "@k8slens/utilities";
+import { bytesToUnits, cssNames, hasLengthAtLeast, interval } from "@k8slens/utilities";
 import { TabLayout } from "../layout/tab-layout-2";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { Node } from "@k8slens/kube-object";
@@ -104,7 +104,7 @@ class NonInjectedNodesRoute extends React.Component<Dependencies> {
   private renderUsage({ node, title, metricNames, formatters }: UsageArgs) {
     const metrics = this.getLastMetricValues(node, metricNames);
 
-    if (!hasLengthGreaterThan(metrics, 2)) {
+    if (!hasLengthAtLeast(metrics, 2)) {
       return <LineProgress value={0}/>;
     }
 

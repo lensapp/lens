@@ -225,7 +225,7 @@ describe("installing update using tray", () => {
         });
 
         it("when download progresses with decimals, percentage increases as integers", () => {
-          downloadPlatformUpdateMock.mock.calls[0][0]({ percentage: 42.424242 });
+          downloadPlatformUpdateMock.mock.calls[0]?.[0]({ percentage: 42.424242 });
 
           expect(
             builder.tray.get("check-for-updates")?.label,

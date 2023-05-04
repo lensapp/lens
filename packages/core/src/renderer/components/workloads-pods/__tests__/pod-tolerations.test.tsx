@@ -12,6 +12,7 @@ import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
 import directoryForLensLocalStorageInjectable from "../../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
+import assert from "assert";
 
 const tolerations: Toleration[] =[
   {
@@ -49,6 +50,9 @@ describe("<PodTolerations />", () => {
     const { container } = render(<PodTolerations tolerations={tolerations} />);
     const rows = container.querySelectorAll(".TableRow");
 
+    assert(rows[0]);
+    assert(rows[1]);
+
     expect(rows[0].querySelector(".key")?.textContent).toBe("CriticalAddonsOnly");
     expect(rows[0].querySelector(".operator")?.textContent).toBe("Exist");
     expect(rows[0].querySelector(".effect")?.textContent).toBe("NoExecute");
@@ -69,6 +73,6 @@ describe("<PodTolerations />", () => {
 
     const rows = container.querySelectorAll(".TableRow");
 
-    expect(rows[0].querySelector(".key")?.textContent).toBe("node.kubernetes.io/not-ready");
+    expect(rows[0]?.querySelector(".key")?.textContent).toBe("node.kubernetes.io/not-ready");
   });
 });

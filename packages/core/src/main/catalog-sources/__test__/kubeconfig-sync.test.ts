@@ -97,8 +97,8 @@ describe("kubeconfig-sync.source tests", () => {
       const models = configToModels(config, "/bar");
 
       expect(models.length).toBe(1);
-      expect(models[0].contextName).toBe("context-name");
-      expect(models[0].kubeConfigPath).toBe("/bar");
+      expect(models[0]?.contextName).toBe("context-name");
+      expect(models[0]?.kubeConfigPath).toBe("/bar");
     });
   });
 

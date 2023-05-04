@@ -24,7 +24,8 @@ export function List<I, T extends object>({ columns, data, title, items, filters
   const query = search.toLowerCase();
 
   const filteredData = data.filter((item, index) => (
-    filters.some(getText => String(getText(items[index])).toLowerCase().includes(query))
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    filters.some(getText => String(getText(items[index]!)).toLowerCase().includes(query))
   ));
 
   return (

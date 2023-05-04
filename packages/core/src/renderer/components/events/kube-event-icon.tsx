@@ -30,16 +30,14 @@ class NonInjectedKubeEventIcon extends React.Component<KubeEventIconProps & Depe
   }
 
   render() {
-    const { object, filterEvents, eventStore } = this.props;
+    const { object, filterEvents = (events) => events, eventStore } = this.props;
     const events = eventStore.getEventsByObject(object);
-    let warnings = events.filter(evt => evt.isWarning());
+    const warnings = filterEvents(events.filter(event => event.isWarning()));
 
-    if (filterEvents) warnings = filterEvents(warnings);
+    const [event] = [...warnings, ...events]; // get latest event
 
-    if (!events.length || (this.showWarningsOnly && !warnings.length)) {
-      return null;
-    }
-    const event = [...warnings, ...events][0]; // get latest event
+    if (!event) return null;
+    if (this.showWarningsOnly && !event.isWarning()) return null;
 
     return (
       <Icon

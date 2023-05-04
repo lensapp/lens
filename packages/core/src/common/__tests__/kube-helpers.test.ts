@@ -239,8 +239,8 @@ describe("kube helpers", () => {
         assert(result.isOk === true);
         expect(result.value.getCurrentContext()).toBe("minikube");
         expect(result.value.contexts.length).toBe(2);
-        expect(result.value.contexts[0].name).toBe("minikube");
-        expect(result.value.contexts[1].name).toBe("cluster-3");
+        expect(result.value.contexts[0]?.name).toBe("minikube");
+        expect(result.value.contexts[1]?.name).toBe("cluster-3");
       });
     });
   });

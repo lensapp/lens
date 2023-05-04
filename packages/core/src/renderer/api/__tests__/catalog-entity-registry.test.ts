@@ -143,13 +143,14 @@ describe("CatalogEntityRegistry", () => {
 
       entityRegistry.updateItems(items);
       expect(entityRegistry.items.get().length).toEqual(1);
-      expect(entityRegistry.items.get()[0].status.phase).toEqual("disconnected");
+      expect(entityRegistry.items.get()[0]?.status.phase).toEqual("disconnected");
 
-      items[0].status.phase = "connected";
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      items[0]!.status.phase = "connected";
 
       entityRegistry.updateItems(items);
       expect(entityRegistry.items.get().length).toEqual(1);
-      expect(entityRegistry.items.get()[0].status.phase).toEqual("connected");
+      expect(entityRegistry.items.get()[0]?.status.phase).toEqual("connected");
     });
 
     it("updates activeEntity", () => {
@@ -170,11 +171,12 @@ describe("CatalogEntityRegistry", () => {
 
       entityRegistry.updateItems(items);
       entityRegistry.activeEntity = entityRegistry.items.get()[0];
-      expect(entityRegistry.activeEntity.status.phase).toEqual("disconnected");
+      expect(entityRegistry.activeEntity?.status.phase).toEqual("disconnected");
 
-      items[0].status.phase = "connected";
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      items[0]!.status.phase = "connected";
       entityRegistry.updateItems(items);
-      expect(entityRegistry.activeEntity.status.phase).toEqual("connected");
+      expect(entityRegistry.activeEntity?.status.phase).toEqual("connected");
     });
 
     it("removes deleted items", () => {
@@ -213,7 +215,7 @@ describe("CatalogEntityRegistry", () => {
       items.splice(0, 1);
       entityRegistry.updateItems(items);
       expect(entityRegistry.items.get().length).toEqual(1);
-      expect(entityRegistry.items.get()[0].metadata.uid).toEqual("456");
+      expect(entityRegistry.items.get()[0]?.metadata.uid).toEqual("456");
     });
   });
 

@@ -83,7 +83,7 @@ describe("computeRuleDeclarations", () => {
       },
     });
 
-    expect(result[0].url).toBe("http://foo.bar/");
+    expect(result[0]?.url).toBe("http://foo.bar/");
   });
 
   it("given no tls entries, should format links as http://", () => {
@@ -120,7 +120,7 @@ describe("computeRuleDeclarations", () => {
       },
     });
 
-    expect(result[0].url).toBe("http://foo.bar/");
+    expect(result[0]?.url).toBe("http://foo.bar/");
   });
 
   it("given some tls entries, should format links as https://", () => {
@@ -159,6 +159,6 @@ describe("computeRuleDeclarations", () => {
       },
     });
 
-    expect(result[0].url).toBe("https://foo.bar/");
+    expect(result[0]?.url).toBe("https://foo.bar/");
   });
 });

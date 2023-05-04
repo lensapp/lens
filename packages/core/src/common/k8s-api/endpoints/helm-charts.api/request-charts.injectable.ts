@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { RawHelmChart } from "../helm-charts.api";
 import { HelmChart } from "../helm-charts.api";
-import { isDefined } from "@k8slens/utilities";
+import { hasLengthAtLeast, isDefined } from "@k8slens/utilities";
 import apiBaseInjectable from "../../api-base.injectable";
 
 export type RequestHelmCharts = () => Promise<HelmChart[]>;
@@ -25,6 +25,7 @@ const requestHelmChartsInjectable = getInjectable({
       return Object
         .values(data)
         .reduce((allCharts, repoCharts) => allCharts.concat(Object.values(repoCharts)), new Array<RawHelmChart[]>())
+        .filter((charts): charts is [HelmChart, ...HelmChart[]] => hasLengthAtLeast(charts, 1))
         .map(([chart]) => HelmChart.create(chart, { onError: "log" }))
         .filter(isDefined);
     };

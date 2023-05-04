@@ -126,10 +126,10 @@ export class Chart extends React.Component<ChartProps> {
 
     // Mutating inner chart datasets to enable seamless transitions
     nextDatasets.forEach((next, datasetIndex) => {
-      const index = datasets.findIndex(set => set.id === next.id);
+      const dataset = datasets.find(set => set.id === next.id);
 
-      if (index !== -1) {
-        const data = datasets[index].data = (datasets[index].data ?? []).slice();  // "Clean" mobx observables data to use in ChartJS
+      if (dataset) {
+        const data = dataset.data = (dataset.data ?? []).slice();  // "Clean" mobx observables data to use in ChartJS
         const nextData = next.data ??= [];
 
         data.splice(next.data.length);
@@ -143,10 +143,7 @@ export class Chart extends React.Component<ChartProps> {
 
         void _data;
 
-        datasets[index] = {
-          ...datasets[index],
-          ...props,
-        };
+        Object.assign(dataset, props);
       } else {
         datasets[datasetIndex] = next;
       }

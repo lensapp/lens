@@ -67,14 +67,14 @@ describe("<Select />", () => {
 
     const { container } = render((
       <Select
-        value={options[0].value}
+        value={options[0]?.value}
         onChange={onChange}
         options={options}
       />
     ));
     const selectedValueContainer = container.querySelector(".Select__single-value");
 
-    expect(selectedValueContainer?.textContent).toBe(options[0].label);
+    expect(selectedValueContainer?.textContent).toBe(options[0]?.label);
   });
 
   it("should reflect to change value", () => {
@@ -93,24 +93,24 @@ describe("<Select />", () => {
 
     const { container, rerender } = render((
       <Select
-        value={options[0].value}
+        value={options[0]?.value}
         onChange={onChange}
         options={options}
       />
     ));
     const selectedValueContainer = container.querySelector(".Select__single-value");
 
-    expect(selectedValueContainer?.textContent).toBe(options[0].label);
+    expect(selectedValueContainer?.textContent).toBe(options[0]?.label);
 
     rerender((
       <Select
-        value={options[1].value}
+        value={options[1]?.value}
         onChange={onChange}
         options={options}
       />
     ));
 
-    expect(container.querySelector(".Select__single-value")?.textContent).toBe(options[1].label);
+    expect(container.querySelector(".Select__single-value")?.textContent).toBe(options[1]?.label);
   });
 
   it("should unselect value if null is passed as a value", () => {
@@ -129,14 +129,14 @@ describe("<Select />", () => {
 
     const { container, rerender } = render((
       <Select
-        value={options[0].value}
+        value={options[0]?.value}
         onChange={onChange}
         options={options}
       />
     ));
     const selectedValueContainer = container.querySelector(".Select__single-value");
 
-    expect(selectedValueContainer?.textContent).toBe(options[0].label);
+    expect(selectedValueContainer?.textContent).toBe(options[0]?.label);
 
     rerender((
       <Select<string, SelectOption<string>>
@@ -165,14 +165,14 @@ describe("<Select />", () => {
 
     const { container, rerender } = render((
       <Select
-        value={options[0].value}
+        value={options[0]?.value}
         onChange={onChange}
         options={options}
       />
     ));
     const selectedValueContainer = container.querySelector(".Select__single-value");
 
-    expect(selectedValueContainer?.textContent).toBe(options[0].label);
+    expect(selectedValueContainer?.textContent).toBe(options[0]?.label);
 
     rerender((
       <Select<string, SelectOption<string>>

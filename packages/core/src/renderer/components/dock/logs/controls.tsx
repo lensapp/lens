@@ -26,7 +26,7 @@ export const LogControls = observer(({ model }: LogControlsProps) => {
 
   const logs = model.timestampSplitLogs.get();
   const { showTimestamps, showPrevious: previous } = tabData;
-  const since = logs.length ? logs[0][0] : null;
+  const since = logs[0]?.[0] ?? null;
 
   const toggleTimestamps = () => {
     model.updateLogTabData({ showTimestamps: !showTimestamps });

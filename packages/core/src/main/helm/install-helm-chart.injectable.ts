@@ -74,7 +74,7 @@ const installHelmChartInjectable = getInjectable({
         }
 
         const output = result.value;
-        const releaseName = output.split("\n")[0].split(" ")[1].trim();
+        const releaseName = output.split("\n")[0]?.split(" ")[1]?.trim() ?? "";
 
         return {
           log: output,

@@ -53,8 +53,8 @@ describe("Custom Category Views", () => {
     const customCategoryViews = di.inject(customCategoryViewsInjectable);
     const { after = [] } = customCategoryViews.get().get("foo")?.get("bar") ?? {};
 
-    expect(after[0].View).toBe(component2);
-    expect(after[1].View).toBe(component1);
+    expect(after[0]?.View).toBe(component2);
+    expect(after[1]?.View).toBe(component1);
   });
 
   it("should put put priority < 50 items in before", () => {
@@ -91,6 +91,6 @@ describe("Custom Category Views", () => {
     const customCategoryViews = di.inject(customCategoryViewsInjectable);
     const { before = [] } = customCategoryViews.get().get("foo")?.get("bar") ?? {};
 
-    expect(before[0].View).toBe(component1);
+    expect(before[0]?.View).toBe(component1);
   });
 });

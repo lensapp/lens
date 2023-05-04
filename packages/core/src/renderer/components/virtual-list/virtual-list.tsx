@@ -73,7 +73,8 @@ function VirtualListInner<T extends { getId(): string } | string>({
       listRef.current?.scrollToItem(index, "smart");
     }
   }, [selectedItemId, [items]]);
-  const getItemSize = (index: number) => rowHeights[index];
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const getItemSize = (index: number) => rowHeights[index]!;
 
   useImperativeHandle(forwardedRef, () => ({
     scrollToItem: (index, align) => listRef.current?.scrollToItem(index, align),
@@ -147,11 +148,16 @@ const Row = observer(<T extends { getId(): string } | string>(props: RowProps<T>
   const { index, style, data } = props;
   const { items, getRow } = data;
   const item = items[index];
+
+  if (item == null) {
+    return null;
+  }
+
   const row = getRow?.((
     typeof item == "string"
       ? index
       : item.getId()
-  ) as never);
+  ) as T extends string ? number : string);
 
   if (!row) return null;
 

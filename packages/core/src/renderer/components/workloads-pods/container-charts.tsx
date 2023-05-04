@@ -39,7 +39,7 @@ const NonInjectedContainerCharts = observer((props: Dependencies) => {
     fsUsage,
     fsWrites,
     fsReads,
-  } = mapValues(metrics, metric => normalizeMetrics(metric).data.result[0].values);
+  } = mapValues(metrics, metric => normalizeMetrics(metric).data.result[0]?.values);
 
   const datasets: Partial<Record<MetricsTab, ChartDataSets[]>> = {
     CPU: [
@@ -48,21 +48,21 @@ const NonInjectedContainerCharts = observer((props: Dependencies) => {
         label: `Usage`,
         tooltip: `CPU cores usage`,
         borderColor: "#3D90CE",
-        data: cpuUsage.map(([x, y]) => ({ x, y })),
+        data: cpuUsage?.map(([x, y]) => ({ x, y })),
       },
       {
         id: "cpuRequests",
         label: `Requests`,
         tooltip: `CPU requests`,
         borderColor: "#30b24d",
-        data: cpuRequests.map(([x, y]) => ({ x, y })),
+        data: cpuRequests?.map(([x, y]) => ({ x, y })),
       },
       {
         id: "cpuLimits",
         label: `Limits`,
         tooltip: `CPU limits`,
         borderColor: chartCapacityColor,
-        data: cpuLimits.map(([x, y]) => ({ x, y })),
+        data: cpuLimits?.map(([x, y]) => ({ x, y })),
       },
     ],
     Memory: [
@@ -71,21 +71,21 @@ const NonInjectedContainerCharts = observer((props: Dependencies) => {
         label: `Usage`,
         tooltip: `Memory usage`,
         borderColor: "#c93dce",
-        data: memoryUsage.map(([x, y]) => ({ x, y })),
+        data: memoryUsage?.map(([x, y]) => ({ x, y })),
       },
       {
         id: "memoryRequests",
         label: `Requests`,
         tooltip: `Memory requests`,
         borderColor: "#30b24d",
-        data: memoryRequests.map(([x, y]) => ({ x, y })),
+        data: memoryRequests?.map(([x, y]) => ({ x, y })),
       },
       {
         id: "memoryLimits",
         label: `Limits`,
         tooltip: `Memory limits`,
         borderColor: chartCapacityColor,
-        data: memoryLimits.map(([x, y]) => ({ x, y })),
+        data: memoryLimits?.map(([x, y]) => ({ x, y })),
       },
     ],
     Filesystem: [
@@ -94,21 +94,21 @@ const NonInjectedContainerCharts = observer((props: Dependencies) => {
         label: `Usage`,
         tooltip: `Bytes consumed on this filesystem`,
         borderColor: "#ffc63d",
-        data: fsUsage.map(([x, y]) => ({ x, y })),
+        data: fsUsage?.map(([x, y]) => ({ x, y })),
       },
       {
         id: "fsWrites",
         label: `Writes`,
         tooltip: `Bytes written on this filesystem`,
         borderColor: "#ff963d",
-        data: fsWrites.map(([x, y]) => ({ x, y })),
+        data: fsWrites?.map(([x, y]) => ({ x, y })),
       },
       {
         id: "fsReads",
         label: `Reads`,
         tooltip: `Bytes read on this filesystem`,
         borderColor: "#fff73d",
-        data: fsReads.map(([x, y]) => ({ x, y })),
+        data: fsReads?.map(([x, y]) => ({ x, y })),
       },
     ],
   };

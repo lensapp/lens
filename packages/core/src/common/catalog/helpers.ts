@@ -5,22 +5,22 @@
 
 import type { CatalogEntity } from "./catalog-entity";
 import GraphemeSplitter from "grapheme-splitter";
-import { hasOwnProperty, hasTypedProperty, isObject, isString, iter } from "@k8slens/utilities";
+import { hasLengthAtLeast, hasOwnProperty, hasTypedProperty, isObject, isString, iter } from "@k8slens/utilities";
 
-function getNameParts(name: string): string[] {
+function getNameParts(name: string): [string, ...string[]] {
   const byWhitespace = name.split(/\s+/);
 
-  if (byWhitespace.length > 1) {
+  if (hasLengthAtLeast(byWhitespace, 1)) {
     return byWhitespace;
   }
 
   const byDashes = name.split(/[-_]+/);
 
-  if (byDashes.length > 1) {
+  if (hasLengthAtLeast(byDashes, 1)) {
     return byDashes;
   }
 
-  return name.split(/@+/);
+  return name.split(/@+/) as [string, ...string[]];
 }
 
 export function limitGraphemeLengthOf(src: string, count: number): string {

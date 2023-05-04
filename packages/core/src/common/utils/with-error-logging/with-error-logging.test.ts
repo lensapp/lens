@@ -10,7 +10,7 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { getPromiseStatus } from "@k8slens/test-utils";
 import logErrorInjectable from "../../log-error.injectable";
-import type { Logger } from "../../logger";
+import type { Logger } from "@k8slens/logger";
 
 describe("with-error-logging", () => {
   describe("given decorated sync function", () => {

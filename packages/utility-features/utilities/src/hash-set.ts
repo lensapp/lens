@@ -5,6 +5,7 @@
 
 import type { IInterceptable, IInterceptor, IListenable, ISetWillChange, ObservableMap } from "mobx";
 import { observable, ObservableSet, runInAction } from "mobx";
+import { iter } from "./iter";
 
 export function makeIterableIterator<T>(iterator: Iterator<T>): IterableIterator<T> {
   (iterator as IterableIterator<T>)[Symbol.iterator] = () => iterator as IterableIterator<T>;
@@ -73,20 +74,8 @@ export class HashSet<T> implements Set<T> {
     return this.#hashmap.size;
   }
 
-  entries(): IterableIterator<[T, T]> {
-    let nextIndex = 0;
-    const keys = Array.from(this.keys());
-    const values = Array.from(this.values());
-
-    return makeIterableIterator<[T, T]>({
-      next() {
-        const index = nextIndex++;
-
-        return index < values.length
-          ? { value: [keys[index], values[index]], done: false }
-          : { done: true, value: undefined };
-      },
-    });
+  entries() {
+    return iter.zip(this.keys(), this.values());
   }
 
   keys(): IterableIterator<T> {
@@ -94,16 +83,7 @@ export class HashSet<T> implements Set<T> {
   }
 
   values(): IterableIterator<T> {
-    let nextIndex = 0;
-    const observableValues = Array.from(this.#hashmap.values());
-
-    return makeIterableIterator<T>({
-      next: () => {
-        return nextIndex < observableValues.length
-          ? { value: observableValues[nextIndex++], done: false }
-          : { done: true, value: undefined };
-      },
-    });
+    return this.#hashmap.values();
   }
 
   [Symbol.iterator](): IterableIterator<T> {
@@ -197,19 +177,7 @@ export class ObservableHashSet<T> implements Set<T>, IInterceptable<ISetWillChan
   }
 
   entries(): IterableIterator<[T, T]> {
-    let nextIndex = 0;
-    const keys = Array.from(this.keys());
-    const values = Array.from(this.values());
-
-    return makeIterableIterator<[T, T]>({
-      next() {
-        const index = nextIndex++;
-
-        return index < values.length
-          ? { value: [keys[index], values[index]], done: false }
-          : { done: true, value: undefined };
-      },
-    });
+    return iter.zip(this.keys(), this.values());
   }
 
   keys(): IterableIterator<T> {
@@ -217,16 +185,7 @@ export class ObservableHashSet<T> implements Set<T>, IInterceptable<ISetWillChan
   }
 
   values(): IterableIterator<T> {
-    let nextIndex = 0;
-    const observableValues = Array.from(this.#hashmap.values());
-
-    return makeIterableIterator<T>({
-      next: () => {
-        return nextIndex < observableValues.length
-          ? { value: observableValues[nextIndex++], done: false }
-          : { done: true, value: undefined };
-      },
-    });
+    return this.#hashmap.values();
   }
 
   [Symbol.iterator](): IterableIterator<T> {

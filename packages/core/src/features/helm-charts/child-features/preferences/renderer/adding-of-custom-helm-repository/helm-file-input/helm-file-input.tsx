@@ -49,9 +49,9 @@ const NonInjectedHelmFileInput = ({
           name: placeholder,
           extensions: fileExtensions,
         },
-        onPick: (filePaths) => {
-          if (filePaths.length) {
-            setValue(filePaths[0]);
+        onPick: ([filePath]) => {
+          if (filePath) {
+            setValue(filePath);
           }
         },
       })}

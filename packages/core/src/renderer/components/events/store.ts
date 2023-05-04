@@ -54,9 +54,9 @@ export class EventStore extends KubeObjectStore<KubeEvent, KubeEventApi> {
     const groupsByInvolvedObject = groupBy(warnings, warning => warning.involvedObject.uid);
     const eventsWithError = Object.values(groupsByInvolvedObject).map(events => {
       const recent = events[0];
-      const { kind, uid } = recent.involvedObject;
+      const { kind, uid } = recent?.involvedObject ?? {};
 
-      if (kind == Pod.kind) {  // Wipe out running pods
+      if (kind == Pod.kind && uid) {  // Wipe out running pods
         const pod = this.dependencies.getPodById(uid);
 
         if (!pod || (!pod.hasIssues() && (pod.spec?.priority ?? 0) < 500000)) {

@@ -37,7 +37,11 @@ export class PageFiltersStore {
 
   protected syncWithGlobalSearch() {
     const disposers = [
-      reaction(() => this.getValues(FilterType.SEARCH)[0], search => this.dependencies.searchUrlParam.set(search)),
+      reaction(() => this.getValues(FilterType.SEARCH)[0], search => {
+        if (search) {
+          this.dependencies.searchUrlParam.set(search);
+        }
+      }),
       reaction(() => this.dependencies.searchUrlParam.get(), search => {
         const filter = this.getByType(FilterType.SEARCH);
 

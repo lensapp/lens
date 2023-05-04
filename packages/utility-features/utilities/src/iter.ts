@@ -4,7 +4,7 @@
  */
 
 import { getOrInsert } from "./collection-functions";
-import type { Tuple } from "./tuple";
+import type { ReadonlyTuple, Tuple } from "./tuple";
 
 export type Falsy = false | 0 | "" | null | undefined;
 
@@ -295,8 +295,13 @@ function nFircate<T>(from: Iterable<T>, field: keyof T, parts: T[typeof field][]
   return res;
 }
 
-function chunks<T, ChunkSize extends number>(src: Iterable<T>, size: ChunkSize): Tuple<T, ChunkSize>[] {
-  const res: Tuple<T, ChunkSize>[] = [];
+/**
+ *
+ * @param src The source iterable to chunk over
+ * @param size The size of each chunk
+ * @returns An iterator over the chunks of `src`
+ */
+function* chunks<T, ChunkSize extends number>(src: Iterable<T>, size: ChunkSize): IterableIterator<Tuple<T, ChunkSize>> {
   const iterating = src[Symbol.iterator]();
 
   top: for (;;) {
@@ -312,10 +317,33 @@ function chunks<T, ChunkSize extends number>(src: Iterable<T>, size: ChunkSize):
       item.push(result.value);
     }
 
-    res.push(item as Tuple<T, ChunkSize>);
+    yield item as Tuple<T, ChunkSize>;
   }
+}
 
-  return res;
+function zip<T, Count extends 0>(...sources: readonly []): IterableIterator<[]>;
+function zip<T, Count extends 1>(...sources: readonly [Iterable<T>]): IterableIterator<[T]>;
+function zip<T, Count extends 2>(...sources: readonly [Iterable<T>, Iterable<T>]): IterableIterator<[T, T]>;
+function zip<T, Count extends 3>(...sources: readonly [Iterable<T>, Iterable<T>, Iterable<T>]): IterableIterator<[T, T, T]>;
+
+function* zip<T, Count extends number>(...sources: ReadonlyTuple<Iterable<T>, Count>): IterableIterator<Tuple<T, Count>> {
+  const iterating = sources.map((iter) => iter[Symbol.iterator]());
+
+  for (;;) {
+    const item: T[] = [];
+
+    for (const iter of iterating) {
+      const result = iter.next();
+
+      if (result.done === true) {
+        return;
+      }
+
+      item.push(result.value);
+    }
+
+    yield item as Tuple<T, Count>;
+  }
 }
 
 export const iter = {
@@ -337,4 +365,5 @@ export const iter = {
   nth,
   reduce,
   take,
+  zip,
 };

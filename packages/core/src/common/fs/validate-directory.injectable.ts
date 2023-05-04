@@ -9,7 +9,7 @@ import type { Stats } from "fs-extra";
 import { lowerFirst } from "lodash/fp";
 import statInjectable from "./stat.injectable";
 
-export type ValidateDirectory = (path: string) => AsyncResult<undefined, string>;
+export type ValidateDirectory = (path: string) => AsyncResult<void, string>;
 
 function getUserReadableFileType(stats: Stats): string {
   if (stats.isFile()) {
@@ -46,7 +46,7 @@ const validateDirectoryInjectable = getInjectable({
         const stats = await stat(path);
 
         if (stats.isDirectory()) {
-          return { isOk: true, value: undefined };
+          return { isOk: true };
         }
 
         return { isOk: false, error: `the provided path is ${getUserReadableFileType(stats)} and not a directory.` };
@@ -63,9 +63,7 @@ const validateDirectoryInjectable = getInjectable({
           ENOTDIR: "a prefix of the provided path is not a directory.",
         };
 
-        const humanReadableError = error.code
-          ? humanReadableErrors[error.code]
-          : lowerFirst(String(error));
+        const humanReadableError = humanReadableErrors[String(error.code)] ?? lowerFirst(String(error));
 
         return { isOk: false, error: humanReadableError };
       }

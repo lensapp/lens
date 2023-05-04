@@ -179,7 +179,7 @@ export class LogStore {
    */
   getLastSinceTime(tabId: TabId): string {
     const logs = this.podLogs.get(tabId) ?? [];
-    const [timestamp] = getTimestamps(logs[logs.length - 1]) ?? [];
+    const [timestamp] = getTimestamps(logs[logs.length - 1] ?? "") ?? [];
     const stamp = timestamp ? new Date(timestamp) : new Date();
 
     stamp.setSeconds(stamp.getSeconds() + 1); // avoid duplicates from last second
@@ -201,11 +201,7 @@ export class LogStore {
 const removeTimestamps = (logs: string) => logs.replace(/^\d+.*?\s/gm, "");
 const getTimestamps = (logs: string) => logs.match(/^\d+\S+/gm);
 const splitOutTimestamp = (logs: string): [string, string] => {
-  const extraction = /^(\d+\S+)(.*)/m.exec(logs);
+  const [,timestamp = "", log = logs]= [.../^(\d+\S+)(.*)/m.exec(logs) ?? []];
 
-  if (!extraction || extraction.length < 3) {
-    return ["", logs];
-  }
-
-  return [extraction[1], extraction[2]];
+  return [timestamp, log];
 };

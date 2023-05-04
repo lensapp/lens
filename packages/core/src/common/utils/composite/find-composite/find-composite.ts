@@ -8,7 +8,7 @@ const _findComposite = <T>(currentLeftIds: string[], currentId: string, currentR
   const [nextId, ...nextRightIds] = currentRightIds;
   const nextLeftIds = [...currentLeftIds, currentId];
 
-  if (currentRightIds.length === 0 && composite.id === currentId) {
+  if (!nextId || composite.id === currentId) {
     return composite;
   }
 
@@ -26,11 +26,11 @@ Node '${[...currentLeftIds, composite.id].join(" -> ")}' had only following chil
 ${composite.children.map((child) => child.id).join("\n")}`);
 };
 
-export const findComposite =
-  (...path: string[]) =>
+export const findComposite = (...path: [string, ...string[]]) => (
   <T>(composite: Composite<T>): Composite<T> => {
     const [currentId, ...rightIds] = path;
     const leftIds: string[] = [];
 
     return _findComposite(leftIds, currentId, rightIds, composite);
-  };
+  }
+);

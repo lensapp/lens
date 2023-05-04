@@ -79,17 +79,23 @@ export class CatalogCategoryRegistry {
   }
 
   hasCategoryForEntity({ kind, apiVersion }: CatalogEntityData & CatalogEntityKindData): boolean {
-    const splitApiVersion = apiVersion.split("/");
-    const group = splitApiVersion[0];
+    const [group] = apiVersion.split("/");
+
+    if (!group) {
+      return false;
+    }
 
     return this.groupKinds.get(group)?.has(kind) ?? false;
   }
 
-  getCategoryForEntity<T extends CatalogCategory>(data: CatalogEntityData & CatalogEntityKindData): T | undefined {
-    const splitApiVersion = data.apiVersion.split("/");
-    const group = splitApiVersion[0];
+  getCategoryForEntity<T extends CatalogCategory>({ apiVersion, kind }: CatalogEntityData & CatalogEntityKindData): T | undefined {
+    const [group] = apiVersion.split("/");
 
-    return this.getForGroupKind(group, data.kind);
+    if (!group) {
+      return undefined;
+    }
+
+    return this.getForGroupKind(group, kind);
   }
 
   getByName(name: string) {

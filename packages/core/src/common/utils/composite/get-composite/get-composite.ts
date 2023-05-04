@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import { hasLengthAtLeast } from "@k8slens/utilities";
 import { pipeline } from "@ogre-tools/fp";
 import {
   countBy,
@@ -119,11 +120,11 @@ export const getCompositeFor = <T>({
 
     const roots = source.filter(isRootId);
 
-    if (roots.length > 1) {
+    if (!hasLengthAtLeast(roots, 1)) {
+      const ids = roots.map(getId).join('", "');
+
       throw new Error(
-        `Tried to get a composite, but multiple roots where encountered: "${roots
-          .map(getId)
-          .join('", "')}"`,
+        `Tried to get a composite, but multiple roots where encountered: "${ids}"`,
       );
     }
 
@@ -139,9 +140,12 @@ const throwMissingParentIds = ({
   missingParentIds,
   availableParentIds,
 }: ParentIdsForHandling) => {
-  throw new Error(
-    `Tried to get a composite but encountered missing parent ids: "${missingParentIds.join(
-      '", "',
-    )}".\n\nAvailable parent ids are:\n"${availableParentIds.join('",\n"')}"`,
-  );
+  const missingIds = missingParentIds.join('", "');
+  const availableIds = availableParentIds.join('", "');
+
+  throw new Error([
+    `Tried to get a composite but encountered missing parent ids: "${missingIds}".`,
+    "",
+    `Available parent ids are: "${availableIds}"`,
+  ].join("\n"));
 };

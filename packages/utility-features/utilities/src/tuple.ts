@@ -18,6 +18,18 @@ type TupleOfImpl<T, N extends number, R extends unknown[]> = R["length"] extends
   : TupleOfImpl<T, N, [T, ...R]>;
 
 /**
+ * A strict N-tuple of type T
+ */
+export type ReadonlyTuple<T, N extends number> = N extends N
+  ? number extends N
+    ? T[]
+    : ReadonlyTupleOfImpl<T, N, []>
+  : never;
+type ReadonlyTupleOfImpl<T, N extends number, R extends readonly unknown[]> = R["length"] extends N
+  ? R
+  : ReadonlyTupleOfImpl<T, N, readonly [T, ...R]>;
+
+/**
  * Iterates over `sources` yielding full tuples until one of the tuple arrays
  * is empty. Then it returns a tuple with the rest of each of tuples
  * @param sources The source arrays

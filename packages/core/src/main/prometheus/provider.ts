@@ -5,7 +5,7 @@
 
 import type { CoreV1Api } from "@kubernetes/client-node";
 import { getInjectionToken } from "@ogre-tools/injectable";
-import { isRequestError } from "@k8slens/utilities";
+import { hasLengthAtLeast, isRequestError } from "@k8slens/utilities";
 
 export interface PrometheusService extends PrometheusServiceInfo {
   kind: string;
@@ -54,7 +54,7 @@ export async function findFirstNamespacedService(client: CoreV1Api, ...selectors
     for (const selector of selectors) {
       const { body: { items: [service] }} = await client.listServiceForAllNamespaces(undefined, undefined, undefined, selector);
 
-      if (service?.metadata?.namespace && service.metadata.name && service.spec?.ports) {
+      if (service?.metadata?.namespace && service.metadata.name && service.spec?.ports && hasLengthAtLeast(service.spec.ports, 1)) {
         return {
           namespace: service.metadata.namespace,
           service: service.metadata.name,
@@ -73,7 +73,7 @@ export async function findNamespacedService(client: CoreV1Api, name: string, nam
   try {
     const { body: service } = await client.readNamespacedService(name, namespace);
 
-    if (!service.metadata?.namespace || !service.metadata.name || !service.spec?.ports) {
+    if (!service.metadata?.namespace || !service.metadata.name || !service.spec?.ports || !hasLengthAtLeast(service.spec.ports, 1)) {
       throw new Error(`Service found in namespace="${namespace}" did not have required information`);
     }
 

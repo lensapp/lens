@@ -40,7 +40,7 @@ export function convertKubectlJsonPathToNodeJsonPath(jsonPath: string) {
   let { pathExpression } = captures;
 
   if (pathExpression.match(slashDashSearch)) {
-    const [first, ...rest] = pathExpression.split(pathByBareDots);
+    const [first, ...rest] = pathExpression.split(pathByBareDots) as [string, ...string[]];
 
     pathExpression = `${convertToIndexNotation(first, true)}${rest.map(value => convertToIndexNotation(value)).join("")}`;
   }

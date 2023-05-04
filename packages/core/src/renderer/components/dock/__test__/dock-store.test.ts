@@ -32,7 +32,8 @@ describe("DockStore", () => {
 
   it("closes tab and selects one from right", () => {
     dockStore.tabs = initialTabs;
-    dockStore.closeTab(dockStore.tabs[0].id);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    dockStore.closeTab(dockStore.tabs[0]!.id);
 
     expect(dockStore.selectedTabId).toBe("create");
 

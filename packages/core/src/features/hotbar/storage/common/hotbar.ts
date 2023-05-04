@@ -70,7 +70,8 @@ export class Hotbar {
         from >= this.items.length ||
         to >= this.items.length ||
         isNaN(from) ||
-        isNaN(to)
+        isNaN(to) ||
+        !source
       ) {
         throw new Error("Invalid 'from' or 'to' arguments");
       }

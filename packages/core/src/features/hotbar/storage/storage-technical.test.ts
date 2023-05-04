@@ -359,15 +359,15 @@ describe("Hotbars technical tests", () => {
     });
 
     it("clears cells without entity", () => {
-      const items = hotbars.get()[0].items;
+      const items = hotbars.get()[0]?.items;
 
-      expect(items[2]).toBeNull();
+      expect(items?.[2]).toBeNull();
     });
 
     it("adds extra data to cells with according entity", () => {
-      const items = hotbars.get()[0].items;
+      const items = hotbars.get()[0]?.items;
 
-      expect(items[0]).toEqual({
+      expect(items?.[0]).toEqual({
         entity: {
           name: "my-aws-cluster",
           source: "local",

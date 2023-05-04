@@ -17,7 +17,7 @@ import type { IComputedValue } from "mobx";
 import { observer } from "mobx-react";
 import type { KubeObjectStatusText } from "./kube-object-status-text-injection-token";
 
-function statusClassName(level: KubeObjectStatusLevel): string {
+function statusClassName(level: KubeObjectStatusLevel | undefined): string | undefined {
   switch (level) {
     case KubeObjectStatusLevel.INFO:
       return "info";
@@ -26,6 +26,8 @@ function statusClassName(level: KubeObjectStatusLevel): string {
     case KubeObjectStatusLevel.CRITICAL:
       return "error";
   }
+
+  return undefined;
 }
 
 function statusTitle(level: KubeObjectStatusLevel): string {
@@ -46,7 +48,7 @@ function getAge(timestamp: string | undefined) {
 }
 
 interface SplitStatusesByLevel {
-  maxLevel: string;
+  maxLevel: string | undefined;
   criticals: KubeObjectStatus[];
   warnings: KubeObjectStatus[];
   infos: KubeObjectStatus[];
@@ -69,7 +71,7 @@ function splitByLevel(statuses: KubeObjectStatus[]): SplitStatusesByLevel {
   const criticals = parts.get(KubeObjectStatusLevel.CRITICAL) ?? [];
   const warnings = parts.get(KubeObjectStatusLevel.WARNING) ?? [];
   const infos = parts.get(KubeObjectStatusLevel.INFO) ?? [];
-  const maxLevel = statusClassName(criticals[0]?.level ?? warnings[0]?.level ?? infos[0].level);
+  const maxLevel = statusClassName(criticals[0]?.level ?? warnings[0]?.level ?? infos[0]?.level);
 
   return { maxLevel, criticals, warnings, infos };
 }

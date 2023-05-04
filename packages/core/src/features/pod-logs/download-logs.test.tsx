@@ -67,7 +67,8 @@ describe("download logs options in logs dock tab", () => {
       windowDi.override(reloadLogsInjectable, () => jest.fn());
       windowDi.override(getLogTabDataInjectable, () => () => ({
         selectedPodId: selectedPod.getId(),
-        selectedContainer: selectedPod.getContainers()[0].name,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        selectedContainer: selectedPod.getContainers()[0]!.name,
         namespace: "default",
         showPrevious: true,
         showTimestamps: false,

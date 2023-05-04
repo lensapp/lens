@@ -34,9 +34,7 @@ const stopCurrentPortForwardRouteInjectable = getRouteInjectable({
         logger.error("[PORT-FORWARD-ROUTE]: error stopping a port-forward", { namespace, port, forwardPort, resourceType, resourceName });
 
         return {
-          error: {
-            message: `error stopping a forward port ${port}`,
-          },
+          error: `error stopping a forward port ${port}`,
         };
       }
     });

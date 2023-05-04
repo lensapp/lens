@@ -546,7 +546,7 @@ metadata:
                 ) as Record<string, Record<string, unknown>>;
 
                 expect(
-                  actual.edit_resource_store["some-first-tab-id"],
+                  actual.edit_resource_store?.["some-first-tab-id"],
                 ).toEqual({
                   resource: "/api/some-api-version/namespaces/some-uid",
                   firstDraft: `apiVersion: some-api-version

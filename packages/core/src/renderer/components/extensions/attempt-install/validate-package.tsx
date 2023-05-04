@@ -17,7 +17,7 @@ export async function validatePackage(filePath: string): Promise<LensExtensionMa
     throw new Error(`invalid extension bundle, ${manifestFilename} not found`);
   }
 
-  const rootFolder = path.normalize(firstFile).split(path.sep)[0];
+  const rootFolder = path.normalize(firstFile).split(path.sep)[0] ?? "";
   const packedInRootFolder = tarFiles.every(entry => entry.startsWith(rootFolder));
   const manifestLocation = packedInRootFolder
     ? path.join(rootFolder, manifestFilename)

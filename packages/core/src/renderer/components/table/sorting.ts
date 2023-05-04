@@ -43,7 +43,11 @@ export function getSorted<T>(rawItems: T[], sortingCallback: TableSortCallback<T
   const res = [];
 
   for (const { index } of sortData) {
-    res.push(rawItems[index]);
+    const item = rawItems[index];
+
+    if (item !== undefined) {
+      res.push(item);
+    }
   }
 
   return res;
