@@ -33,9 +33,6 @@
     "precreate-release-pr": "npm run --workspace @k8slens/release-tool build",
     "create-release-pr": "npm run --workspace @k8slens/release-tool create"
   },
-  "engines": {
-    "npm": "^9"
-  },
   "overrides": {
     "underscore": "^1.12.1",
     "react": "^17",
