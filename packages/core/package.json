@@ -281,7 +281,7 @@
     "memorystream": "^0.3.1",
     "mini-css-extract-plugin": "^2.7.2",
     "mock-http": "^1.1.0",
-    "monaco-editor": "^0.37.1",
+    "monaco-editor": "^0.38.0",
     "monaco-editor-webpack-plugin": "^7.0.1",
     "node-gyp": "^8.3.0",
     "node-loader": "^2.0.0",
@@ -358,7 +358,7 @@
     "@types/tcp-port-used": "^1.0.1",
     "@types/url-parse": "^1.4.8",
     "@types/uuid": "^8.3.4",
-    "monaco-editor": "^0.37.1",
+    "monaco-editor": "^0.38.0",
     "react-select": "^5.7.0",
     "typed-emitter": "^1.4.0",
     "xterm-addon-fit": "^0.5.0"
