@@ -44,13 +44,11 @@ export class Terminal {
   protected readonly api: TerminalApi;
 
   private get elem() {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.xterm.element!;
+    return this.xterm.element;
   }
 
   private get viewport() {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.elem.querySelector(".xterm-viewport")!;
+    return this.elem?.querySelector(".xterm-viewport");
   }
 
   attachTo(parentElem: HTMLElement) {
@@ -99,8 +97,10 @@ export class Terminal {
     const onDataHandler = this.xterm.onData(this.onData);
     const clearOnce = once(this.onClear);
 
-    this.viewport.addEventListener("scroll", this.onScroll);
-    this.elem.addEventListener("contextmenu", this.onContextMenu);
+    const { viewport, elem } = this;
+
+    viewport?.addEventListener("scroll", this.onScroll);
+    elem?.addEventListener("contextmenu", this.onContextMenu);
     this.api.once("ready", clearOnce);
     this.api.once("connected", clearOnce);
     this.api.on("data", this.onApiData);
@@ -128,7 +128,8 @@ export class Terminal {
       () => this.fitAddon.dispose(),
       () => this.api.removeAllListeners(),
       () => window.removeEventListener("resize", this.onResize),
-      () => this.elem.removeEventListener("contextmenu", this.onContextMenu),
+      () => elem?.removeEventListener("contextmenu", this.onContextMenu),
+      () => viewport?.removeEventListener("scroll", this.onScroll),
       this.xterm.onResize(({ cols, rows }) => {
         this.api.sendTerminalSize(cols, rows);
       }),
@@ -161,7 +162,7 @@ export class Terminal {
   };
 
   onScroll = () => {
-    this.scrollPos = this.viewport.scrollTop;
+    this.scrollPos = this.viewport?.scrollTop ?? 0;
   };
 
   onClear = () => {
@@ -176,7 +177,12 @@ export class Terminal {
   onActivate = () => {
     this.fit();
     setTimeout(() => this.focus(), 250); // delay used to prevent focus on active tab
-    this.viewport.scrollTop = this.scrollPos; // restore last scroll position
+
+    const { viewport } = this;
+
+    if (viewport) {
+      viewport.scrollTop = this.scrollPos; // restore last scroll position
+    }
   };
 
   onContextMenu = () => {

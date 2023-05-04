@@ -74,9 +74,12 @@ export function TreeItem(props: TreeItemProps) {
 
   return (
     <li
-      className={cssNames(classes.root, optionalCssNames, styles.treeItem, {
-        [styles.selected]: selected,
-      })}
+      className={cssNames(
+        classes.root,
+        optionalCssNames,
+        styles.treeItem,
+        selected && styles.selected,
+      )}
       role="treeitem"
       data-testid={dataTestId}
       onClick={onClick}
@@ -145,9 +148,11 @@ export function TreeGroup(props: TreeGroupProps) {
         </div>
       </div>
       <ul
-        className={cssNames(classes.contents, styles.contents, {
-          [styles.expanded]: expanded,
-        })}
+        className={cssNames(
+          classes.contents,
+          styles.contents,
+          expanded && styles.expanded,
+        )}
       >
         {children}
       </ul>

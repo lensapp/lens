@@ -10,7 +10,7 @@ import { Badge } from "../badge";
 import { KubeObject } from "@k8slens/kube-object";
 
 export interface DrawerItemLabelsProps extends DrawerItemProps {
-  labels: string[] | Partial<Record<string, string>>;
+  labels?: string[] | Partial<Record<string, string>>;
 }
 
 export function DrawerItemLabels(props: DrawerItemLabelsProps) {

@@ -7,7 +7,7 @@ import { computed, observable, makeObservable, action, runInAction } from "mobx"
 import { ipcRendererOn } from "../../../../common/ipc";
 import type { CatalogCategory, CatalogEntity, CatalogEntityData, CatalogCategoryRegistry, CatalogEntityKindData } from "../../../../common/catalog";
 import type { Disposer } from "@k8slens/utilities";
-import { iter } from "@k8slens/utilities";
+import { isDefined, isString, iter } from "@k8slens/utilities";
 import { once } from "lodash";
 import { CatalogRunEvent } from "../../../../common/catalog/catalog-run-event";
 import { ipcRenderer } from "electron";
@@ -60,7 +60,7 @@ export class CatalogEntityRegistry {
     // If the entity was not found but there are rawEntities to be processed,
     // try to process them and return the entity.
     // This might happen if an extension registered a new Catalog category.
-    if (this.activeEntityId && !entity && this.rawEntities.length > 0) {
+    if (this.activeEntityId.get() && !entity && this.rawEntities.length > 0) {
       this.processRawEntities();
 
       return this.getActiveEntityById();
@@ -70,8 +70,8 @@ export class CatalogEntityRegistry {
   }
 
   set activeEntity(raw: CatalogEntity | string | undefined) {
-    if (raw) {
-      const id = typeof raw === "string"
+    if (isDefined(raw)) {
+      const id = isString(raw)
         ? raw
         : raw.getId();
 

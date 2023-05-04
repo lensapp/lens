@@ -48,14 +48,8 @@ const requestMetricsInjectable = getInjectable({
     function requestMetrics<Keys extends string>(query: Record<Keys, Partial<Record<string, string>>>, params?: RequestMetricsParams): Promise<Record<Keys, MetricData>>;
     async function requestMetrics(metricsQuery: string | string[] | Partial<Record<string, Partial<Record<string, string>>>>, params: RequestMetricsParams = {}): Promise<MetricData | MetricData[] | Partial<Record<string, MetricData>>> {
       const { range = 3600, step = 60, namespace } = params;
-      let { start, end } = params;
-
-      if (!start && !end) {
-        const now = getSecondsFromUnixEpoch();
-
-        start = now - range;
-        end = now;
-      }
+      const now = getSecondsFromUnixEpoch();
+      const { start = now - range, end = now } = params;
 
       return apiBase.post("/metrics", {
         data: metricsQuery,

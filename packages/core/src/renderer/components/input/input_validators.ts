@@ -59,6 +59,10 @@ export function isAsyncValidator(validator: InputValidator): validator is AsyncI
   return typeof validator.debounce === "number";
 }
 
+export function isSyncValidator(validator: InputValidator): validator is SyncInputValidator {
+  return typeof validator.debounce !== "number";
+}
+
 /**
  * A helper function to create an {@link AsyncInputValidator}
  */
@@ -106,17 +110,17 @@ export function unionInputValidatorsAsync(
     debounce: longestDebounce,
     validate: async (value, props) => {
       for (const validator of validators) {
-        if (isAsyncValidator(validator)) {
+        if (isSyncValidator(validator)) {
+          if (validator.validate(value, props)) {
+            return;
+          }
+        } else {
           try {
             await validator.validate(value, props);
 
             return;
           } catch {
             // Do nothing
-          }
-        } else {
-          if (validator.validate(value, props)) {
-            return;
           }
         }
       }

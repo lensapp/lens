@@ -55,15 +55,11 @@ const toItemInjectablesFor = (extension: LensMainExtension, withErrorLoggingFor:
         separator: registration.type === "separator",
 
         label: computed(() => {
-          if (!registration.label) {
-            return "";
-          }
-
           if (isString(registration.label)) {
             return registration.label;
           }
 
-          return registration.label.get();
+          return registration.label?.get() ?? "";
         }),
 
         tooltip: registration.toolTip,

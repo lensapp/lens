@@ -25,9 +25,10 @@ const NonInjectedWindowControls = ({
   minimizeWindow,
 }: Dependencies) => (
   <div
-    className={cssNames(styles.windowButtons, {
-      [styles.linuxButtons]: isLinux,
-    })}
+    className={cssNames(
+      styles.windowButtons,
+      isLinux && styles.linuxButtons,
+    )}
   >
     <div
       className={styles.minimize}

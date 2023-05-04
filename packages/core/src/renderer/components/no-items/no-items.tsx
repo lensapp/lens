@@ -7,7 +7,7 @@ import "./no-items.scss";
 
 import React from "react";
 import type { IClassName, StrictReactNode } from "@k8slens/utilities";
-import { cssNames } from "@k8slens/utilities";
+import { isTruthy, cssNames } from "@k8slens/utilities";
 
 export interface NoItemsProps {
   className?: IClassName;
@@ -20,7 +20,7 @@ export function NoItems(props: NoItemsProps) {
   return (
     <div className={cssNames("NoItems flex box grow", className)}>
       <div className="box center">
-        {children || "Item list is empty"}
+        {isTruthy(children) ? children : "Item list is empty"}
       </div>
     </div>
   );

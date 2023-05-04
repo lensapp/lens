@@ -40,10 +40,11 @@ const NonInjectedUpdateButton = observer(({ warningLevel, update, id }: UpdateBu
         data-testid="update-button"
         data-warning-level={level}
         id={buttonId}
-        className={cssNames(styles.updateButton, {
-          [styles.warningHigh]: level === "high",
-          [styles.warningMedium]: level === "medium",
-        })}
+        className={cssNames(
+          styles.updateButton,
+          level === "high" && styles.warningHigh,
+          level === "medium" && styles.warningMedium,
+        )}
       >
         Update
         <Icon material="arrow_drop_down" className={styles.icon}/>

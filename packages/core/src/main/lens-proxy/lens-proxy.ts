@@ -200,7 +200,7 @@ export class LensProxy {
 
       this.dependencies.logger.error(`[LENS-PROXY]: http proxy errored for cluster: ${String(error)}`, { url: req.url });
 
-      if (target) {
+      if (target !== undefined) {
         this.dependencies.logger.debug(`Failed proxy to target: ${JSON.stringify(target, null, 2)}`);
 
         if (req.method === "GET" && (!res.statusCode || res.statusCode >= 500)) {
@@ -245,12 +245,10 @@ export class LensProxy {
       const kubeAuthProxyServer = this.dependencies.getKubeAuthProxyServer(cluster);
       const proxyTarget = await kubeAuthProxyServer.getApiTarget(isLongRunningRequest(req.url));
 
-      if (proxyTarget) {
-        return this.dependencies.proxy.web(req, res, proxyTarget);
-      }
+      this.dependencies.proxy.web(req, res, proxyTarget);
+    } else {
+      res.setHeader("Content-Security-Policy", this.dependencies.contentSecurityPolicy);
+      await this.dependencies.router.route(cluster, req, res);
     }
-
-    res.setHeader("Content-Security-Policy", this.dependencies.contentSecurityPolicy);
-    await this.dependencies.router.route(cluster, req, res);
   }
 }

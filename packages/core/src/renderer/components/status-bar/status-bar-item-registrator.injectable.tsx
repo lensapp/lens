@@ -14,6 +14,7 @@ import React from "react";
 import { getRandomIdInjectionToken } from "@k8slens/random";
 import { loggerInjectionToken } from "@k8slens/logger";
 import type { Logger } from "@k8slens/logger";
+import { isTruthy } from "@k8slens/utilities";
 
 const statusBarItemRegistratorInjectable = getInjectable({
   id: "status-bar-item-registrator",
@@ -39,7 +40,7 @@ const toItemInjectableFor = (extension: LensRendererExtension, getRandomId: () =
     let component: React.ComponentType;
     let position: "left" | "right";
 
-    if (registration?.item) {
+    if (isTruthy(registration.item)) {
       const { item } = registration;
 
       position = "right";

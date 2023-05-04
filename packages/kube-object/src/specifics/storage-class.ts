@@ -37,9 +37,9 @@ export class StorageClass extends KubeObject<ClusterScopedMetadata, void, void> 
 
   allowedTopologies: TopologySelectorTerm[];
 
-  mountOptions: string[];
+  mountOptions?: string[];
 
-  parameters: Partial<Record<string, string>>;
+  parameters?: Partial<Record<string, string>>;
 
   provisioner: string;
 

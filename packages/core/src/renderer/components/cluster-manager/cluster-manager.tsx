@@ -16,7 +16,7 @@ import { TopBar } from "../layout/top-bar/top-bar";
 import type { IComputedValue } from "mobx";
 import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
 import welcomeRouteInjectable from "../../../common/front-end-routing/routes/welcome/welcome-route.injectable";
-import { buildURL } from "@k8slens/utilities";
+import { buildURL, isDefined } from "@k8slens/utilities";
 import type { WatchForGeneralEntityNavigation } from "../../api/helpers/watch-for-general-entity-navigation.injectable";
 import watchForGeneralEntityNavigationInjectable from "../../api/helpers/watch-for-general-entity-navigation.injectable";
 import currentPathInjectable from "../../routes/current-path.injectable";
@@ -39,7 +39,7 @@ class NonInjectedClusterManager extends React.Component<Dependencies> {
   renderMainComponent() {
     const Component = this.props.currentRouteComponent.get();
 
-    if (Component) {
+    if (isDefined(Component)) {
       return <Component />;
     }
 

@@ -9,6 +9,7 @@ import type { LensRendererExtension } from "../../../../extensions/lens-renderer
 import { pipeline } from "@ogre-tools/fp";
 import { topBarItemOnRightSideInjectionToken } from "../../../../renderer/components/layout/top-bar/top-bar-items/top-bar-item-injection-token";
 import { computed } from "mobx";
+import type { PartialDeep } from "type-fest";
 
 const legacyExtensionApiRegistratorForTopBarItemsInjectable = getInjectable({
   id: "legacy-extension-api-registrator-for-top-bar-items",
@@ -19,7 +20,7 @@ const legacyExtensionApiRegistratorForTopBarItemsInjectable = getInjectable({
     return pipeline(
       extension.topBarItems,
 
-      reject((registration) => !registration?.components?.Item),
+      reject((registration) => !(registration as PartialDeep<typeof registration>)?.components?.Item),
 
       (validTopBarRegistrations) =>
         validTopBarRegistrations.map((registration, index) => {

@@ -54,7 +54,7 @@ export interface ClusterLensApiRequest<Path extends string> extends LensApiReque
 export interface LensApiResult<Response> {
   statusCode?: number;
   response?: Response;
-  error?: unknown;
+  error?: string | Error;
   contentType?: LensApiResultContentType;
   headers?: Partial<Record<string, string>>;
   proxy?: httpProxy;

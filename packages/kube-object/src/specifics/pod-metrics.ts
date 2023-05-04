@@ -19,7 +19,7 @@ export interface PodMetricsContainerUsage {
 
 export interface PodMetricsContainer {
   name: string;
-  usage: PodMetricsContainerUsage;
+  usage?: PodMetricsContainerUsage;
 }
 
 export class PodMetrics extends KubeObject<NamespaceScopedMetadata, void, void> {

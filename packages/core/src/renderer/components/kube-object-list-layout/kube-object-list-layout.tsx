@@ -76,7 +76,7 @@ const matchesApiFor = (api: SubscribableStore["api"]) => (column: GeneralKubeObj
 
 const getLoadErrorMessage = (error: unknown): string => {
   if (error instanceof Error) {
-    if (error.cause) {
+    if (Boolean(error.cause)) {
       return `${error.message}: ${getLoadErrorMessage(error.cause)}`;
     }
 
@@ -166,7 +166,19 @@ class NonInjectedKubeObjectListLayout<
       sortingCallbacks = {},
       ...layoutProps
     } = this.props;
-    const resourceName = this.props.resourceName || ResourceNames[ResourceKindMap[store.api.kind]] || store.api.kind;
+    const resourceName = (() => {
+      if (this.props.resourceName) {
+        return this.props.resourceName;
+      }
+
+      const kubeResource = ResourceKindMap[store.api.kind];
+
+      if (kubeResource) {
+        return ResourceNames[kubeResource];
+      }
+
+      return store.api.kind;
+    })();
     const targetColumns = [
       ...(columns ?? []),
       ...generalColumns.filter(matchesApiFor(store.api)),

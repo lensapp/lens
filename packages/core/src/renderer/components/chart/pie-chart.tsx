@@ -80,7 +80,7 @@ const NonInjectedPieChart = observer(({
           return false;
         }
 
-        const { data = [] } = datasets[datasetIndex];
+        const { data = [] } = datasets[datasetIndex] ?? {};
 
         if (datasets.length === 1) return true;
 

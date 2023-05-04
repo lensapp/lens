@@ -10,7 +10,7 @@ import { autorun,  action, observable } from "mobx";
 import type { KubeApi } from "@k8slens/kube-api";
 import type { KubeObject, ObjectReference } from "@k8slens/kube-object";
 import { parseKubeApi, createKubeApiURL } from "@k8slens/kube-api";
-import { getOrInsertWith, iter } from "@k8slens/utilities";
+import { getOrInsertWith, isDefined, iter } from "@k8slens/utilities";
 import type { CreateCustomResourceStore } from "./create-custom-resource-store.injectable";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -142,7 +142,7 @@ export class ApiManager {
    */
   getStore<Store extends KubeObjectStore>(api: string | KubeApi): Store | undefined ;
   getStore(apiOrBase: string | KubeApi | undefined): KubeObjectStore | undefined {
-    if (!apiOrBase) {
+    if (!isDefined(apiOrBase) || apiOrBase === "") {
       return undefined;
     }
 
@@ -152,7 +152,7 @@ export class ApiManager {
 
     const api = apiBase && this.getApi(apiBase);
 
-    if (!api) {
+    if (!isDefined(api) || api === "") {
       return undefined;
     }
 

@@ -46,10 +46,6 @@ class NonInjectedDeploymentDetails extends React.Component<KubeObjectDetailsProp
   render() {
     const { object: deployment, replicaSetStore, deploymentStore, logger } = this.props;
 
-    if (!deployment) {
-      return null;
-    }
-
     if (!(deployment instanceof Deployment)) {
       logger.error("[DeploymentDetails]: passed object that is not an instanceof Deployment", deployment);
 

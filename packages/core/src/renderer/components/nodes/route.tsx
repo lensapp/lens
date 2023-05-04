@@ -6,7 +6,7 @@
 import "./nodes.scss";
 import React from "react";
 import { observer } from "mobx-react";
-import { bytesToUnits, cssNames, interval } from "@k8slens/utilities";
+import { bytesToUnits, cssNames, hasLengthGreaterThan, interval } from "@k8slens/utilities";
 import { TabLayout } from "../layout/tab-layout-2";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { Node } from "@k8slens/kube-object";
@@ -94,7 +94,7 @@ class NonInjectedNodesRoute extends React.Component<Dependencies> {
           || nodeName === kubernetes_node
         ));
 
-        return result ? parseFloat(result.values.slice(-1)[0][1]) : 0;
+        return result ? parseFloat(result.values.slice(-1)[0]?.[1] ?? "") : 0;
       } catch (e) {
         return 0;
       }
@@ -104,7 +104,7 @@ class NonInjectedNodesRoute extends React.Component<Dependencies> {
   private renderUsage({ node, title, metricNames, formatters }: UsageArgs) {
     const metrics = this.getLastMetricValues(node, metricNames);
 
-    if (!metrics || metrics.length < 2) {
+    if (!hasLengthGreaterThan(metrics, 2)) {
       return <LineProgress value={0}/>;
     }
 

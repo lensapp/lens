@@ -199,7 +199,8 @@ const RawIcon = (props: IconProps & Dependencies) => {
     logger,
     ...elemProps
   } = props;
-  const isInteractive = interactive ?? !!(onClick || href || link);
+  const isInteractive =
+    interactive ?? !!(onClick || href || link !== undefined);
 
   const boundOnClick = (event: React.MouseEvent) => {
     if (!disabled) {
@@ -235,16 +236,17 @@ const RawIcon = (props: IconProps & Dependencies) => {
         active,
         focusable,
       },
-      !size ? { smallest, small, big } : {}
+      size === undefined ? { smallest, small, big } : {}
     ),
     onClick: isInteractive ? boundOnClick : undefined,
     onKeyDown: isInteractive ? boundOnKeyDown : undefined,
     tabIndex: isInteractive && focusable && !disabled ? 0 : undefined,
-    style: size
-      ? ({
-          "--size": `${size}${isNumber(size) ? "px" : ""}`,
-        } as React.CSSProperties)
-      : undefined,
+    style:
+      size !== undefined
+        ? ({
+            "--size": `${size}${isNumber(size) ? "px" : ""}`,
+          } as React.CSSProperties)
+        : undefined,
     ...elemProps,
   };
 
@@ -279,7 +281,7 @@ const RawIcon = (props: IconProps & Dependencies) => {
   );
 
   // render icon type
-  if (link) {
+  if (link !== undefined) {
     const { className, children } = iconProps;
 
     return (

@@ -101,6 +101,7 @@ export class ExtensionLoader {
   ));
 
   async init() {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (ipcMain) {
       await this.initMain();
     } else {
@@ -211,6 +212,7 @@ export class ExtensionLoader {
   }
 
   broadcastExtensions() {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     const channel = ipcRenderer
       ? extensionLoaderFromRendererChannel
       : extensionLoaderFromMainChannel;

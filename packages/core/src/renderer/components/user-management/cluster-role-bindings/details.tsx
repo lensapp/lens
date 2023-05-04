@@ -69,10 +69,6 @@ class NonInjectedClusterRoleBindingDetails extends React.Component<KubeObjectDet
     const { selectedSubjects } = this;
     const { object: clusterRoleBinding, openClusterRoleBindingDialog } = this.props;
 
-    if (!clusterRoleBinding) {
-      return null;
-    }
-
     if (!(clusterRoleBinding instanceof ClusterRoleBinding)) {
       return null;
     }

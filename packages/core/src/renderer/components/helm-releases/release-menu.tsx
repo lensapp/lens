@@ -46,12 +46,9 @@ class NonInjectedHelmReleaseMenu extends React.Component<HelmReleaseMenuProps & 
   renderContent() {
     const { release, toolbar } = this.props;
 
-    if (!release) return null;
-    const hasRollback = release && release.getRevision() > 1;
-
     return (
       <>
-        {hasRollback && (
+        {(release.getRevision() > 1) && (
           <MenuItem onClick={this.rollback}>
             <Icon
               material="history"

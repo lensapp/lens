@@ -62,7 +62,7 @@ class NonInjectedServices extends React.Component<Dependencies> {
             [columnId.name]: service => service.getName(),
             [columnId.namespace]: service => service.getNs(),
             [columnId.selector]: service => service.getSelector(),
-            [columnId.ports]: service => (service.spec.ports || []).map(({ port }) => port)[0],
+            [columnId.ports]: service => service.getPorts().map(({ port }) => port)[0],
             [columnId.clusterIp]: service => service.getClusterIp(),
             [columnId.type]: service => service.getType(),
             [columnId.age]: service => -service.getCreationTimestamp(),

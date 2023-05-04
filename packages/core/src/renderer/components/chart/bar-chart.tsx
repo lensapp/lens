@@ -137,7 +137,7 @@ const NonInjectedBarChart = observer(({
           typeof datasetIndex === "number"
             ? {
               borderColor: "darkgray",
-              backgroundColor: datasets[datasetIndex].borderColor as string,
+              backgroundColor: datasets[datasetIndex]?.borderColor as string,
             }
             : {
               borderColor: "darkgray",
@@ -181,7 +181,7 @@ const tooltipCallbackWith = (precision: number): ChartTooltipCallback["label"] =
       return "";
     }
 
-    const { label, data } = datasets[datasetIndex];
+    const { label, data } = datasets[datasetIndex] ?? {};
 
     if (!label || !data) {
       return "<unknown>";

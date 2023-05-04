@@ -7,7 +7,7 @@ import "./wizard-layout.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { IClassName, StrictReactNode } from "@k8slens/utilities";
-import { cssNames } from "@k8slens/utilities";
+import { isTruthy, cssNames } from "@k8slens/utilities";
 
 export interface WizardLayoutProps extends React.DOMAttributes<Element> {
   className?: IClassName;
@@ -29,7 +29,7 @@ export class WizardLayout extends React.Component<WizardLayoutProps> {
 
     return (
       <div {...props} className={cssNames("WizardLayout", { centered }, className)}>
-        {header && (
+        {isTruthy(header) && (
           <div className={cssNames("head-col flex gaps align-center", headerClass)}>
             {header}
           </div>
@@ -39,7 +39,7 @@ export class WizardLayout extends React.Component<WizardLayoutProps> {
             {children}
           </div>
         </div>
-        {infoPanel && (
+        {isTruthy(infoPanel) && (
           <div className={cssNames("info-col flex column gaps", infoPanelClass)}>
             {infoPanel}
           </div>

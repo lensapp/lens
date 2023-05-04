@@ -77,7 +77,7 @@ export class PodStore extends KubeObjectStore<Pod, PodApi> {
       let cpu = "0";
       let memory = "0";
 
-      if (metric && metric.usage) {
+      if (metric?.usage) {
         cpu = metric.usage.cpu || "0";
         memory = metric.usage.memory || "0";
       }

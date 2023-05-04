@@ -9,6 +9,7 @@ import type { CreateStorage } from "../../../utils/create-storage/create-storage
 import type { TabId } from "../dock/store";
 import autoBind from "auto-bind";
 import { toJS } from "../../../../common/utils";
+import { isTruthy } from "@k8slens/utilities";
 
 export interface DockTabStoreOptions {
   autoInit?: boolean; // load data from storage when `storageKey` is provided and bind events, default: true
@@ -59,7 +60,7 @@ export class DockTabStore<T> {
 
   findTabIdFromData(inspector: (val: T) => unknown): TabId | undefined {
     for (const [tabId, data] of this.data) {
-      if (inspector(data)) {
+      if (isTruthy(inspector(data))) {
         return tabId;
       }
     }

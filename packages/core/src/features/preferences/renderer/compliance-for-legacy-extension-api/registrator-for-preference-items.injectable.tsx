@@ -113,11 +113,10 @@ const registratorForPreferenceItemsInjectable = getInjectable({
     const items = extension.appPreferences.map((registration, i) => {
       const itemId = `${commonId}-item-${registration.id ?? i}`;
 
-      const itemIsInSpecialTab =
-        registration.showInPreferencesTab &&
-        ["telemetry", "application"].includes(
-          registration.showInPreferencesTab,
-        );
+      const itemIsInSpecialTab = (
+        registration.showInPreferencesTab === "telemetry"
+        || registration.showInPreferencesTab === "application"
+      );
 
       return getInjectable({
         id: itemId,

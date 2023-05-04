@@ -6,7 +6,7 @@
 import type { IComputedValue, IReactionDisposer } from "mobx";
 import { action, comparer, computed, makeObservable, reaction } from "mobx";
 import type { StorageLayer } from "../../utils/storage-helper";
-import { noop, toggle } from "@k8slens/utilities";
+import { isTruthy, noop, toggle } from "@k8slens/utilities";
 import type { KubeObjectStoreDependencies, KubeObjectStoreLoadingParams } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { NamespaceApi } from "@k8slens/kube-api";
@@ -115,7 +115,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
 
   @action
   clearSelected(namespaces?: string | string[]) {
-    if (namespaces) {
+    if (isTruthy(namespaces)) {
       const resettingNamespaces = [namespaces].flat();
       const newNamespaces = this.dependencies.storage.get()?.filter(ns => !resettingNamespaces.includes(ns));
 

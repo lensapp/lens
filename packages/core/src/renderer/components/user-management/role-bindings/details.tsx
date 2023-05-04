@@ -62,10 +62,6 @@ class NonInjectedRoleBindingDetails extends React.Component<KubeObjectDetailsPro
     const { selectedSubjects } = this;
     const { object: roleBinding, openRoleBindingDialog } = this.props;
 
-    if (!roleBinding) {
-      return null;
-    }
-
     if (!(roleBinding instanceof RoleBinding)) {
       return null;
     }

@@ -43,10 +43,6 @@ class NonInjectedStorageClassDetails extends React.Component<KubeObjectDetailsPr
   render() {
     const { object: storageClass, storageClassStore } = this.props;
 
-    if (!storageClass) {
-      return null;
-    }
-
     if (!(storageClass instanceof StorageClass)) {
       this.props.logger.error("[StorageClassDetails]: passed object that is not an instanceof StorageClass", storageClass);
 

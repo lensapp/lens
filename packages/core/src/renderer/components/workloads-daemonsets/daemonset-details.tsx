@@ -45,10 +45,6 @@ class NonInjectedDaemonSetDetails extends React.Component<KubeObjectDetailsProps
   render() {
     const { object: daemonSet, daemonSetStore, logger } = this.props;
 
-    if (!daemonSet) {
-      return null;
-    }
-
     if (!(daemonSet instanceof DaemonSet)) {
       logger.error("[DaemonSetDetails]: passed object that is not an instanceof DaemonSet", daemonSet);
 

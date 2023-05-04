@@ -69,10 +69,10 @@ class NonInjectedHotbarEntityIcon extends React.Component<HotbarEntityIconProps 
 
     return (
       <div
-        className={cssNames(styles.led, {
-          // TODO: make it more generic
-          [styles.online]: this.props.entity.status.phase === LensKubernetesClusterStatus.CONNECTED,
-        })}
+        className={cssNames(
+          styles.led,
+          (this.props.entity.status.phase === LensKubernetesClusterStatus.CONNECTED) && styles.online,
+        )}
       />
     );
   }
@@ -107,7 +107,6 @@ class NonInjectedHotbarEntityIcon extends React.Component<HotbarEntityIconProps 
         className={className}
         active={this.isActive(entity)}
         onMenuOpen={() => this.onMenuOpen()}
-        disabled={!entity}
         menuItems={this.menuItems}
         tooltip={(
           entity.metadata.source

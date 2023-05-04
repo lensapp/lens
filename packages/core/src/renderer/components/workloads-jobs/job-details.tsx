@@ -46,10 +46,6 @@ class NonInjectedJobDetails extends React.Component<KubeObjectDetailsProps & Dep
   render() {
     const { object: job, jobStore, logger } = this.props;
 
-    if (!job) {
-      return null;
-    }
-
     if (!(job instanceof Job)) {
       logger.error("[JobDetails]: passed object that is not an instanceof Job", job);
 

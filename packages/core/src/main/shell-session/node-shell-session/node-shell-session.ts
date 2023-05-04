@@ -16,6 +16,7 @@ import type { CreateKubeApi } from "../../../common/k8s-api/create-kube-api.inje
 import { initialNodeShellImage } from "../../../common/cluster-types";
 import type { LoadProxyKubeconfig } from "../../cluster/load-proxy-kubeconfig.injectable";
 import type { Pod } from "@k8slens/kube-object";
+import { isDefined } from "@k8slens/utilities";
 
 export interface NodeShellSessionArgs extends ShellSessionArgs {
   nodeName: string;
@@ -67,7 +68,7 @@ export class NodeShellSession extends ShellSession {
 
       this.send({
         type: TerminalChannels.STDOUT,
-        data: `Error occurred: ${get(error, "response.body.message", error ? String(error) : "unknown error")}`,
+        data: `Error occurred: ${get(error, "response.body.message", isDefined(error) ? String(error) : "unknown error")}`,
       });
 
       throw new ShellOpenError(

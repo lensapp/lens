@@ -273,7 +273,7 @@ export type HorizontalPodAutoscalerMetricStatus =
   | OptionVariant<"ContainerResource", BaseHorizontalPodAutoscalerMetricStatus, "containerResource">;
 
 export interface HorizontalPodAutoscalerSpec {
-  scaleTargetRef: CrossVersionObjectReference;
+  scaleTargetRef?: CrossVersionObjectReference;
   minReplicas?: number;
   maxReplicas: number;
   metrics?: HorizontalPodAutoscalerMetricSpec[];

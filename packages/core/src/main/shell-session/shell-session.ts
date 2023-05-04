@@ -271,7 +271,7 @@ export abstract class ShellSession {
         }
       })
       .once("close", code => {
-        this.dependencies.logger.info(`[SHELL-SESSION]: websocket for ${this.terminalId} closed with code=${WebSocketCloseEvent[code]}(${code})`, { cluster: this.cluster.getMeta() });
+        this.dependencies.logger.info(`[SHELL-SESSION]: websocket for ${this.terminalId} closed with code=${String(WebSocketCloseEvent[code])}(${code})`, { cluster: this.cluster.getMeta() });
 
         const stopShellSession = this.running
           && (

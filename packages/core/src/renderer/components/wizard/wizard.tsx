@@ -6,7 +6,7 @@
 import "./wizard.scss";
 import React from "react";
 import type { StrictReactNode } from "@k8slens/utilities";
-import { cssNames, prevDefault } from "@k8slens/utilities";
+import { cssNames, isTruthy, prevDefault } from "@k8slens/utilities";
 import { Button } from "@k8slens/button";
 import { Stepper } from "../stepper";
 import { SubTitle } from "../layout/sub-title";
@@ -81,7 +81,7 @@ export class Wizard<D> extends React.Component<WizardProps<D>, State> {
   }
 
   protected getValidStep(step: number) {
-    return Math.min(Math.max(1, step), this.steps.length) || 1;
+    return Math.min(Math.max(1, step), this.steps.length);
   }
 
   isFirstStep = () => this.step === 1;
@@ -102,7 +102,11 @@ export class Wizard<D> extends React.Component<WizardProps<D>, State> {
   render() {
     const { className, title, header, hideSteps } = this.props;
     const steps = this.steps.map(stepElem => ({ title: stepElem.props.title }));
-    const step = React.cloneElement(this.steps[this.step - 1]);
+    const rawStep = this.steps[this.step - 1];
+
+    if (!rawStep) {
+      return undefined;
+    }
 
     return (
       <div className={cssNames("Wizard", className)}>
@@ -111,7 +115,7 @@ export class Wizard<D> extends React.Component<WizardProps<D>, State> {
           {title ? <SubTitle title={title} /> : null}
           {!hideSteps && steps.length > 1 ? <Stepper steps={steps} step={this.step} /> : null}
         </div>
-        {step}
+        {React.cloneElement(rawStep)}
       </div>
     );
   }
@@ -256,7 +260,7 @@ export class WizardStep<D> extends React.Component<WizardStepProps<D>, WizardSte
             <Button
               className="back-btn"
               plain
-              label={prevLabel || (isFirst?.() ? "Cancel" : "Back")}
+              label={isTruthy(prevLabel) ? prevLabel : (isFirst?.() ? "Cancel" : "Back")}
               hidden={hideBackBtn}
               onClick={this.prev}
               data-testid={testIdForPrev}
@@ -264,7 +268,7 @@ export class WizardStep<D> extends React.Component<WizardStepProps<D>, WizardSte
             <Button
               primary
               type="submit"
-              label={nextLabel || (isLast?.() ? "Submit" : "Next")}
+              label={isTruthy(nextLabel) ? nextLabel : (isLast?.() ? "Submit" : "Next")}
               hidden={hideNextBtn}
               waiting={waiting ?? this.state.waiting}
               disabled={disabledNext}

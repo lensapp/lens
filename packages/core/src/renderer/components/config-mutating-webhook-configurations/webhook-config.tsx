@@ -144,13 +144,11 @@ export const WebhookConfig: React.FC<WebhookProps> = ({ webhook }) => {
               {" "}
               {rule.operations.join(", ")}
             </div>
-            {rule.resources && (
-              <div>
-                Resources:
-                {" "}
-                {rule.resources.join(", ")}
-              </div>
-            )}
+            <div>
+              Resources:
+              {" "}
+              {rule.resources?.join(", ")}
+            </div>
             {rule.scope && (
               <div>
                 Scope:

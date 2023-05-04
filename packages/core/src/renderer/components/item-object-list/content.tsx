@@ -210,7 +210,7 @@ class NonInjectedItemListLayoutContent<
     const onConfirm = isFunction(removeItems)
       ? () => removeItems.apply(store, [selectedItems])
       : isFunction(removeSelectedItems)
-        ? removeSelectedItems.bind(store)
+        ? () => removeSelectedItems.apply(store)
         : noop;
 
     openConfirmDialog({
@@ -328,7 +328,7 @@ class NonInjectedItemListLayoutContent<
           {() => (
             <AddRemoveButtons
               onRemove={
-                (store.removeItems || store.removeSelectedItems) && selectedItems.length > 0
+                (Boolean(store.removeItems) || Boolean(store.removeSelectedItems)) && selectedItems.length > 0
                   ? () => this.removeItemsDialog(selectedItems)
                   : undefined
               }

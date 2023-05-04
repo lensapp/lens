@@ -38,12 +38,13 @@ import roleBindingApiInjectable from "../../common/k8s-api/endpoints/role-bindin
 import customResourceDefinitionApiInjectable from "../../common/k8s-api/endpoints/custom-resource-definition.api.injectable";
 import { shouldShowResourceInjectionToken } from "../../features/cluster/showing-kube-resources/common/allowed-resources-injection-token";
 import requestMetricsInjectable from "../../common/k8s-api/endpoints/metrics.api/request-metrics.injectable";
+import { maybeGet } from "@k8slens/utilities";
 
 export function isAllowedResource(resources: KubeResource | KubeResource[]) {
   const di = getLegacyGlobalDiForExtensionApi();
 
-  return [resources].flat().every((resourceName) => {
-    const resource = apiResourceRecord[resourceName];
+  return [resources].flat().every((resourceName: string) => {
+    const resource = maybeGet(apiResourceRecord, resourceName);
 
     if (!resource) {
       return true;

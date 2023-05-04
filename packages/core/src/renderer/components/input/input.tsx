@@ -8,7 +8,7 @@ import "./input.scss";
 import type { DOMAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 import React from "react";
 import type { StrictReactNode, SingleOrMany } from "@k8slens/utilities";
-import { isReactNode, isString, isFunction, debouncePromise, isPromiseSettledFulfilled, cssNames } from "@k8slens/utilities";
+import { isReactNode, isFalsy, isTruthy, isString, isFunction, debouncePromise, isPromiseSettledFulfilled, cssNames } from "@k8slens/utilities";
 import { Icon } from "@k8slens/icon";
 import type { TooltipProps } from "@k8slens/tooltip";
 import { Tooltip } from "@k8slens/tooltip";
@@ -195,7 +195,13 @@ export class Input extends React.Component<InputProps, State> {
 
             return undefined;
           } catch (error) {
-            return this.getValidatorError(value, validator) || (error instanceof Error ? error.message : String(error));
+            const validationError = this.getValidatorError(value, validator);
+
+            return isTruthy(validationError)
+              ? validationError
+              : error instanceof Error
+                ? error.message
+                : String(error);
           }
         })());
       }
@@ -327,7 +333,7 @@ export class Input extends React.Component<InputProps, State> {
   get showMaxLenIndicator() {
     const { maxLength, multiLine } = this.props;
 
-    return maxLength && multiLine;
+    return Boolean(maxLength && multiLine);
   }
 
   get isUncontrolled() {
@@ -440,12 +446,12 @@ export class Input extends React.Component<InputProps, State> {
         {errors.map((error, i) => <p key={i}>{error}</p>)}
       </div>
     );
-    const componentId = id || showErrorsAsTooltip
+    const componentId = id || isTruthy(showErrorsAsTooltip)
       ? `input_tooltip_id_${uuid.v4()}`
       : undefined;
     let tooltipError: StrictReactNode;
 
-    if (showErrorsAsTooltip && showErrors) {
+    if (isTruthy(showErrorsAsTooltip) && showErrors) {
       const tooltipProps = typeof showErrorsAsTooltip === "object" ? showErrorsAsTooltip : {};
 
       tooltipProps.className = cssNames("InputTooltipError", tooltipProps.className);
@@ -473,7 +479,7 @@ export class Input extends React.Component<InputProps, State> {
           {contentRight}
         </label>
         <div className="input-info flex gaps">
-          {!showErrorsAsTooltip && showErrors && errorsInfo}
+          {(isFalsy(showErrorsAsTooltip) && showErrors) && errorsInfo}
           {this.showMaxLenIndicator && (
             <div className="maxLengthIndicator box right">
               {this.getValue().length}

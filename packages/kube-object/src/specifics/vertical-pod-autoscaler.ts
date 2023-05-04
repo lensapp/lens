@@ -101,7 +101,7 @@ export interface PodUpdatePolicy {
 }
 
 export interface VerticalPodAutoscalerSpec {
-  targetRef: CrossVersionObjectReference;
+  targetRef?: CrossVersionObjectReference;
   updatePolicy?: PodUpdatePolicy;
   resourcePolicy?: PodResourcePolicy;
   recommenders?: VerticalPodAutoscalerRecommenderSelector[];

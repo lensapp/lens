@@ -4,7 +4,7 @@
  */
 
 import * as yaml from "js-yaml";
-import { iter, put, sortBySemverVersion } from "@k8slens/utilities";
+import { isObject, iter, put, sortBySemverVersion } from "@k8slens/utilities";
 import type { HelmRepo } from "../../common/helm/helm-repo";
 import type { HelmChartManagerCache } from "./helm-chart-manager-cache.injectable";
 import type { Logger } from "@k8slens/logger";
@@ -71,11 +71,11 @@ export class HelmChartManager {
     const cacheFileStats = await this.dependencies.stat(this.repo.cacheFilePath);
     const data = yaml.load(cacheFile) as string | number | HelmCacheFile;
 
-    if (!data || typeof data !== "object" || typeof data.entries !== "object") {
+    if (!isObject(data) || !isObject(data.entries)) {
       throw Object.assign(new TypeError("Helm Cache file does not parse correctly"), { file: this.repo.cacheFilePath, data });
     }
 
-    const normalized = normalizeHelmCharts(this.repo.name, data.entries);
+    const normalized = normalizeHelmCharts(this.repo.name, data.entries as RepoHelmChartList);
 
     return put(
       this.dependencies.cache,

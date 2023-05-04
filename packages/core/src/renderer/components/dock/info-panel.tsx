@@ -9,7 +9,7 @@ import React, { Component } from "react";
 import { computed, observable, reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { StrictReactNode } from "@k8slens/utilities";
-import { cssNames } from "@k8slens/utilities";
+import { cssNames, isTruthy } from "@k8slens/utilities";
 import { Button } from "@k8slens/button";
 import { Icon } from "@k8slens/icon";
 import { Spinner } from "../spinner";
@@ -90,7 +90,7 @@ class NonInjectedInfoPanel extends Component<InfoPanelProps & Dependencies> {
     try {
       const result = await this.props.submit?.();
 
-      if (showNotifications && result) {
+      if (showNotifications && isTruthy(result)) {
         this.props.showSuccessNotification(result);
       }
 
@@ -109,7 +109,7 @@ class NonInjectedInfoPanel extends Component<InfoPanelProps & Dependencies> {
   submitAndClose = async () => {
     const result = await this.submit();
 
-    if (result) {
+    if (isTruthy(result)) {
       this.close();
     }
   };

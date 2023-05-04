@@ -11,7 +11,7 @@ export interface PodSecurityPolicySpec {
   allowedCSIDrivers?: {
     name: string;
   }[];
-  allowedCapabilities: string[];
+  allowedCapabilities?: string[];
   allowedFlexVolumes?: {
     driver: string;
   }[];
@@ -61,7 +61,7 @@ export interface PodSecurityPolicySpec {
   };
   seLinux?: {
     rule: string;
-    seLinuxOptions: {
+    seLinuxOptions?: {
       level: string;
       role: string;
       type: string;

@@ -43,10 +43,6 @@ class NonInjectedCatalogEntityDrawerMenu<T extends CatalogEntity> extends React.
   }
 
   getMenuItems(entity: T): React.ReactChild[] {
-    if (!entity) {
-      return [];
-    }
-
     const items = this.menuItems
       .map(this.props.normalizeMenuItem)
       .filter(hasDefiniteField("icon"))

@@ -81,8 +81,9 @@ export interface IngressRule {
 }
 
 export interface IngressSpec {
-  tls: {
-    secretName: string;
+  tls?: {
+    secretName?: string;
+    hosts?: string[];
   }[];
   rules?: IngressRule[];
   // extensions/v1beta1

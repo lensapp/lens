@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import { isTruthy } from "@k8slens/utilities";
 import { getInjectable } from "@ogre-tools/injectable";
 import { globalAgent } from "https";
 import { requestSystemCAsInjectionToken } from "./request-system-cas-token";
@@ -34,7 +35,7 @@ const injectSystemCAsInjectable = getInjectable({
           return globalAgent.options.ca;
         }
 
-        if (globalAgent.options.ca) {
+        if (isTruthy(globalAgent.options.ca)) {
           return [globalAgent.options.ca];
         }
 

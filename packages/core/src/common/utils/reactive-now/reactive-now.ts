@@ -20,15 +20,16 @@ export function reactiveNow(interval?: number | "frame") {
 
   // Note: This is the kludge until https://github.com/mobxjs/mobx-utils/issues/306 is fixed
   const synchronizationIsEnabled = !process.env.JEST_WORKER_ID;
+  let ticker = tickers[interval];
 
-  if (!tickers[interval] || !synchronizationIsEnabled) {
+  if (!ticker || !synchronizationIsEnabled) {
     if (typeof interval === "number")
-      tickers[interval] = createIntervalTicker(interval);
+      ticker = tickers[interval] = createIntervalTicker(interval);
     else
-      tickers[interval] = createAnimationFrameTicker();
+      ticker = tickers[interval] = createAnimationFrameTicker();
   }
 
-  return tickers[interval].current();
+  return ticker.current();
 }
 
 function createIntervalTicker(interval: number) {

@@ -8,7 +8,7 @@ import type TypedEmitter from "typed-emitter";
 import { observable, makeObservable } from "mobx";
 import { once } from "lodash";
 import type { Disposer, StrictReactNode } from "@k8slens/utilities";
-import { iter } from "@k8slens/utilities";
+import { isObject, iter } from "@k8slens/utilities";
 import type { CategoryColumnRegistration, TitleCellProps } from "../../renderer/components/catalog/custom-category-columns";
 import type { Literal, Metadata } from "../cluster-types";
 
@@ -364,15 +364,15 @@ export abstract class CatalogEntity<
   constructor({ metadata, status, spec }: CatalogEntityData<Metadata, Status, Spec>) {
     makeObservable(this);
 
-    if (!metadata || typeof metadata !== "object") {
+    if (!isObject(metadata)) {
       throw new TypeError("CatalogEntity's metadata must be a defined object");
     }
 
-    if (!status || typeof status !== "object") {
+    if (!isObject(status)) {
       throw new TypeError("CatalogEntity's status must be a defined object");
     }
 
-    if (!spec || typeof spec !== "object") {
+    if (!isObject(spec)) {
       throw new TypeError("CatalogEntity's spec must be a defined object");
     }
 

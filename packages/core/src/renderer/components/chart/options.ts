@@ -36,7 +36,7 @@ const memoryLikeOptions: ChartOptions = {
           return "";
         }
 
-        const { label = "", data } = datasets[datasetIndex];
+        const { label = "", data } = datasets[datasetIndex] ?? {};
 
         if (!data) {
           return label;
@@ -78,7 +78,7 @@ export const metricTabOptions: Record<MetricsTab, ChartOptions> = {
             return "";
           }
 
-          const { label = "", data } = datasets[datasetIndex];
+          const { label = "", data } = datasets[datasetIndex] ?? {};
 
           if (!data) {
             return label;
@@ -106,7 +106,7 @@ export const metricTabOptions: Record<MetricsTab, ChartOptions> = {
             return "";
           }
 
-          const { label = "", data } = datasets[datasetIndex];
+          const { label = "", data } = datasets[datasetIndex] ?? {};
 
           if (!data) {
             return label;
@@ -134,7 +134,7 @@ export const metricTabOptions: Record<MetricsTab, ChartOptions> = {
             return "";
           }
 
-          const { label = "", data } = datasets[datasetIndex];
+          const { label = "", data } = datasets[datasetIndex] ?? {};
 
           if (!data) {
             return label;

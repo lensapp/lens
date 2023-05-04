@@ -5,6 +5,8 @@
 
 import type { ExecException, ExecFileException } from "child_process";
 import type { IncomingMessage } from "http";
+import type { Falsy } from "./iter";
+import type { Tuple } from "./tuple";
 
 /**
  * Narrows `val` to include the property `key` (if true is returned)
@@ -75,6 +77,18 @@ export function isRecord<T extends PropertyKey, V>(val: unknown, isKey: (key: un
  */
 export function isTypedArray<T>(val: unknown, isEntry: (entry: unknown) => entry is T): val is T[] {
   return Array.isArray(val) && val.every(isEntry);
+}
+
+export function hasLengthGreaterThan<T, Len extends number>(x: T[], len: Len): x is Tuple<T, Len> & T[] {
+  return x.length > len;
+}
+
+export function isTruthy<T>(x: T): x is Exclude<T, Falsy> {
+  return !!(x as unknown);
+}
+
+export function isFalsy<T>(x: T): x is Extract<T, Falsy> {
+  return !(x as unknown);
 }
 
 /**

@@ -27,12 +27,10 @@ export const ClusterRoleDetails = observer((props: KubeObjectDetailsProps) => {
               <div className="value">{resources.join(", ")}</div>
             </>
           )}
-          {verbs && (
-            <>
-              <div className="name">Verbs</div>
-              <div className="value">{verbs.join(", ")}</div>
-            </>
-          )}
+
+          <div className="name">Verbs</div>
+          <div className="value">{verbs.join(", ")}</div>
+
           {apiGroups && (
             <>
               <div className="name">Api Groups</div>

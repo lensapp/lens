@@ -21,14 +21,17 @@ const getClusterForRequestInjectable = getInjectable({
       // lens-server is connecting to 127.0.0.1:<port>/<uid>
       if (req.url && req.headers.host.startsWith("127.0.0.1")) {
         const clusterId = req.url.split("/")[1];
-        const cluster = getClusterById(clusterId);
 
-        if (cluster) {
-        // we need to swap path prefix so that request is proxied to kube api
-          req.url = req.url.replace(`/${clusterId}`, apiKubePrefix);
+        if (clusterId) {
+          const cluster = getClusterById(clusterId);
+
+          if (cluster) {
+          // we need to swap path prefix so that request is proxied to kube api
+            req.url = req.url.replace(`/${clusterId}`, apiKubePrefix);
+          }
+
+          return cluster;
         }
-
-        return cluster;
       }
 
       const clusterId = getClusterIdFromHost(req.headers.host);

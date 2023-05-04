@@ -49,10 +49,10 @@ export function normalizeMetrics(metrics: MetricData | undefined | null, frames 
     if (frames > 0) {
       // fill the gaps
       result.forEach(res => {
-        if (!res.values || !res.values.length) return;
+        if (!res.values.length) return;
 
         let now = moment().startOf("minute").subtract(1, "minute").unix();
-        let timestamp = res.values[0][0];
+        let timestamp = res.values[0]?.[0] ?? 0;
 
         while (timestamp <= now) {
           timestamp = moment.unix(timestamp).add(1, "minute").unix();
@@ -63,7 +63,7 @@ export function normalizeMetrics(metrics: MetricData | undefined | null, frames 
         }
 
         while (res.values.length < frames) {
-          const timestamp = moment.unix(res.values[0][0]).subtract(1, "minute").unix();
+          const timestamp = moment.unix(res.values[0]?.[0] ?? 0).subtract(1, "minute").unix();
 
           if (!res.values.find((value) => value[0] === timestamp)) {
             res.values.unshift([timestamp, "0"]);
@@ -101,9 +101,11 @@ export function getItemMetrics<Keys extends string>(metrics: Partial<Record<Keys
     }
     const results = metrics[metric]?.data.result;
     const result = results?.find(res => Object.values(res.metric)[0] == itemName);
+    const item = itemMetrics[metric];
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    itemMetrics[metric]!.data.result = result ? [result] : [];
+    if (item) {
+      item.data.result = result ? [result] : [];
+    }
   }
 
   return itemMetrics;
@@ -114,7 +116,9 @@ export function getMetricLastPoints<Keys extends string>(metrics: Partial<Record
     object.entries(metrics)
       .map(([metricName, metric]) => {
         try {
-          return [metricName, +metric.data.result[0].values.slice(-1)[0][1]] as const;
+          const [value = [0, "0"]] = metric.data.result[0]?.values.slice(-1) ?? [];
+
+          return [metricName, +value[1]] as const;
         } catch {
           return undefined;
         }

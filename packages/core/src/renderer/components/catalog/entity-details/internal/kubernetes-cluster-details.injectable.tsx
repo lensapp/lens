@@ -15,22 +15,26 @@ const kubernetesClusterDetailsItemInjectable = getInjectable({
     kind: KubernetesCluster.kind,
     orderNumber: 40,
     components: {
-      Details: ({ entity }) => (
-        <>
-          <DrawerTitle>Kubernetes Information</DrawerTitle>
-          <div className="box grow EntityMetadata">
-            <DrawerItem
-              name="Distribution"
-              data-testid={`kubernetes-distro-for-${entity.getId()}`}
-            >
-              {entity.metadata.distro || "unknown"}
-            </DrawerItem>
-            <DrawerItem name="Kubelet Version">
-              {entity.metadata.kubeVersion || "unknown"}
-            </DrawerItem>
-          </div>
-        </>
-      ),
+      Details: ({ entity }) => {
+        const kube = entity as KubernetesCluster;
+
+        return (
+          <>
+            <DrawerTitle>Kubernetes Information</DrawerTitle>
+            <div className="box grow EntityMetadata">
+              <DrawerItem
+                name="Distribution"
+                data-testid={`kubernetes-distro-for-${entity.getId()}`}
+              >
+                {kube.metadata.distro || "unknown"}
+              </DrawerItem>
+              <DrawerItem name="Kubelet Version">
+                {kube.metadata.kubeVersion || "unknown"}
+              </DrawerItem>
+            </div>
+          </>
+        );
+      },
     },
   }),
   injectionToken: catalogEntityDetailItemInjectionToken,

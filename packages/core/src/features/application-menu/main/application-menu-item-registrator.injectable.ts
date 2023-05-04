@@ -81,11 +81,12 @@ const toRecursedInjectablesFor = (logError: (errorMessage: string) => void) => {
           injectionToken: applicationMenuItemInjectionToken,
         }),
 
-        ...((registration.submenu as MenuRegistration[])
-          ? (registration.submenu as MenuRegistration[]).flatMap(
-            toRecursedInjectables(currentIdPath),
-          )
-          : []),
+        ...(
+          registration.submenu
+            ? (registration.submenu as MenuRegistration[])
+              .flatMap(toRecursedInjectables(currentIdPath))
+            : []
+        ),
       ];
     };
 

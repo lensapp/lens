@@ -70,10 +70,6 @@ class NonInjectedNamespaceDetails extends React.Component<KubeObjectDetailsProps
   render() {
     const { object: namespace, resourceQuotaStore, getDetailsUrl, limitRangeStore } = this.props;
 
-    if (!namespace) {
-      return null;
-    }
-
     if (!(namespace instanceof Namespace)) {
       this.props.logger.error("[NamespaceDetails]: passed object that is not an instanceof Namespace", namespace);
 
@@ -89,7 +85,7 @@ class NonInjectedNamespaceDetails extends React.Component<KubeObjectDetailsProps
         </DrawerItem>
 
         <DrawerItem name="Resource Quotas" className="quotas flex align-center">
-          {!this.quotas && resourceQuotaStore.isLoading && <Spinner/>}
+          {(this.quotas.length === 0 && resourceQuotaStore.isLoading) && <Spinner/>}
           {this.quotas.map(quota => quota.selfLink && (
             <Link key={quota.getId()} to={getDetailsUrl(quota.selfLink)}>
               {quota.getName()}
@@ -97,7 +93,7 @@ class NonInjectedNamespaceDetails extends React.Component<KubeObjectDetailsProps
           ))}
         </DrawerItem>
         <DrawerItem name="Limit Ranges">
-          {!this.limitRanges && limitRangeStore.isLoading && <Spinner/>}
+          {(this.limitRanges.length === 0 || limitRangeStore.isLoading) ? <Spinner/> : null}
           {this.limitRanges.map(limitRange => limitRange.selfLink && (
             <Link key={limitRange.getId()} to={getDetailsUrl(limitRange.selfLink)}>
               {limitRange.getName()}

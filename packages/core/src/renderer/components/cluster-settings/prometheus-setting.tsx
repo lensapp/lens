@@ -59,7 +59,7 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
   }
 
   @computed get canEditPrometheusPath(): boolean {
-    if (!this.selectedOption || this.selectedOption === autoDetectPrometheus) {
+    if (this.selectedOption === autoDetectPrometheus) {
       return false;
     }
 
@@ -96,7 +96,7 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
   }
 
   parsePrometheusPath = () => {
-    if (!this.selectedOption || !this.path) {
+    if (!this.path) {
       return undefined;
     }
     const parsed = this.path.split(/\/|:/, 3);

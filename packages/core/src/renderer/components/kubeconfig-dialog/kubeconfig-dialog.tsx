@@ -8,7 +8,7 @@ import React from "react";
 import type { IObservableValue } from "mobx";
 import { observer } from "mobx-react";
 import type { StrictReactNode } from "@k8slens/utilities";
-import { cssNames } from "@k8slens/utilities";
+import { cssNames, isTruthy } from "@k8slens/utilities";
 import { Button } from "@k8slens/button";
 import type { DialogProps } from "../dialog";
 import { Dialog } from "../dialog";
@@ -54,7 +54,7 @@ class NonInjectedKubeConfigDialog extends React.Component<KubeConfigDialogProps 
   };
 
   renderContents = (data: KubeconfigDialogData) => (
-    <Wizard header={<h5>{ data.title || "Kubeconfig File" }</h5>}>
+    <Wizard header={<h5>{isTruthy(data.title) ? data.title : "Kubeconfig File" }</h5>}>
       <WizardStep
         customButtons={ (
           <div className="actions flex gaps">

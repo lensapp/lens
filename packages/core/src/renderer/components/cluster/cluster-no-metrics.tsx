@@ -14,7 +14,7 @@ import navigateToEntitySettingsInjectable from "../../../common/front-end-routin
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 
 export interface ClusterNoMetricsProps {
-  className: string;
+  className?: string;
 }
 
 interface Dependencies {

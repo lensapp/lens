@@ -9,6 +9,7 @@ import type { InspectOptions } from "util";
 import { inspect } from "util";
 import { omit } from "lodash";
 import type { Format, TransformableInfo } from "logform";
+import { isObject, isTruthy } from "@k8slens/utilities";
 
 // The following license was copied from https://github.com/duccio/winston-console-format/blob/master/LICENSE
 // This was modified to support formatting causes
@@ -116,9 +117,15 @@ export class ConsoleFormat implements Format {
   private _cause(source: unknown): string[] {
     const messages: string[] = [];
 
-    if (source instanceof Error && source.cause) {
+    if (source instanceof Error && isTruthy(source.cause)) {
       messages.push("Cause:");
-      messages.push(...this.getLines(omit(source.cause, "response")).map(l => `    ${l}`));
+
+      if (isObject(source.cause)) {
+        messages.push(...this.getLines(omit(source.cause, "response")).map(l => `    ${l}`));
+      } else {
+        messages.push(...this.getLines(source.cause).map(l => `    ${l}`));
+      }
+
       messages.push(...this._cause(source.cause));
     }
 

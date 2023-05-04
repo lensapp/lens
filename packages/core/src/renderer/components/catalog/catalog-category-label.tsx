@@ -2,6 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import { isTruthy } from "@k8slens/utilities";
 import React from "react";
 import type { CatalogCategory } from "../../../common/catalog/catalog-entity";
 
@@ -18,7 +19,7 @@ export const CatalogCategoryLabel = ({ category }: CatalogCategoryLabelProps) =>
   return (
     <div className="flex">
       <div>{category.metadata.name}</div>
-      {badge ? (<div className="flex items-center">{badge}</div>) : null}
+      {isTruthy(badge) ? (<div className="flex items-center">{badge}</div>) : null}
     </div>
   );
 };

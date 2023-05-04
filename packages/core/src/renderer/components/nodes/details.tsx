@@ -47,10 +47,6 @@ class NonInjectedNodeDetails extends React.Component<KubeObjectDetailsProps & De
   render() {
     const { object: node, podStore, logger } = this.props;
 
-    if (!node) {
-      return null;
-    }
-
     if (!(node instanceof Node)) {
       logger.error("[NodeDetails]: passed object that is not an instanceof Node", node);
 
@@ -99,7 +95,7 @@ class NonInjectedNodeDetails extends React.Component<KubeObjectDetailsProps & De
             {taints.map(taint => <Badge key={taint.key} label={formatNodeTaint(taint)} />)}
           </DrawerItem>
         )}
-        {conditions && (
+        {conditions.length > 0 && (
           <DrawerItem
             name="Conditions"
             className="conditions"

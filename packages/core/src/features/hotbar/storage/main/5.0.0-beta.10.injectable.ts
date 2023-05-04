@@ -73,13 +73,17 @@ const v500Beta10HotbarStoreMigrationInjectable = getInjectable({
         {
           // grab the default named hotbar or the first.
           const defaultHotbarIndex = Math.max(0, hotbars.findIndex(hotbar => hotbar.name === "default"));
-          const [{ name, id, items }] = hotbars.splice(defaultHotbarIndex, 1);
+          const [hotbar] = hotbars.splice(defaultHotbarIndex, 1);
 
-          workspaceHotbars.set("default", {
-            name,
-            id,
-            items: items.filter(isDefined),
-          });
+          if (hotbar) {
+            const { name, id, items } = hotbar;
+
+            workspaceHotbars.set("default", {
+              name,
+              id,
+              items: items.filter(isDefined),
+            });
+          }
         }
 
         for (const cluster of clusters) {
@@ -130,7 +134,8 @@ const v500Beta10HotbarStoreMigrationInjectable = getInjectable({
           const defaultHotbarIndex = hotbars.findIndex(hotbar => hotbar.name === "default");
 
           if (defaultHotbarIndex >= 0) {
-            const defaultHotbar = createHotbar(hotbars[defaultHotbarIndex]);
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            const defaultHotbar = createHotbar(hotbars[defaultHotbarIndex]!);
 
             if (defaultHotbar.isFull()) {
               // making a new hotbar is less destructive if the first hotbar

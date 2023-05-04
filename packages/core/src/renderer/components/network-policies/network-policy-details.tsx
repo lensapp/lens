@@ -156,10 +156,6 @@ class NonInjectedNetworkPolicyDetails extends React.Component<KubeObjectDetailsP
   render() {
     const { object: policy } = this.props;
 
-    if (!policy) {
-      return null;
-    }
-
     if (!(policy instanceof NetworkPolicy)) {
       this.props.logger.error("[NetworkPolicyDetails]: passed object that is not an instanceof NetworkPolicy", policy);
 

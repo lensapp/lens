@@ -93,10 +93,10 @@ class NonInjectedDock extends React.Component<DockProps & Dependencies> {
     const currentIndex = tabs.indexOf(selectedTab);
     const nextIndex = currentIndex + direction;
 
-    // check if moving to the next or previous tab is possible.
-    if (nextIndex >= tabs.length || nextIndex < 0) return;
-
     const nextElement = tabs[nextIndex];
+
+    // check if moving to the next or previous tab is possible.
+    if (!nextElement) return;
 
     this.onChangeTab(nextElement);
   };

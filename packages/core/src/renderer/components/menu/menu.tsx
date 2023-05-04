@@ -9,7 +9,7 @@ import type { ReactElement } from "react";
 import React, { Fragment } from "react";
 import { createPortal } from "react-dom";
 import type { StrictReactNode } from "@k8slens/utilities";
-import { addEventListener, addWindowEventListener, cssNames, disposer, noop } from "@k8slens/utilities";
+import { addEventListener, addWindowEventListener, cssNames, disposer, isFalsy, isObject, isString, isTruthy, noop } from "@k8slens/utilities";
 import { Animate, requestAnimationFrameInjectable } from "@k8slens/animate";
 import type { IconProps } from "@k8slens/icon";
 import { Icon } from "@k8slens/icon";
@@ -99,7 +99,7 @@ class DefaultNonInjectedMenu extends React.Component<MenuProps & Dependencies & 
       toggleEvent,
     } = this.props;
 
-    if (!usePortal) {
+    if (usePortal === false) {
       if (this.elem?.parentElement) {
         const { position } = window.getComputedStyle(this.elem.parentElement);
 
@@ -161,14 +161,14 @@ class DefaultNonInjectedMenu extends React.Component<MenuProps & Dependencies & 
       let nextItem = reverse ? items[activeIndex - 1] : items[activeIndex + 1];
 
       if (!nextItem) nextItem = items[activeIndex];
-      nextItem.elem?.focus();
+      nextItem?.elem?.focus();
     } else {
-      items[0].elem?.focus();
+      items[0]?.elem?.focus();
     }
   }
 
   refreshPosition = () => requestAnimationFrame(() => {
-    if (!this.props.usePortal || !this.opener || !this.elem) {
+    if (isFalsy(this.props.usePortal) || !this.opener || !this.elem) {
       return;
     }
 
@@ -184,7 +184,7 @@ class DefaultNonInjectedMenu extends React.Component<MenuProps & Dependencies & 
       openerBottom = openerTop + openerClientRect.height;
     }
 
-    const extraMargin = this.props.usePortal ? 8 : 0;
+    const extraMargin = this.props.usePortal === true ? 8 : 0;
 
     const { width: menuWidth, height: menuHeight } = this.elem.getBoundingClientRect();
 
@@ -286,7 +286,7 @@ class DefaultNonInjectedMenu extends React.Component<MenuProps & Dependencies & 
     const target = evt.target as HTMLElement;
     const { usePortal, closeOnScroll } = this.props;
 
-    if (usePortal && closeOnScroll && !target.contains(this.elem)) {
+    if (isTruthy(usePortal) && closeOnScroll && !target.contains(this.elem)) {
       this.close();
     }
   }
@@ -370,7 +370,7 @@ class DefaultNonInjectedMenu extends React.Component<MenuProps & Dependencies & 
       </MenuContext.Provider>
     );
 
-    if (!usePortal) {
+    if (isFalsy(usePortal)) {
       return menu;
     }
 
@@ -461,12 +461,10 @@ export class MenuItem extends React.Component<MenuItemProps> {
     const { className, disabled, active, spacer, icon, children, ...props } = this.props;
     const iconProps: Partial<IconProps> = {};
 
-    if (icon) {
-      if (typeof icon === "string") {
-        iconProps.material = icon;
-      } else {
-        Object.assign(iconProps, icon);
-      }
+    if (isString(icon) && icon) {
+      iconProps.material = icon;
+    } else if (isObject(icon)) {
+      Object.assign(iconProps, icon);
     }
 
     const elemProps: React.HTMLProps<Element> = {
@@ -474,13 +472,15 @@ export class MenuItem extends React.Component<MenuItemProps> {
       ...props,
       className: cssNames("MenuItem", className, { disabled, active, spacer }),
       onClick: this.onClick.bind(this),
-      children: icon ? (
-        <>
-          <Icon {...iconProps}/>
-          {" "}
-          {children}
-        </>
-      ) : children,
+      children: isTruthy(icon)
+        ? (
+          <>
+            <Icon {...iconProps}/>
+            {" "}
+            {children}
+          </>
+        )
+        : children,
       ref: this.bindRef.bind(this),
     };
 

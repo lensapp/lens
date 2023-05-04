@@ -15,7 +15,7 @@ export interface SwitchProps extends Omit<HTMLProps<HTMLInputElement>, "onChange
 
 export function Switch({ children, disabled, onChange, ...props }: SwitchProps) {
   return (
-    <label className={cssNames(styles.Switch, { [styles.disabled]: disabled })} data-testid="switch">
+    <label className={cssNames(styles.Switch, disabled && styles.disabled)} data-testid="switch">
       {children}
       <input
         type="checkbox"

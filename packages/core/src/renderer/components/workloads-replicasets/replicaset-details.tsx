@@ -43,10 +43,6 @@ class NonInjectedReplicaSetDetails extends React.Component<KubeObjectDetailsProp
   render() {
     const { object: replicaSet, replicaSetStore, logger } = this.props;
 
-    if (!replicaSet) {
-      return null;
-    }
-
     if (!(replicaSet instanceof ReplicaSet)) {
       logger.error("[ReplicaSetDetails]: passed object that is not an instanceof ReplicaSet", replicaSet);
 

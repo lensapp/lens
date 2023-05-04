@@ -122,7 +122,7 @@ export abstract class LensProtocolRouter {
         return -1;
       }
 
-      return countBy(b.path)["/"] - countBy(a.path)["/"];
+      return (countBy(b.path)["/"] ?? 0) - (countBy(a.path)["/"] ?? 0);
     })[0] ?? null;
   }
 
@@ -204,6 +204,7 @@ export abstract class LensProtocolRouter {
     const extension = extensionLoader.getInstanceByName(name) as LensExtension | undefined;
 
     if (!extension) {
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       this.dependencies.logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but does not have a class for ${ipcRenderer ? "renderer" : "main"}`);
 
       return name;

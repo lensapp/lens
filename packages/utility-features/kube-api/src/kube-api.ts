@@ -487,11 +487,11 @@ export class KubeApi<
   }
 
   protected normalizeQuery(query: Partial<KubeApiQueryParams> = {}) {
-    if (query.labelSelector) {
+    if (query.labelSelector !== undefined) {
       query.labelSelector = [query.labelSelector].flat().join(",");
     }
 
-    if (query.fieldSelector) {
+    if (query.fieldSelector !== undefined) {
       query.fieldSelector = [query.fieldSelector].flat().join(",");
     }
 
@@ -499,7 +499,7 @@ export class KubeApi<
   }
 
   protected parseResponse(data: unknown, namespace?: string): Kube | Kube[] | null {
-    if (!data) {
+    if (!Boolean(data)) {
       return null;
     }
 

@@ -10,6 +10,7 @@ import type { LensApiRequest } from "../../router/route";
 import path from "path";
 import { contentTypes } from "../../router/router-content-types";
 import { prefixedLoggerInjectable } from "@k8slens/logger";
+import { maybeGet } from "@k8slens/utilities";
 
 const prodStaticFileRouteHandlerInjectable = getInjectable({
   id: "prod-static-file-route-handler",
@@ -33,7 +34,7 @@ const prodStaticFileRouteHandlerInjectable = getInjectable({
       }
 
       const fileExtension = path.extname(assetFilePath).slice(1);
-      const contentType = contentTypes[fileExtension] || contentTypes.txt;
+      const contentType = maybeGet(contentTypes, fileExtension) || contentTypes.txt;
 
       try {
         return { response: await readFileBuffer(assetFilePath), contentType };

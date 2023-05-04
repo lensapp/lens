@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { ServerResponse } from "http";
 import { loggerInjectionToken } from "@k8slens/logger";
-import { object } from "@k8slens/utilities";
+import { isDefined, object } from "@k8slens/utilities";
 import type { LensApiRequest, Route } from "./route";
 import { contentTypes } from "./router-content-types";
 
@@ -34,7 +34,7 @@ const writeServerResponseFor = (serverResponse: ServerResponse) => ({
   if (content instanceof Buffer) {
     serverResponse.write(content);
     serverResponse.end();
-  } else if (content) {
+  } else if (isDefined(content)) {
     serverResponse.end(content);
   } else {
     serverResponse.end();
@@ -67,7 +67,7 @@ const createHandlerForRouteInjectable = getInjectable({
       } catch(error) {
         const mappedResult = contentTypes.txt.resultMapper({
           statusCode: 500,
-          error: error ? String(error) : "unknown error",
+          error: isDefined(error) ? String(error) : "unknown error",
         });
 
         logger.error(`[ROUTER]: route ${route.path}, called with ${request.path}, threw an error`, error);

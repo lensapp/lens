@@ -109,6 +109,7 @@ export class ExtensionDiscovery {
    * Initializes the class and setups the file watcher for added/removed local extensions.
    */
   async init() {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (ipcRenderer) {
       await this.initRenderer();
     } else {

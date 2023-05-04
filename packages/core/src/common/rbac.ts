@@ -3,13 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-export type KubeResource =
-  "namespaces" | "nodes" | "events" | "resourcequotas" | "services" | "limitranges" | "leases" |
-  "secrets" | "configmaps" | "ingresses" | "ingressclasses" | "networkpolicies" | "persistentvolumeclaims" | "persistentvolumes" | "storageclasses" |
-  "pods" | "daemonsets" | "deployments" | "statefulsets" | "replicasets" | "replicationcontrollers" | "jobs" | "cronjobs" |
-  "endpoints" | "customresourcedefinitions" | "horizontalpodautoscalers" | "verticalpodautoscalers" | "podsecuritypolicies" | "poddisruptionbudgets" |
-  "priorityclasses" | "runtimeclasses" |
-  "roles" | "clusterroles" | "rolebindings" | "clusterrolebindings" | "serviceaccounts" | "mutatingwebhookconfigurations" | "validatingwebhookconfigurations";
+export type KubeResource = keyof typeof apiResourceRecord;
 
 export interface KubeApiResource {
   kind: string;
@@ -35,7 +29,7 @@ export interface KubeApiResourceData {
   namespaced: boolean;
 }
 
-export const apiResourceRecord: Record<KubeResource, KubeApiResourceData> = {
+export const apiResourceRecord = {
   clusterroles: {
     kind: "ClusterRole",
     group: "rbac.authorization.k8s.io",

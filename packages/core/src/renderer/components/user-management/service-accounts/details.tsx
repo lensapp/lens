@@ -76,13 +76,11 @@ class NonInjectedServiceAccountsDetails extends React.Component<KubeObjectDetail
   }
 
   renderSecrets() {
-    const { secrets } = this;
-
-    if (!secrets) {
+    if (this.secrets.length === 0) {
       return <Spinner center/>;
     }
 
-    return secrets.map(secret => (
+    return this.secrets.map(secret => (
       <ServiceAccountsSecret
         key={typeof secret === "string" ? secret : secret.getName()}
         secret={secret}
@@ -91,13 +89,11 @@ class NonInjectedServiceAccountsDetails extends React.Component<KubeObjectDetail
   }
 
   renderImagePullSecrets() {
-    const { imagePullSecrets } = this;
-
-    if (!imagePullSecrets) {
+    if (this.imagePullSecrets.length === 0) {
       return <Spinner center/>;
     }
 
-    return this.renderSecretLinks(imagePullSecrets);
+    return this.renderSecretLinks(this.imagePullSecrets);
   }
 
   renderSecretLinks(secrets: (Secret | string)[]) {
@@ -125,10 +121,6 @@ class NonInjectedServiceAccountsDetails extends React.Component<KubeObjectDetail
 
   render() {
     const { object: serviceAccount, secretStore } = this.props;
-
-    if (!serviceAccount) {
-      return null;
-    }
 
     if (!(serviceAccount instanceof ServiceAccount)) {
       return null;

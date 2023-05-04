@@ -32,7 +32,7 @@ export const LogSearch = observer((props: PodLogSearchProps) => {
   const logs = tabData.showTimestamps
     ? model.logs.get()
     : model.logsWithoutTimestamps.get();
-  const jumpDisabled = !searchQuery || !occurrences.length;
+  const jumpDisabled = !searchQuery.get() || !occurrences.length;
 
   const setSearch = (query: string) => {
     searchStore.onSearch(logs, query);

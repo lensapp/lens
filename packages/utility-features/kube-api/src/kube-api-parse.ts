@@ -65,6 +65,10 @@ export function parseKubeApi(path: string | undefined): IKubeApiParsed | undefin
 
   const { apiOrApis, apiGroup, namespace, apiVersion, resource, name } = parsedPath;
 
+  if (!apiOrApis || !apiGroup || !apiVersion || !resource) {
+    return undefined;
+  }
+
   return {
     apiBase: getApiBase(apiOrApis, apiGroup, apiVersion, resource),
     apiPrefix: getApiPrefix(apiOrApis),

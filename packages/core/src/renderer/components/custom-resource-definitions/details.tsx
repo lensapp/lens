@@ -28,10 +28,6 @@ class NonInjectedCustomResourceDefinitionDetails extends React.Component<KubeObj
   render() {
     const { object: crd } = this.props;
 
-    if (!crd) {
-      return null;
-    }
-
     if (!(crd instanceof CustomResourceDefinition)) {
       this.props.logger.error("[CustomResourceDefinitionDetails]: passed object that is not an instanceof CustomResourceDefinition", crd);
 

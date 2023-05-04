@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { hasTypedProperty, isDefined } from "@k8slens/utilities";
+import { hasTypedProperty, isDefined, isObject } from "@k8slens/utilities";
 
 export function getMessageFromError(error: unknown): string {
-  if (!error || typeof error !== "object") {
+  if (!isObject(error)) {
     return "an error has occurred";
   }
 

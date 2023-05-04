@@ -6,11 +6,14 @@
 import { bytesSent, prometheusProviderInjectionToken, findNamespacedService, createPrometheusProvider } from "./provider";
 import type {  PrometheusProvider } from "./provider";
 import { getInjectable } from "@ogre-tools/injectable";
+import assert from "assert";
 
 export const getLensLikeQueryFor = ({ rateAccuracy }: { rateAccuracy: string }): PrometheusProvider["getQuery"] => (
   (opts, queryName) => {
     switch(opts.category) {
       case "cluster":
+        assert(opts.nodes, 'Missing "nodes" option when "category" option is "cluster"');
+
         switch (queryName) {
           case "memoryUsage":
             return `sum(node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) by (kubernetes_name)`.replace(/_bytes/g, `_bytes{kubernetes_node=~"${opts.nodes}"}`);
@@ -69,6 +72,10 @@ export const getLensLikeQueryFor = ({ rateAccuracy }: { rateAccuracy: string }):
         }
         break;
       case "pods":
+        assert(opts.pods, 'Missing "pods" option when "category" option is "pods"');
+        assert(opts.namespace, 'Missing "namespace" option when "category" option is "pods"');
+        assert(opts.selector, 'Missing "selector" option when "category" option is "pods"');
+
         switch (queryName) {
           case "cpuUsage":
             return `sum(rate(container_cpu_usage_seconds_total{container!="POD",container!="",pod=~"${opts.pods}",namespace="${opts.namespace}"}[${rateAccuracy}])) by (${opts.selector})`;
@@ -95,6 +102,9 @@ export const getLensLikeQueryFor = ({ rateAccuracy }: { rateAccuracy: string }):
         }
         break;
       case "pvc":
+        assert(opts.pvc, 'Missing "pvc" option when "category" option is "pvc"');
+        assert(opts.namespace, 'Missing "namespace" option when "category" option is "pvc"');
+
         switch (queryName) {
           case "diskUsage":
             return `sum(kubelet_volume_stats_used_bytes{persistentvolumeclaim="${opts.pvc}",namespace="${opts.namespace}"}) by (persistentvolumeclaim, namespace)`;
@@ -103,6 +113,9 @@ export const getLensLikeQueryFor = ({ rateAccuracy }: { rateAccuracy: string }):
         }
         break;
       case "ingress":
+        assert(opts.ingress, 'Missing "ingress" option when "category" option is "ingress"');
+        assert(opts.namespace, 'Missing "namespace" option when "category" option is "ingress"');
+
         switch (queryName) {
           case "bytesSentSuccess":
             return bytesSent({
@@ -126,7 +139,7 @@ export const getLensLikeQueryFor = ({ rateAccuracy }: { rateAccuracy: string }):
         break;
     }
 
-    throw new Error(`Unknown queryName="${queryName}" for category="${opts.category}"`);
+    throw new Error(`Unknown queryName="${queryName}" for category="${String(opts.category)}"`);
   }
 );
 

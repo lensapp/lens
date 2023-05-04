@@ -125,6 +125,7 @@ module.exports = {
         "no-constant-condition": ["error", {
           "checkLoops": false,
         }],
+        "no-extra-boolean-cast": "off",
         "header/header": [2, "../../license-header"],
         "react/prop-types": "off",
         "no-invalid-this": "off",
@@ -136,6 +137,11 @@ module.exports = {
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-empty-function": "off",
         "@typescript-eslint/no-unnecessary-type-assertion": "off",
+        "@typescript-eslint/strict-boolean-expressions": ["error", {
+          "allowNullableString": true,
+          "allowNullableBoolean": true,
+          "allowNullableNumber": true,
+        }],
         "no-restricted-imports": ["error", {
           "paths": [
             {

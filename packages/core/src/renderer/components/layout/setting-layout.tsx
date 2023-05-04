@@ -8,7 +8,7 @@ import "./setting-layout.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { IClassName, StrictReactNode } from "@k8slens/utilities";
-import { addWindowEventListener, disposer, cssNames } from "@k8slens/utilities";
+import { isTruthy, addWindowEventListener, disposer, cssNames } from "@k8slens/utilities";
 import { CloseButton } from "./close-button";
 import { getLegacyGlobalDiForExtensionApi } from "@k8slens/legacy-global-di";
 import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
@@ -86,7 +86,7 @@ export class SettingLayout extends React.Component<SettingLayoutProps> {
 
     return (
       <div {...elemProps} className={className}>
-        { navigation && (
+        {isTruthy(navigation) && (
           <nav className="sidebarRegion">
             <div className="sidebar">
               {navigation}

@@ -6,7 +6,7 @@
 import "./table-cell.scss";
 
 import React from "react";
-import { cssNames } from "@k8slens/utilities";
+import { cssNames, isTruthy } from "@k8slens/utilities";
 import { Icon } from "@k8slens/icon";
 import { Checkbox } from "../checkbox";
 import autoBindReact from "auto-bind/react";
@@ -87,7 +87,7 @@ export class TableCell extends React.Component<TableCellProps> {
       nowrap: _nowrap,
       sorting: _sort && typeof sortBy === "string",
     });
-    const content = title || children;
+    const content = isTruthy(title) ? title : children;
 
     return (
       <div

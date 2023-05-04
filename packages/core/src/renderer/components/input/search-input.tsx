@@ -7,7 +7,7 @@ import "./search-input.scss";
 
 import React, { createRef } from "react";
 import { observer } from "mobx-react";
-import { addWindowEventListener, cssNames, disposer } from "@k8slens/utilities";
+import { addWindowEventListener, cssNames, disposer, isTruthy } from "@k8slens/utilities";
 import { Icon } from "@k8slens/icon";
 import type { InputProps } from "./input";
 import { Input } from "./input";
@@ -86,7 +86,7 @@ class NonInjectedSearchInput extends React.Component<SearchInputProps & Dependen
     void bindGlobalFocusHotkey;
     void isMac;
 
-    if (showClearIcon && value) {
+    if (showClearIcon && isTruthy(value)) {
       rightIcon = (
         <Icon
           small

@@ -8,7 +8,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { IComputedValue } from "mobx";
 import { action, computed, makeObservable, observable, reaction } from "mobx";
-import { editor, Uri } from "monaco-editor";
+import { editor as Editor, Uri } from "monaco-editor";
 import type { MonacoTheme } from "./monaco-themes";
 import { type MonacoValidator, monacoValidators } from "./monaco-validators";
 import { debounce, merge } from "lodash";
@@ -33,13 +33,13 @@ export interface MonacoEditorProps {
   readOnly?: boolean;
   theme?: MonacoTheme;
   language?: "yaml" | "json"; // supported list of languages, configure in `webpack.renderer.ts`
-  options?: Partial<editor.IStandaloneEditorConstructionOptions>; // customize editor's initialization options
+  options?: Partial<Editor.IStandaloneEditorConstructionOptions>; // customize editor's initialization options
   value: string;
-  onChange?(value: string, evt: editor.IModelContentChangedEvent): void; // catch latest value updates
+  onChange?(value: string, evt: Editor.IModelContentChangedEvent): void; // catch latest value updates
   onError?(error: unknown): void; // provide syntax validation error, etc.
-  onDidLayoutChange?(info: editor.EditorLayoutInfo): void;
-  onDidContentSizeChange?(evt: editor.IContentSizeChangedEvent): void;
-  onModelChange?(model: editor.ITextModel, prev?: editor.ITextModel): void;
+  onDidLayoutChange?(info: Editor.EditorLayoutInfo): void;
+  onDidContentSizeChange?(evt: Editor.IContentSizeChangedEvent): void;
+  onModelChange?(model: Editor.ITextModel, prev?: Editor.ITextModel): void;
   innerRef?: React.ForwardedRef<MonacoEditorRef>;
   setInitialHeight?: boolean;
 }
@@ -55,7 +55,7 @@ export function createMonacoUri(id: MonacoEditorId): Uri {
   return Uri.file(`/monaco-editor/${id}`);
 }
 
-const monacoViewStates = new WeakMap<Uri, editor.ICodeEditorViewState>();
+const monacoViewStates = new WeakMap<Uri, Editor.ICodeEditorViewState>();
 
 export interface MonacoEditorRef {
   focus(): void;
@@ -71,7 +71,7 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
   private dispose = disposer();
 
   @observable.ref containerElem: HTMLDivElement | null = null;
-  @observable.ref editor!: editor.IStandaloneCodeEditor;
+  @observable.ref editor: Editor.IStandaloneCodeEditor | null = null;
   @observable readonly dimensions: { width?: number; height?: number } = {};
   @observable unmounting = false;
 
@@ -94,9 +94,9 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
     return this.props.theme ?? this.props.activeTheme.get().monacoTheme;
   }
 
-  @computed get model(): editor.ITextModel {
+  @computed get model(): Editor.ITextModel {
     const uri = createMonacoUri(this.id);
-    const model = editor.getModel(uri);
+    const model = Editor.getModel(uri);
 
     if (model) {
       return model; // already exists
@@ -111,10 +111,10 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
       this.props.logger.error(`[MONACO-EDITOR]: Passed a non-string default value`, { rawValue });
     }
 
-    return editor.createModel(value, language, uri);
+    return Editor.createModel(value, language, uri);
   }
 
-  @computed get options(): editor.IStandaloneEditorConstructionOptions {
+  @computed get options(): Editor.IStandaloneEditorConstructionOptions {
     return merge({},
       this.props.state.editorConfiguration,
       this.props.options,
@@ -133,7 +133,7 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
    * Monitor editor's dom container element box-size and sync with monaco's dimensions
    * @private
    */
-  private bindResizeObserver() {
+  private bindResizeObserver(editor: Editor.IStandaloneCodeEditor) {
     const resizeObserver = new ResizeObserver(entries => {
       for (const entry of entries) {
         const { width, height } = entry.contentRect;
@@ -142,14 +142,18 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
       }
     });
 
-    const containerElem = this.editor.getContainerDomNode();
+    const containerElem = editor.getContainerDomNode();
 
     resizeObserver.observe(containerElem);
 
     return () => resizeObserver.unobserve(containerElem);
   }
 
-  protected onModelChange(model: editor.ITextModel, oldModel?: editor.ITextModel) {
+  protected onModelChange(model: Editor.ITextModel, oldModel?: Editor.ITextModel) {
+    if (!this.editor) {
+      return;
+    }
+
     this.logger.info("[MONACO]: model change", { model, oldModel }, this.logMetadata);
 
     if (oldModel) {
@@ -168,7 +172,7 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
    * Save current view-model state in the editor.
    * This will allow restore cursor position, selected text, etc.
    */
-  protected saveViewState(model: editor.ITextModel) {
+  protected saveViewState(model: Editor.ITextModel) {
     const viewState = this.editor?.saveViewState();
 
     if (viewState) {
@@ -176,7 +180,7 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
     }
   }
 
-  protected restoreViewState(model: editor.ITextModel) {
+  protected restoreViewState(model: Editor.ITextModel) {
     const viewState = monacoViewStates.get(model.uri);
 
     if (viewState) {
@@ -211,7 +215,7 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
     const { language, readOnly, value: defaultValue } = this.props;
     const { theme } = this;
 
-    this.editor = editor.create(this.containerElem, {
+    const editor = this.editor = Editor.create(this.containerElem, {
       model: this.model,
       detectIndentation: false, // allow `option.tabSize` to use custom number of spaces for [Tab]
       value: defaultValue,
@@ -227,36 +231,36 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
     this.restoreViewState(this.model); // restore previous state if any
 
     if (this.props.autoFocus) {
-      this.editor.focus();
+      editor.focus();
     }
 
-    const onDidLayoutChangeDisposer = this.editor.onDidLayoutChange(layoutInfo => {
+    const onDidLayoutChangeDisposer = editor.onDidLayoutChange(layoutInfo => {
       this.props.onDidLayoutChange?.(layoutInfo);
     });
 
-    const onValueChangeDisposer = this.editor.onDidChangeModelContent(event => {
-      const value = this.editor.getValue();
+    const onValueChangeDisposer = editor.onDidChangeModelContent(event => {
+      const value = editor.getValue();
 
       this.props.onChange?.(value, event);
       this.validateLazy(value);
     });
 
-    const onContentSizeChangeDisposer = this.editor.onDidContentSizeChange((params) => {
+    const onContentSizeChangeDisposer = editor.onDidContentSizeChange((params) => {
       this.props.onDidContentSizeChange?.(params);
     });
 
     this.dispose.push(
       reaction(() => this.model, (model) => this.onModelChange(model)),
-      reaction(() => this.theme, editor.setTheme),
+      reaction(() => this.theme, Editor.setTheme),
       reaction(() => this.props.value, value => this.setValue(value), {
         fireImmediately: true,
       }),
-      reaction(() => this.options, opts => this.editor.updateOptions(opts)),
+      reaction(() => this.options, opts => editor.updateOptions(opts)),
 
       () => onDidLayoutChangeDisposer.dispose(),
       () => onValueChangeDisposer.dispose(),
       () => onContentSizeChangeDisposer.dispose(),
-      this.bindResizeObserver(),
+      this.bindResizeObserver(editor),
     );
   }
 
@@ -268,7 +272,7 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
   }
 
   setValue(value = ""): void {
-    if (value == this.getValue()) return;
+    if (value == this.getValue() || !this.editor) return;
 
     this.editor.setValue(value);
     this.validate(value);

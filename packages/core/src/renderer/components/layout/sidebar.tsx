@@ -29,7 +29,7 @@ const NonInjectedSidebar = observer(({
   <div className={cssNames("flex flex-col")} data-testid="cluster-sidebar">
     <SidebarCluster clusterEntity={entityRegistry.activeEntity} />
 
-    <div className={`${styles.sidebarNav} sidebar-active-status`}>
+    <div className={cssNames(styles.sidebarNav, "sidebar-active-status")}>
       {
         sidebarItems.get()
           .map(hierarchicalSidebarItem => (

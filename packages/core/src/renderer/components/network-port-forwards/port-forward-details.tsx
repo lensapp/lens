@@ -20,7 +20,7 @@ import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injec
 import podApiInjectable from "../../../common/k8s-api/endpoints/pod.api.injectable";
 
 export interface PortForwardDetailsProps {
-  portForward: PortForwardItem;
+  portForward?: PortForwardItem;
   hideDetails(): void;
 }
 
@@ -31,9 +31,8 @@ interface Dependencies {
 }
 
 class NonInjectedPortForwardDetails extends React.Component<PortForwardDetailsProps & Dependencies> {
-  renderResourceName() {
+  renderResourceName(portForward: PortForwardItem) {
     const {
-      portForward,
       serviceApi,
       podApi,
       getDetailsUrl,
@@ -65,7 +64,7 @@ class NonInjectedPortForwardDetails extends React.Component<PortForwardDetailsPr
     return (
       <div>
         <DrawerItem name="Resource Name">
-          {this.renderResourceName()}
+          {this.renderResourceName(portForward)}
         </DrawerItem>
         <DrawerItem name="Namespace">
           {portForward.getNs()}
@@ -91,22 +90,21 @@ class NonInjectedPortForwardDetails extends React.Component<PortForwardDetailsPr
 
   render() {
     const { hideDetails, portForward } = this.props;
-    const toolbar = (
-      <PortForwardMenu
-        portForward={portForward}
-        toolbar
-        hideDetails={hideDetails}
-      />
-    );
 
     return (
       <Drawer
         className="PortForwardDetails"
         usePortal={true}
         open={!!portForward}
-        title={`Port Forward: ${portForwardAddress(portForward)}`}
+        title={portForward && `Port Forward: ${portForwardAddress(portForward)}`}
         onClose={hideDetails}
-        toolbar={toolbar}
+        toolbar={portForward && (
+          <PortForwardMenu
+            portForward={portForward}
+            toolbar
+            hideDetails={hideDetails}
+          />
+        )}
       >
         {this.renderContent()}
       </Drawer>

@@ -6,7 +6,7 @@
 import "./checkbox.scss";
 import React from "react";
 import type { StrictReactNode } from "@k8slens/utilities";
-import { cssNames, noop } from "@k8slens/utilities";
+import { isTruthy, cssNames, noop } from "@k8slens/utilities";
 
 export interface CheckboxProps {
   className?: string;
@@ -35,7 +35,7 @@ export function Checkbox({ label, inline, className, value, children, onChange =
         onChange={event => onChange(event.target.checked, event)}
       />
       <i className="box flex align-center"/>
-      {label ? <span className="label">{label}</span> : null}
+      {isTruthy(label) ? <span className="label">{label}</span> : null}
       {children}
     </label>
   );

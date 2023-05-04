@@ -14,7 +14,8 @@
       {
         "name": "typescript-plugin-css-modules",
         "options": {
-          "namedExports": false
+          "namedExports": false,
+          "noUncheckedIndexedAccess": true,
         }
       }
     ]

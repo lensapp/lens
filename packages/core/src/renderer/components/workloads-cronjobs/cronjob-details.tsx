@@ -47,10 +47,6 @@ class NonInjectedCronJobDetails extends React.Component<KubeObjectDetailsProps &
   render() {
     const { object: cronJob, jobStore, cronJobStore, getDetailsUrl } = this.props;
 
-    if (!cronJob) {
-      return null;
-    }
-
     if (!(cronJob instanceof CronJob)) {
       this.props.logger.error("[CronJobDetails]: passed object that is not an instanceof CronJob", cronJob);
 

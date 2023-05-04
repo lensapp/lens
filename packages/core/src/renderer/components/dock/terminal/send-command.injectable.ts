@@ -4,7 +4,6 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { when } from "mobx";
-import { loggerInjectionToken } from "@k8slens/logger";
 import { TerminalChannels } from "../../../../common/terminal/channels";
 import { waitUntilDefined, noop } from "@k8slens/utilities";
 import showSuccessNotificationInjectable from "../../notifications/show-success-notification.injectable";
@@ -40,7 +39,6 @@ const sendCommandInjectable = getInjectable({
     const selectTab = di.inject(selectDockTabInjectable);
     const getTerminalApi = di.inject(getTerminalApiInjectable);
     const showSuccessNotification = di.inject(showSuccessNotificationInjectable);
-    const logger = di.inject(loggerInjectionToken);
 
     return async (command: string, options: SendCommandOptions = {}): Promise<void> => {
       let tabId: string | undefined = options.tabId;
@@ -70,21 +68,14 @@ const sendCommandInjectable = getInjectable({
       await shellIsReady.catch(noop);
       clearTimeout(notifyVeryLong);
 
-      if (terminalApi) {
-        if (options.enter) {
-          command += "\r";
-        }
-
-        terminalApi.sendMessage({
-          type: TerminalChannels.STDIN,
-          data: command,
-        });
-      } else {
-        logger.warn(
-          "The selected tab is does not have a connection. Cannot send command.",
-          { tabId, command },
-        );
+      if (options.enter) {
+        command += "\r";
       }
+
+      terminalApi.sendMessage({
+        type: TerminalChannels.STDIN,
+        data: command,
+      });
     };
   },
 });

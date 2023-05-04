@@ -64,7 +64,7 @@ jest.mock("@k8slens/tooltip", () => ({
       void tooltipOverrideDisabled;
       const ResolvedTarget = Target as React.FunctionComponent<TargetProps>;
 
-      if (tooltip) {
+      if (Boolean(tooltip)) {
         const testId = props["data-testid"] as string | undefined;
 
         return (

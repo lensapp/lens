@@ -41,16 +41,16 @@ export class ServicePort {
 }
 
 export interface ServiceSpec {
-  type: string;
-  clusterIP: string;
+  type?: string;
+  clusterIP?: string;
   clusterIPs?: string[];
   externalTrafficPolicy?: string;
   externalName?: string;
   loadBalancerIP?: string;
   loadBalancerSourceRanges?: string[];
-  sessionAffinity: string;
-  selector: Partial<Record<string, string>>;
-  ports: ServicePortSpec[];
+  sessionAffinity?: string;
+  selector?: Partial<Record<string, string>>;
+  ports?: ServicePortSpec[];
   healthCheckNodePort?: number;
   externalIPs?: string[]; // https://kubernetes.io/docs/concepts/services-networking/service/#external-ips
   topologyKeys?: string[];

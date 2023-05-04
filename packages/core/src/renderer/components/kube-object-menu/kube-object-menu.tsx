@@ -51,7 +51,7 @@ class NonInjectedKubeObjectMenu<Kube extends KubeObject> extends React.Component
   private menuItems = observable.array<KubeObjectContextMenuItem>();
 
   componentDidUpdate(prevProps: Readonly<KubeObjectMenuProps<Kube> & Dependencies>): void {
-    if (prevProps.object !== this.props.object && this.props.object) {
+    if (prevProps.object !== this.props.object) {
       this.emitOnContextMenuOpen(this.props.object);
     }
   }
@@ -199,11 +199,11 @@ class NonInjectedKubeObjectMenu<Kube extends KubeObject> extends React.Component
         id={`menu-actions-for-kube-object-menu-for-${object?.getId()}`}
         data-testid={`menu-actions-for-kube-object-menu-for-${object?.getId()}`}
         className={cssNames("KubeObjectMenu", className)}
-        onOpen={object ? () => this.emitOnContextMenuOpen(object) : undefined}
+        onOpen={() => this.emitOnContextMenuOpen(object)}
         {...menuProps}
       >
         {this.renderMenuItems()}
-        {object && this.renderContextMenuItems(object)}
+        {this.renderContextMenuItems(object)}
       </MenuActions>
     );
   }

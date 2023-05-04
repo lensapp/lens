@@ -306,7 +306,7 @@ export class KubeObjectStore<
   }
 
   protected resetOnError(error: unknown) {
-    if (error) this.reset();
+    if (Boolean(error)) this.reset();
   }
 
   protected async loadItem(params: { name: string; namespace?: string }): Promise<K | null> {

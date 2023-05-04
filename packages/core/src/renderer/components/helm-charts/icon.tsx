@@ -31,7 +31,7 @@ export const HelmChartIcon = ({
 
   return (
     <div
-      className={cssNames(styles.chartIcon, className, { [styles.imageNotLoaded]: !isImageLoaded })}
+      className={cssNames(styles.chartIcon, className, !isImageLoaded && styles.imageNotLoaded)}
       data-testid="image-container"
       style={{
         backgroundImage: isImageLoaded ? backgroundImage : `url(${placeholderImageUrl})`,

@@ -69,7 +69,7 @@ class NonInjectedIngressDetails extends React.Component<KubeObjectDetailsProps &
   }
 
   renderIngressPoints(ingressPoints: ILoadBalancerIngress[]) {
-    if (!ingressPoints || ingressPoints.length === 0) return null;
+    if (ingressPoints.length === 0) return null;
 
     return (
       <div>
@@ -93,10 +93,6 @@ class NonInjectedIngressDetails extends React.Component<KubeObjectDetailsProps &
 
   render() {
     const { object: ingress, logger } = this.props;
-
-    if (!ingress) {
-      return null;
-    }
 
     if (!(ingress instanceof Ingress)) {
       logger.error("[IngressDetails]: passed object that is not an instanceof Ingress", ingress);

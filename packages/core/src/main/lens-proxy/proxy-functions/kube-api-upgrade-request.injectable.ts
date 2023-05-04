@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { chunk } from "lodash";
 import type { ConnectionOptions } from "tls";
 import { connect } from "tls";
 import url from "url";
@@ -13,6 +12,7 @@ import type { LensProxyApiRequest } from "../lens-proxy";
 import kubeAuthProxyServerInjectable from "../../cluster/kube-auth-proxy-server.injectable";
 import kubeAuthProxyCertificateInjectable from "../../kube-auth-proxy/kube-auth-proxy-certificate.injectable";
 import clusterApiUrlInjectable from "../../../features/cluster/connections/main/api-url.injectable";
+import { iter } from "@k8slens/utilities";
 
 const skipRawHeaders = new Set(["Host", "Authorization"]);
 
@@ -35,7 +35,7 @@ const kubeApiUpgradeRequestInjectable = getInjectable({
       proxySocket.write(`${req.method} ${pUrl.path ?? ""} HTTP/1.1\r\n`);
       proxySocket.write(`Host: ${clusterApiUrl.host}\r\n`);
 
-      for (const [key, value] of chunk(req.rawHeaders, 2)) {
+      for (const [key, value] of iter.chunks(req.rawHeaders, 2)) {
         if (skipRawHeaders.has(key)) {
           continue;
         }

@@ -55,14 +55,16 @@ interface VolumeVariantRender {
   element: JSX.Element;
 }
 
-function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariantRender | null {
+function renderVolumeVariant(props: VolumeVariantProps): VolumeVariantRender | null {
+  const { pod, volume: { name, ...volume }} = props;
+
   if (volume.awsElasticBlockStore) {
     return {
       kind: "awsElasticBlockStore",
       element: <AwsElasticBlockStore
         variant={volume.awsElasticBlockStore}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -73,7 +75,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <AzureDisk
         variant={volume.azureDisk}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -84,7 +86,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <AzureFile
         variant={volume.azureFile}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -95,7 +97,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <CephFs
         variant={volume.cephfs}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -106,7 +108,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <Cinder
         variant={volume.cinder}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -117,7 +119,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <ConfigMap
         variant={volume.configMap}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -128,7 +130,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <ContainerStorageInterface
         variant={volume.csi}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -139,7 +141,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <DownwardAPI
         variant={volume.downwardAPI}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -150,7 +152,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <EmptyDir
         variant={volume.emptyDir}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -161,7 +163,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <Ephemeral
         variant={volume.ephemeral}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -172,7 +174,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <FiberChannel
         variant={volume.fc}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -183,7 +185,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <FlexVolume
         variant={volume.flexVolume}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -194,7 +196,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <Flocker
         variant={volume.flocker}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -205,7 +207,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <GcePersistentDisk
         variant={volume.gcePersistentDisk}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -216,7 +218,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <GitRepo
         variant={volume.gitRepo}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -227,7 +229,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <GlusterFs
         variant={volume.glusterfs}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -238,7 +240,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <HostPath
         variant={volume.hostPath}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -249,7 +251,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <IScsi
         variant={volume.iscsi}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -260,7 +262,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <Local
         variant={volume.local}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -271,7 +273,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <NetworkFs
         variant={volume.nfs}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -282,7 +284,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <PersistentVolumeClaim
         variant={volume.persistentVolumeClaim}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -293,7 +295,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <PhotonPersistentDisk
         variant={volume.photonPersistentDisk}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -304,7 +306,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <PortworxVolume
         variant={volume.portworxVolume}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -315,7 +317,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <Projected
         variant={volume.projected}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -326,7 +328,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <Quobyte
         variant={volume.quobyte}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -337,7 +339,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <RadosBlockDevice
         variant={volume.rbd}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -348,7 +350,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <ScaleIo
         variant={volume.scaleIO}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -359,7 +361,7 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <Secret
         variant={volume.secret}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
@@ -370,23 +372,19 @@ function renderVolumeVariant({ pod, volume }: VolumeVariantProps): VolumeVariant
       element: <StorageOs
         variant={volume.storageos}
         pod={pod}
-        volumeName={volume.name}
+        volumeName={name}
       />,
     };
   }
 
-  if (volume.vsphereVolume) {
-    return {
-      kind: "vsphereVolume",
-      element: <VsphereVolume
-        variant={volume.vsphereVolume}
-        pod={pod}
-        volumeName={volume.name}
-      />,
-    };
-  }
-
-  return null;
+  return {
+    kind: "vsphereVolume",
+    element: <VsphereVolume
+      variant={volume.vsphereVolume}
+      pod={pod}
+      volumeName={name}
+    />,
+  };
 }
 
 export function VolumeVariant(props: VolumeVariantProps) {

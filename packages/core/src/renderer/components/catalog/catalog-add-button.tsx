@@ -11,9 +11,7 @@ import { observer } from "mobx-react";
 import { observable, action } from "mobx";
 import type { CatalogCategory, CatalogEntityAddMenu } from "../../api/catalog-entity";
 import { EventEmitter } from "events";
-import type { CatalogCategoryRegistry } from "../../../common/catalog";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import catalogCategoryRegistryInjectable from "../../../common/catalog/category-registry.injectable";
 import type { Navigate } from "../../navigation/navigate.injectable";
 import navigateInjectable from "../../navigation/navigate.injectable";
 
@@ -24,7 +22,6 @@ export interface CatalogAddButtonProps {
 type CategoryId = string;
 
 interface Dependencies {
-  catalogCategoryRegistry: CatalogCategoryRegistry;
   navigate: Navigate;
 }
 
@@ -43,19 +40,9 @@ class NonInjectedCatalogAddButton extends React.Component<CatalogAddButtonProps 
     }
   }
 
-  get categories() {
-    return this.props.catalogCategoryRegistry.filteredItems;
-  }
-
   updateMenuItems = action(() => {
     this.menuItems.clear();
-
-    if (this.props.category) {
-      this.updateCategoryItems(this.props.category);
-    } else {
-      // Show menu items from all categories
-      this.categories.forEach(this.updateCategoryItems);
-    }
+    this.updateCategoryItems(this.props.category);
   });
 
   updateCategoryItems = action((category: CatalogCategory) => {
@@ -84,16 +71,13 @@ class NonInjectedCatalogAddButton extends React.Component<CatalogAddButtonProps 
 
   onButtonClick = () => {
     const defaultAction = this.items.find(item => item.defaultAction)?.onClick;
-    const clickAction = defaultAction || (this.items.length === 1 ? this.items[0].onClick : null);
+    const clickAction = defaultAction ?? this.items[0]?.onClick;
 
     void clickAction?.();
   };
 
   get items() {
-    const { category } = this.props;
-
-    return category ? this.getCategoryFilteredItems(category) :
-      this.categories.map(this.getCategoryFilteredItems).flat();
+    return this.getCategoryFilteredItems(this.props.category);
   }
 
   render() {
@@ -136,7 +120,6 @@ class NonInjectedCatalogAddButton extends React.Component<CatalogAddButtonProps 
 export const CatalogAddButton = withInjectables<Dependencies, CatalogAddButtonProps>(NonInjectedCatalogAddButton, {
   getProps: (di, props) => ({
     ...props,
-    catalogCategoryRegistry: di.inject(catalogCategoryRegistryInjectable),
     navigate: di.inject(navigateInjectable),
   }),
 });

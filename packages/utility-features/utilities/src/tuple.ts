@@ -22,7 +22,7 @@ type TupleOfImpl<T, N extends number, R extends unknown[]> = R["length"] extends
  * is empty. Then it returns a tuple with the rest of each of tuples
  * @param sources The source arrays
  * @yields A tuple of the next element from each of the sources
- * @returns The tuple of all the sources as soon as at least one of the sources is exausted
+ * @returns The tuple of all the sources as soon as at least one of the sources is exhausted
  */
 function zip<T>(...sources: Tuple<T[], 0>): Iterator<Tuple<T, 0>, Tuple<T[], 0>>;
 function zip<T>(...sources: Tuple<T[], 1>): Iterator<Tuple<T, 1>, Tuple<T[], 1>>;

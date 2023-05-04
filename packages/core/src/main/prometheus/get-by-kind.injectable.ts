@@ -7,22 +7,14 @@ import { matches } from "lodash/fp";
 import type { PrometheusProvider } from "./provider";
 import prometheusProvidersInjectable from "./providers.injectable";
 
-export type GetPrometheusProviderByKind = (kind: string) => PrometheusProvider;
+export type GetPrometheusProviderByKind = (kind: string) => PrometheusProvider | undefined;
 
 const getPrometheusProviderByKindInjectable = getInjectable({
   id: "get-prometheus-provider-by-kind",
   instantiate: (di): GetPrometheusProviderByKind => {
     const providers = di.inject(prometheusProvidersInjectable);
 
-    return (kind) => {
-      const provider = providers.get().find(matches({ kind }));
-
-      if (!provider) {
-        throw new Error(`Provider of kind "${kind}" does not exist`);
-      }
-
-      return provider;
-    };
+    return (kind) => providers.get().find(matches({ kind }));
   },
 });
 

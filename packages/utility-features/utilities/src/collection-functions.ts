@@ -4,6 +4,7 @@
  */
 
 import { runInAction } from "mobx";
+import type { Simplify, ValueOf } from "type-fest";
 import { inspect } from "util";
 import { isDefined } from "./type-narrowing";
 
@@ -140,4 +141,17 @@ export function toggle<K>(set: Set<K>, key: K): void {
  */
 export function includes<T>(src: T[], value: T | null | undefined): boolean {
   return isDefined(value) && src.includes(value);
+}
+
+/**
+ * Attempt to get a value from an object where the key may not exist on the object
+ * @param obj An object to key into
+ * @param key Some key
+ */
+export function maybeGet<T extends object>(obj: T, key: string): Simplify<ValueOf<T>> | undefined {
+  if (key in obj) {
+    return (obj as Record<string, ValueOf<T>>)[key];
+  }
+
+  return undefined;
 }

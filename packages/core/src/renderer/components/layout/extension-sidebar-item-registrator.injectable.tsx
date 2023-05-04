@@ -51,7 +51,7 @@ const extensionSidebarItemRegistratorInjectable = getInjectable({
           parentId,
           isVisible: computed(() => extensionShouldBeEnabledForClusterFrame.value.get() && (visible?.get() ?? true)),
           title,
-          getIcon: () => (components.Icon && <components.Icon />),
+          getIcon: () => <components.Icon />,
           onClick: () => {
             const route = targetRoute.get();
 

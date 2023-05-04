@@ -145,7 +145,9 @@ export class LensRendererExtension extends LensExtension {
    */
   // eslint-disable-next-line @typescript-eslint/ban-types
   async isEnabledForCluster(cluster: KubernetesCluster): Promise<Boolean> {
-    return Promise.resolve((void cluster) || true);
+    void cluster;
+
+    return Promise.resolve(true);
   }
 
   /**

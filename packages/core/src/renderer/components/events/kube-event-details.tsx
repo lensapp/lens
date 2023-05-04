@@ -43,10 +43,6 @@ class NonInjectedKubeEventDetails extends React.Component<KubeEventDetailsProps 
   render() {
     const { object, eventStore } = this.props;
 
-    if (!object) {
-      return null;
-    }
-
     if (!(object instanceof KubeObject)) {
       this.props.logger.error("[KubeEventDetails]: passed object that is not an instanceof KubeObject", object);
 
@@ -64,7 +60,7 @@ class NonInjectedKubeEventDetails extends React.Component<KubeEventDetailsProps 
           <div className={styles.KubeEventDetails}>
             {events.map(event => (
               <div className={styles.event} key={event.getId()}>
-                <div className={cssNames(styles.title, { [styles.warning]: event.isWarning() })}>
+                <div className={cssNames(styles.title, event.isWarning() && styles.warning)}>
                   {event.message}
                 </div>
                 <DrawerItem name="Source">

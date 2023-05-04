@@ -212,9 +212,7 @@ function getInternalCommands(dependencies: Dependencies): CommandRegistration[] 
       id: "entity.viewSettings",
       title: ({ entity }) => `${entity.kind}/${entity.getName()}: View Settings`,
       action: ({ entity }) => dependencies.navigateToEntitySettings(entity.getId()),
-      isActive: ({ entity }) => (
-        entity && dependencies.hasCatalogEntitySettingItems(entity)
-      ),
+      isActive: ({ entity }) => dependencies.hasCatalogEntitySettingItems(entity),
     },
     {
       id: "cluster.openTerminal",

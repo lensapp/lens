@@ -110,9 +110,9 @@ class NonInjectedCustomResourceDetails extends React.Component<CustomResourceDet
   }
 
   render() {
-    const { props: { object, crd, logger }} = this;
+    const { object, crd, logger } = this.props;
 
-    if (!object || !crd) {
+    if (!crd) {
       return null;
     }
 

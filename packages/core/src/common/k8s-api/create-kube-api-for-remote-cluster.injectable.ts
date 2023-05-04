@@ -12,6 +12,7 @@ import createKubeJsonApiInjectable from "./create-kube-json-api.injectable";
 import type { KubeApiOptions } from "@k8slens/kube-api";
 import { KubeApi } from "@k8slens/kube-api";
 import type { KubeJsonApiDataFor, KubeObject, KubeObjectConstructor } from "@k8slens/kube-object";
+import { isDefined } from "@k8slens/utilities";
 
 export interface CreateKubeApiForRemoteClusterConfig {
   cluster: {
@@ -92,7 +93,7 @@ const createKubeApiForRemoteClusterInjectable = getInjectable({
         serverAddress: config.cluster.server,
         apiBase: "",
         debug: isDevelopment,
-        ...(token ? {
+        ...(isDefined(token) ? {
           getRequestOptions: async () => ({
             headers: {
               "Authorization": `Bearer ${typeof token === "function" ? await token() : token}`,

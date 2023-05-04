@@ -29,7 +29,7 @@ const clusterStoreSnapMigrationInjectable = getInjectable({
         }
 
         logger.info("Migrating embedded kubeconfig paths");
-        const storedClusters = (store.get("clusters") || []) as ClusterModel[];
+        const storedClusters = (store.get("clusters") as (ClusterModel[] | undefined) ?? []);
 
         if (!storedClusters.length) return;
 

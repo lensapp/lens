@@ -346,7 +346,7 @@ export const ItemListLayout = withInjectables<Dependencies, ItemListLayoutProps<
 }) as <I extends ItemObject, PreLoadStores extends boolean = true>(props: ItemListLayoutProps<I, PreLoadStores>) => React.ReactElement;
 
 function applyFilters<I extends ItemObject>(filters: ItemsFilter<I>[], items: I[]): I[] {
-  if (!filters || !filters.length) {
+  if (!filters.length) {
     return items;
   }
 

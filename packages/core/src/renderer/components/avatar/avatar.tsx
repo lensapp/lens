@@ -9,7 +9,7 @@ import type { ImgHTMLAttributes, MouseEventHandler } from "react";
 import React from "react";
 import randomColor from "randomcolor";
 import type { StrictReactNode } from "@k8slens/utilities";
-import { cssNames } from "@k8slens/utilities";
+import { isTruthy, cssNames } from "@k8slens/utilities";
 import { computeDefaultShortName } from "../../../common/catalog/helpers";
 
 export interface AvatarProps {
@@ -44,11 +44,13 @@ export const Avatar = ({
   "data-testid": dataTestId,
 }: AvatarProps) => (
   <div
-    className={cssNames(styles.Avatar, {
-      [styles.circle]: variant == "circle",
-      [styles.rounded]: variant == "rounded",
-      [styles.disabled]: disabled,
-    }, className)}
+    className={cssNames(
+      styles.Avatar,
+      variant == "circle" && styles.circle,
+      variant == "rounded" && styles.rounded,
+      disabled && styles.disabled,
+      className,
+    )}
     style={{
       width: `${size}px`,
       height: `${size}px`,
@@ -62,14 +64,18 @@ export const Avatar = ({
     onClick={onClick}
     data-testid={dataTestId}
   >
-    {src
-      ? (
-        <img
-          src={src}
-          {...imgProps}
-          alt={title}
-        />
-      )
-      : children || computeDefaultShortName(title)}
+    {
+      src
+        ? (
+          <img
+            src={src}
+            {...imgProps}
+            alt={title}
+          />
+        )
+        : isTruthy(children)
+          ? children
+          : computeDefaultShortName(title)
+    }
   </div>
 );

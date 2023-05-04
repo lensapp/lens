@@ -9,7 +9,7 @@ import type { LensExtension } from "../../../extensions/lens-extension";
 import { observable, when } from "mobx";
 import type { LensProtocolRouterDependencies, RouteAttempt } from "../../../common/protocol-handler";
 import { ProtocolHandlerInvalid } from "../../../common/protocol-handler";
-import { disposer, noop } from "@k8slens/utilities";
+import { disposer, isTruthy, noop } from "@k8slens/utilities";
 import type { BroadcastMessage } from "../../../common/ipc/broadcast-message.injectable";
 
 export interface FallbackHandler {
@@ -79,7 +79,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
         await this._routeToExtension(url);
       }
     } catch (error) {
-      void this.dependencies.broadcastMessage(ProtocolHandlerInvalid, error ? String(error) : "unknown error", rawUrl);
+      void this.dependencies.broadcastMessage(ProtocolHandlerInvalid, isTruthy(error) ? String(error) : "unknown error", rawUrl);
 
       if (error instanceof proto.RoutingError) {
         this.dependencies.logger.error(`${proto.LensProtocolRouter.LoggingPrefix}: ${String(error)}`, { url: error.url });

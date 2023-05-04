@@ -48,10 +48,6 @@ const NonInjectedKubeObjectMeta = observer((props : Dependencies & KubeObjectMet
     namespaceApi,
   } = props;
 
-  if (!object) {
-    return null;
-  }
-
   if (!(object instanceof KubeObject)) {
     logger.error("[KubeObjectMeta]: passed object that is not an instanceof KubeObject", object);
 

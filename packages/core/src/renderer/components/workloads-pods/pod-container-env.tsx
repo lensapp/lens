@@ -32,7 +32,7 @@ interface Dependencies {
 
 const NonInjectedContainerEnvironment = observer((props: Dependencies & ContainerEnvironmentProps) => {
   const {
-    container: { env, envFrom = [] },
+    container: { env = [], envFrom = [] },
     namespace,
     requestConfigMap,
     requestSecret,
@@ -42,7 +42,7 @@ const NonInjectedContainerEnvironment = observer((props: Dependencies & Containe
   const configMaps = useRef(observable.map<string, IAsyncComputed<ConfigMap>>());
 
   useEffect( () => autorun(() => {
-    for (const { valueFrom } of env ?? []) {
+    for (const { valueFrom } of env) {
       const { configMapKeyRef: { name } = { name: undefined }} = valueFrom ?? {};
 
       if (name) {
@@ -54,7 +54,7 @@ const NonInjectedContainerEnvironment = observer((props: Dependencies & Containe
       }
     }
 
-    for (const { configMapRef, secretRef } of envFrom ?? []) {
+    for (const { configMapRef, secretRef } of envFrom) {
       if (secretRef?.name) {
         getOrInsertWith(secrets.current, secretRef.name, () => asyncComputed({
           betweenUpdates: "show-latest-value",
@@ -178,8 +178,8 @@ const NonInjectedContainerEnvironment = observer((props: Dependencies & Containe
 
   return (
     <DrawerItem name="Environment" className="ContainerEnvironment">
-      {env && renderEnv()}
-      {envFrom && renderEnvFrom()}
+      {renderEnv()}
+      {renderEnvFrom()}
     </DrawerItem>
   );
 });

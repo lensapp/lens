@@ -17,6 +17,7 @@
     "noImplicitReturns": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "noUncheckedIndexedAccess": true,
     "isolatedModules": true,
     "skipLibCheck": true,
     "allowJs": false,

@@ -111,9 +111,7 @@ export const createClusterPrometheusHandler = (...args: [Dependencies, Cluster])
           break;
 
         case "fulfilled":
-          if (res.value) {
-            return res.value;
-          }
+          return res.value;
       }
     }
 
@@ -129,6 +127,10 @@ export const createClusterPrometheusHandler = (...args: [Dependencies, Cluster])
 
     const prometheusPath = ensurePrometheusPath(service);
     const provider = ensurePrometheusProvider(service);
+
+    if (!provider) {
+      return undefined;
+    }
 
     return { prometheusPath, provider };
   };

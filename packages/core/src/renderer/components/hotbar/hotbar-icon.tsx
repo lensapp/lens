@@ -50,7 +50,7 @@ const NonInjectedHotbarIcon = observer(({
   };
 
   return (
-    <div className={cssNames(styles.HotbarIcon, className, { [styles.contextMenuAvailable]: menuItems.length > 0 })}>
+    <div className={cssNames(styles.HotbarIcon, className, (menuItems.length > 0 && styles.contextMenuAvailable))}>
       {tooltip && (
         <Tooltip targetId={id}>
           {tooltip}
@@ -61,7 +61,11 @@ const NonInjectedHotbarIcon = observer(({
         id={id}
         title={title}
         colorHash={source ? `${title}-${source}` : title}
-        className={cssNames(styles.avatar, { [styles.active]: active, [styles.hasImage]: !!src })}
+        className={cssNames(
+          styles.avatar,
+          active && styles.active,
+          !!src && styles.hasImag,
+        )}
         disabled={disabled}
         size={size}
         src={src}

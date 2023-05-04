@@ -6,7 +6,7 @@
 import "./radio.scss";
 import React, { useContext, useRef } from "react";
 import type { StrictReactNode, SingleOrMany } from "@k8slens/utilities";
-import { cssNames, noop } from "@k8slens/utilities";
+import { isTruthy, cssNames, noop } from "@k8slens/utilities";
 
 export interface RadioGroupProps<T> {
   className?: string;
@@ -90,7 +90,7 @@ export function Radio<T>({
         disabled={disabled || ctx.disabled}
       />
       <i className="tick flex center"/>
-      {label ? <div className="label">{label}</div> : null}
+      {isTruthy(label) ? <div className="label">{label}</div> : null}
     </label>
   );
 }

@@ -30,12 +30,14 @@ export function ipcMainHandle(channel: string, listener: (event: Electron.IpcMai
 }
 
 export async function broadcastMessage(channel: string, ...args: unknown[]): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (ipcRenderer) {
     await ipcRenderer.invoke(broadcastMainChannel, channel, ...args.map(toJS));
 
     return;
   }
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (!webContents) {
     return;
   }
@@ -56,9 +58,9 @@ export async function broadcastMessage(channel: string, ...args: unknown[]): Pro
     );
   });
 
-  const views = webContents.getAllWebContents();
+  const views = webContents.getAllWebContents() ?? [];
 
-  if (!views || !isArray(views) || views.length === 0) return;
+  if (!isArray(views) || views.length === 0) return;
 
   args = args.map(toJS);
 

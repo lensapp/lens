@@ -25,7 +25,6 @@ import versionsOfSelectedHelmChartInjectable from "./details/versions-of-selecte
 import type { HelmChartDetailsVersionSelection } from "./details/versions/helm-chart-details-version-selection.injectable";
 import helmChartDetailsVersionSelectionInjectable from "./details/versions/helm-chart-details-version-selection.injectable";
 import assert from "assert";
-import autoBindReact from "auto-bind/react";
 
 export interface HelmChartDetailsProps {
   hideDetails(): void;
@@ -47,15 +46,6 @@ interface Dependencies {
 
 @observer
 class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Dependencies> {
-  constructor(props: HelmChartDetailsProps & Dependencies) {
-    super(props);
-    autoBindReact(this);
-  }
-
-  get chart() {
-    return this.props.chart;
-  }
-
   install = () => {
     const chart = this.props.versionSelection.value.get();
 
@@ -144,13 +134,13 @@ class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Depe
     const readmeIsLoading = this.props.readme.pending.get();
     const versionsAreLoading = this.props.versions.pending.get();
 
-    if (!this.chart || versionsAreLoading) {
+    if (versionsAreLoading) {
       return <Spinner center data-testid="spinner-for-chart-details" />;
     }
 
     return (
       <div className="box grow">
-        {this.renderIntroduction(this.chart)}
+        {this.renderIntroduction(this.props.chart)}
 
         {readmeIsLoading ? (
           <Spinner center data-testid="spinner-for-chart-readme" />
@@ -162,12 +152,13 @@ class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Depe
   }
 
   render() {
+
     return (
       <Drawer
         className="HelmChartDetails"
-        usePortal={true}
-        open={!!this.chart}
-        title={this.chart ? `Chart: ${this.chart.getFullName()}` : ""}
+        usePortal
+        open
+        title={`Chart: ${this.props.chart.getFullName()}`}
         onClose={this.props.hideDetails}
       >
         {this.renderContent()}

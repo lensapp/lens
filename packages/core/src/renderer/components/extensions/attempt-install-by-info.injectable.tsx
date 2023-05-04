@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { isObject } from "@k8slens/utilities";
+import { isObject, isTruthy } from "@k8slens/utilities";
 import React from "react";
 import { SemVer } from "semver";
 import URLParse from "url-parse";
@@ -76,8 +76,8 @@ const attemptInstallByInfoInjectable = getInjectable({
           return disposer();
         }
 
-        if (result.value.error || !isObject(result.value.versions)) {
-          const message = result.value.error ? `: ${String(result.value.error)}` : "";
+        if (isTruthy(result.value.error) || !isObject(result.value.versions)) {
+          const message = isTruthy(result.value.error) ? `: ${String(result.value.error)}` : "";
 
           showErrorNotification(`Failed to get registry information for extension${message}`);
 

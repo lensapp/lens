@@ -63,15 +63,17 @@ export const Badge = withTooltip(observer(({
   return (
     <div
       {...elemProps}
-      className={cssNames(styles.badge, className, {
-        [styles.small]: small,
-        [styles.flat]: flat,
-        [styles.clickable]: Boolean(elemProps.onClick) || isExpandable,
-        [styles.interactive]: isExpandable,
-        [styles.isExpanded]: isExpanded,
-        [styles.disabled]: disabled,
-        [styles.scrollable]: scrollable,
-      })}
+      className={cssNames(
+        styles.badge,
+        className,
+        small && styles.small,
+        flat && styles.flat,
+        (Boolean(elemProps.onClick) || isExpandable) && styles.clickable,
+        isExpandable && styles.interactive,
+        isExpanded && styles.isExpanded,
+        disabled && styles.disabled,
+        scrollable && styles.scrollable,
+      )}
       onMouseUp={onMouseUp}
       ref={elem}
     >

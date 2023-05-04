@@ -54,7 +54,7 @@ class NonInjectedHorizontalPodAutoscalerDetails extends React.Component<KubeObje
   }
 
   renderMetrics(hpa: HorizontalPodAutoscaler) {
-    const renderName = (metric: HorizontalPodAutoscalerMetricSpec) => {
+    const renderName = (metric: HorizontalPodAutoscalerMetricSpec | undefined) => {
       const metricName = getMetricName(metric);
 
       switch (metric?.type) {
@@ -95,7 +95,7 @@ class NonInjectedHorizontalPodAutoscalerDetails extends React.Component<KubeObje
           this.props.getMetrics(hpa)
             .map((metrics, index) => (
               <TableRow key={index}>
-                <TableCell className="name">{renderName(hpa.getMetrics()[index])}</TableCell>
+                <TableCell className="name">{renderName(hpa.getMetrics()?.[index])}</TableCell>
                 <TableCell className="metrics">{metrics}</TableCell>
               </TableRow>
             ))
@@ -106,10 +106,6 @@ class NonInjectedHorizontalPodAutoscalerDetails extends React.Component<KubeObje
 
   render() {
     const { object: hpa, apiManager, getDetailsUrl, logger } = this.props;
-
-    if (!hpa) {
-      return null;
-    }
 
     if (!(hpa instanceof HorizontalPodAutoscaler)) {
       logger.error("[HpaDetails]: passed object that is not an instanceof HorizontalPodAutoscaler", hpa);

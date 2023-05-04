@@ -26,7 +26,7 @@ const selectedUpdateChannelInjectable = getInjectable({
 
       setValue: action((channelId) => {
         const targetUpdateChannel =
-          channelId && updateChannels[channelId]
+          channelId && (channelId in updateChannels)
             ? updateChannels[channelId]
             : defaultUpdateChannel;
 

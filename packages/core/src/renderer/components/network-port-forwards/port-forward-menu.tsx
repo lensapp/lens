@@ -94,8 +94,6 @@ class NonInjectedPortForwardMenu<Props extends PortForwardMenuProps & Dependenci
   renderContent() {
     const { portForward, toolbar } = this.props;
 
-    if (!portForward) return null;
-
     return (
       <>
         { portForward.status === "Active" && (

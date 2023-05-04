@@ -51,7 +51,7 @@ const NonInjectedInstalledExtensions = observer(({
   enableExtension,
   disableExtension,
 }: Dependencies) => {
-  if (!extensionDiscovery.isLoaded) {
+  if (!extensionDiscovery.isLoaded.get()) {
     return <div><Spinner center /></div>;
   }
 
@@ -85,8 +85,8 @@ const NonInjectedInstalledExtensions = observer(({
             accessor: "extension",
             width: 200,
             sortType: (rowA, rowB) => { // Custom sorting for extension name
-              const nameA = extensions[rowA.index].manifest.name;
-              const nameB = extensions[rowB.index].manifest.name;
+              const nameA = extensions[rowA.index]?.manifest.name ?? "";
+              const nameB = extensions[rowB.index]?.manifest.name ?? "";
 
               if (nameA > nameB) return -1;
               if (nameB > nameA) return 1;
@@ -126,7 +126,12 @@ const NonInjectedInstalledExtensions = observer(({
             ),
             version,
             status: (
-              <div className={cssNames({ [styles.enabled]: isEnabled, [styles.invalid]: !isCompatible })}>
+              <div
+                className={cssNames(
+                  isEnabled && styles.enabled,
+                  !isCompatible && styles.invalid,
+                )}
+              >
                 {getStatus(extension)}
               </div>
             ),

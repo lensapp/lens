@@ -13,7 +13,7 @@ import type { Logger } from "@k8slens/logger";
 import type Fetch from "@k8slens/node-fetch";
 import type { RequestInit, Response } from "@k8slens/node-fetch";
 import type { Defaulted } from "@k8slens/utilities";
-import { isArray, isObject, isString, json } from "@k8slens/utilities";
+import { isDefined, isArray, isObject, isString, json } from "@k8slens/utilities";
 
 export interface JsonApiError {
   code?: number;
@@ -150,7 +150,7 @@ export class JsonApi<Data = unknown, Params extends { data?: unknown } = { data?
     );
     const { query } = params ?? {};
 
-    if (query && Object.keys(query).length > 0) {
+    if (isObject(query) && Object.keys(query).length > 0) {
       const queryString = stringify(query as unknown as QueryParams);
 
       reqUrl += (reqUrl.includes("?") ? "&" : "?") + queryString;
@@ -206,13 +206,13 @@ export class JsonApi<Data = unknown, Params extends { data?: unknown } = { data?
   ) {
     let reqUrl = `${this.config.serverAddress}${this.config.apiBase}${path}`;
     const reqInit = merge({}, this.reqInit, await this.getRequestOptions(), init);
-    const { data, query } = params || {};
+    const { data, query } = params ?? {};
 
-    if (data && !reqInit.body) {
+    if (isDefined(data) && reqInit.body == null) {
       reqInit.body = JSON.stringify(data);
     }
 
-    if (query && Object.keys(query).length > 0) {
+    if (isObject(query) && Object.keys(query).length > 0) {
       const queryString = stringify(query as unknown as QueryParams);
 
       reqUrl += (reqUrl.includes("?") ? "&" : "?") + queryString;

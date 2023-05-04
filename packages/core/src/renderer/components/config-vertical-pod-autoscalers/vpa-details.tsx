@@ -161,10 +161,6 @@ class NonInjectedVpaDetails extends React.Component<KubeObjectDetailsProps & Dep
   render() {
     const { object: vpa, apiManager, getDetailsUrl, logger } = this.props;
 
-    if (!vpa) {
-      return null;
-    }
-
     if (!(vpa instanceof VerticalPodAutoscaler)) {
       logger.error("[VpaDetails]: passed object that is not an instanceof VerticalPodAutoscaler", vpa);
 
@@ -186,10 +182,7 @@ class NonInjectedVpaDetails extends React.Component<KubeObjectDetailsProps & Dep
         </DrawerItem>
 
         <DrawerItem name="Recommender">
-          {
-            /* according to the spec there can be 0 or 1 recommenders, only */
-            recommenders?.length ? recommenders[0].name : "default"
-          }
+          {recommenders?.[0]?.name ?? "default"}
         </DrawerItem>
 
         {vpa.status && this.renderStatus(vpa, vpa.status)}

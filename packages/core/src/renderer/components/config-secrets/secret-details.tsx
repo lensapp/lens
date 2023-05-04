@@ -48,10 +48,8 @@ class NonInjectedSecretDetails extends React.Component<KubeObjectDetailsProps & 
       autorun(() => {
         const secret = this.props.object as Secret;
 
-        if (secret) {
-          this.data = secret.data;
-          this.revealSecret.clear();
-        }
+        this.data = secret.data;
+        this.revealSecret.clear();
       }),
     ]);
   }
@@ -144,10 +142,6 @@ class NonInjectedSecretDetails extends React.Component<KubeObjectDetailsProps & 
 
   render() {
     const { object: secret, logger } = this.props;
-
-    if (!secret) {
-      return null;
-    }
 
     if (!(secret instanceof Secret)) {
       logger.error("[SecretDetails]: passed object that is not an instanceof Secret", secret);

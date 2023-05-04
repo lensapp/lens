@@ -24,10 +24,6 @@ class NonInjectedEndpointsDetails extends React.Component<KubeObjectDetailsProps
   render() {
     const { object: endpoint } = this.props;
 
-    if (!endpoint) {
-      return null;
-    }
-
     if (!(endpoint instanceof Endpoints)) {
       this.props.logger.error("[EndpointDetails]: passed object that is not an instanceof Endpoint", endpoint);
 

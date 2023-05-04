@@ -4,6 +4,7 @@
  */
 
 import { getOrInsert } from "./collection-functions";
+import type { Tuple } from "./tuple";
 
 export type Falsy = false | 0 | "" | null | undefined;
 
@@ -288,11 +289,30 @@ function nFircate<T>(from: Iterable<T>, field: keyof T, parts: T[typeof field][]
   for (const item of from) {
     const index = parts.indexOf(item[field]);
 
-    if (index < 0) {
-      continue;
+    res[index]?.push(item);
+  }
+
+  return res;
+}
+
+function chunks<T, ChunkSize extends number>(src: Iterable<T>, size: ChunkSize): Tuple<T, ChunkSize>[] {
+  const res: Tuple<T, ChunkSize>[] = [];
+  const iterating = src[Symbol.iterator]();
+
+  top: for (;;) {
+    const item: T[] = [];
+
+    for (let i = 0; i < size; i += 1) {
+      const result = iterating.next();
+
+      if (result.done === true) {
+        break top;
+      }
+
+      item.push(result.value);
     }
 
-    res[index].push(item);
+    res.push(item as Tuple<T, ChunkSize>);
   }
 
   return res;
@@ -300,6 +320,7 @@ function nFircate<T>(from: Iterable<T>, field: keyof T, parts: T[typeof field][]
 
 export const iter = {
   chain,
+  chunks,
   concat,
   every,
   filter,
@@ -311,8 +332,8 @@ export const iter = {
   flatMap,
   join,
   map,
-  nFircate,
   newEmpty,
+  nFircate,
   nth,
   reduce,
   take,
