@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/button",
   "private": false,
-  "version": "1.0.0-alpha.5",
+  "version": "1.0.0-alpha.6",
   "description": "Highly extendable button in the Lens.",
   "type": "commonjs",
   "files": [
@@ -39,10 +39,10 @@
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
-    "@k8slens/webpack": "^6.5.0-alpha.4",
     "@async-fn/jest": "^1.6.4",
-    "@k8slens/eslint-config": "^6.5.0-alpha.2",
-    "@k8slens/react-testing-library-discovery": "^1.0.0-alpha.0",
+    "@k8slens/eslint-config": "^6.5.0-alpha.3",
+    "@k8slens/react-testing-library-discovery": "^1.0.0-alpha.4",
+    "@k8slens/webpack": "^6.5.0-alpha.5",
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^12.8.3"
   }
