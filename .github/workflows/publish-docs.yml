@@ -77,7 +77,7 @@ jobs:
 
       - name: Generate Extensions API Reference using typedocs
         run: |
-          npm ci
+          npm run all:install-in-ci
           npm run build:docs
 
       - name: mkdocs deploy master

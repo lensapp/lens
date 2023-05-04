@@ -48,7 +48,7 @@ jobs:
           timeout_minutes: 20
           max_attempts: 3
           retry_on: error
-          command: npm ci
+          command: npm run all:install-in-ci
 
       - name: Build library parts
         run: npm run build -- --ignore open-lens
