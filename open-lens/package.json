@@ -254,7 +254,7 @@
     "jest-environment-jsdom": "^28.1.3",
     "jsonfile": "^6.1.0",
     "mini-css-extract-plugin": "^2.7.1",
-    "monaco-editor": "^0.37.1",
+    "monaco-editor": "^0.38.0",
     "monaco-editor-webpack-plugin": "^7.0.1",
     "node-loader": "^2.0.0",
     "nodemon": "^2.0.20",
