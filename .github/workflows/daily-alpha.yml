@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          token: ${{ secrets.PROJECT_GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -31,4 +31,3 @@ jobs:
         env:
           BUMP_PACKAGE_ARGS: -- --conventional-commits --conventional-prerelease --yes
           PICK_ALL_PRS: "true"
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
