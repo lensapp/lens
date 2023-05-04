@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { JsonApiErrorParsed } from "../../../common/k8s-api/json-api";
+import { JsonApiErrorParsed } from "@k8slens/json-api";
 import { loggerInjectionToken } from "@k8slens/logger";
 import type { Disposer } from "@k8slens/utilities";
 import type { CreateNotificationOptions } from "./notifications.store";

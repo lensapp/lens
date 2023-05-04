@@ -6,7 +6,7 @@
 import type React from "react";
 import { action, observable, makeObservable } from "mobx";
 import uniqueId from "lodash/uniqueId";
-import type { JsonApiErrorParsed } from "../../../common/k8s-api/json-api";
+import type { JsonApiErrorParsed } from "@k8slens/json-api";
 import type { SetRequired } from "type-fest";
 import autoBind from "auto-bind";
 

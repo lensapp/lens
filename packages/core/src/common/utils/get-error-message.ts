@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { JsonApiErrorParsed } from "../k8s-api/json-api";
+import { JsonApiErrorParsed } from "@k8slens/json-api";
 
 export const getErrorMessage = (error: unknown): string => {
   if (typeof error === "string") {

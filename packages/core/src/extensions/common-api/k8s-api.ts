@@ -25,7 +25,7 @@ import { loggerInjectionToken } from "@k8slens/logger";
 import maybeKubeApiInjectable from "../../common/k8s-api/maybe-kube-api.injectable";
 import { DeploymentApi as InternalDeploymentApi, IngressApi as InternalIngressApi, NodeApi, PersistentVolumeClaimApi, PodApi } from "../../common/k8s-api/endpoints";
 import { storesAndApisCanBeCreatedInjectionToken } from "../../common/k8s-api/stores-apis-can-be-created.token";
-import type { JsonApiConfig } from "../../common/k8s-api/json-api";
+import type { JsonApiConfig } from "@k8slens/json-api";
 import type { KubeJsonApi as InternalKubeJsonApi } from "../../common/k8s-api/kube-json-api";
 import createKubeJsonApiInjectable from "../../common/k8s-api/create-kube-json-api.injectable";
 import type { RequestInit } from "@k8slens/node-fetch";
