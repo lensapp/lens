@@ -333,7 +333,7 @@
     "@k8slens/messaging-for-main": "^1.0.0-alpha.1",
     "@k8slens/messaging-for-renderer": "^1.0.0-alpha.1",
     "@k8slens/resizing-anchor": "^1.0.0-alpha.5",
-    "@k8slens/routing": "^1.0.0-alpha.5",
+    "@k8slens/routing": "^1.0.0-alpha.6",
     "@k8slens/run-many": "^1.0.0-alpha.1",
     "@k8slens/startable-stoppable": "^1.0.0-alpha.1",
     "@k8slens/test-utils": "^1.0.0-alpha.3",

@@ -198,6 +198,7 @@
     "@k8slens/messaging-for-renderer": "^1.0.0-alpha.4",
     "@k8slens/node-fetch": "^6.5.0-alpha.3",
     "@k8slens/react-application": "^1.0.0-alpha.3",
+    "@k8slens/routing": "1.0.0-alpha.6",
     "@k8slens/run-many": "^1.0.0-alpha.4",
     "@k8slens/startable-stoppable": "^1.0.0-alpha.3",
     "@k8slens/utilities": "^1.0.0-alpha.3",
