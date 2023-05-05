@@ -56,8 +56,6 @@ assert(inputFile, "input file not found");
 assert(noticeFile, "notice icon file not found");
 assert(spinnerFile, "spinner icon file not found");
 
-console.log(inputFile, noticeFile, spinnerFile)
-
 const getSvgStyling = (colouring: "dark" | "light") => (
   `
     <style>
