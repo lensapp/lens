@@ -9,6 +9,7 @@ import { JSDOM } from "jsdom";
 import path from "path";
 import sharp from "sharp";
 import arg from "arg";
+import assert from "assert";
 
 const options = arg({
   "--input": String,
@@ -41,11 +42,21 @@ const joinWithInitCwd = (relativePath: string): string => {
   return path.join(INIT_CWD, relativePath);
 };
 
+const resolve = async (input: string) => {
+  return (await import.meta.resolve?.(input))?.replace("file://", "");
+}
+
 const size = options["--output-size"] ?? 16;
-const inputFile = joinWithInitCwd(assertOption("--input"));
 const outputFolder = joinWithInitCwd(assertOption("--output"));
-const noticeFile = joinWithInitCwd(assertOption("--notice-icon"));
-const spinnerFile = joinWithInitCwd(assertOption("--spinner-icon"));
+const inputFile = await resolve(assertOption("--input"));
+const noticeFile = await resolve(assertOption("--notice-icon"));
+const spinnerFile = await resolve(assertOption("--spinner-icon"));
+
+assert(inputFile, "input file not found");
+assert(noticeFile, "notice icon file not found");
+assert(spinnerFile, "spinner icon file not found");
+
+console.log(inputFile, noticeFile, spinnerFile)
 
 const getSvgStyling = (colouring: "dark" | "light") => (
   `

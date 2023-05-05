@@ -69,6 +69,9 @@ export const getReactConfigFor =
           {
             test: /\.(ttf|eot|woff2?)$/,
             type: "asset/resource",
+            generator: {
+              filename: "fonts/[name][ext]",
+            },
           },
 
           {
@@ -79,6 +82,9 @@ export const getReactConfigFor =
           {
             test: /\.(jpg|png|ico)$/,
             type: "asset/resource",
+            generator: {
+              filename: "images/[name][ext]",
+            },
           },
         ],
       },

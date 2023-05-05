@@ -124,7 +124,10 @@ export function iconsAndImagesWebpackRules(): webpack.RuleSetRule[] {
     },
     {
       test: /\.(jpg|png|ico)$/,
-      type: "asset/resource", // path to file, e.g. "/static/build/assets/*"
+      type: "asset/resource",
+      generator: {
+        filename: "images/[name][ext]",
+      },
     },
   ];
 }
@@ -137,6 +140,9 @@ export function fontsLoaderWebpackRules(): webpack.RuleSetRule[] {
     {
       test: /\.(ttf|eot|woff2?)$/,
       type: "asset/resource",
+      generator: {
+        filename: "fonts/[name][ext]",
+      },
     },
   ];
 }

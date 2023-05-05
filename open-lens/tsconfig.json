@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
@@ -15,7 +15,7 @@
   },
   "include": [
     "src/**/*",
-    "../core/types/*.d.ts"
+    "../packages/core/types/*.d.ts"
   ],
   "exclude": [
     "out",
@@ -23,10 +23,5 @@
     "coverage",
     "binaries",
     "static"
-  ],
-  "references": [
-    {
-      "path": "../core"
-    }
   ]
 }
