@@ -18,9 +18,14 @@
   },
   "main": "static/build/main.js",
   "exports": {
+    "./package.json": "./package.json",
     "./main": "./static/build/library/main.js",
     "./renderer": "./static/build/library/renderer.js",
-    "./styles": "./static/build/library/renderer.css"
+    "./styles": "./static/build/library/renderer.css",
+    "./template.html": "./src/renderer/template.html",
+    "./vars.scss": "./src/renderer/components/vars.scss",
+    "./fonts/*": "./static/build/library/fonts/*",
+    "./icons/*.svg": "./src/renderer/components/icon/*.svg"
   },
   "typesVersions": {
     "*": {
@@ -38,7 +43,8 @@
     "build/notarize.js",
     "static/build/library/**/*",
     "src/renderer/template.html",
-    "templates/**/*",
+    "src/renderer/components/vars.scss",
+    "src/renderer/components/icon/*.svg",
     "types/*",
     "tsconfig.json"
   ],

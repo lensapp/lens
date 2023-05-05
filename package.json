@@ -3,7 +3,8 @@
   "private": true,
 
   "workspaces": [
-    "packages/**/*"
+    "packages/**/*",
+    "open-lens"
   ],
 
   "scripts": {

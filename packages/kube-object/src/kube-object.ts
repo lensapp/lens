@@ -5,7 +5,6 @@
 
 import moment from "moment";
 import { formatDuration, isObject, isString } from "@k8slens/utilities";
-import type { ItemObject } from "@k8slens/list-layout";
 import type { Patch } from "rfc6902";
 import autoBind from "auto-bind";
 import type { KubeObjectMetadata, KubeObjectScope, KubeJsonApiData } from "./api-types";
@@ -34,8 +33,7 @@ export class KubeObject<
   Metadata extends KubeObjectMetadata<KubeObjectScope> = KubeObjectMetadata<KubeObjectScope>,
   Status = unknown,
   Spec = unknown,
-> implements ItemObject
-{
+> {
   static readonly kind?: string;
 
   static readonly namespaced?: boolean;

@@ -1,7 +1,7 @@
 /**
- * Copyright (c) OpenLens Authors. All rights reserved.
- * Licensed under MIT License. See LICENSE in root directory for more information.
- */
+* Copyright (c) OpenLens Authors. All rights reserved.
+* Licensed under MIT License. See LICENSE in root directory for more information.
+*/
 
  import path from "path";
  import type webpack from "webpack";
@@ -15,7 +15,7 @@
  import type { WebpackPluginInstance } from "webpack";
  import { DefinePlugin } from "webpack";
  import { assetsFolderName, isDevelopment, rendererDir, buildDir, htmlTemplate, publicPath } from "./vars";
- import { platform } from "process";
+ import corePackageJson from "@k8slens/core/package.json";
 
  const renderer: webpack.Configuration = {
   target: "electron-renderer",
@@ -117,8 +117,10 @@
     new CopyPlugin({
       patterns: [
         {
-          // TODO: Figure out a way to access without relative path
-          from: "../../node_modules/@k8slens/core/static/build/library/*.ttf",
+          from: path.resolve(
+            path.dirname(require.resolve("@k8slens/core/package.json")),
+            corePackageJson.exports["./fonts/*"]
+          ),
           to: "[name][ext]",
         },
       ],
@@ -130,7 +132,7 @@
         : []
     ),
   ],
-};
+ };
 
  /**
   * Import icons and image files.
@@ -144,7 +146,10 @@
      },
      {
        test: /\.(jpg|png|ico)$/,
-       type: "asset/resource", // path to file, e.g. "/static/build/assets/*"
+       type: "asset/resource",
+       generator: {
+         filename: "images/[name][ext]",
+       },
      },
    ];
  }
@@ -157,6 +162,9 @@
      {
        test: /\.(ttf|eot|woff2?)$/,
        type: "asset/resource",
+       generator: {
+         filename: "fonts/[name][ext]",
+       },
      },
    ];
  }

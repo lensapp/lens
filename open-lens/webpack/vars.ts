@@ -15,7 +15,7 @@ export const publicPath = "/build/";
 export const webpackDevServerPort = Number(process.env.WEBPACK_DEV_SERVER_PORT) || 9191;
 
 // TODO: Figure out a way to access these without relative paths
-export const htmlTemplate = path.resolve(__dirname, "..", "..", "..", "node_modules", "@k8slens", "core", "src/renderer", "template.html");
-export const sassCommonVars = path.resolve(__dirname, "..", "..", "..", "node_modules", "@k8slens", "core", "src", "renderer", "components/vars.scss");
+export const htmlTemplate = require.resolve("@k8slens/core/template.html");
+export const sassCommonVars = require.resolve("@k8slens/core/vars.scss");
 
 assert(Number.isInteger(webpackDevServerPort), "WEBPACK_DEV_SERVER_PORT environment variable must only be an integer");

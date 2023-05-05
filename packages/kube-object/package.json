@@ -31,7 +31,6 @@
     "lint:fix": "lens-lint --fix"
   },
   "peerDependencies": {
-    "@k8slens/list-layout": "^1.0.0-alpha.1",
     "@k8slens/utilities": "^1.0.0-alpha.2",
     "@ogre-tools/injectable": "^15.8.1",
     "auto-bind": "^4.0.0",
