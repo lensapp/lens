@@ -1,23 +1,30 @@
 /**
-* Copyright (c) OpenLens Authors. All rights reserved.
-* Licensed under MIT License. See LICENSE in root directory for more information.
-*/
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
 
- import path from "path";
- import type webpack from "webpack";
- import HtmlWebpackPlugin from "html-webpack-plugin";
- import MiniCssExtractPlugin from "mini-css-extract-plugin";
- import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
- import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
- import CircularDependencyPlugin from "circular-dependency-plugin";
- import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
- import CopyPlugin from "copy-webpack-plugin";
- import type { WebpackPluginInstance } from "webpack";
- import { DefinePlugin } from "webpack";
- import { assetsFolderName, isDevelopment, rendererDir, buildDir, htmlTemplate, publicPath } from "./vars";
- import corePackageJson from "@k8slens/core/package.json";
+import path from "path";
+import type webpack from "webpack";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
+import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
+import CircularDependencyPlugin from "circular-dependency-plugin";
+import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
+import CopyPlugin from "copy-webpack-plugin";
+import type { WebpackPluginInstance } from "webpack";
+import { DefinePlugin } from "webpack";
+import {
+  assetsFolderName,
+  isDevelopment,
+  rendererDir,
+  buildDir,
+  htmlTemplate,
+  publicPath,
+} from "./vars";
+import corePackageJson from "@k8slens/core/package.json";
 
- const renderer: webpack.Configuration = {
+const renderer: webpack.Configuration = {
   target: "electron-renderer",
   name: "lens-app-renderer",
   mode: isDevelopment ? "development" : "production",
@@ -45,15 +52,9 @@
     /\[ReactRefreshPlugin] .*?HMR.*? is not enabled/, // enabled in webpack.dev-server
   ],
   resolve: {
-    extensions: [
-      ".js", ".jsx", ".json",
-      ".ts", ".tsx",
-    ],
+    extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
   },
-  externals: [
-    "npm",
-    "win-ca"
-  ],
+  externals: ["npm", "win-ca"],
   optimization: {
     minimize: false,
   },
@@ -126,78 +127,74 @@
       ],
     }),
 
-    ...(
-      isDevelopment
-        ? [new ReactRefreshWebpackPlugin()]
-        : []
-    ),
+    ...(isDevelopment ? [new ReactRefreshWebpackPlugin()] : []),
   ],
- };
+};
 
- /**
-  * Import icons and image files.
-  * Read more about asset types: https://webpack.js.org/guides/asset-modules/
-  */
- export function iconsAndImagesWebpackRules(): webpack.RuleSetRule[] {
-   return [
-     {
-       test: /\.svg$/,
-       type: "asset/source", // exports the source code of the asset, so we get XML
-     },
-     {
-       test: /\.(jpg|png|ico)$/,
-       type: "asset/resource",
-       generator: {
-         filename: "images/[name][ext]",
-       },
-     },
-   ];
- }
+/**
+ * Import icons and image files.
+ * Read more about asset types: https://webpack.js.org/guides/asset-modules/
+ */
+export function iconsAndImagesWebpackRules(): webpack.RuleSetRule[] {
+  return [
+    {
+      test: /\.svg$/,
+      type: "asset/source", // exports the source code of the asset, so we get XML
+    },
+    {
+      test: /\.(jpg|png|ico)$/,
+      type: "asset/resource",
+      generator: {
+        filename: "images/[name][ext]",
+      },
+    },
+  ];
+}
 
- /**
-  * Import custom fonts as URL.
-  */
- export function fontsLoaderWebpackRules(): webpack.RuleSetRule[] {
-   return [
-     {
-       test: /\.(ttf|eot|woff2?)$/,
-       type: "asset/resource",
-       generator: {
-         filename: "fonts/[name][ext]",
-       },
-     },
-   ];
- }
+/**
+ * Import custom fonts as URL.
+ */
+export function fontsLoaderWebpackRules(): webpack.RuleSetRule[] {
+  return [
+    {
+      test: /\.(ttf|eot|woff2?)$/,
+      type: "asset/resource",
+      generator: {
+        filename: "fonts/[name][ext]",
+      },
+    },
+  ];
+}
 
- export interface CssModulesWebpackRuleOptions {
-   styleLoader?: string;
- }
+export interface CssModulesWebpackRuleOptions {
+  styleLoader?: string;
+}
 
- /**
-  * Import CSS or SASS styles with modules support (*.module.scss)
-  */
- export function cssModulesWebpackRule({ styleLoader }: CssModulesWebpackRuleOptions = {}): webpack.RuleSetRule {
-   styleLoader ??= isDevelopment
-     ? "style-loader"
-     : MiniCssExtractPlugin.loader;
+/**
+ * Import CSS or SASS styles with modules support (*.module.scss)
+ */
+export function cssModulesWebpackRule({
+  styleLoader,
+}: CssModulesWebpackRuleOptions = {}): webpack.RuleSetRule {
+  styleLoader ??= isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader;
 
-   return {
-     test: /\.s?css$/,
-     use: [
-       styleLoader,
-       {
-         loader: "css-loader",
-         options: {
-           sourceMap: isDevelopment,
-           modules: {
-             auto: /\.module\./i, // https://github.com/webpack-contrib/css-loader#auto
-             mode: "local", // :local(.selector) by default
-             localIdentName: "[name]__[local]--[hash:base64:5]",
-           },
-         },
-       },
-     ],
-   };
- }
+  return {
+    test: /\.s?css$/,
+    use: [
+      styleLoader,
+      {
+        loader: "css-loader",
+        options: {
+          sourceMap: isDevelopment,
+          modules: {
+            auto: /\.module\./i, // https://github.com/webpack-contrib/css-loader#auto
+            mode: "local", // :local(.selector) by default
+            localIdentName: "[name]__[local]--[hash:base64:5]",
+          },
+        },
+      },
+    ],
+  };
+}
 
- export default renderer;
+export default renderer;
