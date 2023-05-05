@@ -13,8 +13,6 @@ export const assetsFolderName = "assets";
 export const rendererDir = path.join(process.cwd(), "src", "renderer");
 export const publicPath = "/build/";
 export const webpackDevServerPort = Number(process.env.WEBPACK_DEV_SERVER_PORT) || 9191;
-
-// TODO: Figure out a way to access these without relative paths
 export const htmlTemplate = require.resolve("@k8slens/core/template.html");
 export const sassCommonVars = require.resolve("@k8slens/core/vars.scss");
 
