@@ -107,7 +107,7 @@ class NonInjectedDeploymentScaleDialog extends Component<DeploymentScaleDialogPr
       <Wizard
         header={(
           <h5>
-            Scale Deployment
+            {"Scale Deployment "}
             <span>{deployment.getName()}</span>
           </h5>
         )}
@@ -139,14 +139,14 @@ class NonInjectedDeploymentScaleDialog extends Component<DeploymentScaleDialogPr
             </div>
             <div className="plus-minus-container flex gaps">
               <Icon
-                material="add_circle_outline"
-                onClick={this.desiredReplicasUp}
-                data-testid="desired-replicas-up"
-              />
-              <Icon
                 material="remove_circle_outline"
                 onClick={this.desiredReplicasDown}
                 data-testid="desired-replicas-down"
+              />
+              <Icon
+                material="add_circle_outline"
+                onClick={this.desiredReplicasUp}
+                data-testid="desired-replicas-up"
               />
             </div>
           </div>
