@@ -23,7 +23,6 @@
     "compute-versions": "node ./build/compute-versions.mjs",
     "prebuild": "npm run compute-versions",
     "build": "lens-webpack-build",
-    "dev": "webpack --mode=development --watch",
     "test": "jest --coverage --runInBand"
   },
   "peerDependencies": {

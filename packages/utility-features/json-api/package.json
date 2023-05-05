@@ -26,7 +26,6 @@
   "scripts": {
     "build": "lens-webpack-build",
     "clean": "rimraf dist/",
-    "dev": "webpack --mode=development --watch",
     "test": "jest --coverage --runInBand",
     "lint": "lens-lint",
     "lint:fix": "lens-lint --fix"
