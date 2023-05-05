@@ -14,7 +14,7 @@ import { minikubeReady } from "../helpers/minikube";
 import type { Frame, Page } from "playwright";
 import { groupBy, toPairs } from "lodash/fp";
 import { pipeline } from "@ogre-tools/fp";
-import { describeIf } from "../../../core/src/test-utils/skippers";
+import { describeIf } from "@k8slens/test-utils";
 
 const TEST_NAMESPACE = "integration-tests";
 
