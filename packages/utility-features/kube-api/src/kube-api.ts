@@ -543,7 +543,7 @@ export class KubeApi<
     // custom apis might return array for list response, e.g. users, groups, etc.
     return data
       .filter(isJsonApiData)
-      .map((data) => (this.ensureMetadataSelfLink(data.metadata), data))
+      .map((data) => (this.ensureMetadataSelfLink(data.metadata), data)) // eslint-disable-line no-sequences
       .map((data) => new KubeObjectConstructor(data as Data));
   }
 

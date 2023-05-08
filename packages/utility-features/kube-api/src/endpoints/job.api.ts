@@ -10,7 +10,7 @@ import { Job } from "@k8slens/kube-object";
 export class JobApi extends KubeApi<Job> {
   constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
     super(deps, {
-      ...opts ?? {},
+      ...(opts ?? {}),
       objectConstructor: Job,
     });
   }

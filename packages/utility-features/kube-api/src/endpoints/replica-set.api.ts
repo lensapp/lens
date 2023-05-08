@@ -10,7 +10,7 @@ import { ReplicaSet } from "@k8slens/kube-object";
 export class ReplicaSetApi extends KubeApi<ReplicaSet> {
   constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
     super(deps, {
-      ...opts ?? {},
+      ...(opts ?? {}),
       objectConstructor: ReplicaSet,
     });
   }
@@ -22,6 +22,6 @@ export class ReplicaSetApi extends KubeApi<ReplicaSet> {
   }
 
   scale(params: NamespacedResourceDescriptor, replicas: number) {
-    return this.scaleResource(params, { spec: { replicas }});
+    return this.scaleResource(params, { spec: { replicas } });
   }
 }

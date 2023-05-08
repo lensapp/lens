@@ -12,7 +12,7 @@ import { StatefulSet } from "@k8slens/kube-object";
 export class StatefulSetApi extends KubeApi<StatefulSet> {
   constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
     super(deps, {
-      ...opts ?? {},
+      ...(opts ?? {}),
       objectConstructor: StatefulSet,
     });
   }
@@ -24,18 +24,22 @@ export class StatefulSetApi extends KubeApi<StatefulSet> {
   }
 
   scale(params: NamespacedResourceDescriptor, replicas: number) {
-    return this.scaleResource(params, { spec: { replicas }});
+    return this.scaleResource(params, { spec: { replicas } });
   }
 
   restart(params: NamespacedResourceDescriptor) {
-    return this.patch(params, {
-      spec: {
-        template: {
-          metadata: {
-            annotations: { "kubectl.kubernetes.io/restartedAt" : moment.utc().format() },
+    return this.patch(
+      params,
+      {
+        spec: {
+          template: {
+            metadata: {
+              annotations: { "kubectl.kubernetes.io/restartedAt": moment.utc().format() },
+            },
           },
         },
       },
-    }, "strategic");
+      "strategic",
+    );
   }
 }

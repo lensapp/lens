@@ -17,12 +17,16 @@ export class IngressClassApi extends KubeApi<IngressClass> {
   }
 
   setAsDefault({ name }: ResourceDescriptor, isDefault = true) {
-    return this.patch({ name }, {
-      metadata: {
-        annotations: {
-          [IngressClass.ANNOTATION_IS_DEFAULT]: String(isDefault),
+    return this.patch(
+      { name },
+      {
+        metadata: {
+          annotations: {
+            [IngressClass.ANNOTATION_IS_DEFAULT]: String(isDefault),
+          },
         },
       },
-    }, "strategic");
+      "strategic",
+    );
   }
 }

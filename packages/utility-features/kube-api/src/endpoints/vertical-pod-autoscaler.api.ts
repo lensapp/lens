@@ -7,11 +7,10 @@ import { VerticalPodAutoscaler } from "@k8slens/kube-object";
 import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 
-
 export class VerticalPodAutoscalerApi extends KubeApi<VerticalPodAutoscaler> {
   constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
     super(deps, {
-      ...opts ?? {},
+      ...(opts ?? {}),
       objectConstructor: VerticalPodAutoscaler,
     });
   }

@@ -12,7 +12,6 @@ export class PodSecurityPolicyApi extends KubeApi<PodSecurityPolicy> {
     super(deps, {
       ...opts,
       objectConstructor: PodSecurityPolicy,
-
     });
   }
 }

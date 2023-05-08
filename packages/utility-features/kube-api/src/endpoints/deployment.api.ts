@@ -12,7 +12,7 @@ import { Deployment } from "@k8slens/kube-object";
 export class DeploymentApi extends KubeApi<Deployment> {
   constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
     super(deps, {
-      ...opts ?? {},
+      ...(opts ?? {}),
       objectConstructor: Deployment,
     });
   }
@@ -24,18 +24,22 @@ export class DeploymentApi extends KubeApi<Deployment> {
   }
 
   scale(params: NamespacedResourceDescriptor, replicas: number) {
-    return this.scaleResource(params, { spec: { replicas }});
+    return this.scaleResource(params, { spec: { replicas } });
   }
 
   restart(params: NamespacedResourceDescriptor) {
-    return this.patch(params, {
-      spec: {
-        template: {
-          metadata: {
-            annotations: { "kubectl.kubernetes.io/restartedAt" : moment.utc().format() },
+    return this.patch(
+      params,
+      {
+        spec: {
+          template: {
+            metadata: {
+              annotations: { "kubectl.kubernetes.io/restartedAt": moment.utc().format() },
+            },
           },
         },
       },
-    }, "strategic");
+      "strategic",
+    );
   }
 }

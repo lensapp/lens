@@ -9,7 +9,7 @@ import { KubeApi } from "../kube-api";
 export class ValidatingWebhookConfigurationApi extends KubeApi<ValidatingWebhookConfiguration> {
   constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
     super(deps, {
-      ...opts ?? {},
+      ...(opts ?? {}),
       objectConstructor: ValidatingWebhookConfiguration,
     });
   }

@@ -10,7 +10,7 @@ import { KubeApi } from "../kube-api";
 export class IngressApi extends KubeApi<Ingress> {
   constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
     super(deps, {
-      ...opts ?? {},
+      ...(opts ?? {}),
       objectConstructor: Ingress,
       // Add fallback for Kubernetes <1.19
       checkPreferredVersion: true,

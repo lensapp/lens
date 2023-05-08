@@ -10,16 +10,19 @@ import { KubeApi } from "../kube-api";
 export class SelfSubjectRulesReviewApi extends KubeApi<SelfSubjectRulesReview> {
   constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
     super(deps, {
-      ...opts ?? {},
+      ...(opts ?? {}),
       objectConstructor: SelfSubjectRulesReview,
     });
   }
 
   create({ namespace = "default" }) {
-    return super.create({}, {
-      spec: {
-        namespace,
+    return super.create(
+      {},
+      {
+        spec: {
+          namespace,
+        },
       },
-    });
+    );
   }
 }

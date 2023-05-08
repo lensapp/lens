@@ -10,7 +10,7 @@ import { Lease } from "@k8slens/kube-object";
 export class LeaseApi extends KubeApi<Lease> {
   constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
     super(deps, {
-      ...opts ?? {},
+      ...(opts ?? {}),
       objectConstructor: Lease,
     });
   }

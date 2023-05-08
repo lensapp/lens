@@ -10,7 +10,7 @@ import { KubeApi } from "../kube-api";
 export class NodeApi extends KubeApi<Node> {
   constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
     super(deps, {
-      ...opts ?? {},
+      ...(opts ?? {}),
       objectConstructor: Node,
     });
   }
