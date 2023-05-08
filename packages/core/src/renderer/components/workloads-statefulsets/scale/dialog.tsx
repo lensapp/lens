@@ -107,7 +107,7 @@ class NonInjectedStatefulSetScaleDialog extends Component<StatefulSetScaleDialog
       <Wizard
         header={(
           <h5>
-            Scale Stateful Set
+            {"Scale Stateful Set "}
             <span>{statefulSet.getName()}</span>
           </h5>
         )}
@@ -135,14 +135,14 @@ class NonInjectedStatefulSetScaleDialog extends Component<StatefulSetScaleDialog
             </div>
             <div className="plus-minus-container flex gaps">
               <Icon
-                material="add_circle_outline"
-                onClick={this.desiredReplicasUp}
-                data-testid="desired-replicas-up"
-              />
-              <Icon
                 material="remove_circle_outline"
                 onClick={this.desiredReplicasDown}
                 data-testid="desired-replicas-down"
+              />
+              <Icon
+                material="add_circle_outline"
+                onClick={this.desiredReplicasUp}
+                data-testid="desired-replicas-up"
               />
             </div>
           </div>
