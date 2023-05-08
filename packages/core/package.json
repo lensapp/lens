@@ -24,7 +24,7 @@
     "./styles": "./static/build/library/renderer.css",
     "./template.html": "./src/renderer/template.html",
     "./vars.scss": "./src/renderer/components/vars.scss",
-    "./fonts/*.ttf": "./static/build/library/fonts/*.ttf",
+    "./fonts": "./static/build/library/fonts",
     "./icons/*.svg": "./src/renderer/components/icon/*.svg"
   },
   "typesVersions": {
