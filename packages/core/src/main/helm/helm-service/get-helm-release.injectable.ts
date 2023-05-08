@@ -4,47 +4,42 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
-import { loggerInjectionToken } from "@k8slens/logger";
 import kubeconfigManagerInjectable from "../../kubeconfig-manager/kubeconfig-manager.injectable";
-import { isObject, json } from "@k8slens/utilities";
-import execHelmInjectable from "../exec-helm/exec-helm.injectable";
+import type { AsyncResult } from "@k8slens/utilities";
 import getHelmReleaseResourcesInjectable from "./get-helm-release-resources/get-helm-release-resources.injectable";
+import type { HelmReleaseDataWithResources } from "../../../features/helm-releases/common/channels";
+import getHelmReleaseDataInjectable from "./get-helm-release-data.injectable";
+
+export interface GetHelmReleaseArgs {
+  cluster: Cluster;
+  releaseName: string;
+  namespace: string;
+}
+
+export type GetHelmRelease = (args: GetHelmReleaseArgs) => AsyncResult<HelmReleaseDataWithResources, string>;
 
 const getHelmReleaseInjectable = getInjectable({
   id: "get-helm-release",
 
-  instantiate: (di) => {
-    const logger = di.inject(loggerInjectionToken);
-    const execHelm = di.inject(execHelmInjectable);
+  instantiate: (di): GetHelmRelease => {
+    const getHelmReleaseData = di.inject(getHelmReleaseDataInjectable);
     const getHelmReleaseResources = di.inject(getHelmReleaseResourcesInjectable);
 
-    return async (cluster: Cluster, releaseName: string, namespace: string) => {
+    return async ({ cluster, namespace, releaseName }) => {
       const proxyKubeconfigManager = di.inject(kubeconfigManagerInjectable, cluster);
       const proxyKubeconfigPath = await proxyKubeconfigManager.ensurePath();
 
-      logger.debug("Fetch release");
-
-      const result = await execHelm([
-        "status",
+      const releaseResult = await getHelmReleaseData(
         releaseName,
-        "--namespace",
         namespace,
-        "--kubeconfig",
         proxyKubeconfigPath,
-        "--output",
-        "json",
-      ]);
+      );
 
-      if (!result.callWasSuccessful) {
-        logger.warn(`Failed to exectute helm: ${result.error}`);
-
-        return undefined;
-      }
-
-      const release = json.parse(result.response);
-
-      if (!isObject(release) || Array.isArray(release)) {
-        return undefined;
+      if (!releaseResult.callWasSuccessful) {
+        return {
+          callWasSuccessful: false,
+          error: `Failed to get helm release data: ${releaseResult.error}`,
+        };
       }
 
       const resourcesResult = await getHelmReleaseResources(
@@ -54,14 +49,18 @@ const getHelmReleaseInjectable = getInjectable({
       );
 
       if (!resourcesResult.callWasSuccessful) {
-        logger.warn(`Failed to get helm release resources: ${resourcesResult.error}`);
-
-        return undefined;
+        return {
+          callWasSuccessful: false,
+          error: `Failed to get helm release resources: ${resourcesResult.error}`,
+        };
       }
 
       return {
-        ...release,
-        resources: resourcesResult.response,
+        callWasSuccessful: true,
+        response: {
+          ...releaseResult.response,
+          resources: resourcesResult.response,
+        },
       };
     };
   },

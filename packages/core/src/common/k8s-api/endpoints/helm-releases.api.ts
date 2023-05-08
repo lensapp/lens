@@ -4,14 +4,14 @@
  */
 
 import type { ItemObject } from "@k8slens/list-layout";
-import type { HelmReleaseDetails } from "./helm-releases.api/request-details.injectable";
+import type { HelmReleaseData } from "../../../features/helm-releases/common/channels";
 
 export interface HelmReleaseUpdateDetails {
   log: string;
-  release: HelmReleaseDetails;
+  release: HelmReleaseData;
 }
 
-export interface HelmReleaseDto {
+export interface HelmRelease extends ItemObject {
   appVersion: string;
   name: string;
   namespace: string;
@@ -19,14 +19,10 @@ export interface HelmReleaseDto {
   status: string;
   updated: string;
   revision: string;
-}
-
-export interface HelmRelease extends HelmReleaseDto, ItemObject {
   getNs: () => string;
   getChart: (withVersion?: boolean) => string;
   getRevision: () => number;
   getStatus: () => string;
   getVersion: () => string;
   getUpdated: (humanize?: boolean, compact?: boolean) => string | number;
-  getRepo: () => Promise<string>;
 }

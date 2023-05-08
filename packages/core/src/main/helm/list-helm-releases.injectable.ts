@@ -4,9 +4,11 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import execHelmInjectable from "./exec-helm/exec-helm.injectable";
-import { toCamelCase, isObject } from "@k8slens/utilities";
+import type { AsyncResult } from "@k8slens/utilities";
+import { isObject } from "@k8slens/utilities";
+import type { ListedHelmRelease } from "../../features/helm-releases/common/channels";
 
-export type ListHelmReleases = (pathToKubeconfig: string, namespace?: string) => Promise<Record<string, any>[]>;
+export type ListHelmReleases = (pathToKubeconfig: string, namespace?: string) => AsyncResult<ListedHelmRelease[], string>;
 
 const listHelmReleasesInjectable = getInjectable({
   id: "list-helm-releases",
@@ -33,16 +35,21 @@ const listHelmReleasesInjectable = getInjectable({
       const result = await execHelm(args);
 
       if (!result.callWasSuccessful) {
-        throw result.error;
+        return {
+          callWasSuccessful: false,
+          error: `Failed to list helm releases: ${result.error}`,
+        };
       }
 
-      const output = JSON.parse(result.response);
+      const rawOutput = JSON.parse(result.response);
+      const output = Array.isArray(rawOutput)
+        ? rawOutput.filter(isObject)
+        : [];
 
-      if (!Array.isArray(output) || output.length == 0) {
-        return [];
-      }
-
-      return output.filter(isObject).map(toCamelCase);
+      return {
+        callWasSuccessful: true,
+        response: output as unknown as ListedHelmRelease[],
+      };
     };
   },
 });

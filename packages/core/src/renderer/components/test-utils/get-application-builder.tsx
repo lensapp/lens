@@ -71,6 +71,7 @@ import { testUsingFakeTime } from "../../../test-utils/use-fake-time";
 import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
 import { getMessageBridgeFake } from "@k8slens/messaging-fake-bridge";
 import { historyInjectionToken } from "@k8slens/routing";
+import writeJsonSyncInjectable from "../../../common/fs/write-json-sync.injectable";
 
 type MainDiCallback = (container: { mainDi: DiContainer }) => void | Promise<void>;
 type WindowDiCallback = (container: { windowDi: DiContainer }) => void | Promise<void>;
@@ -240,7 +241,7 @@ export const getApplicationBuilder = () => {
     },
   }));
 
-  const windowHelpers = new Map<string, { di: DiContainer; getRendered: () => RenderResult }>();
+  const windowHelpers: ApplicationWindowHelpers = new Map();
 
   const createElectronWindowFake: CreateElectronWindow = (configuration) => {
     const windowId = configuration.id;
@@ -273,7 +274,10 @@ export const getApplicationBuilder = () => {
 
     let rendered: RenderResult;
 
-    windowHelpers.set(windowId, { di: windowDi, getRendered: () => rendered });
+    windowHelpers.set(windowId, {
+      di: windowDi,
+      getRendered: () => rendered,
+    });
 
     return {
       show: () => {},
@@ -321,9 +325,10 @@ export const getApplicationBuilder = () => {
 
   const namespaceItems = observable.array<Namespace>();
   const selectedNamespaces = observable.set<string>();
-  const startApplication = mainDi.inject(startApplicationInjectionToken);
 
   const startApp = async ({ shouldStartHidden }: { shouldStartHidden: boolean }) => {
+    const startApplication = mainDi.inject(startApplicationInjectionToken);
+
     mainDi.inject(lensProxyPortInjectable).set(42);
 
     for (const callback of beforeApplicationStartCallbacks) {
@@ -545,19 +550,17 @@ export const getApplicationBuilder = () => {
     setEnvironmentToClusterFrame: () => {
       environment = environments.clusterFrame;
 
+      const cluster = new Cluster({
+        id: "some-cluster-id",
+        contextName: "some-context-name",
+        kubeConfigPath: "/some-path-to-kube-config",
+      });
+
       builder.beforeWindowStart(({ windowDi }) => {
-        const cluster = new Cluster({
-          id: "some-cluster-id",
-          contextName: "some-context-name",
-          kubeConfigPath: "/some-path-to-kube-config",
-        });
-
-        windowDi.override(activeKubernetesClusterInjectable, () =>
-          computed(() => catalogEntityFromCluster(cluster)),
-        );
-
         windowDi.override(hostedClusterIdInjectable, () => cluster.id);
-        windowDi.override(hostedClusterInjectable, () => cluster);
+
+        // TODO: Remove this once we moved catalog to new IPC injectables
+        windowDi.override(activeKubernetesClusterInjectable, () => computed(() => catalogEntityFromCluster(cluster)));
 
         // TODO: Figure out a way to remove this stub.
         windowDi.override(namespaceStoreInjectable, () => ({
@@ -579,6 +582,43 @@ export const getApplicationBuilder = () => {
           getTotalCount: () => namespaceItems.length,
           isSelected: () => false,
         } as Partial<NamespaceStore> as NamespaceStore));
+      });
+
+      builder.beforeApplicationStart(({ mainDi }) => {
+        const writeJsonSync = mainDi.inject(writeJsonSyncInjectable);
+
+        writeJsonSync("/some-path-to-kube-config", {
+          clusters: [
+            {
+              name: cluster.contextName,
+            },
+          ],
+          users: [
+            {
+              name: "some-user-name",
+            },
+          ],
+          contexts: [
+            {
+              name: cluster.contextName,
+              context: {
+                cluster: cluster.contextName,
+                user: "some-user-name",
+              },
+            },
+          ],
+          "current-context": cluster.contextName,
+        });
+        writeJsonSync("/some-directory-for-app-data/some-product-name/lens-cluster-store.json", {
+          clusters: [
+            {
+              id: cluster.id,
+              kubeConfigPath: "/some-path-to-kube-config",
+              contextName: cluster.contextName,
+            },
+          ],
+          __internal__: { migrations: { version: "6.4.0" }},
+        });
       });
 
       return builder;
@@ -774,17 +814,13 @@ const findExtensionInstance = <T extends LensExtension> (di: DiContainer, inject
 type ApplicationWindowHelpers = Map<string, { di: DiContainer; getRendered: () => RenderResult }>;
 
 const toWindowWithHelpersFor =
-  (windowHelpers: ApplicationWindowHelpers) => (applicationWindow: LensWindow) => ({
+  (windowHelpers: ApplicationWindowHelpers) => (applicationWindow: LensWindow): LensWindowWithHelpers => ({
     ...applicationWindow,
 
     get rendered() {
       const helpers = windowHelpers.get(applicationWindow.id);
 
-      if (!helpers) {
-        throw new Error(
-          `Tried to get rendered for application window "${applicationWindow.id}" before it was started.`,
-        );
-      }
+      assert(helpers, `Tried to get rendered for application window "${applicationWindow.id}" before it was started.`);
 
       return helpers.getRendered();
     },
@@ -792,11 +828,7 @@ const toWindowWithHelpersFor =
     get di() {
       const helpers = windowHelpers.get(applicationWindow.id);
 
-      if (!helpers) {
-        throw new Error(
-          `Tried to get di for application window "${applicationWindow.id}" before it was started.`,
-        );
-      }
+      assert(helpers, `Tried to get rendered for application window "${applicationWindow.id}" before it was started.`);
 
       return helpers.di;
     },

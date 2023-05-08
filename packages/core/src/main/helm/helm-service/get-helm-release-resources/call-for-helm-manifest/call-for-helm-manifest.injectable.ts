@@ -4,12 +4,13 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { AsyncResult } from "@k8slens/utilities";
+import { isObject } from "@k8slens/utilities";
 import execHelmInjectable from "../../../exec-helm/exec-helm.injectable";
 import yaml from "js-yaml";
 import type { KubeJsonApiData, KubeJsonApiDataList } from "@k8slens/kube-object";
 
-const callForHelmManifestInjectable = getInjectable({
-  id: "call-for-helm-manifest",
+const requestHelmManifestInjectable = getInjectable({
+  id: "request-helm-manifest",
 
   instantiate: (di) => {
     const execHelm = di.inject(execHelmInjectable);
@@ -37,11 +38,11 @@ const callForHelmManifestInjectable = getInjectable({
         callWasSuccessful: true,
         response: yaml
           .loadAll(result.response)
-          .filter((manifest) => !!manifest) as KubeJsonApiData[],
+          .filter(isObject) as unknown as KubeJsonApiData[],
       };
     };
 
   },
 });
 
-export default callForHelmManifestInjectable;
+export default requestHelmManifestInjectable;
