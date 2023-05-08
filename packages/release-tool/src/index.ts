@@ -173,7 +173,18 @@ async function createReleaseBranchAndCommit(prBase: string, version: SemVer, prB
 
   await pipeExecFile("git", ["checkout", "-b", prBranch]);
   await pipeExecFile("git", ["add", "."]);
-  await pipeExecFile("git", ["commit", "-sm", `Release ${version.format()}`]);
+
+  try {
+    await pipeExecFile("git", ["commit", "-sm", `Release ${version.format()}`]);
+  } catch (error) {
+    if (process.env.FAIL_ON_NO_CHANGES === "false") {
+      console.log("No changes to commit");
+      return;
+    }
+
+    throw error;
+  }
+
   await pipeExecFile("git", ["push", "--set-upstream", "origin", prBranch]);
 
   await pipeExecFile("gh", [

@@ -35,4 +35,5 @@ jobs:
         env:
           BUMP_PACKAGE_ARGS: -- --conventional-commits --conventional-prerelease --yes
           PICK_ALL_PRS: "true"
+          FAIL_ON_NO_CHANGES: "false"
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
