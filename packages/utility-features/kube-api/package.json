@@ -39,7 +39,7 @@
     "@k8slens/kube-object": "^1.0.0-alpha.1",
     "@k8slens/logger": "^1.0.0-alpha.5",
     "@k8slens/utilities": "^1.0.0-alpha.1",
-    "@ogre-tools/injectable": "^15.8.1",
+    "@ogre-tools/injectable": "^16.1.0",
     "byline": "^5.0.0",
     "lodash": "^4.17.15",
     "mobx": "^6.8.0",
