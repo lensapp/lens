@@ -8,7 +8,6 @@ import { RoleBinding } from "@k8slens/kube-object";
 import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 
-
 export class RoleBindingApi extends KubeApi<RoleBinding, RoleBindingData> {
   constructor(deps: KubeApiDependencies, opts: DerivedKubeApiOptions = {}) {
     super(deps, {

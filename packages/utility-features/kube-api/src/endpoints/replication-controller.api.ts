@@ -11,7 +11,7 @@ import type { Scale } from "@k8slens/kube-object";
 export class ReplicationControllerApi extends KubeApi<ReplicationController> {
   constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
     super(deps, {
-      ...opts ?? {},
+      ...(opts ?? {}),
       objectConstructor: ReplicationController,
     });
   }
@@ -25,6 +25,6 @@ export class ReplicationControllerApi extends KubeApi<ReplicationController> {
   }
 
   scale(params: NamespacedResourceDescriptor, replicas: number): Promise<Scale> {
-    return this.scaleResource(params, { spec: { replicas }});
+    return this.scaleResource(params, { spec: { replicas } });
   }
 }

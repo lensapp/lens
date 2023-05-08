@@ -11,20 +11,24 @@ import { DaemonSet } from "@k8slens/kube-object";
 export class DaemonSetApi extends KubeApi<DaemonSet> {
   constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
     super(deps, {
-      ...opts ?? {},
+      ...(opts ?? {}),
       objectConstructor: DaemonSet,
     });
   }
 
   restart(params: NamespacedResourceDescriptor) {
-    return this.patch(params, {
-      spec: {
-        template: {
-          metadata: {
-            annotations: { "kubectl.kubernetes.io/restartedAt" : moment.utc().format() },
+    return this.patch(
+      params,
+      {
+        spec: {
+          template: {
+            metadata: {
+              annotations: { "kubectl.kubernetes.io/restartedAt": moment.utc().format() },
+            },
           },
         },
       },
-    }, "strategic");
+      "strategic",
+    );
   }
 }

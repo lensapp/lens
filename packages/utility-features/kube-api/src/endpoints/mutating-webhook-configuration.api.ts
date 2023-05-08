@@ -9,7 +9,7 @@ import { KubeApi } from "../kube-api";
 export class MutatingWebhookConfigurationApi extends KubeApi<MutatingWebhookConfiguration> {
   constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
     super(deps, {
-      ...opts ?? {},
+      ...(opts ?? {}),
       objectConstructor: MutatingWebhookConfiguration,
     });
   }

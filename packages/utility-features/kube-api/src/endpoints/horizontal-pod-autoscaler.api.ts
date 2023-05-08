@@ -11,14 +11,9 @@ export class HorizontalPodAutoscalerApi extends KubeApi<HorizontalPodAutoscaler>
   constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
     super(deps, {
       allowedUsableVersions: {
-        autoscaling: [
-          "v2",
-          "v2beta2",
-          "v2beta1",
-          "v1",
-        ],
+        autoscaling: ["v2", "v2beta2", "v2beta1", "v1"],
       },
-      ...opts ?? {},
+      ...(opts ?? {}),
       objectConstructor: HorizontalPodAutoscaler,
       checkPreferredVersion: true,
     });
