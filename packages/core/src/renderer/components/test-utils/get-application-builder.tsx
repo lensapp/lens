@@ -687,8 +687,10 @@ export const getApplicationBuilder = () => {
       const windowDi = builder.applicationWindow.only.di;
       const cluster = windowDi.inject(hostedClusterInjectable);
 
+      assert(cluster, "For some reason the hosted cluster is not yet available, are you running in an 'afterWindowStart' callback?");
+
       runInAction(() => {
-        cluster?.resourcesToShow.add(formatKubeApiResource(resource));
+        cluster.resourcesToShow.add(formatKubeApiResource(resource));
       });
 
       return builder;

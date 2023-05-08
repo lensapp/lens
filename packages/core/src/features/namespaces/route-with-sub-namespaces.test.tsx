@@ -33,9 +33,12 @@ describe("namespaces route when viewed with some subNamespaces", () => {
     requestDeleteSubNamespaceAnchorMock = asyncFn();
 
     builder.beforeWindowStart(({ windowDi }) => {
-      builder.allowKubeResource({ group: "", apiName: "namespaces" });
       windowDi.override(requestDeleteNormalNamespaceInjectable, () => requestDeleteNormalNamespaceMock);
       windowDi.override(requestDeleteSubNamespaceAnchorInjectable, () => requestDeleteSubNamespaceAnchorMock);
+    });
+
+    builder.afterWindowStart(() => {
+      builder.allowKubeResource({ group: "", apiName: "namespaces" });
     });
 
     result = await builder.render();
