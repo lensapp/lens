@@ -29,17 +29,24 @@ import type { NavigateToHelmReleases } from "../../../../../common/front-end-rou
 import navigateToHelmReleasesInjectable from "../../../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
 import assert from "assert";
 import activeThemeInjectable from "../../../../themes/active.injectable";
-import type { ToHelmRelease } from "../../to-helm-release.injectable";
-import toHelmReleaseInjectable from "../../to-helm-release.injectable";
+import hostedClusterIdInjectable from "../../../../cluster-frame-context/hosted-cluster-id.injectable";
+import helmChartRepoInjectable from "../../helm-chart-repo.injectable";
+import type { IAsyncComputed } from "@ogre-tools/injectable-react";
+import { waitUntilDefined } from "@k8slens/utilities";
 
 const releaseDetailsModelInjectable = getInjectable({
   id: "release-details-model",
 
   instantiate: async (di, targetRelease: TargetHelmRelease) => {
+    const clusterId = di.inject(hostedClusterIdInjectable);
+
+    assert(clusterId, "Cluster id is required");
+
     const model = new ReleaseDetailsModel({
       requestDetailedHelmRelease: di.inject(requestDetailedHelmReleaseInjectable),
       targetRelease,
       activeTheme: di.inject(activeThemeInjectable),
+      clusterId,
       requestHelmReleaseConfiguration: di.inject(requestHelmReleaseConfigurationInjectable),
       getResourceDetailsUrl: di.inject(getResourceDetailsUrlInjectable),
       updateRelease: di.inject(updateReleaseInjectable),
@@ -47,7 +54,7 @@ const releaseDetailsModelInjectable = getInjectable({
       showSuccessNotification: di.inject(showSuccessNotificationInjectable),
       createUpgradeChartTab: di.inject(createUpgradeChartTabInjectable),
       navigateToHelmReleases: di.inject(navigateToHelmReleasesInjectable),
-      toHelmRelease: di.inject(toHelmReleaseInjectable),
+      helmChartRepo: di.injectFactory(helmChartRepoInjectable),
     });
 
     await model.load();
@@ -78,6 +85,7 @@ export interface ConfigurationInput {
 interface Dependencies {
   readonly targetRelease: TargetHelmRelease;
   readonly activeTheme: IComputedValue<LensTheme>;
+  readonly clusterId: string;
   requestDetailedHelmRelease: RequestDetailedHelmRelease;
   requestHelmReleaseConfiguration: RequestHelmReleaseConfiguration;
   getResourceDetailsUrl: GetResourceDetailsUrl;
@@ -86,7 +94,7 @@ interface Dependencies {
   showSuccessNotification: ShowNotification;
   createUpgradeChartTab: (release: HelmRelease) => string;
   navigateToHelmReleases: NavigateToHelmReleases;
-  toHelmRelease: ToHelmRelease;
+  helmChartRepo: (release: HelmRelease) => IAsyncComputed<string | undefined>;
 }
 
 export class ReleaseDetailsModel {
@@ -114,10 +122,12 @@ export class ReleaseDetailsModel {
 
       const name = this.release.getName();
       const namespace = this.release.getNs();
+      const helmChartRepo = this.dependencies.helmChartRepo(this.release);
+      const repo = await waitUntilDefined(helmChartRepo.value);
 
       const data = {
         chart: this.release.getChart(),
-        repo: await this.release.getRepo(),
+        repo,
         version: this.release.getVersion(),
         values: this.configuration.nonSavedValue.get(),
       };
@@ -165,10 +175,11 @@ export class ReleaseDetailsModel {
   load = async () => {
     const { name, namespace } = this.dependencies.targetRelease;
 
-    const result = await this.dependencies.requestDetailedHelmRelease(
-      name,
+    const result = await this.dependencies.requestDetailedHelmRelease({
+      releaseName: name,
       namespace,
-    );
+      clusterId: this.dependencies.clusterId,
+    });
 
     if (!result.callWasSuccessful) {
       runInAction(() => {
@@ -210,7 +221,7 @@ export class ReleaseDetailsModel {
 
     assert(detailedRelease, "Tried to access release before load");
 
-    return this.dependencies.toHelmRelease(detailedRelease.release);
+    return detailedRelease.release;
   }
 
   @computed private get details() {
@@ -227,7 +238,7 @@ export class ReleaseDetailsModel {
 
   @computed get groupedResources(): MinimalResourceGroup[] {
     return pipeline(
-      this.details?.resources ?? [],
+      this.details.resources ?? [],
       groupBy((resource) => resource.kind),
       (grouped) => Object.entries(grouped),
 

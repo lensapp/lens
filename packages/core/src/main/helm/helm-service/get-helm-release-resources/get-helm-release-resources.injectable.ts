@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import callForHelmManifestInjectable from "./call-for-helm-manifest/call-for-helm-manifest.injectable";
+import requestHelmManifestInjectable from "./call-for-helm-manifest/call-for-helm-manifest.injectable";
 import type { KubeJsonApiData, KubeJsonApiDataList } from "@k8slens/kube-object";
 import type { AsyncResult } from "@k8slens/utilities";
 
@@ -17,10 +17,10 @@ const getHelmReleaseResourcesInjectable = getInjectable({
   id: "get-helm-release-resources",
 
   instantiate: (di): GetHelmReleaseResources => {
-    const callForHelmManifest = di.inject(callForHelmManifestInjectable);
+    const requestHelmManifest = di.inject(requestHelmManifestInjectable);
 
     return async (name, namespace, kubeconfigPath) => {
-      const result = await callForHelmManifest(name, namespace, kubeconfigPath);
+      const result = await requestHelmManifest(name, namespace, kubeconfigPath);
 
       if (!result.callWasSuccessful) {
         return result;

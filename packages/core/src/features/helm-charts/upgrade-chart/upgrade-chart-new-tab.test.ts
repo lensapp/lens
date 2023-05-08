@@ -6,6 +6,7 @@
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { RenderResult } from "@testing-library/react";
+import { anyObject } from "jest-mock-extended";
 import type { NavigateToHelmReleases } from "../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
 import navigateToHelmReleasesInjectable from "../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
 import { HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
@@ -15,8 +16,8 @@ import type { RequestHelmChartVersions } from "../../../common/k8s-api/endpoints
 import requestHelmChartVersionsInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/request-versions.injectable";
 import type { RequestHelmReleaseConfiguration } from "../../../common/k8s-api/endpoints/helm-releases.api/request-configuration.injectable";
 import requestHelmReleaseConfigurationInjectable from "../../../common/k8s-api/endpoints/helm-releases.api/request-configuration.injectable";
-import type { RequestHelmReleases } from "../../../common/k8s-api/endpoints/helm-releases.api/request-releases.injectable";
-import requestHelmReleasesInjectable from "../../../common/k8s-api/endpoints/helm-releases.api/request-releases.injectable";
+import type { ListClusterHelmReleases } from "../../../main/helm/helm-service/list-helm-releases.injectable";
+import listClusterHelmReleasesInjectable from "../../../main/helm/helm-service/list-helm-releases.injectable";
 import dockStoreInjectable from "../../../renderer/components/dock/dock/store.injectable";
 import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
@@ -26,9 +27,9 @@ describe("New Upgrade Helm Chart Dock Tab", () => {
   let builder: ApplicationBuilder;
   let renderResult: RenderResult;
   let requestHelmReleaseConfigurationMock: AsyncFnMock<RequestHelmReleaseConfiguration>;
-  let requestHelmReleasesMock: AsyncFnMock<RequestHelmReleases>;
   let requestHelmChartsMock: AsyncFnMock<RequestHelmCharts>;
   let requestHelmChartVersionsMock: AsyncFnMock<RequestHelmChartVersions>;
+  let listClusterHelmReleasesMock: AsyncFnMock<ListClusterHelmReleases>;
   let navigateToHelmReleases: NavigateToHelmReleases;
 
   beforeEach(async () => {
@@ -39,9 +40,6 @@ describe("New Upgrade Helm Chart Dock Tab", () => {
       requestHelmReleaseConfigurationMock = asyncFn();
       windowDi.override(requestHelmReleaseConfigurationInjectable, () => requestHelmReleaseConfigurationMock);
 
-      requestHelmReleasesMock = asyncFn();
-      windowDi.override(requestHelmReleasesInjectable, () => requestHelmReleasesMock);
-
       requestHelmChartsMock = asyncFn();
       windowDi.override(requestHelmChartsInjectable, () => requestHelmChartsMock);
 
@@ -49,6 +47,11 @@ describe("New Upgrade Helm Chart Dock Tab", () => {
       windowDi.override(requestHelmChartVersionsInjectable, () => requestHelmChartVersionsMock);
 
       navigateToHelmReleases = windowDi.inject(navigateToHelmReleasesInjectable);
+    });
+
+    builder.beforeApplicationStart(({ mainDi }) => {
+      listClusterHelmReleasesMock = asyncFn();
+      mainDi.override(listClusterHelmReleasesInjectable, () => listClusterHelmReleasesMock);
     });
 
     testUsingFakeTime("2020-01-12 12:00:00");
@@ -79,22 +82,25 @@ describe("New Upgrade Helm Chart Dock Tab", () => {
       });
 
       it("requests helm releases for the selected namespace", () => {
-        expect(requestHelmReleasesMock).toBeCalledWith("my-second-namespace");
+        expect(listClusterHelmReleasesMock).toBeCalledWith(anyObject({ id: "some-cluster-id" }), "my-second-namespace");
       });
 
       describe("when helm releases resolves", () => {
         beforeEach(async () => {
-          await requestHelmReleasesMock.resolve([
-            {
-              appVersion: "some-app-version",
-              name: "some-name",
-              namespace: "my-second-namespace",
-              chart: "some-chart-1.0.0",
-              status: "some-status",
-              updated: "some-updated",
-              revision: "some-revision",
-            },
-          ]);
+          await listClusterHelmReleasesMock.resolve({
+            callWasSuccessful: true,
+            response: [
+              {
+                app_version: "some-app-version",
+                name: "some-name",
+                namespace: "my-second-namespace",
+                chart: "some-chart-1.0.0",
+                status: "some-status",
+                updated: "some-updated",
+                revision: "some-revision",
+              },
+            ],
+          });
         });
 
         it("renders", () => {

@@ -49,7 +49,7 @@ const webpackLensMain = (): webpack.Configuration => {
           use: "node-loader",
         },
         {
-          test: /\.ts$/,
+          test: (modulePath) => modulePath.endsWith(".ts") && !modulePath.endsWith(".test.ts"),
           exclude: /node_modules/,
           use: {
             loader: "ts-loader",

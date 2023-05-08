@@ -52,9 +52,15 @@ const updateHelmReleaseInjectable = getInjectable({
           throw result.error; // keep the same interface
         }
 
+        const releaseResult = await getHelmRelease({ cluster, releaseName, namespace });
+
+        if (!releaseResult.callWasSuccessful) {
+          throw releaseResult.error; // keep the same interface
+        }
+
         return {
           log: result.response,
-          release: await getHelmRelease(cluster, releaseName, namespace),
+          release: releaseResult.response,
         };
       } finally {
         await removePath(valuesFilePath);

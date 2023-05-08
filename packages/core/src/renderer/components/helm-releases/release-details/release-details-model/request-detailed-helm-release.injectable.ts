@@ -3,47 +3,57 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { HelmReleaseDto } from "../../../../../common/k8s-api/endpoints/helm-releases.api";
-import requestHelmReleasesInjectable from "../../../../../common/k8s-api/endpoints/helm-releases.api/request-releases.injectable";
-import type { HelmReleaseDetails } from "../../../../../common/k8s-api/endpoints/helm-releases.api/request-details.injectable";
-import requestHelmReleaseDetailsInjectable from "../../../../../common/k8s-api/endpoints/helm-releases.api/request-details.injectable";
 import type { AsyncResult } from "@k8slens/utilities";
+import requestHelmReleaseInjectable from "../../../../../features/helm-releases/renderer/request–helm-release.injectable";
+import type { GetHelmReleaseArgs, HelmReleaseDataWithResources } from "../../../../../features/helm-releases/common/channels";
+import requestListHelmReleasesInjectable from "../../../../../features/helm-releases/renderer/request-list-helm-releases.injectable";
+import type { HelmRelease } from "../../../../../common/k8s-api/endpoints/helm-releases.api";
+import { toHelmRelease } from "../../to-helm-release";
 
 export interface DetailedHelmRelease {
-  release: HelmReleaseDto;
-  details?: HelmReleaseDetails;
+  release: HelmRelease;
+  details: HelmReleaseDataWithResources;
 }
 
-export type RequestDetailedHelmRelease = (
-  name: string,
-  namespace: string
-) => AsyncResult<DetailedHelmRelease>;
+export type RequestDetailedHelmRelease = (args: GetHelmReleaseArgs) => AsyncResult<DetailedHelmRelease>;
 
 const requestDetailedHelmReleaseInjectable = getInjectable({
   id: "request-detailed-helm-release",
 
   instantiate: (di): RequestDetailedHelmRelease => {
-    const requestHelmReleases = di.inject(requestHelmReleasesInjectable);
-    const requestHelmReleaseDetails = di.inject(requestHelmReleaseDetailsInjectable);
+    const requestListHelmReleases = di.inject(requestListHelmReleasesInjectable);
+    const requestHelmRelease = di.inject(requestHelmReleaseInjectable);
 
-    return async (name, namespace) => {
-      const [releases, details] = await Promise.all([
-        requestHelmReleases(namespace),
-        requestHelmReleaseDetails(name, namespace),
-      ]);
+    return async ({ clusterId, namespace, releaseName }) => {
+      const listReleasesResult = await requestListHelmReleases({ clusterId, namespace });
+      const detailsResult = await requestHelmRelease({ clusterId, releaseName, namespace });
 
-      const release = releases.find(
-        (rel) => rel.name === name && rel.namespace === namespace,
+      if (!listReleasesResult.callWasSuccessful) {
+        return listReleasesResult;
+      }
+
+      const release = listReleasesResult.response.find(
+        (rel) => rel.name === releaseName && rel.namespace === namespace,
       );
 
       if (!release) {
         return {
           callWasSuccessful: false,
-          error: `Release ${name} didn't exist in ${namespace} namespace.`,
+          error: `Release ${releaseName} didn't exist in ${namespace} namespace.`,
         };
       }
 
-      return { callWasSuccessful: true, response: { release, details }};
+      if (!detailsResult.callWasSuccessful) {
+        return detailsResult;
+      }
+
+      return {
+        callWasSuccessful: true,
+        response: {
+          release: toHelmRelease(release),
+          details: detailsResult.response,
+        },
+      };
     };
   },
 });

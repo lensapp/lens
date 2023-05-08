@@ -26,7 +26,7 @@ const helmChartVersionsInjectable = getInjectable({
   },
 
   lifecycle: lifecycleEnum.keyedSingleton({
-    getInstanceKey: (di, release: HelmRelease) => release.getName(),
+    getInstanceKey: (di, release: HelmRelease) => `${release.namespace}/${release.name}}`,
   }),
 });
 

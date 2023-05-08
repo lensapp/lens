@@ -62,7 +62,10 @@ export function webpackLensRenderer(): webpack.Configuration {
           use: "node-loader",
         },
         {
-          test: /\.tsx?$/,
+          test: (modulePath) => (
+            (modulePath.endsWith(".ts") && !modulePath.endsWith(".test.ts"))
+            || (modulePath.endsWith(".tsx") && !modulePath.endsWith(".test.tsx"))
+          ),
           exclude: /node_modules/,
           use: {
             loader: "ts-loader",
