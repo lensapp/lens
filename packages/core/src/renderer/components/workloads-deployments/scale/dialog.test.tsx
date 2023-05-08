@@ -6,7 +6,7 @@
 import React from "react";
 import { waitFor, fireEvent } from "@testing-library/react";
 import { DeploymentScaleDialog } from "./dialog";
-import type { DeploymentApi } from "../../../../common/k8s-api/endpoints/deployment.api";
+import type { DeploymentApi } from "@k8slens/kube-api";
 import { Deployment } from "@k8slens/kube-object";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import deploymentApiInjectable from "../../../../common/k8s-api/endpoints/deployment.api.injectable";

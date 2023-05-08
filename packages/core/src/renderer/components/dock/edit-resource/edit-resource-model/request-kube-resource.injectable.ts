@@ -8,7 +8,7 @@ import { KubeObject } from "@k8slens/kube-object";
 import type { AsyncResult } from "@k8slens/utilities";
 import { getErrorMessage } from "../../../../../common/utils/get-error-message";
 import type { Writable } from "type-fest";
-import { parseKubeApi } from "../../../../../common/k8s-api/kube-api-parse";
+import { parseKubeApi } from "@k8slens/kube-api";
 import apiKubeGetInjectable from "../../../../k8s/api-kube-get.injectable";
 
 export type RequestKubeResource = (selfLink: string) => AsyncResult<KubeObject | undefined>;

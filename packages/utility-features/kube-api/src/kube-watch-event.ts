@@ -5,11 +5,12 @@
 
 import type { KubeStatusData } from "@k8slens/kube-object";
 
-export type IKubeWatchEvent<T> = {
-  readonly type: "ADDED" | "MODIFIED" | "DELETED";
-  readonly object: T;
-} | {
-  readonly type: "ERROR";
-  readonly object?: KubeStatusData;
-};
-
+export type IKubeWatchEvent<T> =
+  | {
+      readonly type: "ADDED" | "MODIFIED" | "DELETED";
+      readonly object: T;
+    }
+  | {
+      readonly type: "ERROR";
+      readonly object?: KubeStatusData;
+    };

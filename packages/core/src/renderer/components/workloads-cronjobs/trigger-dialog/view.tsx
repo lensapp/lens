@@ -24,7 +24,7 @@ import cronJobTriggerDialogStateInjectable from "./state.injectable";
 import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
 import showErrorNotificationInjectable from "../../notifications/show-error-notification.injectable";
-import type { JobApi } from "../../../../common/k8s-api/endpoints";
+import type { JobApi } from "@k8slens/kube-api";
 
 export interface CronJobTriggerDialogProps extends Partial<DialogProps> {
 }

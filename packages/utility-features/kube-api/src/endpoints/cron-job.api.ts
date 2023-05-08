@@ -16,11 +16,15 @@ export class CronJobApi extends KubeApi<CronJob> {
   }
 
   private requestSetSuspend(params: NamespacedResourceDescriptor, suspend: boolean) {
-    return this.patch(params, {
-      spec: {
-        suspend,
+    return this.patch(
+      params,
+      {
+        spec: {
+          suspend,
+        },
       },
-    }, "strategic");
+      "strategic",
+    );
   }
 
   suspend(params: NamespacedResourceDescriptor) {

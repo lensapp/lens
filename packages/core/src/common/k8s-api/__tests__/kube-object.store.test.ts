@@ -4,7 +4,7 @@
  */
 
 import { noop } from "@k8slens/utilities";
-import type { KubeApi } from "../kube-api";
+import type { KubeApi } from "@k8slens/kube-api";
 import { KubeObject } from "@k8slens/kube-object";
 import type { KubeObjectStoreLoadingParams } from "../kube-object.store";
 import { KubeObjectStore } from "../kube-object.store";

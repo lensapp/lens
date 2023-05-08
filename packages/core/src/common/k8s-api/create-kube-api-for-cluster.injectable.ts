@@ -9,7 +9,7 @@ import isDevelopmentInjectable from "../vars/is-development.injectable";
 import apiBaseInjectable from "./api-base.injectable";
 import type { KubeApiConstructor } from "./create-kube-api-for-remote-cluster.injectable";
 import createKubeJsonApiInjectable from "./create-kube-json-api.injectable";
-import { KubeApi } from "./kube-api";
+import { KubeApi } from "@k8slens/kube-api";
 import type { KubeJsonApiDataFor, KubeObject, KubeObjectConstructor } from "@k8slens/kube-object";
 
 export interface CreateKubeApiForLocalClusterConfig {

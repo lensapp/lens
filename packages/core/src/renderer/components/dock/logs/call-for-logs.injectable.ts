@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { PodLogsQuery } from "@k8slens/kube-object";
 import podApiInjectable from "../../../../common/k8s-api/endpoints/pod.api.injectable";
-import type { ResourceDescriptor } from "../../../../common/k8s-api/kube-api";
+import type { ResourceDescriptor } from "@k8slens/kube-api";
 
 export type CallForLogs = (params: ResourceDescriptor, query?: PodLogsQuery) => Promise<string>;
 

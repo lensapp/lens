@@ -9,8 +9,8 @@ import type { RequestInit } from "@k8slens/node-fetch";
 import { loggerInjectionToken } from "@k8slens/logger";
 import isDevelopmentInjectable from "../vars/is-development.injectable";
 import createKubeJsonApiInjectable from "./create-kube-json-api.injectable";
-import type { KubeApiOptions } from "./kube-api";
-import { KubeApi } from "./kube-api";
+import type { KubeApiOptions } from "@k8slens/kube-api";
+import { KubeApi } from "@k8slens/kube-api";
 import type { KubeJsonApiDataFor, KubeObject, KubeObjectConstructor } from "@k8slens/kube-object";
 
 export interface CreateKubeApiForRemoteClusterConfig {

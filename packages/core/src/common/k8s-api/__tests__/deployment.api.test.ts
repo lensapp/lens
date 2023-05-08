@@ -6,9 +6,8 @@
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
 import storesAndApisCanBeCreatedInjectable from "../../../renderer/stores-apis-can-be-created.injectable";
 import apiKubeInjectable from "../../../renderer/k8s/api-kube.injectable";
-import type { DeploymentApi } from "../endpoints/deployment.api";
 import deploymentApiInjectable from "../endpoints/deployment.api.injectable";
-import type { KubeJsonApi } from "../kube-json-api";
+import type { KubeJsonApi, DeploymentApi } from "@k8slens/kube-api";
 
 describe("DeploymentApi", () => {
   let deploymentApi: DeploymentApi;

@@ -11,7 +11,7 @@ import type { KubeEvent, KubeObject } from "@k8slens/kube-object";
 import { Pod } from "@k8slens/kube-object";
 import type { GetPodById } from "../workloads-pods/get-pod-by-id.injectable";
 import autoBind from "auto-bind";
-import type { KubeEventApi } from "../../../common/k8s-api/endpoints";
+import type { KubeEventApi } from "@k8slens/kube-api";
 
 export interface EventStoreDependencies extends KubeObjectStoreDependencies {
   getPodById: GetPodById;

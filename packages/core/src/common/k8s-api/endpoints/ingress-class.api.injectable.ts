@@ -3,8 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { IngressClassApi } from "./ingress-class.api";
-import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
+import { kubeApiInjectionToken, IngressClassApi } from "@k8slens/kube-api";
 import { loggerInjectionToken } from "@k8slens/logger";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 

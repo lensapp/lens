@@ -21,7 +21,7 @@ import { TooltipPosition } from "@k8slens/tooltip";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
 import type { SubscribableStore, SubscribeStores } from "../../kube-watch-api/kube-watch-api";
-import type { KubeApi } from "../../../common/k8s-api/kube-api";
+import type { KubeApi } from "@k8slens/kube-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import type { PageParam } from "../../navigation/page-param";
 import type { ToggleKubeDetailsPane } from "../kube-detail-params/toggle-details.injectable";

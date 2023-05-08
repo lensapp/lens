@@ -4,7 +4,7 @@
  */
 
 // Kubernetes apis
-// Docs: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/
+// Docs: https://kubernetes.io/docs/reference/kubernetes-api/
 
 export * from "./cluster.api";
 export * from "./cluster-role.api";
@@ -12,6 +12,7 @@ export * from "./cluster-role-binding.api";
 export * from "./config-map.api";
 export * from "./custom-resource-definition.api";
 export * from "./cron-job.api";
+export * from "./component-status.api";
 export * from "./daemon-set.api";
 export * from "./deployment.api";
 export * from "./endpoint.api";

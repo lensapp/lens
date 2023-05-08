@@ -5,8 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
-import { VerticalPodAutoscalerApi } from "./vertical-pod-autoscaler.api";
-import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
+import { kubeApiInjectionToken, VerticalPodAutoscalerApi } from "@k8slens/kube-api";
 import { loggerInjectionToken } from "@k8slens/logger";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 

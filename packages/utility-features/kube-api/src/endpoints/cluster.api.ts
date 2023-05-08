@@ -20,7 +20,7 @@ export class ClusterApi extends KubeApi<Cluster> {
 
   constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
     super(deps, {
-      ...opts ?? {},
+      ...(opts ?? {}),
       objectConstructor: Cluster,
     });
   }

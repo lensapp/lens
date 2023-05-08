@@ -7,7 +7,7 @@ import type { RoleBinding, RoleBindingData, Subject } from "@k8slens/kube-object
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 import { HashSet } from "@k8slens/utilities";
 import { hashSubject } from "../hashers";
-import type { RoleBindingApi } from "../../../../common/k8s-api/endpoints";
+import type { RoleBindingApi } from "@k8slens/kube-api";
 
 export class RoleBindingStore extends KubeObjectStore<RoleBinding, RoleBindingApi, RoleBindingData> {
   protected sortItems(items: RoleBinding[]) {

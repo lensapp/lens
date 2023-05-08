@@ -15,7 +15,7 @@ import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
 import type { ShowCheckedErrorNotification } from "../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../notifications/show-checked-error.injectable";
-import type { DeploymentApi } from "../../../common/k8s-api/endpoints";
+import type { DeploymentApi } from "@k8slens/kube-api";
 
 export interface DeploymentMenuProps extends KubeObjectMenuProps<Deployment> {}
 

@@ -13,7 +13,7 @@ import assert from "assert";
 import type { GetPodById } from "../../workloads-pods/get-pod-by-id.injectable";
 import type { GetPodsByOwnerId } from "../../workloads-pods/get-pods-by-owner-id.injectable";
 import type { LoadLogs } from "./load-logs.injectable";
-import type { ResourceDescriptor } from "../../../../common/k8s-api/kube-api";
+import type { ResourceDescriptor } from "@k8slens/kube-api";
 
 export interface LogTabViewModelDependencies {
   getLogs: (tabId: TabId) => string[];

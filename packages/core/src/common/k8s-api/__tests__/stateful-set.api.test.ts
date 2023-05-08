@@ -6,9 +6,8 @@
 import storesAndApisCanBeCreatedInjectable from "../../../renderer/stores-apis-can-be-created.injectable";
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
 import apiKubeInjectable from "../../../renderer/k8s/api-kube.injectable";
-import type { StatefulSetApi } from "../endpoints";
 import statefulSetApiInjectable from "../endpoints/stateful-set.api.injectable";
-import type { KubeJsonApi } from "../kube-json-api";
+import type { KubeJsonApi, StatefulSetApi } from "@k8slens/kube-api";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { flushPromises } from "@k8slens/test-utils";

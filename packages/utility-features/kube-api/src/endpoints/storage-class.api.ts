@@ -8,7 +8,6 @@ import { StorageClass } from "@k8slens/kube-object";
 import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 
-
 export class StorageClassApi extends KubeApi<StorageClass, StorageClassData> {
   constructor(deps: KubeApiDependencies, opts: DerivedKubeApiOptions = {}) {
     super(deps, {

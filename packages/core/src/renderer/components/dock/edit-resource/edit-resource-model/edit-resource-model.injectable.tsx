@@ -19,7 +19,7 @@ import type { ShowNotification } from "../../../notifications";
 import showSuccessNotificationInjectable from "../../../notifications/show-success-notification.injectable";
 import React from "react";
 import showErrorNotificationInjectable from "../../../notifications/show-error-notification.injectable";
-import { createKubeApiURL, parseKubeApi } from "../../../../../common/k8s-api/kube-api-parse";
+import { createKubeApiURL, parseKubeApi } from "@k8slens/kube-api";
 
 const editResourceModelInjectable = getInjectable({
   id: "edit-resource-model",

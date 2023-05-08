@@ -9,7 +9,7 @@ import type { KubeConfig } from "@kubernetes/client-node";
 import type { ShellSessionArgs, ShellSessionDependencies } from "../shell-session";
 import { ShellOpenError, ShellSession } from "../shell-session";
 import { get, once } from "lodash";
-import { NodeApi } from "../../../common/k8s-api/endpoints";
+import { NodeApi } from "@k8slens/kube-api";
 import { TerminalChannels } from "../../../common/terminal/channels";
 import type { CreateKubeJsonApiForCluster } from "../../../common/k8s-api/create-kube-json-api-for-cluster.injectable";
 import type { CreateKubeApi } from "../../../common/k8s-api/create-kube-api.injectable";
