@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { StatefulSetApi } from "../../../../common/k8s-api/endpoints";
+import type { StatefulSetApi } from "@k8slens/kube-api";
 import { StatefulSet } from "@k8slens/kube-object";
 import { StatefulSetScaleDialog } from "./dialog";
 import { waitFor, fireEvent } from "@testing-library/react";

@@ -21,7 +21,7 @@ import statefulSetApiInjectable from "../../../../common/k8s-api/endpoints/state
 import statefulSetDialogStateInjectable from "./dialog-state.injectable";
 import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
-import type { StatefulSetApi } from "../../../../common/k8s-api/endpoints";
+import type { StatefulSetApi } from "@k8slens/kube-api";
 
 export interface StatefulSetScaleDialogProps extends Partial<DialogProps> {
 }

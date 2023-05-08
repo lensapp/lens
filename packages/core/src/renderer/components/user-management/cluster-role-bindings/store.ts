@@ -7,7 +7,7 @@ import type { Subject, ClusterRoleBinding, ClusterRoleBindingData } from "@k8sle
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 import { HashSet } from "@k8slens/utilities";
 import { hashSubject } from "../hashers";
-import type { ClusterRoleBindingApi } from "../../../../common/k8s-api/endpoints";
+import type { ClusterRoleBindingApi } from "@k8slens/kube-api";
 
 export class ClusterRoleBindingStore extends KubeObjectStore<ClusterRoleBinding, ClusterRoleBindingApi, ClusterRoleBindingData> {
   protected sortItems(items: ClusterRoleBinding[]) {

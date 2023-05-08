@@ -1,0 +1,54 @@
+{
+  "name": "@k8slens/kube-api",
+  "private": false,
+  "version": "1.0.0-alpha.1",
+  "description": "Kube api",
+  "type": "commonjs",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lensapp/lens.git"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": {
+    "name": "OpenLens Authors",
+    "email": "info@k8slens.dev"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/lensapp/lens",
+  "scripts": {
+    "build": "webpack",
+    "clean": "rimraf dist/",
+    "dev": "webpack --mode=development --watch",
+    "test": "jest --coverage --runInBand",
+    "lint": "lens-lint",
+    "lint:fix": "lens-lint --fix"
+  },
+  "dependencies": {
+    "@k8slens/node-fetch": "^6.5.0-alpha.3"
+  },
+  "peerDependencies": {
+    "@k8slens/json-api": "^1.0.0-alpha.1",
+    "@k8slens/kube-object": "^1.0.0-alpha.1",
+    "@k8slens/logger": "^1.0.0-alpha.5",
+    "@k8slens/utilities": "^1.0.0-alpha.1",
+    "@ogre-tools/injectable": "^15.8.1",
+    "byline": "^5.0.0",
+    "lodash": "^4.17.15",
+    "mobx": "^6.8.0",
+    "moment": "^2.29.4",
+    "rfc6902": "^5.0.1"
+  },
+  "devDependencies": {
+    "@k8slens/eslint-config": "^6.5.0-alpha.2",
+    "@k8slens/jest": "^6.5.0-alpha.4",
+    "@k8slens/typescript": "^6.5.0-alpha.2"
+  }
+}

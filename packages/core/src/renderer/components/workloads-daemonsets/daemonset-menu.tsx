@@ -13,7 +13,7 @@ import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
 import type { ShowCheckedErrorNotification } from "../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../notifications/show-checked-error.injectable";
-import type { DaemonSetApi } from "../../../common/k8s-api/endpoints";
+import type { DaemonSetApi } from "@k8slens/kube-api";
 
 export interface DaemonSetMenuProps extends KubeObjectMenuProps<DaemonSet> {}
 

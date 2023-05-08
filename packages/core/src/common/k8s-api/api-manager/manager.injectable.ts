@@ -7,7 +7,7 @@ import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-c
 import { ApiManager } from "./api-manager";
 import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
 import { kubeObjectStoreInjectionToken } from "./kube-object-store-token";
-import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
+import { kubeApiInjectionToken } from "@k8slens/kube-api";
 import { computed } from "mobx";
 import { customResourceDefinitionApiInjectionToken } from "./crd-api-token";
 import createCustomResourceStoreInjectable from "./create-custom-resource-store.injectable";

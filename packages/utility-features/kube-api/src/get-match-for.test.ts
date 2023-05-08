@@ -23,7 +23,7 @@ describe("get-match-for", () => {
     expect(match).toEqual(["match"]);
   });
 
-  it("given multiple matching regex, when called with a string, returns first match", () => {
+  it("given multiple matching regex with one non-matching, when called with a string, returns first match", () => {
     const getMatch = getMatchFor(/non-match/, /some-match/, /match/);
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

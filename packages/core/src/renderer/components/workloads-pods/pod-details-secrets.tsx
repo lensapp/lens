@@ -14,7 +14,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import secretApiInjectable from "../../../common/k8s-api/endpoints/secret.api.injectable";
 import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
-import type { SecretApi } from "../../../common/k8s-api/endpoints";
+import type { SecretApi } from "@k8slens/kube-api";
 
 export interface PodDetailsSecretsProps {
   pod: Pod;

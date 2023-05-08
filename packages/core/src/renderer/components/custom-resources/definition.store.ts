@@ -8,7 +8,7 @@ import type { KubeObjectStoreDependencies, KubeObjectStoreOptions } from "../../
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { CustomResourceDefinition, KubeObject } from "@k8slens/kube-object";
 import autoBind from "auto-bind";
-import type { CustomResourceDefinitionApi } from "../../../common/k8s-api/endpoints";
+import type { CustomResourceDefinitionApi } from "@k8slens/kube-api";
 
 export class CustomResourceDefinitionStore extends KubeObjectStore<CustomResourceDefinition, CustomResourceDefinitionApi> {
   constructor(

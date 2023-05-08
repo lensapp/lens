@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { apiKubeInjectionToken } from "./api-kube";
+import { apiKubeInjectionToken } from "@k8slens/kube-api";
 
 const maybeKubeApiInjectable = getInjectable({
   id: "maybe-kube-api",

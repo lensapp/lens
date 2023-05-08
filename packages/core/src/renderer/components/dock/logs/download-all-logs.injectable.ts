@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { PodLogsQuery } from "@k8slens/kube-object";
-import type { ResourceDescriptor } from "../../../../common/k8s-api/kube-api";
+import type { ResourceDescriptor } from "@k8slens/kube-api";
 import { loggerInjectionToken } from "@k8slens/logger";
 import openSaveFileDialogInjectable from "../../../utils/save-file.injectable";
 import showErrorNotificationInjectable from "../../notifications/show-error-notification.injectable";

@@ -11,7 +11,7 @@ import type { PortForwardItem } from "../../port-forward";
 import { portForwardAddress } from "../../port-forward";
 import { Drawer, DrawerItem } from "../drawer";
 import { cssNames } from "@k8slens/utilities";
-import type { PodApi, ServiceApi } from "../../../common/k8s-api/endpoints";
+import type { PodApi, ServiceApi } from "@k8slens/kube-api";
 import { PortForwardMenu } from "./port-forward-menu";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import serviceApiInjectable from "../../../common/k8s-api/endpoints/service.api.injectable";

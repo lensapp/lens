@@ -4,7 +4,7 @@
  */
 
 import type { ServiceAccount, ServiceAccountData } from "@k8slens/kube-object";
-import type { ServiceAccountApi } from "../../../../common/k8s-api/endpoints";
+import type { ServiceAccountApi } from "@k8slens/kube-api";
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 
 export class ServiceAccountStore extends KubeObjectStore<ServiceAccount, ServiceAccountApi, ServiceAccountData> {

@@ -38,7 +38,7 @@ import serviceAccountStoreInjectable from "../../service-accounts/store.injectab
 import roleApiInjectable from "../../../../../common/k8s-api/endpoints/role.api.injectable";
 import type { ShowCheckedErrorNotification } from "../../../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../../../notifications/show-checked-error.injectable";
-import type { RoleApi } from "../../../../../common/k8s-api/endpoints";
+import type { RoleApi } from "@k8slens/kube-api";
 
 export interface RoleBindingDialogProps extends Partial<DialogProps> {
 }

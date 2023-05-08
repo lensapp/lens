@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
-import type { DerivedKubeApiOptions, KubeApiDependencies } from "./kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "@k8slens/kube-api";
 import maybeKubeApiInjectable from "./maybe-kube-api.injectable";
 
 export interface CreateKubeApi {

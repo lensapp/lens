@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import EventEmitter from "events";
 import type TypedEventEmitter from "typed-emitter";
-import type { KubeApi } from "../kube-api";
+import type { KubeApi } from "@k8slens/kube-api";
 
 export interface LegacyAutoRegistration {
   kubeApi: (api: KubeApi<any, any>) => void;

@@ -8,7 +8,7 @@ import type { DaemonSet, Pod } from "@k8slens/kube-object";
 import { PodStatusPhase } from "@k8slens/kube-object";
 import type { KubeObjectStoreDependencies, KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import type { DaemonSetApi } from "../../../common/k8s-api/endpoints";
+import type { DaemonSetApi } from "@k8slens/kube-api";
 
 export interface DaemonSetStoreDependencies extends KubeObjectStoreDependencies {
   readonly getPodsByOwnerId: GetPodsByOwnerId;

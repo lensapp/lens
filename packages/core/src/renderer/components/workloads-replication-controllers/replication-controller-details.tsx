@@ -16,7 +16,7 @@ import replicationControllerApiInjectable from "../../../common/k8s-api/endpoint
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
 import type { ShowNotification } from "../notifications";
 import { Slider } from "../slider";
-import type { ReplicationControllerApi } from "../../../common/k8s-api/endpoints";
+import type { ReplicationControllerApi } from "@k8slens/kube-api";
 
 export interface ReplicationControllerDetailsProps extends KubeObjectDetailsProps<ReplicationController> {
 }

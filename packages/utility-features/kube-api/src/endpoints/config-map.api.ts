@@ -12,7 +12,7 @@ export class ConfigMapApi extends KubeApi<ConfigMap, ConfigMapData> {
   constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
     super(deps, {
       objectConstructor: ConfigMap,
-      ...opts ?? {},
+      ...(opts ?? {}),
     });
   }
 }

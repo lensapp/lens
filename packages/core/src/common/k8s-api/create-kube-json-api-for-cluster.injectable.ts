@@ -7,7 +7,7 @@ import { apiKubePrefix } from "../vars";
 import isDebuggingInjectable from "../vars/is-debugging.injectable";
 import { apiBaseHostHeaderInjectionToken, apiBaseServerAddressInjectionToken } from "./api-base-configs";
 import createKubeJsonApiInjectable from "./create-kube-json-api.injectable";
-import type { KubeJsonApi } from "./kube-json-api";
+import type { KubeJsonApi } from "@k8slens/kube-api";
 
 export type CreateKubeJsonApiForCluster = (clusterId: string) => KubeJsonApi;
 

@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { ApiManager } from "../api-manager";
-import type { IngressApi } from "../endpoints";
-import { HorizontalPodAutoscalerApi } from "../endpoints";
+import type { IngressApi } from "@k8slens/kube-api";
+import { HorizontalPodAutoscalerApi } from "@k8slens/kube-api";
 import { Ingress } from "@k8slens/kube-object";
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
 import type { Fetch } from "../../fetch/fetch.injectable";

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { KubeJsonApi } from "../../common/k8s-api/kube-json-api";
+import type { KubeJsonApi } from "@k8slens/kube-api";
 import apiKubeInjectable from "./api-kube.injectable";
 
 export type ApiKubePatch = KubeJsonApi["patch"];

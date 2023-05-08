@@ -5,8 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
-import { CustomResourceDefinitionApi } from "./custom-resource-definition.api";
-import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
+import { kubeApiInjectionToken, CustomResourceDefinitionApi } from "@k8slens/kube-api";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
 

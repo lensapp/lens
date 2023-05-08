@@ -3,10 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
+import { kubeApiInjectionToken, ReplicationControllerApi } from "@k8slens/kube-api";
 import { loggerInjectionToken } from "@k8slens/logger";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
-import { ReplicationControllerApi } from "./replication-controller.api";
 
 const replicationControllerApiInjectable = getInjectable({
   id: "replication-controller-api",

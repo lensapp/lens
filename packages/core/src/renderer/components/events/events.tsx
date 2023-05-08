@@ -31,7 +31,7 @@ import eventStoreInjectable from "./store.injectable";
 import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import { NamespaceSelectBadge } from "../namespaces/namespace-select-badge";
-import type { KubeEventApi } from "../../../common/k8s-api/endpoints";
+import type { KubeEventApi } from "@k8slens/kube-api";
 
 enum columnId {
   message = "message",

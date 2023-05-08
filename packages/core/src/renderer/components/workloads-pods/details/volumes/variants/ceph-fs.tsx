@@ -5,7 +5,7 @@
 
 import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
-import type { SecretApi } from "../../../../../../common/k8s-api/endpoints";
+import type { SecretApi } from "@k8slens/kube-api";
 import secretApiInjectable from "../../../../../../common/k8s-api/endpoints/secret.api.injectable";
 import { DrawerItem } from "../../../../drawer";
 import type { PodVolumeVariantSpecificProps } from "../variant-helpers";
