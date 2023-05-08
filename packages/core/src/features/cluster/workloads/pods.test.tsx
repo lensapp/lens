@@ -13,7 +13,6 @@ import type { PodMetricsApi } from "../../../common/k8s-api/endpoints/pod-metric
 import podMetricsApiInjectable from "../../../common/k8s-api/endpoints/pod-metrics.api.injectable";
 import type { RequestMetrics } from "../../../common/k8s-api/endpoints/metrics.api/request-metrics.injectable";
 import requestMetricsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-metrics.injectable";
-import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 
 describe("workloads / pods", () => {
   let rendered: RenderResult;
@@ -24,19 +23,15 @@ describe("workloads / pods", () => {
     applicationBuilder = getApplicationBuilder().setEnvironmentToClusterFrame();
     applicationBuilder.namespaces.add("default");
     applicationBuilder.beforeWindowStart(({ windowDi }) => {
+      windowDi.override(podMetricsApiInjectable, () => ({
+        list: async () => Promise.resolve(podMetrics),
+      } as PodMetricsApi));
+    });
+    applicationBuilder.afterWindowStart(() => {
       applicationBuilder.allowKubeResource({
         apiName: "pods",
         group: "",
       });
-
-      windowDi.override(podMetricsApiInjectable, () => ({
-        list: async () => Promise.resolve(podMetrics),
-      } as PodMetricsApi));
-
-      const apiManager = windowDi.inject(apiManagerInjectable);
-      const podStore = windowDi.inject(podStoreInjectable);
-
-      apiManager.registerStore(podStore);
     });
   });
 
