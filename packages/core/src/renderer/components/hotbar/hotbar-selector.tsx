@@ -88,7 +88,7 @@ const NonInjectedHotbarSelector = observer(({
           targetId="hotbarIndex"
           preferredPositions={[TooltipPosition.TOP, TooltipPosition.TOP_LEFT]}
         >
-          {hotbar?.name}
+          {hotbar?.name.get()}
         </Tooltip>
       </div>
       <Icon

@@ -2,6 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import type { SafeReactNode } from "@k8slens/utilities";
 import { getInjectable } from "@ogre-tools/injectable";
 import { orderBy } from "lodash";
 import type { CatalogCategory, CatalogEntity } from "../../../../common/catalog";
@@ -35,7 +36,7 @@ const getCategoryColumnsInjectable = getInjectable({
       const sortingCallbacks: CategoryColumns["sortingCallbacks"] = {};
       const searchFilters: CategoryColumns["searchFilters"] = [];
       const renderTableHeader: CategoryColumns["renderTableHeader"] = [];
-      const tableRowRenderers: ((entity: CatalogEntity) => React.ReactNode)[] = [];
+      const tableRowRenderers: ((entity: CatalogEntity) => SafeReactNode)[] = [];
 
       for (const registration of allRegistrations) {
         if (registration.sortCallback) {

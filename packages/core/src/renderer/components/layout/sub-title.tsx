@@ -5,15 +5,15 @@
 
 import "./sub-title.scss";
 import React from "react";
-import type { SingleOrMany } from "@k8slens/utilities";
+import type { SafeReactNode, SingleOrMany } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 
 export interface SubTitleProps {
   className?: string;
-  title: React.ReactNode;
+  title: SafeReactNode;
   compact?: boolean; // no bottom padding
   id?: string;
-  children?: SingleOrMany<React.ReactNode>;
+  children?: SingleOrMany<SafeReactNode>;
 }
 
 export class SubTitle extends React.Component<SubTitleProps> {

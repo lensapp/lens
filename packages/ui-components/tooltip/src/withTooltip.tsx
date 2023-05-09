@@ -3,23 +3,22 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { ReactNode } from "react";
 import React, { useState } from "react";
 import type { TooltipProps } from "./tooltip";
 import { Tooltip } from "./tooltip";
-import { isReactNode } from "@k8slens/utilities";
+import { isReactNode, SafeReactNode } from "@k8slens/utilities";
 import uniqueId from "lodash/uniqueId";
 import type { SingleOrMany } from "@k8slens/utilities";
 
 export interface TooltipDecoratorProps {
-  tooltip?: ReactNode | Omit<TooltipProps, "targetId">;
+  tooltip?: SafeReactNode | Omit<TooltipProps, "targetId">;
   /**
    * forces tooltip to detect the target's parent for mouse events. This is
    * useful for displaying tooltips even when the target is "disabled"
    */
   tooltipOverrideDisabled?: boolean;
   id?: string;
-  children?: SingleOrMany<React.ReactNode>;
+  children?: SingleOrMany<SafeReactNode>;
 }
 
 export function withTooltip<TargetProps>(

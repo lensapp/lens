@@ -5,7 +5,7 @@
 
 import "./radio.scss";
 import React, { useContext, useRef } from "react";
-import type { SingleOrMany } from "@k8slens/utilities";
+import type { SafeReactNode, SingleOrMany } from "@k8slens/utilities";
 import { cssNames, noop } from "@k8slens/utilities";
 
 export interface RadioGroupProps<T> {
@@ -50,7 +50,7 @@ export function RadioGroup<T>({
 
 export interface RadioProps<T> {
   className?: string;
-  label: React.ReactNode;
+  label: SafeReactNode;
   value: T;
   disabled?: boolean;
 }

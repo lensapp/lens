@@ -7,7 +7,7 @@ import "./input.scss";
 
 import type { DOMAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 import React from "react";
-import type { SingleOrMany } from "@k8slens/utilities";
+import type { SafeReactNode, SingleOrMany } from "@k8slens/utilities";
 import { debouncePromise, isPromiseSettledFulfilled, cssNames } from "@k8slens/utilities";
 import { Icon } from "../icon";
 import type { TooltipProps } from "@k8slens/tooltip";
@@ -53,12 +53,12 @@ export interface IconDataFnArg {
 }
 
 /**
- * One of the folloing:
+ * One of the following:
  * - A material icon name
  * - A react node
  * - Or a function that produces a react node
  */
-export type IconData = string | React.ReactNode | ((opt: IconDataFnArg) => React.ReactNode);
+export type IconData = string | SafeReactNode | ((opt: IconDataFnArg) => SafeReactNode);
 
 export type InputProps = Omit<InputElementProps, "onChange" | "onSubmit"> & {
   theme?: "round-black" | "round";
@@ -74,7 +74,7 @@ export type InputProps = Omit<InputElementProps, "onChange" | "onSubmit"> & {
   showErrorsAsTooltip?: boolean | Omit<TooltipProps, "targetId">; // show validation errors as a tooltip :hover (instead of block below)
   iconLeft?: IconData;
   iconRight?: IconData;
-  contentRight?: string | React.ReactNode; // Any component of string goes after iconRight
+  contentRight?: string | SafeReactNode; // Any component of string goes after iconRight
   validators?: SingleOrMany<InputValidator>;
   blurOnEnter?: boolean;
   onChange?(value: string, evt: React.ChangeEvent<InputElement>): void;
@@ -86,7 +86,7 @@ interface State {
   dirty: boolean;
   valid: boolean;
   validating: boolean;
-  errors: React.ReactNode[];
+  errors: SafeReactNode[];
   submitted: boolean;
 }
 
@@ -171,8 +171,8 @@ export class Input extends React.Component<InputProps, State> {
   async validate() {
     const value = this.getValue();
     let validationId = (this.validationId = ""); // reset every time for async validators
-    const asyncValidators: Promise<React.ReactNode>[] = [];
-    const errors: React.ReactNode[] = [];
+    const asyncValidators: Promise<SafeReactNode>[] = [];
+    const errors: SafeReactNode[] = [];
 
     // run validators
     for (const validator of this.validators) {
@@ -192,6 +192,8 @@ export class Input extends React.Component<InputProps, State> {
         asyncValidators.push((async () => {
           try {
             await validator.validate(value, this.props);
+
+            return undefined;
           } catch (error) {
             return this.getValidatorError(value, validator) || (error instanceof Error ? error.message : String(error));
           }
@@ -220,7 +222,7 @@ export class Input extends React.Component<InputProps, State> {
     this.input?.setCustomValidity(errors[0]?.toString() ?? "");
   }
 
-  setValidation(errors: React.ReactNode[]) {
+  setValidation(errors: SafeReactNode[]) {
     this.setState({
       validating: false,
       valid: !errors.length,
@@ -432,7 +434,7 @@ export class Input extends React.Component<InputProps, State> {
     const componentId = id || showErrorsAsTooltip
       ? `input_tooltip_id_${uuid.v4()}`
       : undefined;
-    let tooltipError: React.ReactNode;
+    let tooltipError: SafeReactNode;
 
     if (showErrorsAsTooltip && showErrors) {
       const tooltipProps = typeof showErrorsAsTooltip === "object" ? showErrorsAsTooltip : {};

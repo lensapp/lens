@@ -5,7 +5,6 @@
 
 import "./item-list-layout.scss";
 
-import type { ReactNode } from "react";
 import React from "react";
 import type { IComputedValue } from "mobx";
 import { computed, makeObservable } from "mobx";
@@ -13,7 +12,7 @@ import { Observer, observer } from "mobx-react";
 import type { ConfirmDialogParams } from "../confirm-dialog";
 import type { TableCellProps, TableProps, TableRowProps, TableSortCallbacks } from "../table";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import type { IClassName } from "@k8slens/utilities";
+import type { IClassName, SafeReactNode } from "@k8slens/utilities";
 import { cssNames, isDefined, isReactNode, noop, prevDefault, stopPropagation } from "@k8slens/utilities";
 import type { AddRemoveButtonsProps } from "../add-remove-buttons";
 import { AddRemoveButtons } from "../add-remove-buttons";
@@ -50,8 +49,8 @@ export interface ItemListLayoutContentProps<Item extends ItemObject, PreLoadStor
   sortingCallbacks?: TableSortCallbacks<Item>;
   tableProps?: Partial<TableProps<Item>>; // low-level table configuration
   renderTableHeader?: (TableCellProps | undefined | null)[];
-  renderTableContents: (item: Item) => (ReactNode | TableCellProps)[];
-  renderItemMenu?: (item: Item, store: ItemListStore<Item, PreLoadStores>) => ReactNode;
+  renderTableContents: (item: Item) => (SafeReactNode | TableCellProps)[];
+  renderItemMenu?: (item: Item, store: ItemListStore<Item, PreLoadStores>) => SafeReactNode;
   customizeTableRowProps?: (item: Item) => Partial<TableRowProps<Item>>;
   addRemoveButtons?: Partial<AddRemoveButtonsProps>;
   virtual?: boolean;
@@ -71,7 +70,7 @@ export interface ItemListLayoutContentProps<Item extends ItemObject, PreLoadStor
    *
    * @default "Failed to load items"
    */
-  failedToLoadMessage?: React.ReactNode;
+  failedToLoadMessage?: SafeReactNode;
 }
 
 interface Dependencies {

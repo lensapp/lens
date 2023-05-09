@@ -7,6 +7,7 @@ import styles from "./main-layout.module.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
+import type { SafeReactNode, SingleOrMany } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { ErrorBoundary } from "@k8slens/error-boundary";
 import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "@k8slens/resizing-anchor";
@@ -16,10 +17,10 @@ import sidebarStorageInjectable, { defaultSidebarWidth } from "./sidebar-storage
 import type { StorageLayer } from "../../utils/storage-helper";
 
 export interface MainLayoutProps {
-  sidebar: React.ReactNode;
+  sidebar: SafeReactNode;
   className?: string;
-  footer?: React.ReactNode;
-  children?: React.ReactNode | React.ReactNode[];
+  footer?: SafeReactNode;
+  children?: SingleOrMany<SafeReactNode>;
 }
 
 /**

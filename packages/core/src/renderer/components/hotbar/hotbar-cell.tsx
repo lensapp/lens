@@ -4,13 +4,12 @@
  */
 import "./hotbar-menu.scss";
 
-import type { HTMLAttributes, ReactNode } from "react";
 import React, { useState } from "react";
-
+import type { SafeReactNode, SingleOrMany } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 
-export interface HotbarCellProps extends HTMLAttributes<HTMLDivElement> {
-  children?: ReactNode;
+export interface HotbarCellProps extends React.HTMLAttributes<HTMLDivElement> {
+  children?: SingleOrMany<SafeReactNode>;
   index: number;
   innerRef?: React.Ref<HTMLDivElement>;
 }

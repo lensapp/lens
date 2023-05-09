@@ -5,17 +5,17 @@
 
 import "./checkbox.scss";
 import React from "react";
-import type { SingleOrMany } from "@k8slens/utilities";
+import type { SafeReactNode, SingleOrMany } from "@k8slens/utilities";
 import { cssNames, noop } from "@k8slens/utilities";
 
 export interface CheckboxProps {
   className?: string;
-  label?: React.ReactNode;
+  label?: SafeReactNode;
   inline?: boolean;
   disabled?: boolean;
   value?: boolean;
   onChange?(value: boolean, evt: React.ChangeEvent<HTMLInputElement>): void;
-  children?: SingleOrMany<React.ReactChild | React.ReactFragment>;
+  children?: SingleOrMany<SafeReactNode>;
 }
 
 export function Checkbox({ label, inline, className, value, children, onChange = noop, disabled, ...inputProps }: CheckboxProps) {

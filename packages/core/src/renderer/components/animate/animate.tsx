@@ -5,6 +5,7 @@
 
 import "./animate.scss";
 import React, { useEffect, useState } from "react";
+import type { SafeReactNode, SingleOrMany } from "@k8slens/utilities";
 import { cssNames, noop } from "@k8slens/utilities";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { RequestAnimationFrame } from "./request-animation-frame.injectable";
@@ -21,7 +22,7 @@ export interface AnimateProps {
   onLeave?: () => void;
   enterDuration?: number;
   leaveDuration?: number;
-  children?: React.ReactNode;
+  children?: SingleOrMany<SafeReactNode>;
 }
 
 interface Dependencies {

@@ -22,7 +22,7 @@ const everySecond = 1000;
 const everyMinute = 60 * 1000;
 
 /**
- * This function computes a resonable update interval, matching `formatDuration`'s rules on when to display seconds
+ * This function computes a reasonable update interval, matching `formatDuration`'s rules on when to display seconds
  */
 function computeUpdateInterval(creationTimestampEpoch: number, compact: boolean): number {
   const seconds = Math.floor((Date.now() - creationTimestampEpoch) / 1000);

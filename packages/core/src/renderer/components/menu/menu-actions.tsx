@@ -8,6 +8,7 @@ import "./menu-actions.scss";
 import React, { isValidElement } from "react";
 import { observable, makeObservable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
+import type { SafeReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import type { IconProps } from "../icon";
 import { Icon } from "../icon";
@@ -25,11 +26,11 @@ export interface MenuActionsProps extends Partial<MenuProps> {
   className?: string;
   toolbar?: boolean; // display menu as toolbar with icons
   autoCloseOnSelect?: boolean;
-  triggerIcon?: string | (IconProps & TooltipDecoratorProps) | React.ReactNode;
+  triggerIcon?: string | (IconProps & TooltipDecoratorProps) | SafeReactNode;
   /**
    * @deprecated Provide your own remove `<MenuItem>` as part of the `children` passed to this component
    */
-  removeConfirmationMessage?: React.ReactNode | (() => React.ReactNode);
+  removeConfirmationMessage?: SafeReactNode | (() => SafeReactNode);
   /**
    * @deprecated Provide your own update `<MenuItem>` as part of the `children` passed to this component
    */

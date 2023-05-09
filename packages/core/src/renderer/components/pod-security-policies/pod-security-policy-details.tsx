@@ -15,6 +15,7 @@ import { Table, TableCell, TableHead, TableRow } from "../table";
 import type { Logger } from "@k8slens/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { loggerInjectionToken } from "@k8slens/logger";
+import type { SafeReactNode } from "@k8slens/utilities";
 
 export interface PodSecurityPolicyDetailsProps extends KubeObjectDetailsProps<PodSecurityPolicy> {
 }
@@ -33,7 +34,7 @@ interface Dependencies {
 
 @observer
 class NonInjectedPodSecurityPolicyDetails extends React.Component<PodSecurityPolicyDetailsProps & Dependencies> {
-  renderRuleGroup(title: React.ReactNode, group: RuleGroup | undefined) {
+  renderRuleGroup(title: SafeReactNode, group: RuleGroup | undefined) {
     if (!group) return null;
     const { rule, ranges } = group;
 

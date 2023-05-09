@@ -14,9 +14,10 @@ import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-create
 import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
 import { HorizontalPodAutoscalerDetails } from "./details";
+import type { SafeReactNode } from "@k8slens/utilities";
 
 jest.mock("react-router-dom", () => ({
-  Link: ({ children }: { children: React.ReactNode }) => children,
+  Link: ({ children }: { children: SafeReactNode }) => children,
 }));
 
 const hpaV2 = {

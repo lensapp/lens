@@ -6,11 +6,11 @@
 import "./button.scss";
 import type { ButtonHTMLAttributes } from "react";
 import React from "react";
-import { cssNames } from "@k8slens/utilities";
+import { cssNames, SafeReactNode, SingleOrMany } from "@k8slens/utilities";
 import { withTooltip } from "@k8slens/tooltip";
 
 export interface ButtonProps extends ButtonHTMLAttributes<any> {
-  label?: React.ReactNode;
+  label?: SafeReactNode;
   waiting?: boolean;
   primary?: boolean;
   accent?: boolean;
@@ -23,6 +23,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<any> {
   round?: boolean;
   href?: string; // render as hyperlink
   target?: "_blank"; // in case of using @href
+  children?: SingleOrMany<SafeReactNode>;
 }
 
 export const Button = withTooltip((props: ButtonProps) => {

@@ -11,7 +11,7 @@ import React from "react";
 import { Icon } from "../icon";
 import type { InputProps, InputValidator } from "../input";
 import { Input } from "../input";
-import type { SingleOrMany } from "@k8slens/utilities";
+import type { SafeReactNode, SingleOrMany } from "@k8slens/utilities";
 import autoBindReact from "auto-bind/react";
 
 export interface EditableListProps<T> {
@@ -23,7 +23,7 @@ export interface EditableListProps<T> {
 
   // An optional prop used to convert T to a displayable string
   // defaults to `String`
-  renderItem?: (item: T, index: number) => React.ReactNode;
+  renderItem?: (item: T, index: number) => SafeReactNode;
   inputTheme?: InputProps["theme"];
 }
 

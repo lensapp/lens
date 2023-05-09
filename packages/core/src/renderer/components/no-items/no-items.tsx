@@ -6,12 +6,12 @@
 import "./no-items.scss";
 
 import React from "react";
-import type { IClassName } from "@k8slens/utilities";
+import type { IClassName, SafeReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 
 export interface NoItemsProps {
   className?: IClassName;
-  children?: React.ReactNode;
+  children?: SafeReactNode;
 }
 
 export function NoItems(props: NoItemsProps) {
