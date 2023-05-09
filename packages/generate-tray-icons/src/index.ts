@@ -10,6 +10,7 @@ import path from "path";
 import sharp from "sharp";
 import arg from "arg";
 import assert from "assert";
+import { platform } from "process";
 
 const options = arg({
   "--input": String,
@@ -45,7 +46,11 @@ const joinWithInitCwd = (relativePath: string): string => {
 const resolve = async (input: string) => {
   const filePath = await import.meta.resolve?.(input);
 
-  return filePath?.replace("file:///", "");
+  if (platform === "win32") {
+    return filePath?.replace("file:///", "");
+  } else {
+    return filePath?.replace("file://", "");
+  }
 }
 
 const size = options["--output-size"] ?? 16;
