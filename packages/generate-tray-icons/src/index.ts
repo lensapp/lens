@@ -43,7 +43,9 @@ const joinWithInitCwd = (relativePath: string): string => {
 };
 
 const resolve = async (input: string) => {
-  return (await import.meta.resolve?.(input))?.replace("file://", "");
+  const filePath = await import.meta.resolve?.(input);
+
+  return filePath?.replace("file:///", "");
 }
 
 const size = options["--output-size"] ?? 16;
