@@ -111,6 +111,20 @@ const tests: KubeApiParseTestData[] = [
     name: "kube-public",
     namespace: undefined,
   }],
+
+  [
+    "/apis/apps/v1/namespaces/default/deployments/some-deployment",
+    {
+      apiBase: "/apis/apps/v1/deployments",
+      apiGroup: "apps",
+      apiPrefix: "/apis",
+      apiVersion: "v1",
+      apiVersionWithGroup: "apps/v1",
+      name: "some-deployment",
+      namespace: "default",
+      resource: "deployments",
+    },
+  ],
 ];
 
 const invalidTests = [
