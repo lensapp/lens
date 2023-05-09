@@ -17,7 +17,6 @@ export * from "./src/disposer";
 export * from "./src/formatDuration";
 export * from "./src/hash-set";
 export * from "./src/interval";
-export * from "./src/is-node-falsy";
 export * from "./src/isMiddleClick";
 export * from "./src/isReactNode";
 export * from "./src/iter";

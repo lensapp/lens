@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { SafeReactNode } from "@k8slens/utilities";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import type React from "react";
 import type { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
 import rendererExtensionsInjectable from "../../../../extensions/renderer-extensions.injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
@@ -20,8 +20,8 @@ describe("Custom Category Views", () => {
   });
 
   it("should order items correctly over all extensions", () => {
-    const component1 = (): React.ReactNode => null;
-    const component2 = (): React.ReactNode => null;
+    const component1 = (): SafeReactNode => null;
+    const component2 = (): SafeReactNode => null;
 
     di.override(rendererExtensionsInjectable, () => computed(() => [
       {
@@ -58,8 +58,8 @@ describe("Custom Category Views", () => {
   });
 
   it("should put put priority < 50 items in before", () => {
-    const component1 = (): React.ReactNode => null;
-    const component2 = (): React.ReactNode => null;
+    const component1 = (): SafeReactNode => null;
+    const component2 = (): SafeReactNode => null;
 
     di.override(rendererExtensionsInjectable, () => computed(() => [
       {

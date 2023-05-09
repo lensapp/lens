@@ -5,6 +5,7 @@
 
 import "./wizard.scss";
 import React from "react";
+import type { SafeReactNode } from "@k8slens/utilities";
 import { cssNames, prevDefault } from "@k8slens/utilities";
 import { Button } from "@k8slens/button";
 import { Stepper } from "../stepper";
@@ -24,7 +25,7 @@ export interface WizardProps<D> extends WizardCommonProps<D> {
   className?: string;
   step?: number;
   title?: string;
-  header?: React.ReactNode;
+  header?: SafeReactNode;
   onChange?: (step: number) => void;
   children?: React.ReactElement<WizardStepProps<D>>[] | React.ReactElement<WizardStepProps<D>>;
 }
@@ -107,28 +108,28 @@ export interface WizardStepProps<D> extends WizardCommonProps<D> {
   title?: string;
   className?: string | object;
   contentClass?: string | object;
-  customButtons?: React.ReactNode; // render custom buttons block in footer
-  moreButtons?: React.ReactNode; // add more buttons to section in the footer
+  customButtons?: SafeReactNode; // render custom buttons block in footer
+  moreButtons?: SafeReactNode; // add more buttons to section in the footer
   loading?: boolean; // indicator of loading content for the step
   waiting?: boolean; // indicator of waiting response before going to next step
   disabledNext?: boolean; // disable next button flag, e.g when filling step is not finished
   hideNextBtn?: boolean;
   hideBackBtn?: boolean;
   step?: number;
-  prevLabel?: React.ReactNode; // custom label for prev button
-  nextLabel?: React.ReactNode; // custom label for next button
+  prevLabel?: SafeReactNode; // custom label for prev button
+  nextLabel?: SafeReactNode; // custom label for next button
   next?: () => void | boolean | Promise<any>; // custom action for next button
   prev?: () => void; // custom action for prev button
   first?: () => void;
   last?: () => void;
   isFirst?: () => boolean;
   isLast?: () => boolean;
-  beforeContent?: React.ReactNode;
-  afterContent?: React.ReactNode;
+  beforeContent?: SafeReactNode;
+  afterContent?: SafeReactNode;
   noValidate?: boolean; // no validate form attribute
   skip?: boolean; // don't render the step
   scrollable?: boolean;
-  children?: React.ReactNode | React.ReactNode[];
+  children?: SafeReactNode | SafeReactNode[];
   testIdForNext?: string;
   testIdForPrev?: string;
 }

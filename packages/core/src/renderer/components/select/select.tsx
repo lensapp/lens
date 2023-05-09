@@ -14,6 +14,7 @@ import { observer } from "mobx-react";
 import ReactSelect, { components, createFilter } from "react-select";
 import type { Props as ReactSelectProps, GroupBase, MultiValue, OptionsOrGroups, PropsValue, SingleValue } from "react-select";
 import type { LensTheme } from "../../themes/lens-theme";
+import type { SafeReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import activeThemeInjectable from "../../themes/active.injectable";
@@ -23,7 +24,7 @@ const { Menu } = components;
 
 export interface SelectOption<Value> {
   value: Value;
-  label: React.ReactNode;
+  label: SafeReactNode;
   isDisabled?: boolean;
   isSelected?: boolean;
   id?: string;

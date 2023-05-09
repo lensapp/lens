@@ -106,7 +106,11 @@ class NonInjectedCustomResources extends React.Component<Dependencies> {
             isNamespaced && (
               <NamespaceSelectBadge namespace={customResource.getNs() as string} />
             ),
-            ...extraColumns.map((column) => safeJSONPathValue(customResource, column.jsonPath)),
+            ...(
+              extraColumns
+                .map((column) => safeJSONPathValue(customResource, column.jsonPath))
+                .map(formatJSONValue)
+            ),
             <KubeObjectAge key="age" object={customResource} />,
           ]}
           failedToLoadMessage={(

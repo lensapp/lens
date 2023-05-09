@@ -7,12 +7,13 @@ import type { IconProps } from "../icon";
 import type React from "react";
 import type { PageTarget } from "../../routes/page-registration";
 import type { IComputedValue } from "mobx";
+import type { SafeReactNode } from "@k8slens/utilities";
 
 export interface ClusterPageMenuRegistration {
   id?: string;
   parentId?: string;
   target?: PageTarget;
-  title: React.ReactNode;
+  title: SafeReactNode;
   components: ClusterPageMenuComponents;
   visible?: IComputedValue<boolean>;
   orderNumber?: number;

@@ -6,6 +6,7 @@
 import "./add-remove-buttons.scss";
 
 import React from "react";
+import type { SafeReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { Button } from "@k8slens/button";
 import { Icon } from "../icon";
@@ -13,8 +14,8 @@ import { Icon } from "../icon";
 export interface AddRemoveButtonsProps extends React.HTMLAttributes<any> {
   onAdd?: () => void;
   onRemove?: () => void;
-  addTooltip?: React.ReactNode;
-  removeTooltip?: React.ReactNode;
+  addTooltip?: SafeReactNode;
+  removeTooltip?: SafeReactNode;
 }
 
 export class AddRemoveButtons extends React.PureComponent<AddRemoveButtonsProps> {

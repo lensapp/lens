@@ -5,7 +5,6 @@
 
 import "./icon.scss";
 
-import type { ReactNode } from "react";
 import React, { createRef } from "react";
 import { NavLink } from "react-router-dom";
 import type { LocationDescriptor } from "history";
@@ -37,6 +36,7 @@ import Workloads from "./workloads.svg";
 import type { Logger } from "@k8slens/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { loggerInjectionToken } from "@k8slens/logger";
+import type { SingleOrMany, SafeReactNode } from "@k8slens/utilities";
 
 const hrefValidation = /https?:\/\//;
 
@@ -158,7 +158,9 @@ export interface BaseIconProps {
   "data-testid"?: string;
 }
 
-export interface IconProps extends React.HTMLAttributes<any>, BaseIconProps {}
+export interface IconProps extends React.HTMLAttributes<any>, BaseIconProps {
+  children?: SingleOrMany<SafeReactNode>;
+}
 
 export function isSvg(content: string): boolean {
   // source code of the asset
@@ -204,7 +206,7 @@ const RawIcon = (props: IconProps & Dependencies) => {
     onKeyDown?.(event);
   };
 
-  let iconContent: ReactNode;
+  let iconContent: SafeReactNode;
   const iconProps: Partial<IconProps> = {
     className: cssNames("Icon", className,
       { svg, material, interactive: isInteractive, disabled, sticker, active, focusable },

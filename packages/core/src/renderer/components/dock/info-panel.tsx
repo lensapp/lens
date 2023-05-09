@@ -5,10 +5,10 @@
 
 import "./info-panel.scss";
 
-import type { ReactNode } from "react";
 import React, { Component } from "react";
 import { computed, observable, reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
+import type { SafeReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { Button } from "@k8slens/button";
 import { Icon } from "../icon";
@@ -29,9 +29,9 @@ export interface InfoPanelProps extends OptionalProps {
 export interface OptionalProps {
   className?: string;
   error?: string;
-  controls?: ReactNode;
-  submitLabel?: ReactNode;
-  submittingMessage?: ReactNode;
+  controls?: SafeReactNode;
+  submitLabel?: SafeReactNode;
+  submittingMessage?: SafeReactNode;
   disableSubmit?: boolean;
   showButtons?: boolean;
   showSubmitClose?: boolean;

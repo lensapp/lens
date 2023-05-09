@@ -7,6 +7,7 @@ import "./tab-layout.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
+import type { SafeReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { Tab, Tabs } from "../tabs";
 import { ErrorBoundary } from "@k8slens/error-boundary";
@@ -14,7 +15,7 @@ import type { HierarchicalSidebarItem } from "./sidebar-items.injectable";
 
 export interface TabLayoutProps {
   tabs?: HierarchicalSidebarItem[];
-  children?: React.ReactNode;
+  children?: SafeReactNode;
   scrollable?: boolean;
 }
 

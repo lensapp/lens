@@ -2,7 +2,6 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { ReactNode } from "react";
 import React, { useState } from "react";
 
 import { MenuItem } from "../menu";
@@ -12,6 +11,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
 import type { Hotbar } from "../../../features/hotbar/storage/common/hotbar";
 import activeHotbarInjectable from "../../../features/hotbar/storage/common/active.injectable";
+import type { SafeReactNode } from "@k8slens/utilities";
 
 interface Dependencies {
   activeHotbar: IComputedValue<Hotbar | undefined>;
@@ -19,8 +19,8 @@ interface Dependencies {
 
 interface HotbarToggleMenuItemProps {
   entity: CatalogEntity;
-  addContent: ReactNode;
-  removeContent: ReactNode;
+  addContent: SafeReactNode;
+  removeContent: SafeReactNode;
 }
 
 function NonInjectedHotbarToggleMenuItem({

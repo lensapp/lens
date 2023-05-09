@@ -5,11 +5,11 @@
 
 import "./confirm-dialog.scss";
 
-import type { ReactNode } from "react";
 import React from "react";
 import type { IObservableValue } from "mobx";
 import { observable, makeObservable, computed } from "mobx";
 import { observer } from "mobx-react";
+import type { SafeReactNode } from "@k8slens/utilities";
 import { cssNames, noop, prevDefault } from "@k8slens/utilities";
 import type { ButtonProps } from "@k8slens/button";
 import { Button } from "@k8slens/button";
@@ -30,10 +30,10 @@ export interface ConfirmDialogParams extends ConfirmDialogBooleanParams {
 }
 
 export interface ConfirmDialogBooleanParams {
-  labelOk?: ReactNode;
-  labelCancel?: ReactNode;
-  message: ReactNode;
-  icon?: ReactNode;
+  labelOk?: SafeReactNode;
+  labelCancel?: SafeReactNode;
+  message: SafeReactNode;
+  icon?: SafeReactNode;
   okButtonProps?: Partial<ButtonProps>;
   cancelButtonProps?: Partial<ButtonProps>;
 }

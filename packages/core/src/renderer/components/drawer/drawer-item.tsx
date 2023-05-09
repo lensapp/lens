@@ -5,10 +5,11 @@
 
 import "./drawer-item.scss";
 import React from "react";
+import type { SafeReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 
 export interface DrawerItemProps extends React.HTMLAttributes<HTMLDivElement> {
-  name: React.ReactNode;
+  name: SafeReactNode;
   title?: string;
   labelsOnly?: boolean;
   hidden?: boolean;

@@ -4,7 +4,7 @@
  */
 
 import type { KubeObject } from "@k8slens/kube-object";
-import type { ReactNode } from "react";
+import type { SafeReactNode } from "@k8slens/utilities";
 import type { TableSortCallback, SearchFilter, TableCellProps } from "./list-layout-column";
 
 export interface BaseKubeObjectListLayoutColumn<K extends KubeObject> {
@@ -13,7 +13,7 @@ export interface BaseKubeObjectListLayoutColumn<K extends KubeObject> {
   sortingCallBack?: TableSortCallback<K>;
   searchFilter?: SearchFilter<K>;
   header: TableCellProps | undefined | null;
-  content: (item: K) => ReactNode | TableCellProps;
+  content: (item: K) => SafeReactNode | TableCellProps;
 }
 
 export interface GeneralKubeObjectListLayoutColumn extends BaseKubeObjectListLayoutColumn<KubeObject> {

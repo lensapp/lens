@@ -47,6 +47,7 @@
   "devDependencies": {
     "@async-fn/jest": "^1.6.4",
     "@k8slens/typescript": "^6.5.0-alpha.2",
+    "@ogre-tools/injectable-extension-for-auto-registration": "^15.9.0",
     "@ogre-tools/test-utils": "^15.8.1",
     "ts-node": "^10.9.1",
     "webpack-node-externals": "^3.0.0"
