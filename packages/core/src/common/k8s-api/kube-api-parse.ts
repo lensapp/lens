@@ -46,9 +46,10 @@ export function parseKubeApi(path: string): IKubeApiParsed | undefined {
         break;
     }
 
-    let rest: string[];
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    apiVersion = left.at(-1)!;
+    const rest = left.slice(0, -1);
 
-    [apiVersion, ...rest] = left;
     apiGroup = rest.join("/");
   } else {
     if (left.length === 0) {
