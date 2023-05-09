@@ -79,6 +79,12 @@ module.exports = {
           "objectsInObjects": false,
           "arraysInObjects": true,
         }],
+        "@typescript-eslint/ban-types": ["error", {
+          "extendDefaults": true,
+          "types": {
+            "ReactNode": "Use SafeReactNode instead",
+          },
+        }],
         "linebreak-style": ["error", "unix"],
         "eol-last": ["error", "always"],
         "semi": ["error", "always"],
