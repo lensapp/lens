@@ -4,6 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { AsyncResult } from "@k8slens/utilities";
+import { result } from "@k8slens/utilities";
 import requestHelmReleaseInjectable from "../../../../../features/helm-releases/renderer/request–helm-release.injectable";
 import type { GetHelmReleaseArgs, HelmReleaseDataWithResources } from "../../../../../features/helm-releases/common/channels";
 import requestListHelmReleasesInjectable from "../../../../../features/helm-releases/renderer/request-list-helm-releases.injectable";
@@ -15,7 +16,7 @@ export interface DetailedHelmRelease {
   details: HelmReleaseDataWithResources;
 }
 
-export type RequestDetailedHelmRelease = (args: GetHelmReleaseArgs) => AsyncResult<DetailedHelmRelease>;
+export type RequestDetailedHelmRelease = (args: GetHelmReleaseArgs) => AsyncResult<DetailedHelmRelease, string>;
 
 const requestDetailedHelmReleaseInjectable = getInjectable({
   id: "request-detailed-helm-release",
@@ -26,34 +27,28 @@ const requestDetailedHelmReleaseInjectable = getInjectable({
 
     return async ({ clusterId, namespace, releaseName }) => {
       const listReleasesResult = await requestListHelmReleases({ clusterId, namespace });
-      const detailsResult = await requestHelmRelease({ clusterId, releaseName, namespace });
 
-      if (!listReleasesResult.callWasSuccessful) {
+      if (!listReleasesResult.isOk) {
         return listReleasesResult;
       }
 
-      const release = listReleasesResult.response.find(
-        (rel) => rel.name === releaseName && rel.namespace === namespace,
-      );
-
-      if (!release) {
-        return {
-          isOk: false,
-          error: `Release ${releaseName} didn't exist in ${namespace} namespace.`,
-        };
-      }
+      const detailsResult = await requestHelmRelease({ clusterId, releaseName, namespace });
 
       if (!detailsResult.isOk) {
         return detailsResult;
       }
 
-      return {
-        isOk: true,
-        value: {
-          release: toHelmRelease(release),
-          details: detailsResult.value,
-        },
-      };
+      const release = listReleasesResult.value
+        .find((rel) => rel.name === releaseName && rel.namespace === namespace);
+
+      if (!release) {
+        return result.error(`Release ${releaseName} didn't exist in ${namespace} namespace.`);
+      }
+
+      return result.ok({
+        release: toHelmRelease(release),
+        details: detailsResult.value,
+      });
     };
   },
 });

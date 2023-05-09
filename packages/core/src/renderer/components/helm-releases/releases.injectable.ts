@@ -37,8 +37,8 @@ const releasesInjectable = getInjectable({
 
         return iter.chain([releaseResults].flat().values())
           .filterMap((result) => {
-            if (result.callWasSuccessful) {
-              return result.response;
+            if (result.isOk) {
+              return result.value;
             }
 
             logger.warn("Failed to list helm releases", { error: result.error });

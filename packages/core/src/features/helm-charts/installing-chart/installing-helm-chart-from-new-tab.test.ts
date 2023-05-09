@@ -71,7 +71,7 @@ describe("installing helm chart from new tab", () => {
       );
     });
 
-    builder.beforeApplicationStart(({ mainDi }) => {
+    await builder.beforeApplicationStart(({ mainDi }) => {
       listClusterHelmReleasesMock = asyncFn();
       mainDi.override(listClusterHelmReleasesInjectable, () => listClusterHelmReleasesMock);
     });
@@ -403,8 +403,8 @@ describe("installing helm chart from new tab", () => {
 
                   await flushPromises();
                   await listClusterHelmReleasesMock.resolve({
-                    callWasSuccessful: true,
-                    response: [],
+                    isOk: true,
+                    value: [],
                   });
                 });
 

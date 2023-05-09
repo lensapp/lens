@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
+import { result } from "@k8slens/utilities";
 import getHelmReleaseInjectable from "../../../main/helm/helm-service/get-helm-release.injectable";
 import getClusterByIdInjectable from "../../cluster/storage/common/get-by-id.injectable";
 import { getHelmReleaseChannel } from "../common/channels";
@@ -17,16 +18,19 @@ const handleGetHelmReleaseInjectable = getRequestChannelListenerInjectable({
       const cluster = getClusterById(clusterId);
 
       if (!cluster) {
-        return {
-          callWasSuccessful: false,
-          error: `Cluster with id "${clusterId}" not found`,
-        };
+        return result.error(`Cluster with id "${clusterId}" not found`);
       }
 
-      return getHelmRelease({
+      const helmResult = await getHelmRelease({
         cluster,
         ...args,
       });
+
+      if (helmResult.isOk) {
+        return helmResult;
+      }
+
+      return result.error(helmResult.error.message);
     };
   },
   id: "handle-get-helm-release",

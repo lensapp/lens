@@ -4,6 +4,7 @@
  */
 
 import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
+import { result } from "@k8slens/utilities";
 import listClusterHelmReleasesInjectable from "../../../main/helm/helm-service/list-helm-releases.injectable";
 import getClusterByIdInjectable from "../../cluster/storage/common/get-by-id.injectable";
 import { listHelmReleasesChannel } from "../common/channels";
@@ -19,10 +20,7 @@ const handleListHelmReleasesInjectable = getRequestChannelListenerInjectable({
       const cluster = getClusterById(clusterId);
 
       if (!cluster) {
-        return {
-          callWasSuccessful: false,
-          error: `Cluster with id "${clusterId}" not found`,
-        };
+        return result.error(`Cluster with id "${clusterId}" not found`);
       }
 
       return listClusterHelmReleases(cluster, namespace);

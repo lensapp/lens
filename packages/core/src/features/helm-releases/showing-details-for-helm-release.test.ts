@@ -77,7 +77,7 @@ describe("showing details for helm release", () => {
       windowDi.override(requestHelmChartValuesInjectable, () => requestHelmChartValuesMock);
     });
 
-    builder.beforeApplicationStart(({ mainDi }) => {
+    await builder.beforeApplicationStart(({ mainDi }) => {
       listClusterHelmReleasesMock = asyncFn();
       mainDi.override(listClusterHelmReleasesInjectable, () => listClusterHelmReleasesMock);
     });
@@ -128,12 +128,12 @@ describe("showing details for helm release", () => {
 
       it("when releases resolve but there is none, renders", async () => {
         await listClusterHelmReleasesMock.resolve({
-          callWasSuccessful: true,
-          response: [],
+          isOk: true,
+          value: [],
         });
         await listClusterHelmReleasesMock.resolve({
-          callWasSuccessful: true,
-          response: [],
+          isOk: true,
+          value: [],
         });
 
         expect(rendered.baseElement).toMatchSnapshot();
@@ -144,8 +144,8 @@ describe("showing details for helm release", () => {
           await listClusterHelmReleasesMock.resolveSpecific(
             ([, namespace]) => namespace === "some-namespace",
             {
-              callWasSuccessful: true,
-              response: [
+              isOk: true,
+              value: [
                 {
                   app_version: "some-app-version",
                   name: "some-name",
@@ -162,8 +162,8 @@ describe("showing details for helm release", () => {
           await listClusterHelmReleasesMock.resolveSpecific(
             ([, namespace]) => namespace === "some-other-namespace",
             {
-              callWasSuccessful: true,
-              response: [
+              isOk: true,
+              value: [
                 {
                   app_version: "some-other-app-version",
                   name: "some-other-name",

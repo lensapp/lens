@@ -55,7 +55,7 @@ const updateHelmReleaseInjectable = getInjectable({
         const releaseResult = await getHelmRelease({ cluster, releaseName, namespace });
 
         if (!releaseResult.isOk) {
-          throw releaseResult.error; // keep the same interface
+          throw releaseResult.error.message; // keep the same interface
         }
 
         return {

@@ -5,10 +5,10 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import execHelmInjectable from "./exec-helm/exec-helm.injectable";
 import type { AsyncResult } from "@k8slens/utilities";
-import { isObject } from "@k8slens/utilities";
+import { json, result, isObject } from "@k8slens/utilities";
 import type { ListedHelmRelease } from "../../features/helm-releases/common/channels";
 
-export type ListHelmReleases = (pathToKubeconfig: string, namespace?: string) => AsyncResult<ListedHelmRelease[], string>;
+export type ListHelmReleases = (pathToKubeconfig: string, namespace?: string) => AsyncResult<ListedHelmRelease[], Error>;
 
 const listHelmReleasesInjectable = getInjectable({
   id: "list-helm-releases",
@@ -32,18 +32,20 @@ const listHelmReleasesInjectable = getInjectable({
 
       args.push("--kubeconfig", pathToKubeconfig);
 
-      const result = await execHelm(args);
+      const helmResult = await execHelm(args);
 
-      if (!result.isOk) {
-        return {
-          isOk: false,
-          error: `Failed to list helm releases: ${result.error}`,
-        };
+      if (!helmResult.isOk) {
+        return result.wrapError("Failed to list helm releases", helmResult);
       }
 
-      const rawOutput = JSON.parse(result.value);
-      const output = Array.isArray(rawOutput)
-        ? rawOutput.filter(isObject)
+      const parseResult = json.parse(helmResult.value);
+
+      if (!parseResult.isOk) {
+        return result.wrapError("Failed to parse response from 'helm ls --all'", parseResult);
+      }
+
+      const output = Array.isArray(parseResult.value)
+        ? parseResult.value.filter(isObject)
         : [];
 
       return {

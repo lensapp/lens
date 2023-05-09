@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { AsyncResult } from "@k8slens/utilities";
-import { isObject, json } from "@k8slens/utilities";
+import { result, isObject, json } from "@k8slens/utilities";
 import { getInjectable } from "@ogre-tools/injectable";
 import type { HelmReleaseData } from "../../../features/helm-releases/common/channels";
 import execHelmInjectable from "../exec-helm/exec-helm.injectable";
@@ -12,7 +12,7 @@ export type GetHelmReleaseData = (
   name: string,
   namespace: string,
   kubeconfigPath: string,
-) => AsyncResult<HelmReleaseData, string>;
+) => AsyncResult<HelmReleaseData, Error>;
 
 const getHelmReleaseDataInjectable = getInjectable({
   id: "get-helm-release-data",
@@ -20,7 +20,7 @@ const getHelmReleaseDataInjectable = getInjectable({
     const execHelm = di.inject(execHelmInjectable);
 
     return async (releaseName, namespace, proxyKubeconfigPath) => {
-      const result = await execHelm([
+      const helmResult = await execHelm([
         "status",
         releaseName,
         "--namespace",
@@ -31,35 +31,23 @@ const getHelmReleaseDataInjectable = getInjectable({
         "json",
       ]);
 
-      if (!result.callWasSuccessful) {
-        return {
-          callWasSuccessful: false,
-          error: `Failed to execute helm: ${result.error}`,
-        };
+      if (!helmResult.isOk) {
+        return result.wrapError("Failed to execute 'helm status'", helmResult);
       }
 
-      const parseResult = json.parse(result.response);
+      const parseResult = json.parse(helmResult.value);
 
-      if (!parseResult.callWasSuccessful) {
-        return {
-          callWasSuccessful: false,
-          error: `Failed to parse helm response: ${parseResult.error}`,
-        };
+      if (!parseResult.isOk) {
+        return result.wrapError("Failed to parse result from 'helm status'", parseResult);
       }
 
-      const release = parseResult.response;
+      const release = parseResult.value;
 
       if (!isObject(release) || Array.isArray(release)) {
-        return {
-          callWasSuccessful: false,
-          error: `Helm response is not an object: ${JSON.stringify(release)}`,
-        };
+        return result.error(new Error(`Result from 'helm status' is not an object: ${JSON.stringify(release)}`));
       }
 
-      return {
-        callWasSuccessful: true,
-        response: release as unknown as HelmReleaseData,
-      };
+      return result.ok(release as unknown as HelmReleaseData);
     };
   },
 });

@@ -49,7 +49,7 @@ describe("New Upgrade Helm Chart Dock Tab", () => {
       navigateToHelmReleases = windowDi.inject(navigateToHelmReleasesInjectable);
     });
 
-    builder.beforeApplicationStart(({ mainDi }) => {
+    await builder.beforeApplicationStart(({ mainDi }) => {
       listClusterHelmReleasesMock = asyncFn();
       mainDi.override(listClusterHelmReleasesInjectable, () => listClusterHelmReleasesMock);
     });
@@ -88,8 +88,8 @@ describe("New Upgrade Helm Chart Dock Tab", () => {
       describe("when helm releases resolves", () => {
         beforeEach(async () => {
           await listClusterHelmReleasesMock.resolve({
-            callWasSuccessful: true,
-            response: [
+            isOk: true,
+            value: [
               {
                 app_version: "some-app-version",
                 name: "some-name",
