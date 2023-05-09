@@ -3,9 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-// Parse kube-api path and get api-version, group, etc.
+import { pipeline } from "@ogre-tools/fp";
+import { compact, join } from "lodash/fp";
+import { getMatchFor } from "./get-match-for";
+import { prepend } from "./prepend";
 
-import { array } from "@k8slens/utilities";
+// Parse kube-api path and get api-version, group, etc.
 
 export interface IKubeApiLinkRef {
   apiPrefix?: string;
@@ -22,92 +25,46 @@ export interface IKubeApiParsed extends IKubeApiLinkRef {
   apiVersionWithGroup: string;
 }
 
-export function parseKubeApi(path: string): IKubeApiParsed | undefined {
-  const apiPath = new URL(path, "https://localhost").pathname;
-  const [, prefix, ...parts] = apiPath.split("/");
-  const apiPrefix = `/${prefix}`;
-  const [left, right, namespaced] = array.split(parts, "namespaces");
-  let apiGroup: string;
-  let apiVersion: string | undefined;
-  let namespace: string | undefined;
-  let resource: string;
-  let name: string | undefined;
-
-  if (namespaced) {
-    switch (right.length) {
-      case 1:
-        name = right[0];
-        // fallthrough
-      case 0:
-        resource = "namespaces"; // special case this due to `split` removing namespaces
-        break;
-      default:
-        [namespace, resource, name] = right;
-        break;
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    apiVersion = left.at(-1)!;
-    const rest = left.slice(0, -1);
-
-    apiGroup = rest.join("/");
-  } else {
-    if (left.length === 0) {
-      return undefined;
-    }
-
-    if (left.length === 1 || left.length === 2) {
-      [apiVersion, resource] = left;
-      apiGroup = "";
-    } else if (left.length === 4) {
-      [apiGroup, apiVersion, resource, name] = left;
-    } else {
-      /**
-       * Given that
-       *  - `apiVersion` is `GROUP/VERSION` and
-       *  - `VERSION` is `DNS_LABEL` which is /^[a-z0-9]((-[a-z0-9])|[a-z0-9])*$/i
-       *     where length <= 63
-       *  - `GROUP` is /^D(\.D)*$/ where D is `DNS_LABEL` and length <= 253
-       *
-       * There is no well defined selection from an array of items that were
-       * separated by '/'
-       *
-       * Solution is to create a heuristic. Namely:
-       * 1. if '.' in left[0] then apiGroup <- left[0]
-       * 2. if left[1] matches /^v[0-9]/ then apiGroup, apiVersion <- left[0], left[1]
-       * 3. otherwise assume apiVersion <- left[0]
-       * 4. always resource, name <- left[(0 or 1)+1..]
-       */
-      if (left[0].includes(".") || left[1].match(/^v[0-9]/)) {
-        [apiGroup, apiVersion] = left;
-        resource = left.slice(2).join("/");
-      } else {
-        apiGroup = "";
-        apiVersion = left[0];
-        [resource, name] = left.slice(1);
-      }
-    }
+export function parseKubeApi(
+  path: string | undefined,
+): IKubeApiParsed | undefined {
+  if (!path) {
+    return undefined;
   }
 
-  const apiVersionWithGroup = [apiGroup, apiVersion].filter(v => v).join("/");
-  const apiBase = [apiPrefix, apiGroup, apiVersion, resource].filter(v => v).join("/");
+  const parsedPath = getParsedPath(path);
+
+  if (!parsedPath) {
+    return undefined;
+  }
+
+  const { apiOrApis, apiGroup, namespace, apiVersion, resource, name } =
+    parsedPath;
 
   return {
-    apiBase,
-    apiPrefix, apiGroup,
-    apiVersion, apiVersionWithGroup,
-    namespace, resource, name,
+    apiBase: getApiBase(apiOrApis, apiGroup, apiVersion, resource),
+    apiPrefix: getApiPrefix(apiOrApis),
+    apiGroup: getApiGroup(apiGroup),
+    apiVersion,
+    apiVersionWithGroup: getApiVersionWithGroup(apiGroup, apiVersion),
+    namespace,
+    resource,
+    name,
   };
 }
 
-function isIKubeApiParsed(refOrParsed: IKubeApiLinkRef | IKubeApiParsed): refOrParsed is IKubeApiParsed {
+function isIKubeApiParsed(
+  refOrParsed: IKubeApiLinkRef | IKubeApiParsed,
+): refOrParsed is IKubeApiParsed {
   return "apiGroup" in refOrParsed && !!refOrParsed.apiGroup;
 }
 
 export function createKubeApiURL(linkRef: IKubeApiLinkRef): string;
 export function createKubeApiURL(linkParsed: IKubeApiParsed): string;
 
-export function createKubeApiURL(ref: IKubeApiLinkRef | IKubeApiParsed): string {
+export function createKubeApiURL(
+  ref: IKubeApiLinkRef | IKubeApiParsed,
+): string {
   if (isIKubeApiParsed(ref)) {
     return createKubeApiURL({
       apiPrefix: ref.apiPrefix,
@@ -133,3 +90,42 @@ export function createKubeApiURL(ref: IKubeApiLinkRef | IKubeApiParsed): string 
 
   return parts.join("/");
 }
+
+const getKubeApiPathMatch = getMatchFor(
+  /^\/(?<apiOrApis>apis)\/(?<apiGroup>[^/]+?)\/(?<apiVersion>[^/]+?)\/namespaces\/(?<namespace>[^/]+?)\/(?<resource>[^/]+?)\/(?<name>[^/]+?)$/,
+  /^\/(?<apiOrApis>apis)\/(?<apiGroup>[^/]+?)\/(?<apiVersion>[^/]+?)\/namespaces\/(?<namespace>[^/]+?)\/(?<resource>[^/]+?)$/,
+  /^\/(?<apiOrApis>api)\/(?<apiVersion>[^/]+?)\/namespaces\/(?<namespace>[^/]+?)\/(?<resource>[^/]+?)\/(?<name>[^/]+?)$/,
+  /^\/(?<apiOrApis>apis)\/(?<apiGroup>[^/]+?)\/(?<apiVersion>[^/]+?)\/(?<resource>[^/]+?)\/(?<name>[^/]+?)$/,
+  /^\/(?<apiOrApis>api)\/(?<apiVersion>[^/]+?)\/namespaces\/(?<namespace>[^/]+?)\/(?<resource>[^/]+?)$/,
+  /^\/(?<apiOrApis>apis)\/(?<apiGroup>[^/]+?)\/(?<apiVersion>[^/]+?)\/(?<resource>[^/]+?)$/,
+  /^\/(?<apiOrApis>api)\/(?<apiVersion>[^/]+?)\/(?<resource>[^/]+?)\/(?<name>[^/]+?)$/,
+  /^\/(?<apiOrApis>api)\/(?<apiVersion>[^/]+?)\/(?<resource>[^/]+?)$/,
+);
+
+const getParsedPath = (path: string) =>
+  pipeline(path, withoutDomainAddressOrParameters, getKubeApiPathMatch, (match) => match?.groups);
+
+const joinTruthy = (delimiter: string) => (toBeJoined: string[]) =>
+  pipeline(toBeJoined, compact, join(delimiter));
+
+const getApiBase = (
+  apiOrApis: string,
+  apiGroup: string,
+  apiVersion: string,
+  resource: string,
+) =>
+  pipeline(
+    [apiOrApis, apiGroup, apiVersion, resource],
+    joinTruthy("/"),
+    prepend("/"),
+  );
+
+const getApiPrefix = prepend("/");
+
+const getApiVersionWithGroup = (apiGroup: string, apiVersion: string) =>
+  joinTruthy("/")([apiGroup, apiVersion]);
+
+const getApiGroup = (apiGroup: string) => apiGroup || "";
+
+const withoutDomainAddressOrParameters = (path: string) =>
+  new URL(path, "http://irrelevant").pathname;
