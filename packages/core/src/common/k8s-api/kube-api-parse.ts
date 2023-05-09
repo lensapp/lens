@@ -92,10 +92,6 @@ export function parseKubeApi(path: string): IKubeApiParsed | undefined {
   const apiVersionWithGroup = [apiGroup, apiVersion].filter(v => v).join("/");
   const apiBase = [apiPrefix, apiGroup, apiVersion, resource].filter(v => v).join("/");
 
-  if (!apiBase) {
-    return undefined;
-  }
-
   return {
     apiBase,
     apiPrefix, apiGroup,
