@@ -1,6 +1,6 @@
 {
   "name": "@k8slens/run-many",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.5",
   "type": "commonjs",
   "description": "A package containing runMany and runManySync",
   "publishConfig": {
@@ -34,7 +34,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@k8slens/webpack": "^6.5.0-alpha.5",
+    "@k8slens/webpack": "^6.5.0-alpha.6",
     "@types/uuid": "^9.0.1"
   }
 }

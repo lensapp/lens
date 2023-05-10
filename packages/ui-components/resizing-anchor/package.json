@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/resizing-anchor",
   "private": false,
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-alpha.7",
   "description": "Highly extendable resizing-anchor in the Lens.",
   "type": "commonjs",
   "files": [
@@ -45,6 +45,6 @@
     "@async-fn/jest": "^1.6.4",
     "@k8slens/eslint-config": "^6.5.0-alpha.3",
     "@k8slens/react-testing-library-discovery": "^1.0.0-alpha.4",
-    "@k8slens/webpack": "^6.5.0-alpha.5"
+    "@k8slens/webpack": "^6.5.0-alpha.6"
   }
 }
