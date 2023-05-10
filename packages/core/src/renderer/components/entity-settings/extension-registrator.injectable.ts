@@ -56,7 +56,7 @@ const getInjectableForEntitySettingRegistrationFor = (extension: LensRendererExt
   kind,
   title,
   group = "Extensions",
-  id = title.toLowerCase(),
+  id = btoa(title),
   priority,
   source,
 }: EntitySettingRegistration) => getInjectable({
