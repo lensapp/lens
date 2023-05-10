@@ -40,7 +40,10 @@ const NonInjectedPods = observer((props: Dependencies) => {
         tableId="workloads_pods"
         isConfigurable
         searchFilters={[
+          pod => pod.getSearchFields(),
+          pod => pod.getStatusMessage(),
           pod => pod.status?.podIP,
+          pod => pod.getNodeName(),
         ]}
         renderHeaderTitle="Pods"
         renderTableHeader={[]}
