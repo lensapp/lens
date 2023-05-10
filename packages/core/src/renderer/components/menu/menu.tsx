@@ -8,7 +8,7 @@ import "./menu.scss";
 import type { ReactElement } from "react";
 import React, { Fragment } from "react";
 import { createPortal } from "react-dom";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames, noop } from "@k8slens/utilities";
 import { Animate } from "../animate";
 import type { IconProps } from "../icon";
@@ -49,7 +49,7 @@ export interface MenuProps {
   closeOnClickOutside?: boolean;    // use false value for sub-menus
   closeOnScroll?: boolean;          // applicable when usePortal={true}
   position?: MenuPosition;          // applicable when usePortal={false}
-  children?: SafeReactNode;
+  children?: StrictReactNode;
   animated?: boolean;
   toggleEvent?: "click" | "contextmenu";
   "data-testid"?: string;

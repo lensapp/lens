@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { SafeReactNode, SingleOrMany } from "@k8slens/utilities";
+import type { StrictReactNode, SingleOrMany } from "@k8slens/utilities";
 
 export interface ItemObject {
   getId: () => string;
@@ -36,7 +36,7 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
   /**
    * The actual value of the cell
    */
-  title?: SafeReactNode;
+  title?: StrictReactNode;
 
   /**
    * content inside could be scrolled

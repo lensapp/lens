@@ -8,14 +8,14 @@ import { computed } from "mobx";
 import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
 import { byOrderNumber } from "../../../common/utils/composable-responsibilities/orderable/orderable";
 import type { SetRequired } from "type-fest";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 
 export interface SidebarItemRegistration {
   id: string;
   parentId: string | null;
-  title: SafeReactNode;
+  title: StrictReactNode;
   onClick: () => void;
-  getIcon?: () => SafeReactNode;
+  getIcon?: () => StrictReactNode;
   isActive?: IComputedValue<boolean>;
   isVisible?: IComputedValue<boolean>;
   orderNumber: number;

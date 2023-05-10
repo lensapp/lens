@@ -7,7 +7,7 @@ import "./table-cell.scss";
 import type { TableSortBy, TableSortParams } from "./table";
 
 import React from "react";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { Icon } from "../icon";
 import { Checkbox } from "../checkbox";
@@ -29,7 +29,7 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
   /**
    * The actual value of the cell
    */
-  title?: SafeReactNode;
+  title?: StrictReactNode;
 
   /**
    * content inside could be scrolled

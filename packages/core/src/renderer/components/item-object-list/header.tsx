@@ -7,7 +7,7 @@ import "./item-list-layout.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { IClassName, SafeReactNode } from "@k8slens/utilities";
+import type { IClassName, StrictReactNode } from "@k8slens/utilities";
 import { cssNames, isDefined } from "@k8slens/utilities";
 import type { ItemObject } from "@k8slens/list-layout";
 import type { Filter } from "./page-filters/store";
@@ -26,8 +26,8 @@ export interface ItemListLayoutHeaderProps<I extends ItemObject, PreLoadStores e
   showHeader?: boolean;
   headerClassName?: IClassName;
   renderHeaderTitle?:
-    | SafeReactNode
-    | (() => SafeReactNode);
+    | StrictReactNode
+    | (() => StrictReactNode);
   customizeHeader?: HeaderCustomizer | HeaderCustomizer[];
 }
 

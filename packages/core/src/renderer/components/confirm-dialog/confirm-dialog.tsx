@@ -9,7 +9,7 @@ import React from "react";
 import type { IObservableValue } from "mobx";
 import { observable, makeObservable, computed } from "mobx";
 import { observer } from "mobx-react";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames, noop, prevDefault } from "@k8slens/utilities";
 import type { ButtonProps } from "@k8slens/button";
 import { Button } from "@k8slens/button";
@@ -30,10 +30,10 @@ export interface ConfirmDialogParams extends ConfirmDialogBooleanParams {
 }
 
 export interface ConfirmDialogBooleanParams {
-  labelOk?: SafeReactNode;
-  labelCancel?: SafeReactNode;
-  message: SafeReactNode;
-  icon?: SafeReactNode;
+  labelOk?: StrictReactNode;
+  labelCancel?: StrictReactNode;
+  message: StrictReactNode;
+  icon?: StrictReactNode;
   okButtonProps?: Partial<ButtonProps>;
   cancelButtonProps?: Partial<ButtonProps>;
 }

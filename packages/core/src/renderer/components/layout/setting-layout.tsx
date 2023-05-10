@@ -7,7 +7,7 @@ import "./setting-layout.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { IClassName, SafeReactNode } from "@k8slens/utilities";
+import type { IClassName, StrictReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { CloseButton } from "./close-button";
 import { getLegacyGlobalDiForExtensionApi } from "@k8slens/legacy-global-di";
@@ -19,7 +19,7 @@ export interface SettingLayoutProps extends React.DOMAttributes<any> {
   contentClass?: IClassName;
   provideBackButtonNavigation?: boolean;
   contentGaps?: boolean;
-  navigation?: SafeReactNode;
+  navigation?: StrictReactNode;
   back?: (evt: React.MouseEvent | KeyboardEvent) => void;
   closeButtonProps?: { "data-testid"?: string };
 }

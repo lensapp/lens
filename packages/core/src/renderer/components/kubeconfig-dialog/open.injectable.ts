@@ -6,10 +6,10 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
 import showCheckedErrorNotificationInjectable from "../notifications/show-checked-error.injectable";
 import kubeconfigDialogStateInjectable from "./state.injectable";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 
 export interface OpenKubeconfigDialogArgs {
-  title?: SafeReactNode;
+  title?: StrictReactNode;
   loader: () => Promise<string>;
 }
 

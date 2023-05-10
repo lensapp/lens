@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 import type { IComputedValue } from "mobx";
 
 /**
@@ -35,10 +35,10 @@ export interface StatusBarRegistration {
   /**
    * @deprecated use {@link StatusBarRegistration.components} instead
    */
-  item?: SafeReactNode | (() => SafeReactNode);
+  item?: StrictReactNode | (() => StrictReactNode);
 
   /**
-   * The newer API, allows for registering a component instead of a SafeReactNode
+   * The newer API, allows for registering a component instead of a StrictReactNode
    */
   components?: StatusBarComponents;
 

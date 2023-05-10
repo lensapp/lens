@@ -5,15 +5,15 @@
 
 import "./sub-title.scss";
 import React from "react";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 
 export interface SubTitleProps {
   className?: string;
-  title: SafeReactNode;
+  title: StrictReactNode;
   compact?: boolean; // no bottom padding
   id?: string;
-  children?: SafeReactNode;
+  children?: StrictReactNode;
 }
 
 export class SubTitle extends React.Component<SubTitleProps> {

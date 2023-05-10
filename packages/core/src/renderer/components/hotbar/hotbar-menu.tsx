@@ -8,7 +8,7 @@ import "./hotbar-menu.scss";
 import React, { useState } from "react";
 import { observer } from "mobx-react";
 import { HotbarEntityIcon } from "./hotbar-entity-icon";
-import type { IClassName, SafeReactNode } from "@k8slens/utilities";
+import type { IClassName, StrictReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
 import type { CatalogEntity } from "../../api/catalog-entity";
@@ -147,7 +147,7 @@ const NonInjectedHotbarMenu = observer((props: Dependencies & HotbarMenuProps) =
                 )}
               </Draggable>
             )}
-            {provided.placeholder as SafeReactNode}
+            {provided.placeholder as StrictReactNode}
           </HotbarCell>
         )}
       </Droppable>

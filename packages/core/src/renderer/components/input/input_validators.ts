@@ -7,7 +7,7 @@ import type { InputProps } from "./input";
 import fse from "fs-extra";
 import { TypedRegEx } from "typed-regex";
 import type { SetRequired } from "type-fest";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 
 export type InputValidationResult<IsAsync extends boolean> =
   IsAsync extends true
@@ -16,7 +16,7 @@ export type InputValidationResult<IsAsync extends boolean> =
 
 export type InputValidation<IsAsync extends boolean> = (value: string, props?: InputProps) => InputValidationResult<IsAsync>;
 
-export type SyncValidationMessage = SafeReactNode | ((value: string, props?: InputProps) => SafeReactNode);
+export type SyncValidationMessage = StrictReactNode | ((value: string, props?: InputProps) => StrictReactNode);
 
 /**
  * @deprecated This type is not as type safe as it is possible to specify an async input validator without specifying a `debounce` time.

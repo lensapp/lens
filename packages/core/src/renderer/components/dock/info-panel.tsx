@@ -8,7 +8,7 @@ import "./info-panel.scss";
 import React, { Component } from "react";
 import { computed, observable, reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { Button } from "@k8slens/button";
 import { Icon } from "../icon";
@@ -29,9 +29,9 @@ export interface InfoPanelProps extends OptionalProps {
 export interface OptionalProps {
   className?: string;
   error?: string;
-  controls?: SafeReactNode;
-  submitLabel?: SafeReactNode;
-  submittingMessage?: SafeReactNode;
+  controls?: StrictReactNode;
+  submitLabel?: StrictReactNode;
+  submittingMessage?: StrictReactNode;
   disableSubmit?: boolean;
   showButtons?: boolean;
   showSubmitClose?: boolean;

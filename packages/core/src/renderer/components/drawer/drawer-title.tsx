@@ -5,17 +5,17 @@
 
 import styles from "./drawer-title.module.css";
 import React from "react";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 
 export interface DrawerTitleProps {
   className?: string;
-  children?: SafeReactNode;
+  children?: StrictReactNode;
 
   /**
    * @deprecated Prefer passing the value as `children`
    */
-  title?: SafeReactNode;
+  title?: StrictReactNode;
 
   /**
    * Specifies how large this title is

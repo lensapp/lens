@@ -8,7 +8,7 @@ import "./tab-layout.scss";
 import React from "react";
 import { matchPath, Redirect, Route, Switch } from "react-router";
 import { observer } from "mobx-react";
-import type { IClassName, SafeReactNode } from "@k8slens/utilities";
+import type { IClassName, StrictReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { Tab, Tabs } from "../tabs";
 import { ErrorBoundary } from "@k8slens/error-boundary";
@@ -22,13 +22,13 @@ export interface TabLayoutProps {
   className?: IClassName;
   contentClass?: IClassName;
   tabs?: TabLayoutRoute[];
-  children?: SafeReactNode;
+  children?: StrictReactNode;
   scrollable?: boolean;
 }
 
 export interface TabLayoutRoute {
   routePath: string;
-  title: SafeReactNode;
+  title: StrictReactNode;
   component: React.ComponentType<any>;
   url?: string; // page-url, if not provided `routePath` is used (doesn't work when path has some :placeholder(s))
   exact?: boolean; // route-path matching rule

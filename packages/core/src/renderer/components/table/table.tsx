@@ -7,7 +7,7 @@ import "./table.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames, isDefined } from "@k8slens/utilities";
 import type { TableRowElem, TableRowProps } from "./table-row";
 import { TableRow } from "./table-row";
@@ -87,7 +87,7 @@ export interface TableProps<Item> extends React.DOMAttributes<HTMLDivElement> {
   /**
    * This is shown when {@link TableProps.items} is empty
    */
-  noItems?: SafeReactNode;
+  noItems?: StrictReactNode;
   /**
    * Allows to scroll list to selected item
    */

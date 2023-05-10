@@ -6,12 +6,12 @@
 import "./drawer-param-toggler.scss";
 import React from "react";
 import { Icon } from "../icon";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 
 export interface DrawerParamTogglerProps {
   label: string | number;
-  children: SafeReactNode;
+  children: StrictReactNode;
 }
 
 interface State {

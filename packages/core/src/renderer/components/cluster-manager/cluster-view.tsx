@@ -22,7 +22,7 @@ import type { RequestClusterActivation } from "../../../features/cluster/activat
 import requestClusterActivationInjectable from "../../../features/cluster/activation/renderer/request-activation.injectable";
 import type { GetClusterById } from "../../../features/cluster/storage/common/get-by-id.injectable";
 import getClusterByIdInjectable from "../../../features/cluster/storage/common/get-by-id.injectable";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 
 interface Dependencies {
   clusterId: IComputedValue<string>;
@@ -94,7 +94,7 @@ class NonInjectedClusterView extends React.Component<Dependencies> {
     ]);
   }
 
-  renderStatus(): SafeReactNode {
+  renderStatus(): StrictReactNode {
     const { cluster, isReady } = this;
 
     if (cluster && !isReady) {

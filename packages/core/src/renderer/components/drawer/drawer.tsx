@@ -8,7 +8,7 @@ import "./drawer.scss";
 import React from "react";
 import { clipboard } from "electron";
 import { createPortal } from "react-dom";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames, noop } from "@k8slens/utilities";
 import { Icon } from "../icon";
 import type { AnimateName } from "../animate";
@@ -24,7 +24,7 @@ export type DrawerPosition = "top" | "left" | "right" | "bottom";
 
 export interface DrawerProps {
   open: boolean;
-  title: SafeReactNode;
+  title: StrictReactNode;
 
   /**
    * The width or heigh (depending on `position`) of the Drawer.
@@ -38,8 +38,8 @@ export interface DrawerProps {
   position?: DrawerPosition;
   animation?: AnimateName;
   onClose?: () => void;
-  toolbar?: SafeReactNode;
-  children?: SafeReactNode;
+  toolbar?: StrictReactNode;
+  children?: StrictReactNode;
   "data-testid"?: string;
   testIdForClose?: string;
 }

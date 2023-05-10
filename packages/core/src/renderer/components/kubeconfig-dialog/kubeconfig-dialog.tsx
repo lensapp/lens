@@ -7,7 +7,7 @@ import styles from "./kubeconfig-dialog.module.scss";
 import React from "react";
 import type { IObservableValue } from "mobx";
 import { observer } from "mobx-react";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { Button } from "@k8slens/button";
 import type { DialogProps } from "../dialog";
@@ -23,7 +23,7 @@ import kubeconfigDialogStateInjectable from "./state.injectable";
 import { saveFileDialog } from "../../utils/saveFile";
 
 export interface KubeconfigDialogData {
-  title?: SafeReactNode;
+  title?: StrictReactNode;
   config: string;
 }
 

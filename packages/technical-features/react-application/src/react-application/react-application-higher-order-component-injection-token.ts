@@ -1,9 +1,9 @@
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type React from "react";
 
 export type ReactApplicationHigherOrderComponent = React.ComponentType<{
-  children: SafeReactNode;
+  children: StrictReactNode;
 }>;
 
 export const reactApplicationHigherOrderComponentInjectionToken =

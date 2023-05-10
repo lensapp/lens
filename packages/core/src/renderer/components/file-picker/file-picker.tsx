@@ -13,7 +13,7 @@ import { Spinner } from "../spinner";
 import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import _ from "lodash";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 
 export interface FileUploadProps {
     uploadDir: string;
@@ -49,7 +49,7 @@ export enum OverTotalSizeLimitStyle {
 
 export interface BaseProps {
     accept?: string;
-    label: SafeReactNode;
+    label: StrictReactNode;
     multiple?: boolean;
 
     // limit is the optional maximum number of files to upload
@@ -221,7 +221,7 @@ class DefaultedFilePicker extends React.Component<FilePickerProps & typeof defau
     );
   }
 
-  getIconRight(): SafeReactNode {
+  getIconRight(): StrictReactNode {
     switch (this.status) {
       case FileInputStatus.PROCESSING:
         return <Spinner />;

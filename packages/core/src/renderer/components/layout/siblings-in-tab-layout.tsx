@@ -9,10 +9,10 @@ import React from "react";
 import siblingTabsInjectable from "../../routes/sibling-tabs.injectable";
 import { TabLayout } from "./tab-layout-2";
 import type { HierarchicalSidebarItem } from "./sidebar-items.injectable";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 
 interface SiblingTabLayoutProps {
-  children: SafeReactNode;
+  children: StrictReactNode;
   scrollable?: boolean;
 }
 

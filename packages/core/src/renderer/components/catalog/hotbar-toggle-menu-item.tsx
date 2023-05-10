@@ -11,7 +11,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
 import type { Hotbar } from "../../../features/hotbar/storage/common/hotbar";
 import activeHotbarInjectable from "../../../features/hotbar/storage/common/active.injectable";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 
 interface Dependencies {
   activeHotbar: IComputedValue<Hotbar | undefined>;
@@ -19,8 +19,8 @@ interface Dependencies {
 
 interface HotbarToggleMenuItemProps {
   entity: CatalogEntity;
-  addContent: SafeReactNode;
-  removeContent: SafeReactNode;
+  addContent: StrictReactNode;
+  removeContent: StrictReactNode;
 }
 
 function NonInjectedHotbarToggleMenuItem({
