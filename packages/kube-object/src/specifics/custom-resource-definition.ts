@@ -140,6 +140,13 @@ export class CustomResourceDefinition extends KubeObject<
     return this.spec.scope;
   }
 
+  getPreferredVersion(): CustomResourceDefinitionVersion {
+    return this.getPreferedVersion();
+  }
+
+  /**
+   * @deprecated Switch to using {@link getPreferredVersion} instead (which fixes the is a typo)
+   */
   getPreferedVersion(): CustomResourceDefinitionVersion {
     const { apiVersion } = this;
 
