@@ -1,0 +1,663 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Viewing Custom Resources with extra columns renders 1`] = `
+<div>
+  <div
+    class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+    style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
+  >
+    <div
+      class="drawer-wrapper flex column"
+    >
+      <div
+        class="drawer-title flex align-center"
+      >
+        <div
+          class="drawer-title-text flex gaps align-center"
+        >
+          
+        </div>
+        <i
+          class="Icon material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="close"
+          >
+            close
+          </span>
+        </i>
+        <div>
+          Close
+        </div>
+      </div>
+      <div
+        class="drawer-content flex column box grow"
+      />
+    </div>
+    <div
+      class="ResizingAnchor horizontal leading"
+    />
+  </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
+    class="mainLayout"
+    style="--sidebar-width: 200px;"
+  >
+    <div
+      class="sidebar"
+    >
+      <div
+        class="flex flex-col"
+        data-testid="cluster-sidebar"
+      >
+        <div
+          class="SidebarCluster"
+        >
+          <div
+            class="Avatar rounded loadingAvatar"
+            style="width: 40px; height: 40px;"
+          >
+            ??
+          </div>
+          <div
+            class="loadingClusterName"
+          />
+        </div>
+        <div
+          class="sidebarNav sidebar-active-status"
+        >
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-workloads"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-workloads"
+              href="/"
+            >
+              <i
+                class="Icon svg focusable"
+              >
+                <span
+                  class="icon"
+                />
+              </i>
+              <span>
+                Workloads
+              </span>
+              <i
+                class="Icon expandIcon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="keyboard_arrow_down"
+                >
+                  keyboard_arrow_down
+                </span>
+              </i>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-config"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-config"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="list"
+                >
+                  list
+                </span>
+              </i>
+              <span>
+                Config
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-network"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-network"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="device_hub"
+                >
+                  device_hub
+                </span>
+              </i>
+              <span>
+                Network
+              </span>
+              <i
+                class="Icon expandIcon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="keyboard_arrow_down"
+                >
+                  keyboard_arrow_down
+                </span>
+              </i>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-storage"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-storage"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="storage"
+                >
+                  storage
+                </span>
+              </i>
+              <span>
+                Storage
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-helm"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-helm"
+              href="/"
+            >
+              <i
+                class="Icon svg focusable"
+              >
+                <span
+                  class="icon"
+                />
+              </i>
+              <span>
+                Helm
+              </span>
+              <i
+                class="Icon expandIcon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="keyboard_arrow_down"
+                >
+                  keyboard_arrow_down
+                </span>
+              </i>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-user-management"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-user-management"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="security"
+                >
+                  security
+                </span>
+              </i>
+              <span>
+                Access Control
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="true"
+            data-testid="sidebar-item-custom-resources"
+          >
+            <a
+              aria-current="page"
+              class="navItem active"
+              data-testid="sidebar-item-link-for-custom-resources"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="extension"
+                >
+                  extension
+                </span>
+              </i>
+              <span>
+                Custom Resources
+              </span>
+              <i
+                class="Icon expandIcon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="keyboard_arrow_down"
+                >
+                  keyboard_arrow_down
+                </span>
+              </i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="ResizingAnchor horizontal trailing"
+      />
+    </div>
+    <div
+      class="contents"
+    >
+      <div
+        class="TabLayout"
+        data-testid="tab-layout"
+      >
+        <main
+          class=""
+        >
+          <div
+            class="ItemListLayout flex column KubeObjectListLayout CrdResources"
+          >
+            <div
+              class="header flex gaps align-center"
+            >
+              <h5
+                class="title"
+              >
+                SomeResource
+              </h5>
+              <div
+                class="info-panel box grow"
+              >
+                1 item
+              </div>
+              <div
+                class="Input SearchInput focused"
+              >
+                <label
+                  class="input-area flex gaps align-center"
+                  id=""
+                >
+                  <input
+                    class="input box grow"
+                    placeholder="SomeResource search ..."
+                    spellcheck="false"
+                    value=""
+                  />
+                  <i
+                    class="Icon material focusable small"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="search"
+                    >
+                      search
+                    </span>
+                  </i>
+                </label>
+                <div
+                  class="input-info flex gaps"
+                />
+              </div>
+            </div>
+            <div
+              class="items box grow flex column"
+            >
+              <div
+                class="Table flex column KubeObjectListLayout CrdResources box grow dark selectable scrollable sortable autoSize virtual"
+              >
+                <div
+                  class="TableHead sticky nowrap topLine"
+                >
+                  <div
+                    class="TableCell checkbox"
+                  >
+                    <label
+                      class="Checkbox flex align-center"
+                    >
+                      <input
+                        type="checkbox"
+                      />
+                      <i
+                        class="box flex align-center"
+                      />
+                    </label>
+                  </div>
+                  <div
+                    class="TableCell name nowrap sorting"
+                    id="name"
+                  >
+                    <div
+                      class="content"
+                    >
+                      Name
+                    </div>
+                    <i
+                      class="Icon sortIcon material focusable"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="arrow_drop_down"
+                      >
+                        arrow_drop_down
+                      </span>
+                    </i>
+                  </div>
+                  <div
+                    class="TableCell some-column nowrap sorting"
+                    data-testid="custom-resource-column-title-some-column"
+                    id="Some Column"
+                  >
+                    <div
+                      class="content"
+                    >
+                      Some Column
+                    </div>
+                    <i
+                      class="Icon sortIcon material focusable"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="arrow_drop_down"
+                      >
+                        arrow_drop_down
+                      </span>
+                    </i>
+                  </div>
+                  <div
+                    class="TableCell age nowrap sorting"
+                    id="age"
+                  >
+                    <div
+                      class="content"
+                    >
+                      Age
+                    </div>
+                    <i
+                      class="Icon sortIcon material focusable"
+                    >
+                      <span
+                        class="icon"
+                        data-icon-name="arrow_drop_down"
+                      >
+                        arrow_drop_down
+                      </span>
+                    </i>
+                  </div>
+                  <div
+                    class="TableCell menu nowrap"
+                  >
+                    <div
+                      class="content"
+                    >
+                      <i
+                        class="Icon material interactive focusable"
+                        id="menu-actions-for-item-object-list-content"
+                        tabindex="0"
+                      >
+                        <span
+                          class="icon"
+                          data-icon-name="more_vert"
+                        >
+                          more_vert
+                        </span>
+                      </i>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="VirtualList KubeObjectListLayout CrdResources box grow dark"
+                >
+                  <div>
+                    <div
+                      class="list"
+                      style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                    >
+                      <div
+                        style="height: 33px; width: 100%;"
+                      >
+                        <div
+                          style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                        >
+                          <div
+                            class="TableRow nowrap"
+                          >
+                            <div
+                              class="TableCell checkbox"
+                            >
+                              <label
+                                class="Checkbox flex align-center"
+                              >
+                                <input
+                                  type="checkbox"
+                                />
+                                <i
+                                  class="box flex align-center"
+                                />
+                              </label>
+                            </div>
+                            <div
+                              class="TableCell name"
+                            >
+                              some-resource
+                            </div>
+                            <div
+                              class="TableCell"
+                            />
+                            <div
+                              class="TableCell some-column"
+                              data-testid="custom-resource-column-cell-some-column-for-some-resource"
+                            >
+                              {"foo":"bar"}
+                            </div>
+                            <div
+                              class="TableCell age"
+                            >
+                              &lt;unknown&gt;
+                            </div>
+                            <div
+                              class="TableCell menu"
+                            >
+                              <div>
+                                <i
+                                  class="Icon material interactive focusable"
+                                  data-testid="icon-for-menu-actions-for-kube-object-menu-for-some-uid-2"
+                                  id="menu-actions-for-kube-object-menu-for-some-uid-2"
+                                  tabindex="0"
+                                >
+                                  <span
+                                    class="icon"
+                                    data-icon-name="more_vert"
+                                  >
+                                    more_vert
+                                  </span>
+                                </i>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="AddRemoveButtons flex gaps"
+              />
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+    <div
+      class="footer"
+    >
+      <div
+        class="Dock"
+        tabindex="-1"
+      >
+        <div
+          class="ResizingAnchor vertical leading"
+        />
+        <div
+          class="tabs-container flex align-center"
+        >
+          <div
+            class="dockTabs"
+            role="tablist"
+          >
+            <div
+              class="Tabs tabs"
+            >
+              <div
+                class="Tab flex gaps align-center DockTab TerminalTab active"
+                data-testid="dock-tab-for-terminal"
+                id="tab-terminal"
+                role="tab"
+                tabindex="0"
+              >
+                <i
+                  class="Icon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="terminal"
+                  >
+                    terminal
+                  </span>
+                </i>
+                <div
+                  class="label"
+                >
+                  <div
+                    class="flex align-center"
+                  >
+                    <span
+                      class="title"
+                    >
+                      Terminal
+                    </span>
+                    <div
+                      class="close"
+                    >
+                      <i
+                        class="Icon material interactive focusable small"
+                        data-testid="dock-tab-close-for-terminal"
+                        tabindex="0"
+                      >
+                        <span
+                          class="icon"
+                          data-icon-name="close"
+                        >
+                          close
+                        </span>
+                      </i>
+                      <div
+                        data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                      >
+                        Close ⌘+W
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="toolbar flex gaps align-center box grow"
+          >
+            <div
+              class="dock-menu box grow"
+            >
+              <i
+                class="Icon new-dock-tab material interactive focusable"
+                id="menu-actions-for-dock"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="add"
+                >
+                  add
+                </span>
+              </i>
+              <div>
+                New tab
+              </div>
+            </div>
+            <i
+              class="Icon material interactive focusable"
+              tabindex="0"
+            >
+              <span
+                class="icon"
+                data-icon-name="fullscreen"
+              >
+                fullscreen
+              </span>
+            </i>
+            <div>
+              Fit to window
+            </div>
+            <i
+              class="Icon material interactive focusable"
+              tabindex="0"
+            >
+              <span
+                class="icon"
+                data-icon-name="keyboard_arrow_up"
+              >
+                keyboard_arrow_up
+              </span>
+            </i>
+            <div>
+              Open
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
