@@ -10,7 +10,7 @@ import { createPortal } from "react-dom";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { reaction } from "mobx";
 import { Animate } from "../animate";
-import type { SafeReactNode, SingleOrMany } from "@k8slens/utilities";
+import type { SafeReactNode } from "@k8slens/utilities";
 import { cssNames, noop, stopPropagation } from "@k8slens/utilities";
 import type { ObservableHistory } from "mobx-observable-history";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -30,7 +30,7 @@ export interface DialogProps {
   pinned?: boolean;
   animated?: boolean;
   "data-testid"?: string;
-  children?: SingleOrMany<SafeReactNode>;
+  children?: SafeReactNode;
 }
 
 interface DialogState {

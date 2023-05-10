@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { SafeReactNode, SingleOrMany } from "@k8slens/utilities";
+import type { SafeReactNode } from "@k8slens/utilities";
 import { render, RenderResult } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
@@ -12,7 +12,7 @@ import { withTooltip } from "./withTooltip";
 type MyComponentProps = {
   text: string;
   id?: string;
-  children?: SingleOrMany<SafeReactNode>;
+  children?: SafeReactNode;
   "data-testid"?: string;
 };
 

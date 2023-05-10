@@ -7,7 +7,7 @@ import styles from "./main-layout.module.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { SafeReactNode, SingleOrMany } from "@k8slens/utilities";
+import type { SafeReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { ErrorBoundary } from "@k8slens/error-boundary";
 import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "@k8slens/resizing-anchor";
@@ -20,7 +20,7 @@ export interface MainLayoutProps {
   sidebar: SafeReactNode;
   className?: string;
   footer?: SafeReactNode;
-  children?: SingleOrMany<SafeReactNode>;
+  children?: SafeReactNode;
 }
 
 /**

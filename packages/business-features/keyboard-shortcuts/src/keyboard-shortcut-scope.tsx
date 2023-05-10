@@ -1,9 +1,9 @@
-import type { SafeReactNode, SingleOrMany } from "@k8slens/utilities";
+import type { SafeReactNode } from "@k8slens/utilities";
 import React from "react";
 
 export interface KeyboardShortcutScopeProps {
   id: string;
-  children: SingleOrMany<SafeReactNode>;
+  children: SafeReactNode;
 }
 
 export const KeyboardShortcutScope = ({ id, children }: KeyboardShortcutScopeProps) => (

@@ -1,11 +1,11 @@
-import type { SafeReactNode, SingleOrMany } from "@k8slens/utilities";
+import type { SafeReactNode } from "@k8slens/utilities";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import React, { useEffect } from "react";
 
 import invokeShortcutInjectable, { InvokeShortcut } from "./invoke-shortcut.injectable";
 
 export interface KeyboardShortcutListenerProps {
-  children: SingleOrMany<SafeReactNode>;
+  children: SafeReactNode;
 }
 
 interface Dependencies {

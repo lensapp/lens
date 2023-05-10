@@ -18,7 +18,7 @@ export interface TooltipDecoratorProps {
    */
   tooltipOverrideDisabled?: boolean;
   id?: string;
-  children?: SingleOrMany<SafeReactNode>;
+  children?: SafeReactNode;
 }
 
 export function withTooltip<TargetProps>(
