@@ -18,9 +18,11 @@ export type StrictReactFragment =
     };
 
 export type StrictReactNode =
-  | React.ReactChild
+  | React.ReactElement
+  | React.ReactText
   | StrictReactFragment
   | React.ReactPortal
+  | Iterable<StrictReactNode>
   | boolean
   | null
   | undefined;
