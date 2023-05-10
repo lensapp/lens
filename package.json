@@ -21,7 +21,7 @@
     "clean:node_modules": "lerna clean -y && rimraf node_modules",
     "dev": "cross-env NODE_ENV=development lerna run build --stream --skip-nx-cache",
     "postdev": "lerna watch -- lerna run build --stream --scope \\$LERNA_PACKAGE_NAME",
-    "prestart-dev": "cd packages/open-lens && rimraf static/build/ && npm run build:tray-icons && npm run download:binaries",
+    "prestart-dev": "cd ./open-lens && rimraf static/build/ && npm run build:tray-icons && npm run download:binaries",
     "start-dev": "lerna run start",
     "lint": "lerna run lint --stream --no-bail",
     "lint:fix": "lerna run lint:fix --stream",
