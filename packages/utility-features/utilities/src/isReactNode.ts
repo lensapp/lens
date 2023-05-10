@@ -9,7 +9,7 @@ import type { SingleOrMany } from "./types";
 
 export type SafeReactNode = React.ReactElement | React.ReactText | boolean | null | undefined | Iterable<SafeReactNode>;
 
-export function toSafeReactChildrenArray(children: SingleOrMany<SafeReactNode>) {
+export function toSafeReactChildrenArray(children: SafeReactNode) {
   return React.Children.toArray(children) as (Exclude<SafeReactNode, boolean | null | undefined>)[];
 }
 

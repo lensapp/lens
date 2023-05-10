@@ -9,7 +9,7 @@ import type { ErrorInfo } from "react";
 import React from "react";
 import { observer } from "mobx-react";
 import { Button } from "@k8slens/button";
-import type { SafeReactNode, SingleOrMany } from "@k8slens/utilities";
+import type { SafeReactNode } from "@k8slens/utilities";
 import type { ObservableHistory } from "mobx-observable-history";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { observableHistoryInjectionToken } from "@k8slens/routing";
@@ -18,7 +18,7 @@ const issuesTrackerUrl = "https://github.com/lensapp/lens/issues";
 const forumsUrl = "https://forums.k8slens.dev";
 
 export interface ErrorBoundaryProps {
-  children?: SingleOrMany<SafeReactNode>;
+  children?: SafeReactNode;
 }
 
 interface State {

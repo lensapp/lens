@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect, useState } from "react";
-import type { SafeReactNode, SingleOrMany } from "@k8slens/utilities";
+import type { SafeReactNode } from "@k8slens/utilities";
 import type { RequestIdleCallback } from "./request-idle-callback.injectable";
 import type { CancelIdleCallback } from "./cancel-idle-callback.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -14,7 +14,7 @@ import idleCallbackTimeoutInjectable from "./idle-callback-timeout.injectable";
 
 export interface RenderDelayProps {
   placeholder?: SafeReactNode;
-  children: SingleOrMany<SafeReactNode>;
+  children: SafeReactNode;
 }
 
 interface Dependencies {

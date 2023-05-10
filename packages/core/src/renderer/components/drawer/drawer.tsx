@@ -8,7 +8,7 @@ import "./drawer.scss";
 import React from "react";
 import { clipboard } from "electron";
 import { createPortal } from "react-dom";
-import type { SafeReactNode, SingleOrMany } from "@k8slens/utilities";
+import type { SafeReactNode } from "@k8slens/utilities";
 import { cssNames, noop } from "@k8slens/utilities";
 import { Icon } from "../icon";
 import type { AnimateName } from "../animate";
@@ -39,7 +39,7 @@ export interface DrawerProps {
   animation?: AnimateName;
   onClose?: () => void;
   toolbar?: SafeReactNode;
-  children?: SingleOrMany<SafeReactNode>;
+  children?: SafeReactNode;
   "data-testid"?: string;
   testIdForClose?: string;
 }

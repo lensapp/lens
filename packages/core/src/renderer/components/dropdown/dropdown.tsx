@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { SafeReactNode, SingleOrMany } from "@k8slens/utilities";
+import type { SafeReactNode } from "@k8slens/utilities";
 import { toSafeReactChildrenArray } from "@k8slens/utilities";
 import type { HTMLAttributes } from "react";
 import React, { useState } from "react";
@@ -11,7 +11,7 @@ import { Menu } from "../menu";
 
 interface DropdownProps extends HTMLAttributes<HTMLDivElement> {
   contentForToggle: SafeReactNode;
-  children?: SingleOrMany<SafeReactNode>;
+  children?: SafeReactNode;
 }
 
 export function Dropdown(props: DropdownProps) {

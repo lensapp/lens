@@ -36,7 +36,7 @@ import Workloads from "./workloads.svg";
 import type { Logger } from "@k8slens/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { loggerInjectionToken } from "@k8slens/logger";
-import type { SingleOrMany, SafeReactNode } from "@k8slens/utilities";
+import type { SafeReactNode } from "@k8slens/utilities";
 
 const hrefValidation = /https?:\/\//;
 
@@ -159,7 +159,7 @@ export interface BaseIconProps {
 }
 
 export interface IconProps extends React.HTMLAttributes<any>, BaseIconProps {
-  children?: SingleOrMany<SafeReactNode>;
+  children?: SafeReactNode;
 }
 
 export function isSvg(content: string): boolean {

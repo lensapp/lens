@@ -8,7 +8,7 @@ import styles from "./avatar.module.scss";
 import type { ImgHTMLAttributes, MouseEventHandler } from "react";
 import React from "react";
 import randomColor from "randomcolor";
-import type { SafeReactNode, SingleOrMany } from "@k8slens/utilities";
+import type { SafeReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { computeDefaultShortName } from "../../../common/catalog/helpers";
 
@@ -21,7 +21,7 @@ export interface AvatarProps {
   variant?: "circle" | "rounded" | "square";
   imgProps?: ImgHTMLAttributes<HTMLImageElement>;
   disabled?: boolean;
-  children?: SingleOrMany<SafeReactNode>;
+  children?: SafeReactNode;
   className?: string;
   id?: string;
   onClick?: MouseEventHandler<HTMLDivElement>;
