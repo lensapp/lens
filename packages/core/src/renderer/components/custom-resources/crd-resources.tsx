@@ -58,7 +58,7 @@ class NonInjectedCustomResources extends React.Component<Dependencies> {
 
     const isNamespaced = crd.isNamespaced();
     const extraColumns = crd.getPrinterColumns(false);  // Cols with priority bigger than 0 are shown in details
-    const version = crd.getPreferedVersion();
+    const version = crd.getPreferredVersion();
 
     return (
       <TabLayout>
