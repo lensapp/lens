@@ -10,7 +10,7 @@ import type { IComputedValue } from "mobx";
 import { computed, makeObservable, untracked } from "mobx";
 import type { ConfirmDialogParams } from "../confirm-dialog";
 import type { TableCellProps, TableProps, TableRowProps, TableSortCallbacks } from "../table";
-import type { IClassName, SafeReactNode, SingleOrMany } from "@k8slens/utilities";
+import type { IClassName, StrictReactNode, SingleOrMany } from "@k8slens/utilities";
 import { cssNames, noop } from "@k8slens/utilities";
 import type { AddRemoveButtonsProps } from "../add-remove-buttons";
 import type { ItemObject } from "@k8slens/list-layout";
@@ -38,10 +38,10 @@ export type ItemsFilter<I extends ItemObject> = (items: I[]) => I[];
 export type ItemsFilters<I extends ItemObject> = Record<string, ItemsFilter<I>>;
 
 export interface HeaderPlaceholders {
-  title?: SafeReactNode;
+  title?: StrictReactNode;
   searchProps?: SearchInputUrlProps;
-  filters?: SafeReactNode;
-  info?: SafeReactNode;
+  filters?: StrictReactNode;
+  info?: StrictReactNode;
 }
 
 function normalizeText(value: Primitive) {
@@ -78,7 +78,7 @@ export type ItemListStore<I extends ItemObject, PreLoadStores extends boolean> =
 export type RenderHeaderTitle<
   Item extends ItemObject,
   PreLoadStores extends boolean,
-> = SafeReactNode | ((parent: NonInjectedItemListLayout<Item, PreLoadStores>) => SafeReactNode);
+> = StrictReactNode | ((parent: NonInjectedItemListLayout<Item, PreLoadStores>) => StrictReactNode);
 
 export type HeaderCustomizer = (placeholders: HeaderPlaceholders) => HeaderPlaceholders;
 export type ItemListLayoutProps<Item extends ItemObject, PreLoadStores extends boolean = boolean> = {
@@ -107,8 +107,8 @@ export type ItemListLayoutProps<Item extends ItemObject, PreLoadStores extends b
   sortingCallbacks?: TableSortCallbacks<Item>;
   tableProps?: Partial<TableProps<Item>>; // low-level table configuration
   renderTableHeader?: (TableCellProps | undefined | null)[];
-  renderTableContents: (item: Item) => (SafeReactNode | TableCellProps)[];
-  renderItemMenu?: (item: Item, store: ItemListStore<Item, PreLoadStores>) => SafeReactNode;
+  renderTableContents: (item: Item) => (StrictReactNode | TableCellProps)[];
+  renderItemMenu?: (item: Item, store: ItemListStore<Item, PreLoadStores>) => StrictReactNode;
   customizeTableRowProps?: (item: Item) => Partial<TableRowProps<Item>>;
   addRemoveButtons?: Partial<AddRemoveButtonsProps>;
   virtual?: boolean;
@@ -120,7 +120,7 @@ export type ItemListLayoutProps<Item extends ItemObject, PreLoadStores extends b
 
   // other
   customizeRemoveDialog?: (selectedItems: Item[]) => Partial<ConfirmDialogParams>;
-  renderFooter?: (parent: NonInjectedItemListLayout<Item, PreLoadStores>) => SafeReactNode;
+  renderFooter?: (parent: NonInjectedItemListLayout<Item, PreLoadStores>) => StrictReactNode;
 
   spinnerTestId?: string;
 
@@ -129,7 +129,7 @@ export type ItemListLayoutProps<Item extends ItemObject, PreLoadStores extends b
    *
    * @default "Failed to load items"
    */
-  failedToLoadMessage?: SafeReactNode;
+  failedToLoadMessage?: StrictReactNode;
 
   filterCallbacks?: ItemsFilters<Item>;
   "data-testid"?: string;

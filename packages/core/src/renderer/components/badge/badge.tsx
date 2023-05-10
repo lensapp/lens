@@ -8,18 +8,18 @@ import styles from "./badge.module.scss";
 import React, { useEffect, useRef, useState } from "react";
 import { action, observable } from "mobx";
 import { observer } from "mobx-react";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { withTooltip } from "@k8slens/tooltip";
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
   small?: boolean;
   flat?: boolean;
-  label?: SafeReactNode;
+  label?: StrictReactNode;
   expandable?: boolean;
   disabled?: boolean;
   scrollable?: boolean;
-  children?: SafeReactNode;
+  children?: StrictReactNode;
 }
 
 // Common handler for all Badge instances

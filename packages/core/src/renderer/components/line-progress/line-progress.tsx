@@ -5,7 +5,7 @@
 
 import "./line-progress.scss";
 import React from "react";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { withTooltip } from "@k8slens/tooltip";
 
@@ -15,7 +15,7 @@ export interface LineProgressProps extends React.HTMLProps<HTMLDivElement> {
   max?: number;
   className?: any;
   precise?: number;
-  children?: SafeReactNode;
+  children?: StrictReactNode;
 }
 
 function valuePercent({ value, min, max, precise }: Required<Pick<LineProgressProps, "value" | "min" | "max" | "precise">>) {

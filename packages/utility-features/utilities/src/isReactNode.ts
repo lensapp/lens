@@ -5,15 +5,25 @@
 
 import React from "react";
 import { isObject } from "./type-narrowing";
-import type { SingleOrMany } from "./types";
 
-export type SafeReactNode = React.ReactElement | React.ReactText | boolean | null | undefined | Iterable<SafeReactNode>;
+export type StrictReactFragment =
+  | {
+      key?: string | number | null;
+      ref?: null;
+      props?: {
+        children?: StrictReactNode;
+      };
+    };
 
-export function toSafeReactChildrenArray(children: SafeReactNode) {
-  return React.Children.toArray(children) as (Exclude<SafeReactNode, boolean | null | undefined>)[];
-}
+export type StrictReactNode =
+  | React.ReactChild
+  | StrictReactFragment
+  | React.ReactPortal
+  | boolean
+  | null
+  | undefined;
 
-export function isReactNode(node: unknown): node is SafeReactNode {
+export function isReactNode(node: unknown): node is StrictReactNode {
   return (isObject(node) && React.isValidElement(node))
     || Array.isArray(node) && node.every(isReactNode)
     || node == null

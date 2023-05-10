@@ -9,7 +9,7 @@ import moment from "moment";
 import React from "react";
 
 import type { Secret } from "@k8slens/kube-object";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 import { prevDefault } from "@k8slens/utilities";
 import { Icon } from "../../icon";
 
@@ -23,7 +23,7 @@ interface State {
 
 interface RenderRowArgs {
   name: string;
-  value: SafeReactNode;
+  value: StrictReactNode;
 }
 
 export class ServiceAccountsSecret extends React.Component<ServiceAccountsSecretProps, State> {

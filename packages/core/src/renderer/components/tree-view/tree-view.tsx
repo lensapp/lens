@@ -6,7 +6,7 @@
 import styles from "./tree-view.module.scss";
 import type { MouseEventHandler } from "react";
 import React, { useState } from "react";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { Icon } from "../icon";
 
@@ -16,7 +16,7 @@ export interface TreeViewClasses {
 
 export interface TreeViewProps {
   classes?: TreeViewClasses;
-  children: SafeReactNode;
+  children: StrictReactNode;
 }
 
 export function TreeView(props: TreeViewProps) {

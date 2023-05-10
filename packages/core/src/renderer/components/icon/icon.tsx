@@ -36,7 +36,7 @@ import Workloads from "./workloads.svg";
 import type { Logger } from "@k8slens/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { loggerInjectionToken } from "@k8slens/logger";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 
 const hrefValidation = /https?:\/\//;
 
@@ -159,7 +159,7 @@ export interface BaseIconProps {
 }
 
 export interface IconProps extends React.HTMLAttributes<any>, BaseIconProps {
-  children?: SafeReactNode;
+  children?: StrictReactNode;
 }
 
 export function isSvg(content: string): boolean {
@@ -206,7 +206,7 @@ const RawIcon = (props: IconProps & Dependencies) => {
     onKeyDown?.(event);
   };
 
-  let iconContent: SafeReactNode;
+  let iconContent: StrictReactNode;
   const iconProps: Partial<IconProps> = {
     className: cssNames("Icon", className,
       { svg, material, interactive: isInteractive, disabled, sticker, active, focusable },

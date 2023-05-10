@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 import type { CatalogEntity } from "../../../common/catalog";
 import type { TableCellProps } from "../table";
 
@@ -32,7 +32,7 @@ export interface CategoryColumnRegistration {
   /**
    * This function will be called to generate the cells (on demand) for the column
    */
-  renderCell: (entity: CatalogEntity) => SafeReactNode;
+  renderCell: (entity: CatalogEntity) => StrictReactNode;
 
   /**
    * This function will be used to generate the columns title cell.
@@ -79,7 +79,7 @@ export interface AdditionalCategoryColumnRegistration extends CategoryColumnRegi
 export interface RegisteredAdditionalCategoryColumn {
   id: string;
   priority: number;
-  renderCell: (entity: CatalogEntity) => SafeReactNode;
+  renderCell: (entity: CatalogEntity) => StrictReactNode;
   titleProps: TableCellProps;
   sortCallback?: (entity: CatalogEntity) => string | number | (string | number)[];
   searchFilter?: (entity: CatalogEntity) => string | string[];

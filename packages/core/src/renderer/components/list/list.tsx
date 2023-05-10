@@ -9,14 +9,14 @@ import { SearchInput } from "../input";
 
 import type { UseTableOptions } from "react-table";
 import { ReactTable } from "../table/react-table";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 
 export type SearchFilter<T> = (item: T) => string | number;
 
 export interface ListProps<T> extends UseTableOptions<any> {
   items: T[];
   filters: SearchFilter<T>[];
-  title?: SafeReactNode;
+  title?: StrictReactNode;
 }
 
 export function List<T>({ columns, data, title, items, filters }: ListProps<T>) {

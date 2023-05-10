@@ -7,7 +7,7 @@ import "./crd-resource-details.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames, safeJSONPathValue } from "@k8slens/utilities";
 import { Badge } from "../badge";
 import { DrawerItem } from "../drawer";
@@ -23,7 +23,7 @@ export interface CustomResourceDetailsProps extends KubeObjectDetailsProps<KubeO
   crd?: CustomResourceDefinition;
 }
 
-function convertSpecValue(value: unknown): SafeReactNode {
+function convertSpecValue(value: unknown): StrictReactNode {
   if (Array.isArray(value)) {
     return (
       <ul>

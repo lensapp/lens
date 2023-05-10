@@ -5,17 +5,17 @@
 
 import "./checkbox.scss";
 import React from "react";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames, noop } from "@k8slens/utilities";
 
 export interface CheckboxProps {
   className?: string;
-  label?: SafeReactNode;
+  label?: StrictReactNode;
   inline?: boolean;
   disabled?: boolean;
   value?: boolean;
   onChange?(value: boolean, evt: React.ChangeEvent<HTMLInputElement>): void;
-  children?: SafeReactNode;
+  children?: StrictReactNode;
 }
 
 export function Checkbox({ label, inline, className, value, children, onChange = noop, disabled, ...inputProps }: CheckboxProps) {

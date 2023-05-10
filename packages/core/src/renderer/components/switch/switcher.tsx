@@ -3,13 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 import React from "react";
 import { Switch } from "./switch";
 
 export interface SwitcherProps {
   disabled?: boolean;
-  children?: SafeReactNode;
+  children?: StrictReactNode;
   checked?: boolean;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
   name?: string;

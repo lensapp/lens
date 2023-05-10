@@ -5,14 +5,14 @@
 
 import "./sub-header.scss";
 import React from "react";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 
 export interface SubHeaderProps {
   className?: string;
   withLine?: boolean; // add bottom line
   compact?: boolean; // no extra padding around content
-  children: SafeReactNode;
+  children: StrictReactNode;
 }
 
 export class SubHeader extends React.Component<SubHeaderProps> {

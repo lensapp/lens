@@ -6,19 +6,18 @@
 import React, { useState } from "react";
 import type { TooltipProps } from "./tooltip";
 import { Tooltip } from "./tooltip";
-import { isReactNode, SafeReactNode } from "@k8slens/utilities";
+import { isReactNode, StrictReactNode } from "@k8slens/utilities";
 import uniqueId from "lodash/uniqueId";
-import type { SingleOrMany } from "@k8slens/utilities";
 
 export interface TooltipDecoratorProps {
-  tooltip?: SafeReactNode | Omit<TooltipProps, "targetId">;
+  tooltip?: StrictReactNode | Omit<TooltipProps, "targetId">;
   /**
    * forces tooltip to detect the target's parent for mouse events. This is
    * useful for displaying tooltips even when the target is "disabled"
    */
   tooltipOverrideDisabled?: boolean;
   id?: string;
-  children?: SafeReactNode;
+  children?: StrictReactNode;
 }
 
 export function withTooltip<TargetProps>(

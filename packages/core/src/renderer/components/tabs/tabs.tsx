@@ -6,7 +6,7 @@
 import "./tabs.scss";
 import type { DOMAttributes } from "react";
 import React from "react";
-import type { SafeReactNode } from "@k8slens/utilities";
+import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { Icon } from "../icon";
 import autoBindReact from "auto-bind/react";
@@ -56,8 +56,8 @@ export interface TabProps<D> extends DOMAttributes<HTMLElement> {
   className?: string;
   active?: boolean;
   disabled?: boolean;
-  icon?: SafeReactNode | string; // material-io name or custom icon
-  label?: SafeReactNode;
+  icon?: StrictReactNode | string; // material-io name or custom icon
+  label?: StrictReactNode;
   value: D;
 }
 

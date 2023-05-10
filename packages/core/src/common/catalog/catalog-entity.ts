@@ -7,7 +7,7 @@ import EventEmitter from "events";
 import type TypedEmitter from "typed-emitter";
 import { observable, makeObservable } from "mobx";
 import { once } from "lodash";
-import type { Disposer, SafeReactNode } from "@k8slens/utilities";
+import type { Disposer, StrictReactNode } from "@k8slens/utilities";
 import { iter } from "@k8slens/utilities";
 import type { CategoryColumnRegistration, TitleCellProps } from "../../renderer/components/catalog/custom-category-columns";
 
@@ -201,7 +201,7 @@ export abstract class CatalogCategory extends (EventEmitter as new () => TypedEm
    * Defaults to no badge.
    * The badge is displayed next to the Category name in the Catalog Category menu
    */
-  public getBadge(): SafeReactNode {
+  public getBadge(): StrictReactNode {
     return null;
   }
 
