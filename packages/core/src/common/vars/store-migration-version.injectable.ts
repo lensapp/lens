@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 
 const storeMigrationVersionInjectable = getInjectable({
   id: "store-migration-version",
-  instantiate: () => "6.4.0",
+  instantiate: () => "6.5.0",
 });
 
 export default storeMigrationVersionInjectable;
