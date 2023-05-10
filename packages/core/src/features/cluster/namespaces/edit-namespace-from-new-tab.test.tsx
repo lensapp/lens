@@ -161,7 +161,7 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
 
           it("calls for namespace", () => {
             expect(apiKubeGetMock).toHaveBeenCalledWith(
-              "/apis/some-api-version/namespaces/some-uid",
+              "/api/some-api-version/namespaces/some-uid",
             );
           });
 
@@ -208,7 +208,7 @@ metadata:
   resourceVersion: some-resource-version
   somePropertyToBeRemoved: some-value
   somePropertyToBeChanged: some-old-value
-  selfLink: /apis/some-api-version/namespaces/some-uid
+  selfLink: /api/some-api-version/namespaces/some-uid
 `);
             });
 
@@ -227,7 +227,7 @@ metadata:
 
               it("calls for save with just the adding version label", () => {
                 expect(apiKubePatchMock).toHaveBeenCalledWith(
-                  "/apis/some-api-version/namespaces/some-uid",
+                  "/api/some-api-version/namespaces/some-uid",
                   {
                     data: [{
                       op: "add",
@@ -509,7 +509,7 @@ metadata:
   resourceVersion: some-resource-version
   somePropertyToBeChanged: some-changed-value
   someAddedProperty: some-new-value
-  selfLink: /apis/some-api-version/namespaces/some-uid
+  selfLink: /api/some-api-version/namespaces/some-uid
 `,
                   },
                 });
@@ -532,7 +532,7 @@ metadata:
   resourceVersion: some-resource-version
   somePropertyToBeChanged: some-changed-value
   someAddedProperty: some-new-value
-  selfLink: /apis/some-api-version/namespaces/some-uid
+  selfLink: /api/some-api-version/namespaces/some-uid
 `);
               });
 
@@ -548,7 +548,7 @@ metadata:
                 expect(
                   actual.edit_resource_store["some-first-tab-id"],
                 ).toEqual({
-                  resource: "/apis/some-api-version/namespaces/some-uid",
+                  resource: "/api/some-api-version/namespaces/some-uid",
                   firstDraft: `apiVersion: some-api-version
 kind: Namespace
 metadata:
@@ -557,7 +557,7 @@ metadata:
   resourceVersion: some-resource-version
   somePropertyToBeRemoved: some-value
   somePropertyToBeChanged: some-old-value
-  selfLink: /apis/some-api-version/namespaces/some-uid
+  selfLink: /api/some-api-version/namespaces/some-uid
 `,
                   draft: `apiVersion: some-api-version
 kind: Namespace
@@ -567,7 +567,7 @@ metadata:
   resourceVersion: some-resource-version
   somePropertyToBeChanged: some-changed-value
   someAddedProperty: some-new-value
-  selfLink: /apis/some-api-version/namespaces/some-uid
+  selfLink: /api/some-api-version/namespaces/some-uid
 `,
                 });
               });
@@ -583,7 +583,7 @@ metadata:
 
                 it("calls for save with changed configuration", () => {
                   expect(apiKubePatchMock).toHaveBeenCalledWith(
-                    "/apis/some-api-version/namespaces/some-uid",
+                    "/api/some-api-version/namespaces/some-uid",
                     {
                       data: [
                         {
@@ -637,7 +637,7 @@ metadata:
   uid: some-uid
   name: some-name
   resourceVersion: some-resource-version
-  selfLink: /apis/some-api-version/namespaces/some-uid
+  selfLink: /api/some-api-version/namespaces/some-uid
   somePropertyToBeChanged: some-changed-value
   someAddedProperty: some-new-value
   someOtherAddedProperty: some-other-new-value
@@ -655,7 +655,7 @@ metadata:
                   fireEvent.click(saveButton);
 
                   expect(apiKubePatchMock).toHaveBeenCalledWith(
-                    "/apis/some-api-version/namespaces/some-uid",
+                    "/api/some-api-version/namespaces/some-uid",
                     {
                       data: [
                         {
@@ -732,7 +732,7 @@ metadata:
   uid: some-uid
   name: some-name
   resourceVersion: some-resource-version
-  selfLink: /apis/some-api-version/namespaces/some-uid
+  selfLink: /api/some-api-version/namespaces/some-uid
 `,
                     },
                   });
@@ -794,7 +794,7 @@ metadata:
 
               it("calls for second namespace", () => {
                 expect(apiKubeGetMock).toHaveBeenCalledWith(
-                  "/apis/some-api-version/namespaces/some-other-uid",
+                  "/api/some-api-version/namespaces/some-other-uid",
                 );
               });
 
@@ -811,7 +811,7 @@ metadata:
                       name: "some-other-name",
                       resourceVersion: "some-resource-version",
                       selfLink:
-                        "/apis/some-api-version/namespaces/some-other-uid",
+                        "/api/some-api-version/namespaces/some-other-uid",
                     },
                   });
 
@@ -833,7 +833,7 @@ metadata:
   uid: some-other-uid
   name: some-other-name
   resourceVersion: some-resource-version
-  selfLink: /apis/some-api-version/namespaces/some-other-uid
+  selfLink: /api/some-api-version/namespaces/some-other-uid
 `);
                 });
 
@@ -847,7 +847,7 @@ metadata:
                   fireEvent.click(saveButton);
 
                   expect(apiKubePatchMock).toHaveBeenCalledWith(
-                    "/apis/some-api-version/namespaces/some-other-uid",
+                    "/api/some-api-version/namespaces/some-other-uid",
                     {
                       data: [{
                         op: "add",
@@ -897,7 +897,7 @@ metadata:
                   });
 
                   it("does not call for namespace", () => {
-                    expect(apiKubeGetMock).not.toHaveBeenCalledWith("/apis/some-api-version/namespaces/some-uid");
+                    expect(apiKubeGetMock).not.toHaveBeenCalledWith("/api/some-api-version/namespaces/some-uid");
                   });
 
                   it("has configuration in the editor", () => {
@@ -913,7 +913,7 @@ metadata:
   resourceVersion: some-resource-version
   somePropertyToBeRemoved: some-value
   somePropertyToBeChanged: some-old-value
-  selfLink: /apis/some-api-version/namespaces/some-uid
+  selfLink: /api/some-api-version/namespaces/some-uid
 `);
                   });
 
@@ -927,7 +927,7 @@ metadata:
                     fireEvent.click(saveButton);
 
                     expect(apiKubePatchMock).toHaveBeenCalledWith(
-                      "/apis/some-api-version/namespaces/some-uid",
+                      "/api/some-api-version/namespaces/some-uid",
                       {
                         data: [{
                           op: "add",
@@ -987,7 +987,7 @@ const someNamespaceDataStub = {
     uid: "some-uid",
     name: "some-name",
     resourceVersion: "some-resource-version",
-    selfLink: "/apis/some-api-version/namespaces/some-uid",
+    selfLink: "/api/some-api-version/namespaces/some-uid",
   },
 };
 
@@ -998,6 +998,6 @@ const someOtherNamespaceDataStub = {
     uid: "some-other-uid",
     name: "some-other-name",
     resourceVersion: "some-resource-version",
-    selfLink: "/apis/some-api-version/namespaces/some-other-uid",
+    selfLink: "/api/some-api-version/namespaces/some-other-uid",
   },
 };

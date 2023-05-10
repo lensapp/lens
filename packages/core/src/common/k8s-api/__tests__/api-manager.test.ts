@@ -58,7 +58,7 @@ describe("ApiManager", () => {
 
   describe("registerApi", () => {
     it("re-register store if apiBase changed", () => {
-      const apiBase = "apis/v1/foo";
+      const apiBase = "api/v1/foo";
       const fallbackApiBase = "/apis/extensions/v1beta1/foo";
       const kubeApi = new TestApi({
         logger: di.inject(loggerInjectionToken),

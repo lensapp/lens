@@ -81,7 +81,7 @@ exports[`disable kube object detail items when cluster is not relevant given ext
               class="value"
             >
               <a
-                href="/workloads?kube-details=%2Fapi%2Fv1%2Fnamespaces%2Fsome-namespace&kube-selected=%2Fapis%2Fsome-api-version%2Fnamespaces%2Fsome-namespace%2Fsome-kind%2Fsome-name"
+                href="/workloads?kube-details=%2Fapi%2Fv1%2Fnamespaces%2Fsome-namespace&kube-selected=%2Fapi%2Fsome-api-version%2Fnamespaces%2Fsome-namespace%2Fsome-kind%2Fsome-name"
               >
                 some-namespace
               </a>
@@ -702,7 +702,7 @@ exports[`disable kube object detail items when cluster is not relevant given ext
               class="value"
             >
               <a
-                href="/workloads?kube-details=%2Fapi%2Fv1%2Fnamespaces%2Fsome-namespace&kube-selected=%2Fapis%2Fsome-api-version%2Fnamespaces%2Fsome-namespace%2Fsome-kind%2Fsome-name"
+                href="/workloads?kube-details=%2Fapi%2Fv1%2Fnamespaces%2Fsome-namespace&kube-selected=%2Fapi%2Fsome-api-version%2Fnamespaces%2Fsome-namespace%2Fsome-kind%2Fsome-name"
               >
                 some-namespace
               </a>
@@ -1318,7 +1318,7 @@ exports[`disable kube object detail items when cluster is not relevant given not
               class="value"
             >
               <a
-                href="/workloads?kube-details=%2Fapi%2Fv1%2Fnamespaces%2Fsome-namespace&kube-selected=%2Fapis%2Fsome-api-version%2Fnamespaces%2Fsome-namespace%2Fsome-kind%2Fsome-name"
+                href="/workloads?kube-details=%2Fapi%2Fv1%2Fnamespaces%2Fsome-namespace&kube-selected=%2Fapi%2Fsome-api-version%2Fnamespaces%2Fsome-namespace%2Fsome-kind%2Fsome-name"
               >
                 some-namespace
               </a>
