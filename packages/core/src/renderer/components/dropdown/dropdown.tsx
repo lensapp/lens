@@ -4,7 +4,6 @@
  */
 
 import type { StrictReactNode } from "@k8slens/utilities";
-import { toSafeReactChildrenArray } from "@k8slens/utilities";
 import type { HTMLAttributes } from "react";
 import React, { useState } from "react";
 import { Menu } from "../menu";
@@ -34,7 +33,7 @@ export function Dropdown(props: DropdownProps) {
         close={toggle}
         open={toggle}
       >
-        {toSafeReactChildrenArray(children)}
+        {children}
       </Menu>
     </div>
   );
