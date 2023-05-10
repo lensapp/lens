@@ -120,7 +120,7 @@ class NonInjectedCustomResources extends React.Component<Dependencies> {
               </p>
               {!version.served && (
                 <p>
-                  {`Prefered version (${crd.getGroup()}/${version.name}) is not served`}
+                  {`Preferred version (${crd.getGroup()}/${version.name}) is not served`}
                 </p>
               )}
             </>
