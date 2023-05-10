@@ -29,7 +29,7 @@ describe("reactively hide kube object detail item", () => {
     builder.afterWindowStart(({ windowDi }) => {
       const apiManager = windowDi.inject(apiManagerInjectable);
       const api = {
-        apiBase: "/apis/some-api-version/some-kind",
+        apiBase: "/api/some-api-version/some-kind",
       } as Partial<KubeApi<KubeObject>> as KubeApi<KubeObject>;
       const store = {
         api,
@@ -73,7 +73,7 @@ describe("reactively hide kube object detail item", () => {
     const windowDi = builder.applicationWindow.only.di;
     const showDetails = windowDi.inject(showDetailsInjectable);
 
-    showDetails("/apis/some-api-version/namespaces/some-namespace/some-kind/some-name");
+    showDetails("/api/some-api-version/namespaces/some-namespace/some-kind/some-name");
 
     builder.extensions.enable(testExtension);
   });
@@ -96,7 +96,7 @@ describe("reactively hide kube object detail item", () => {
 
       const apiManager = builder.applicationWindow.only.di.inject(apiManagerInjectable);
 
-      assert(apiManager.getStore("/apis/some-api-version/some-kind"));
+      assert(apiManager.getStore("/api/some-api-version/some-kind"));
     });
 
     it("renders", () => {

@@ -2101,7 +2101,7 @@ metadata:
   resourceVersion: some-resource-version
   somePropertyToBeChanged: some-changed-value
   someAddedProperty: some-new-value
-  selfLink: /apis/some-api-version/namespaces/some-uid
+  selfLink: /api/some-api-version/namespaces/some-uid
 
               </textarea>
             </div>
@@ -3633,7 +3633,7 @@ metadata:
   uid: some-other-uid
   name: some-other-name
   resourceVersion: some-resource-version
-  selfLink: /apis/some-api-version/namespaces/some-other-uid
+  selfLink: /api/some-api-version/namespaces/some-other-uid
 
               </textarea>
             </div>
@@ -4437,7 +4437,7 @@ metadata:
   resourceVersion: some-resource-version
   somePropertyToBeRemoved: some-value
   somePropertyToBeChanged: some-old-value
-  selfLink: /apis/some-api-version/namespaces/some-uid
+  selfLink: /api/some-api-version/namespaces/some-uid
 
               </textarea>
             </div>
@@ -5964,7 +5964,7 @@ metadata:
   resourceVersion: some-resource-version
   somePropertyToBeRemoved: some-value
   somePropertyToBeChanged: some-old-value
-  selfLink: /apis/some-api-version/namespaces/some-uid
+  selfLink: /api/some-api-version/namespaces/some-uid
 
               </textarea>
             </div>
@@ -6716,7 +6716,7 @@ metadata:
   resourceVersion: some-resource-version
   somePropertyToBeRemoved: some-value
   somePropertyToBeChanged: some-old-value
-  selfLink: /apis/some-api-version/namespaces/some-uid
+  selfLink: /api/some-api-version/namespaces/some-uid
 
               </textarea>
             </div>
@@ -7468,7 +7468,7 @@ metadata:
   resourceVersion: some-resource-version
   somePropertyToBeRemoved: some-value
   somePropertyToBeChanged: some-old-value
-  selfLink: /apis/some-api-version/namespaces/some-uid
+  selfLink: /api/some-api-version/namespaces/some-uid
   labels:
     k8slens-edit-resource-version: some-api-version
 
@@ -8222,7 +8222,7 @@ metadata:
   resourceVersion: some-resource-version
   somePropertyToBeRemoved: some-value
   somePropertyToBeChanged: some-old-value
-  selfLink: /apis/some-api-version/namespaces/some-uid
+  selfLink: /api/some-api-version/namespaces/some-uid
 
               </textarea>
             </div>
@@ -9570,7 +9570,7 @@ metadata:
   resourceVersion: some-resource-version
   somePropertyToBeRemoved: some-value
   somePropertyToBeChanged: some-old-value
-  selfLink: /apis/some-api-version/namespaces/some-uid
+  selfLink: /api/some-api-version/namespaces/some-uid
 
               </textarea>
             </div>
@@ -10322,7 +10322,7 @@ metadata:
   resourceVersion: some-resource-version
   somePropertyToBeRemoved: some-value
   somePropertyToBeChanged: some-old-value
-  selfLink: /apis/some-api-version/namespaces/some-uid
+  selfLink: /api/some-api-version/namespaces/some-uid
 
               </textarea>
             </div>
@@ -11074,7 +11074,7 @@ metadata:
   resourceVersion: some-resource-version
   somePropertyToBeRemoved: some-value
   somePropertyToBeChanged: some-old-value
-  selfLink: /apis/some-api-version/namespaces/some-uid
+  selfLink: /api/some-api-version/namespaces/some-uid
 
               </textarea>
             </div>
