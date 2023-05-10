@@ -354,6 +354,7 @@ exports[`Command Pallet: keyboard shortcut tests when on linux renders 1`] = `
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -747,6 +748,7 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing ESC
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1140,6 +1142,7 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1545,6 +1548,7 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1847,6 +1851,7 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS renders 1`] = `
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -2149,6 +2154,7 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing ESC
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -2451,6 +2457,7 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -2765,6 +2772,7 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1

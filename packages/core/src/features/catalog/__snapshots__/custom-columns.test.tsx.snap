@@ -546,6 +546,7 @@ exports[`custom category columns for catalog renders 1`] = `
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1162,6 +1163,7 @@ exports[`custom category columns for catalog when category is added using defaul
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1768,6 +1770,7 @@ exports[`custom category columns for catalog when category is added using defaul
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -2363,6 +2366,7 @@ exports[`custom category columns for catalog when category is added using defaul
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -2979,6 +2983,7 @@ exports[`custom category columns for catalog when category is added with custom 
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -3532,6 +3537,7 @@ exports[`custom category columns for catalog when category is added with custom 
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -4148,6 +4154,7 @@ exports[`custom category columns for catalog when category is added without defa
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -4690,6 +4697,7 @@ exports[`custom category columns for catalog when category is added without defa
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1

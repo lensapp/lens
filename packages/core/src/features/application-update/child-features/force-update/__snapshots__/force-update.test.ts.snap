@@ -288,6 +288,7 @@ exports[`force user to update when too long since update was downloaded when app
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -615,6 +616,7 @@ exports[`force user to update when too long since update was downloaded when app
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -989,6 +991,7 @@ exports[`force user to update when too long since update was downloaded when app
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1

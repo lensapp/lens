@@ -263,6 +263,7 @@ exports[`<StatusBar /> when StatusBar's status is set to "error" renders 1`] = `
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -565,6 +566,7 @@ exports[`<StatusBar /> when StatusBar's status is set to "warning" renders 1`] =
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -867,6 +869,7 @@ exports[`<StatusBar /> when an extension is enabled specifying the side the elem
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1211,6 +1214,7 @@ exports[`<StatusBar /> when an extension is enabled with an invalid data type, (
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1513,6 +1517,7 @@ exports[`<StatusBar /> when an extension is enabled with an invalid data type, (
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1815,6 +1820,7 @@ exports[`<StatusBar /> when an extension is enabled with an invalid data type, (
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -2117,6 +2123,7 @@ exports[`<StatusBar /> when an extension is enabled with an invalid data type, (
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -2419,6 +2426,7 @@ exports[`<StatusBar /> when an extension is enabled with an invalid data type, (
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -2721,6 +2729,7 @@ exports[`<StatusBar /> when an extension is enabled with an invalid data type, (
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -3023,6 +3032,7 @@ exports[`<StatusBar /> when an extension is enabled with an invalid data type, (
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -3325,6 +3335,7 @@ exports[`<StatusBar /> when an extension is enabled with no status items renders
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1

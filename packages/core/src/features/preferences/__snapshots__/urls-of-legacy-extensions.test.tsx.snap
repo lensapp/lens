@@ -406,6 +406,7 @@ exports[`preferences: URLs of legacy extensions given extension with both custom
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -851,6 +852,7 @@ exports[`preferences: URLs of legacy extensions given extension with both custom
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1258,6 +1260,7 @@ exports[`preferences: URLs of legacy extensions given extension with custom pref
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1639,6 +1642,7 @@ exports[`preferences: URLs of legacy extensions given extension with custom pref
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -2060,6 +2064,7 @@ exports[`preferences: URLs of legacy extensions given extension with custom pref
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1

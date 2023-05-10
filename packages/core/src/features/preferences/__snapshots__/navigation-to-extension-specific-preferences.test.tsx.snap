@@ -652,6 +652,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1048,6 +1049,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -1455,6 +1457,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -1862,6 +1865,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -2295,6 +2299,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -2972,6 +2977,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -3687,6 +3693,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -4108,6 +4115,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -4460,6 +4468,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1

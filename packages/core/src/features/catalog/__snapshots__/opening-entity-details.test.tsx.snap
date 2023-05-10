@@ -263,6 +263,7 @@ exports[`opening catalog entity details panel renders 1`] = `
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1073,6 +1074,7 @@ exports[`opening catalog entity details panel when navigated to the catalog rend
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1883,6 +1885,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -2725,6 +2728,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -3567,6 +3571,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -4660,6 +4665,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -5490,6 +5496,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -6320,6 +6327,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -6813,6 +6821,7 @@ exports[`opening catalog entity details panel when not navigated to the catalog 
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1

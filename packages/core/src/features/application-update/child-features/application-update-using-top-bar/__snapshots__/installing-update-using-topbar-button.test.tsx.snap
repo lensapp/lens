@@ -288,6 +288,7 @@ exports[`encourage user to update when sufficient time passed since update was d
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -590,6 +591,7 @@ exports[`encourage user to update when sufficient time passed since update was d
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1

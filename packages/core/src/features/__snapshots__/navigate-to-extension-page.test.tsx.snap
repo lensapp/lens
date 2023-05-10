@@ -262,6 +262,7 @@ exports[`navigate to extension page renders 1`] = `
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -482,6 +483,7 @@ exports[`navigate to extension page when extension navigates to child route rend
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -718,6 +720,7 @@ exports[`navigate to extension page when extension navigates to route with param
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -954,6 +957,7 @@ exports[`navigate to extension page when extension navigates to route without pa
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -1190,6 +1194,7 @@ exports[`navigate to extension page when extension navigates to route without pa
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1

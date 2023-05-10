@@ -639,6 +639,7 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -1344,6 +1345,7 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -2061,6 +2063,7 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1

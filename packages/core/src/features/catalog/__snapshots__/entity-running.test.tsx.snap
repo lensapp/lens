@@ -661,6 +661,7 @@ exports[`entity running technical tests when navigated to catalog renders 1`] = 
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1361,6 +1362,7 @@ exports[`entity running technical tests when navigated to catalog when details p
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1

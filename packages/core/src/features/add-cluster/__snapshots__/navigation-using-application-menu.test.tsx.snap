@@ -262,6 +262,7 @@ exports[`add-cluster - navigation using application menu renders 1`] = `
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -566,6 +567,7 @@ exports[`add-cluster - navigation using application menu when navigating to add 
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1

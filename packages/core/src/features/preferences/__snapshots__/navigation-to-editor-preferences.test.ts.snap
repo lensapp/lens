@@ -639,6 +639,7 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -1294,6 +1295,7 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1

@@ -546,6 +546,7 @@ exports[`Deleting a cluster when an internal kubeconfig cluster is used when the
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1187,6 +1188,7 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1861,6 +1863,7 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -2614,6 +2617,7 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -3367,6 +3371,7 @@ exports[`Deleting a cluster when the kubeconfig has only one cluster when the di
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
