@@ -94,8 +94,6 @@ export function formatJSONValue(value: unknown): string {
 
 /**
  * This function is a safer version of `JSONPath.value(obj, path)` with untrusted jsonpath strings
- *
- * This function will also stringify the value retrieved from the object
  */
 export function safeJSONPathValue(obj: object, path: string): unknown {
   try {
