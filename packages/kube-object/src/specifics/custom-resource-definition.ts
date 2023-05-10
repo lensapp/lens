@@ -141,13 +141,6 @@ export class CustomResourceDefinition extends KubeObject<
   }
 
   getPreferredVersion(): CustomResourceDefinitionVersion {
-    return this.getPreferedVersion();
-  }
-
-  /**
-   * @deprecated Switch to using {@link getPreferredVersion} instead (which fixes the is a typo)
-   */
-  getPreferedVersion(): CustomResourceDefinitionVersion {
     const { apiVersion } = this;
 
     switch (apiVersion) {
@@ -179,8 +172,15 @@ export class CustomResourceDefinition extends KubeObject<
     );
   }
 
+  /**
+   * @deprecated Switch to using {@link getPreferredVersion} instead (which fixes the is a typo)
+   */
+  getPreferedVersion(): CustomResourceDefinitionVersion {
+    return this.getPreferredVersion();
+  }
+
   getVersion() {
-    return this.getPreferedVersion().name;
+    return this.getPreferredVersion().name;
   }
 
   isNamespaced() {
@@ -200,13 +200,13 @@ export class CustomResourceDefinition extends KubeObject<
   }
 
   getPrinterColumns(ignorePriority = true): AdditionalPrinterColumnsV1[] {
-    const columns = this.getPreferedVersion().additionalPrinterColumns ?? [];
+    const columns = this.getPreferredVersion().additionalPrinterColumns ?? [];
 
     return columns.filter((column) => column.name.toLowerCase() !== "age" && (ignorePriority || !column.priority));
   }
 
   getValidation() {
-    return JSON.stringify(this.getPreferedVersion().schema, null, 2);
+    return JSON.stringify(this.getPreferredVersion().schema, null, 2);
   }
 
   getConditions() {

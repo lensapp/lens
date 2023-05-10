@@ -4,79 +4,15 @@
  */
 
 import "./table-cell.scss";
-import type { TableSortBy, TableSortParams } from "./table";
 
 import React from "react";
-import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { Icon } from "../icon";
 import { Checkbox } from "../checkbox";
 import autoBindReact from "auto-bind/react";
+import type { TableCellProps } from "@k8slens/list-layout";
 
 export type TableCellElem = React.ReactElement<TableCellProps>;
-
-export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
-  /**
-   * used for configuration visibility of columns
-   */
-  id?: string;
-
-  /**
-   * Any css class names for this table cell. Only used if `title` is a "simple" react node
-   */
-  className?: string;
-
-  /**
-   * The actual value of the cell
-   */
-  title?: StrictReactNode;
-
-  /**
-   * content inside could be scrolled
-   */
-  scrollable?: boolean;
-
-  /**
-   * render cell with a checkbox
-   */
-  checkbox?: boolean;
-
-  /**
-   * mark checkbox as checked or not
-   */
-  isChecked?: boolean;
-
-  /**
-   * column name, must be same as key in sortable object `<Table sortable={}></Table>`
-   */
-  sortBy?: TableSortBy;
-
-  /**
-   * id of the column which follow same visibility rules
-   */
-  showWithColumn?: string;
-
-  /**
-   * @internal
-   */
-  _sorting?: Partial<TableSortParams>;
-
-  /**
-   * @internal
-   */
-  _sort?(sortBy: TableSortBy): void;
-
-  /**
-   * @internal
-   * indicator, might come from parent <TableHead>, don't use this prop outside (!)
-   */
-  _nowrap?: boolean;
-
-  /**
-   * For passing in the testid
-   */
-  "data-testid"?: string;
-}
 
 export class TableCell extends React.Component<TableCellProps> {
   constructor(props: TableCellProps) {

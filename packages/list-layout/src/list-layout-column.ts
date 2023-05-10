@@ -54,7 +54,7 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
   isChecked?: boolean;
 
   /**
-   * column name, must be same as key in sortable object <Table sortable={}/>
+   * column name, must be same as key in sortable object `<Table sortable={}></Table>`
    */
   sortBy?: TableSortBy;
 
@@ -78,4 +78,9 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
    * indicator, might come from parent <TableHead>, don't use this prop outside (!)
    */
   _nowrap?: boolean;
+
+  /**
+   * For passing in the testid
+   */
+  "data-testid"?: string;
 }

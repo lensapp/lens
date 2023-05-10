@@ -20,6 +20,7 @@ import type { CustomResourceDefinitionStore } from "./definition.store";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import customResourceDefinitionStoreInjectable from "./definition.store.injectable";
 import { NamespaceSelectBadge } from "../namespaces/namespace-select-badge";
+import type { TableCellProps } from "@k8slens/list-layout";
 
 enum columnId {
   name = "name",
@@ -95,9 +96,10 @@ class NonInjectedCustomResources extends React.Component<Dependencies> {
               : undefined,
             ...extraColumns.map(({ name }) => ({
               title: name,
-              className: name.toLowerCase(),
+              className: name.toLowerCase().replace(/\s+/g, "-"),
               sortBy: name,
               id: name,
+              "data-testid": `custom-resource-column-title-${name.toLowerCase().replace(/\s+/g, "-")}`,
             })),
             { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           ]}
@@ -106,11 +108,10 @@ class NonInjectedCustomResources extends React.Component<Dependencies> {
             isNamespaced && (
               <NamespaceSelectBadge namespace={customResource.getNs() as string} />
             ),
-            ...(
-              extraColumns
-                .map((column) => safeJSONPathValue(customResource, column.jsonPath))
-                .map(formatJSONValue)
-            ),
+            ...extraColumns.map((column): TableCellProps => ({
+              "data-testid": `custom-resource-column-cell-${column.name.toLowerCase().replace(/\s+/g, "-")}-for-${customResource.getScopedName()}`,
+              title: formatJSONValue(safeJSONPathValue(customResource, column.jsonPath)),
+            })),
             <KubeObjectAge key="age" object={customResource} />,
           ]}
           failedToLoadMessage={(
