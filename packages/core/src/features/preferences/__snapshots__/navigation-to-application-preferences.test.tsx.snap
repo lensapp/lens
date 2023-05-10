@@ -639,6 +639,7 @@ exports[`preferences - navigation to application preferences given in preference
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -1347,6 +1348,7 @@ exports[`preferences - navigation to application preferences given in preference
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -1769,6 +1771,7 @@ exports[`preferences - navigation to application preferences given in some child
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -2446,6 +2449,7 @@ exports[`preferences - navigation to application preferences given in some child
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -3124,6 +3128,7 @@ exports[`preferences - navigation to application preferences given in some child
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1

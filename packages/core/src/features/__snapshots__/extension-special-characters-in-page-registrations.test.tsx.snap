@@ -262,6 +262,7 @@ exports[`extension special characters in page registrations renders 1`] = `
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -482,6 +483,7 @@ exports[`extension special characters in page registrations when navigating to r
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1

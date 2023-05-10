@@ -263,6 +263,7 @@ exports[`installing update when started renders 1`] = `
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -565,6 +566,7 @@ exports[`installing update when started when user checks for updates renders 1`]
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -867,6 +869,7 @@ exports[`installing update when started when user checks for updates when new up
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1169,6 +1172,7 @@ exports[`installing update when started when user checks for updates when new up
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1471,6 +1475,7 @@ exports[`installing update when started when user checks for updates when new up
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1798,6 +1803,7 @@ exports[`installing update when started when user checks for updates when new up
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -2125,6 +2131,7 @@ exports[`installing update when started when user checks for updates when new up
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -2452,6 +2459,7 @@ exports[`installing update when started when user checks for updates when new up
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -2754,6 +2762,7 @@ exports[`installing update when started when user checks for updates when no new
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1

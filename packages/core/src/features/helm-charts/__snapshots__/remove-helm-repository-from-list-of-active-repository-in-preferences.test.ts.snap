@@ -680,6 +680,7 @@ exports[`remove helm repository from list of active repositories in preferences 
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1410,6 +1411,7 @@ exports[`remove helm repository from list of active repositories in preferences 
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -2140,6 +2142,7 @@ exports[`remove helm repository from list of active repositories in preferences 
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -2887,6 +2890,7 @@ exports[`remove helm repository from list of active repositories in preferences 
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1

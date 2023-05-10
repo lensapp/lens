@@ -639,6 +639,7 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -1061,6 +1062,7 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1

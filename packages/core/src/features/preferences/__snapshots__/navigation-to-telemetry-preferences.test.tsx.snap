@@ -368,6 +368,7 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -1045,6 +1046,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -1734,6 +1736,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -2129,6 +2132,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -2484,6 +2488,7 @@ exports[`preferences - navigation to telemetry preferences given no URL for Sent
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1

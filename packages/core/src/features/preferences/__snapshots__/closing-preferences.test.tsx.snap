@@ -651,6 +651,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -1015,6 +1016,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -1237,6 +1239,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -1459,6 +1462,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -2148,6 +2152,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -2512,6 +2517,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -2734,6 +2740,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -2956,6 +2963,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1

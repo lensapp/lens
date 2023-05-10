@@ -263,6 +263,7 @@ exports[`installing update using tray when started renders 1`] = `
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -565,6 +566,7 @@ exports[`installing update using tray when started when user checks for updates 
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -867,6 +869,7 @@ exports[`installing update using tray when started when user checks for updates 
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1169,6 +1172,7 @@ exports[`installing update using tray when started when user checks for updates 
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1496,6 +1500,7 @@ exports[`installing update using tray when started when user checks for updates 
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1798,6 +1803,7 @@ exports[`installing update using tray when started when user checks for updates 
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1

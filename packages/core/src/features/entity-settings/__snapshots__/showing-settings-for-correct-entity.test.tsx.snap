@@ -263,6 +263,7 @@ exports[`Showing correct entity settings renders 1`] = `
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -641,6 +642,7 @@ exports[`Showing correct entity settings when navigating to local cluster entity
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1040,6 +1042,7 @@ exports[`Showing correct entity settings when navigating to non-local cluster en
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1341,6 +1344,7 @@ exports[`Showing correct entity settings when navigating to weblink entity setti
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1

@@ -680,6 +680,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1427,6 +1428,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -2066,6 +2068,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -2813,6 +2816,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -3452,6 +3456,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -4199,6 +4204,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -4991,6 +4997,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -5630,6 +5637,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -6269,6 +6277,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -6908,6 +6917,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1

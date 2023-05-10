@@ -680,6 +680,7 @@ exports[`add custom helm repository in preferences when navigating to preference
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -1438,6 +1439,7 @@ exports[`add custom helm repository in preferences when navigating to preference
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -2196,6 +2198,7 @@ exports[`add custom helm repository in preferences when navigating to preference
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -3065,6 +3068,7 @@ exports[`add custom helm repository in preferences when navigating to preference
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -3831,6 +3835,7 @@ exports[`add custom helm repository in preferences when navigating to preference
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -4700,6 +4705,7 @@ exports[`add custom helm repository in preferences when navigating to preference
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -5751,6 +5757,7 @@ exports[`add custom helm repository in preferences when navigating to preference
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -6620,6 +6627,7 @@ exports[`add custom helm repository in preferences when navigating to preference
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -7671,6 +7679,7 @@ exports[`add custom helm repository in preferences when navigating to preference
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -8541,6 +8550,7 @@ exports[`add custom helm repository in preferences when navigating to preference
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -9296,6 +9306,7 @@ exports[`add custom helm repository in preferences when navigating to preference
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1
@@ -10051,6 +10062,7 @@ exports[`add custom helm repository in preferences when navigating to preference
           >
             <div
               class="badge Badge small clickable"
+              data-testid="hotbar-menu-badge-for-default"
               id="hotbarIndex"
             >
               1

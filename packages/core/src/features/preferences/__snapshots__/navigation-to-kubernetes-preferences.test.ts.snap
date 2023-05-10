@@ -639,6 +639,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
@@ -1332,6 +1333,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
         >
           <div
             class="badge Badge small clickable"
+            data-testid="hotbar-menu-badge-for-default"
             id="hotbarIndex"
           >
             1
