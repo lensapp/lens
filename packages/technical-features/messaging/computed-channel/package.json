@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/computed-channel",
   "private": false,
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.5",
   "description": "MobX-like computed between channels",
   "type": "commonjs",
   "publishConfig": {
@@ -43,8 +43,8 @@
   },
   "devDependencies": {
     "@k8slens/eslint-config": "^6.5.0-alpha.3",
-    "@k8slens/messaging-fake-bridge": "^1.0.0-alpha.4",
-    "@k8slens/webpack": "^6.5.0-alpha.5",
+    "@k8slens/messaging-fake-bridge": "^1.0.0-alpha.5",
+    "@k8slens/webpack": "^6.5.0-alpha.6",
     "type-fest": "^2.14.0"
   }
 }
