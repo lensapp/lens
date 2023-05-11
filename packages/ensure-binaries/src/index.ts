@@ -17,6 +17,7 @@ import gunzip from "gunzip-maybe";
 import fetch from "node-fetch"
 import z from "zod";
 import arg from "arg";
+import { arch } from "process";
 
 const options = arg({
   "--package": String,
@@ -245,54 +246,68 @@ const multiBar = new MultiBar({
   noTTYOutput: true,
   format: "[{bar}] {percentage}% | {downloadArch} {binaryName}",
 });
-const downloaders: BinaryDownloader[] = [
-  new LensK8sProxyDownloader({
-    version: packageInfo.config.k8sProxyVersion,
-    platform: normalizedPlatform,
-    downloadArch: "amd64",
-    fileArch: "x64",
-    baseDir: pathToBaseDir,
-  }, multiBar),
-  new KubectlDownloader({
-    version: packageInfo.config.bundledKubectlVersion,
-    platform: normalizedPlatform,
-    downloadArch: "amd64",
-    fileArch: "x64",
-    baseDir: pathToBaseDir,
-  }, multiBar),
-  new HelmDownloader({
-    version: packageInfo.config.bundledHelmVersion,
-    platform: normalizedPlatform,
-    downloadArch: "amd64",
-    fileArch: "x64",
-    baseDir: pathToBaseDir,
-  }, multiBar),
-];
 
-if (normalizedPlatform !== "windows") {
+const downloaders: BinaryDownloader[] = [];
+
+const downloadX64Binaries = () => {
   downloaders.push(
     new LensK8sProxyDownloader({
       version: packageInfo.config.k8sProxyVersion,
       platform: normalizedPlatform,
-      downloadArch: "arm64",
-      fileArch: "arm64",
+      downloadArch: "amd64",
+      fileArch: "x64",
       baseDir: pathToBaseDir,
     }, multiBar),
     new KubectlDownloader({
       version: packageInfo.config.bundledKubectlVersion,
       platform: normalizedPlatform,
-      downloadArch: "arm64",
-      fileArch: "arm64",
+      downloadArch: "amd64",
+      fileArch: "x64",
       baseDir: pathToBaseDir,
     }, multiBar),
     new HelmDownloader({
       version: packageInfo.config.bundledHelmVersion,
       platform: normalizedPlatform,
-      downloadArch: "arm64",
-      fileArch: "arm64",
+      downloadArch: "amd64",
+      fileArch: "x64",
       baseDir: pathToBaseDir,
     }, multiBar),
   );
+}
+
+const downloadAmd64Binaries = () => {
+  downloaders.push(
+    new LensK8sProxyDownloader({
+      version: packageInfo.config.k8sProxyVersion,
+      platform: normalizedPlatform,
+      downloadArch: "amd64",
+      fileArch: "amd64",
+      baseDir: pathToBaseDir,
+    }, multiBar),
+    new KubectlDownloader({
+      version: packageInfo.config.bundledKubectlVersion,
+      platform: normalizedPlatform,
+      downloadArch: "amd64",
+      fileArch: "amd64",
+      baseDir: pathToBaseDir,
+    }, multiBar),
+    new HelmDownloader({
+      version: packageInfo.config.bundledHelmVersion,
+      platform: normalizedPlatform,
+      downloadArch: "amd64",
+      fileArch: "amd64",
+      baseDir: pathToBaseDir,
+    }, multiBar),
+  );
+}
+
+if (process.env.DOWNLOAD_ALL_ARCHITECTURES === "true") {
+  downloadX64Binaries();
+  downloadAmd64Binaries();
+} else if (arch === "x64") {
+  downloadX64Binaries();
+} else if (arch === "arm64") {
+  downloadAmd64Binaries();
 }
 
 const settledResults = await Promise.allSettled(downloaders.map(downloader => (
