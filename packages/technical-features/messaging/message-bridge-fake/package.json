@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/messaging-fake-bridge",
   "private": false,
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.5",
   "description": "Fake implementation to bridge multiple dependency injection containers.",
   "type": "commonjs",
   "publishConfig": {
@@ -42,6 +42,6 @@
   },
   "devDependencies": {
     "@k8slens/eslint-config": "^6.5.0-alpha.3",
-    "@k8slens/webpack": "^6.5.0-alpha.5"
+    "@k8slens/webpack": "^6.5.0-alpha.6"
   }
 }
