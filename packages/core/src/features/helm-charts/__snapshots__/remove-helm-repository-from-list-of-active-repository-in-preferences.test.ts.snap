@@ -603,7 +603,23 @@ exports[`remove helm repository from list of active repositories in preferences 
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
-          />
+          >
+            <div
+              style="z-index: 11; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="2"
@@ -1317,7 +1333,23 @@ exports[`remove helm repository from list of active repositories in preferences 
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
-          />
+          >
+            <div
+              style="z-index: 11; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="2"
@@ -2031,7 +2063,23 @@ exports[`remove helm repository from list of active repositories in preferences 
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
-          />
+          >
+            <div
+              style="z-index: 11; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="2"
@@ -2762,7 +2810,23 @@ exports[`remove helm repository from list of active repositories in preferences 
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
-          />
+          >
+            <div
+              style="z-index: 11; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="2"
