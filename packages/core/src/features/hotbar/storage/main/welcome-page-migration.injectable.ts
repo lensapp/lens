@@ -37,7 +37,7 @@ const welcomePageMigration = getInjectable({
 
         const newFirstHotbar: HotbarData = {
           ...firstHotbar,
-          items: [welcomePageHotbarItem, ...firstHotbar.items.slice(-1)],
+          items: [welcomePageHotbarItem, ...firstHotbar.items.slice(0, -1)],
         };
 
         store.set("hotbars", [newFirstHotbar, ...hotbars.slice(1)]);
