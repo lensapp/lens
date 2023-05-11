@@ -10,10 +10,18 @@ import type { HotbarItem } from "../common/types";
 import v640HotbarStoreMigrationInjectable from "./welcome-page-migration.injectable";
 import { defaultHotbarCells } from "../common/types";
 
+function fillWithEmpties(items: HotbarItem[])  {
+  const emptyHotBarItems = new Array(defaultHotbarCells).fill(null);
+
+  return [...items, ...emptyHotBarItems.slice(items.length)];
+}
+
 function setFirstHotbarItems(store: MigrationStore, items: HotbarItem[]) {
   const oldHotbars = store.get("hotbars") as HotbarData[];
+  // empty hotbar items are nulls
+  const itemsWithEmptyCells = fillWithEmpties(items);
 
-  store.set("hotbars", [{ ...oldHotbars[0], items }, ...oldHotbars.slice(1)]);
+  store.set("hotbars", [{ ...oldHotbars[0], items: itemsWithEmptyCells }, ...oldHotbars.slice(1)]);
 }
 
 const someItem: HotbarItem = {
@@ -64,7 +72,7 @@ describe("hotbar-welcome-page-migration", () => {
 
   it("given first hotbar is empty, adds welcome page to first place", () => {
     migration.run(store);
-    expect(storeModel.get("hotbars")[0].items).toEqual([welcomeHotbarItem]);
+    expect(storeModel.get("hotbars")[0].items[0]).toEqual(welcomeHotbarItem);
   });
 
   it("given first hotbar has items but is not full, adds welcome page to first place", () => {
@@ -72,7 +80,7 @@ describe("hotbar-welcome-page-migration", () => {
 
     migration.run(store);
 
-    expect(storeModel.get("hotbars")[0].items).toEqual([welcomeHotbarItem, someItem]);
+    expect(storeModel.get("hotbars")[0].items.slice(0, 2)).toEqual([welcomeHotbarItem, someItem]);
   });
 
   it("given first hotbar is full, does not add welcome page", () => {
@@ -87,7 +95,7 @@ describe("hotbar-welcome-page-migration", () => {
   });
 
   it("given first hotbar has already welcome page, does not add welcome page", () => {
-    const hotBarItemsWithWelcomePage = [someItem, welcomeHotbarItem, someItem];
+    const hotBarItemsWithWelcomePage = fillWithEmpties([someItem, welcomeHotbarItem, someItem]);
 
     setFirstHotbarItems(store, hotBarItemsWithWelcomePage);
     migration.run(store);
