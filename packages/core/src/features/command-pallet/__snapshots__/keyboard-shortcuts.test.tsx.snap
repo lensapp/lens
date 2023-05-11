@@ -266,10 +266,10 @@ exports[`Command Pallet: keyboard shortcut tests when on linux renders 1`] = `
               >
                 <div
                   class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  id="hotbarIcon-hotbar-icon-welcome-page-entity"
+                  style="width: 40px; height: 40px; background: rgb(210, 16, 232);"
                 >
-                  Ca
+                  WP
                 </div>
               </div>
             </div>
@@ -643,10 +643,10 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing ESC
               >
                 <div
                   class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  id="hotbarIcon-hotbar-icon-welcome-page-entity"
+                  style="width: 40px; height: 40px; background: rgb(210, 16, 232);"
                 >
-                  Ca
+                  WP
                 </div>
               </div>
             </div>
@@ -1020,10 +1020,10 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
               >
                 <div
                   class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  id="hotbarIcon-hotbar-icon-welcome-page-entity"
+                  style="width: 40px; height: 40px; background: rgb(210, 16, 232);"
                 >
-                  Ca
+                  WP
                 </div>
               </div>
             </div>
@@ -1409,10 +1409,10 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
               >
                 <div
                   class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  id="hotbarIcon-hotbar-icon-welcome-page-entity"
+                  style="width: 40px; height: 40px; background: rgb(210, 16, 232);"
                 >
-                  Ca
+                  WP
                 </div>
               </div>
             </div>
@@ -1695,10 +1695,10 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS renders 1`] = `
               >
                 <div
                   class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  id="hotbarIcon-hotbar-icon-welcome-page-entity"
+                  style="width: 40px; height: 40px; background: rgb(210, 16, 232);"
                 >
-                  Ca
+                  WP
                 </div>
               </div>
             </div>
@@ -1981,10 +1981,10 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing ESC
               >
                 <div
                   class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  id="hotbarIcon-hotbar-icon-welcome-page-entity"
+                  style="width: 40px; height: 40px; background: rgb(210, 16, 232);"
                 >
-                  Ca
+                  WP
                 </div>
               </div>
             </div>
@@ -2267,10 +2267,10 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
               >
                 <div
                   class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  id="hotbarIcon-hotbar-icon-welcome-page-entity"
+                  style="width: 40px; height: 40px; background: rgb(210, 16, 232);"
                 >
-                  Ca
+                  WP
                 </div>
               </div>
             </div>
@@ -2565,10 +2565,10 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
               >
                 <div
                   class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  id="hotbarIcon-hotbar-icon-welcome-page-entity"
+                  style="width: 40px; height: 40px; background: rgb(210, 16, 232);"
                 >
-                  Ca
+                  WP
                 </div>
               </div>
             </div>

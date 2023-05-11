@@ -175,10 +175,10 @@ exports[`opening catalog entity details panel renders 1`] = `
               >
                 <div
                   class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  id="hotbarIcon-hotbar-icon-welcome-page-entity"
+                  style="width: 40px; height: 40px; background: rgb(210, 16, 232);"
                 >
-                  Ca
+                  WP
                 </div>
               </div>
             </div>
@@ -969,10 +969,10 @@ exports[`opening catalog entity details panel when navigated to the catalog rend
               >
                 <div
                   class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  id="hotbarIcon-hotbar-icon-welcome-page-entity"
+                  style="width: 40px; height: 40px; background: rgb(210, 16, 232);"
                 >
-                  Ca
+                  WP
                 </div>
               </div>
             </div>
@@ -1763,10 +1763,10 @@ exports[`opening catalog entity details panel when navigated to the catalog when
               >
                 <div
                   class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  id="hotbarIcon-hotbar-icon-welcome-page-entity"
+                  style="width: 40px; height: 40px; background: rgb(210, 16, 232);"
                 >
-                  Ca
+                  WP
                 </div>
               </div>
             </div>
@@ -2589,10 +2589,10 @@ exports[`opening catalog entity details panel when navigated to the catalog when
               >
                 <div
                   class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  id="hotbarIcon-hotbar-icon-welcome-page-entity"
+                  style="width: 40px; height: 40px; background: rgb(210, 16, 232);"
                 >
-                  Ca
+                  WP
                 </div>
               </div>
             </div>
@@ -3415,10 +3415,10 @@ exports[`opening catalog entity details panel when navigated to the catalog when
               >
                 <div
                   class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  id="hotbarIcon-hotbar-icon-welcome-page-entity"
+                  style="width: 40px; height: 40px; background: rgb(210, 16, 232);"
                 >
-                  Ca
+                  WP
                 </div>
               </div>
             </div>
@@ -4492,10 +4492,10 @@ exports[`opening catalog entity details panel when navigated to the catalog when
               >
                 <div
                   class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  id="hotbarIcon-hotbar-icon-welcome-page-entity"
+                  style="width: 40px; height: 40px; background: rgb(210, 16, 232);"
                 >
-                  Ca
+                  WP
                 </div>
               </div>
             </div>
@@ -5306,10 +5306,10 @@ exports[`opening catalog entity details panel when navigated to the catalog when
               >
                 <div
                   class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  id="hotbarIcon-hotbar-icon-welcome-page-entity"
+                  style="width: 40px; height: 40px; background: rgb(210, 16, 232);"
                 >
-                  Ca
+                  WP
                 </div>
               </div>
             </div>
@@ -6120,10 +6120,10 @@ exports[`opening catalog entity details panel when navigated to the catalog when
               >
                 <div
                   class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  id="hotbarIcon-hotbar-icon-welcome-page-entity"
+                  style="width: 40px; height: 40px; background: rgb(210, 16, 232);"
                 >
-                  Ca
+                  WP
                 </div>
               </div>
             </div>
@@ -6597,10 +6597,10 @@ exports[`opening catalog entity details panel when not navigated to the catalog 
               >
                 <div
                   class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  id="hotbarIcon-hotbar-icon-welcome-page-entity"
+                  style="width: 40px; height: 40px; background: rgb(210, 16, 232);"
                 >
-                  Ca
+                  WP
                 </div>
               </div>
             </div>

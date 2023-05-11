@@ -175,10 +175,10 @@ exports[`Showing correct entity settings renders 1`] = `
               >
                 <div
                   class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  id="hotbarIcon-hotbar-icon-welcome-page-entity"
+                  style="width: 40px; height: 40px; background: rgb(210, 16, 232);"
                 >
-                  Ca
+                  WP
                 </div>
               </div>
             </div>
@@ -537,10 +537,10 @@ exports[`Showing correct entity settings when navigating to local cluster entity
               >
                 <div
                   class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  id="hotbarIcon-hotbar-icon-welcome-page-entity"
+                  style="width: 40px; height: 40px; background: rgb(210, 16, 232);"
                 >
-                  Ca
+                  WP
                 </div>
               </div>
             </div>
@@ -920,10 +920,10 @@ exports[`Showing correct entity settings when navigating to non-local cluster en
               >
                 <div
                   class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  id="hotbarIcon-hotbar-icon-welcome-page-entity"
+                  style="width: 40px; height: 40px; background: rgb(210, 16, 232);"
                 >
-                  Ca
+                  WP
                 </div>
               </div>
             </div>
@@ -1205,10 +1205,10 @@ exports[`Showing correct entity settings when navigating to weblink entity setti
               >
                 <div
                   class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  id="hotbarIcon-hotbar-icon-welcome-page-entity"
+                  style="width: 40px; height: 40px; background: rgb(210, 16, 232);"
                 >
-                  Ca
+                  WP
                 </div>
               </div>
             </div>
