@@ -15,24 +15,29 @@
         "^build"
       ]
     },
+    "build:app": {
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "test:integration": {
+      "dependsOn": [
+        "^build"
+      ]
+    },
     "build:docs": {
       "dependsOn": [
         "^build"
       ]
     },
-    "dev": {
-      "dependsOn": [
-        "prepare:dev"
-      ]
-    },
     "lint": {
       "dependsOn": [
-        "^prepare:test"
+        "^build"
       ]
     },
     "test:unit": {
       "dependsOn": [
-        "^prepare:test"
+        "^build"
       ]
     }
   }
