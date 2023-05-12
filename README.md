@@ -32,3 +32,5 @@ See [Contributing](https://docs.k8slens.dev/contributing/contribute-to-lens/) pa
 ## License
 
 See [License](LICENSE).
+
+sanity check
