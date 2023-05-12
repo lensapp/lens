@@ -40,7 +40,7 @@
   "config": {
     "k8sProxyVersion": "0.3.0",
     "bundledKubectlVersion": "1.23.3",
-    "bundledHelmVersion": "3.7.2",
+    "bundledHelmVersion": "3.11.0",
     "sentryDsn": "",
     "contentSecurityPolicy": "script-src 'unsafe-eval' 'self'; frame-src https://*.lens.app:*/; img-src * data:",
     "welcomeRoute": "/welcome"
