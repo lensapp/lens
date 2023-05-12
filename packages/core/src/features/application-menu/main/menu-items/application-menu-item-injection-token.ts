@@ -8,7 +8,7 @@ import type { SetOptional } from "type-fest";
 import type { ChildOfParentComposite, ParentOfChildComposite } from "../../../../common/utils/composite/interfaces";
 import type { MaybeShowable } from "../../../../common/utils/composable-responsibilities/showable/showable";
 import type { Discriminable } from "../../../../common/utils/composable-responsibilities/discriminable/discriminable";
-import type { Orderable } from "../../../../common/utils/composable-responsibilities/orderable/orderable";
+import type { Orderable } from "@k8slens/utilities";
 
 export interface MayHaveKeyboardShortcut {
   keyboardShortcut?: string;

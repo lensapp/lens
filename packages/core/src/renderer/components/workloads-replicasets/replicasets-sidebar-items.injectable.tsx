@@ -3,36 +3,31 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { computed } from "mobx";
 
 import replicasetsRouteInjectable from "../../../common/front-end-routing/routes/cluster/workloads/replicasets/replicasets-route.injectable";
-import { workloadsSidebarItemId } from "../workloads/workloads-sidebar-items.injectable";
-import { sidebarItemsInjectionToken } from "../layout/sidebar-items.injectable";
+import workloadsSidebarItemInjectable from "../workloads/workloads-sidebar-items.injectable";
+import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToReplicasetsInjectable from "../../../common/front-end-routing/routes/cluster/workloads/replicasets/navigate-to-replicasets.injectable";
 
-const replicasetsSidebarItemsInjectable = getInjectable({
-  id: "replicasets-sidebar-items",
+const replicasetsSidebarItemInjectable = getInjectable({
+  id: "replicasets-sidebar-item",
 
   instantiate: (di) => {
     const route = di.inject(replicasetsRouteInjectable);
-    const navigateToReplicasets = di.inject(navigateToReplicasetsInjectable);
-    const routeIsActive = di.inject(routeIsActiveInjectable, route);
 
-    return computed(() => [
-      {
-        id: "replica-sets",
-        parentId: workloadsSidebarItemId,
-        title: "ReplicaSets",
-        onClick: navigateToReplicasets,
-        isActive: routeIsActive,
-        isVisible: route.isEnabled,
-        orderNumber: 60,
-      },
-    ]);
+    return {
+      id: "replica-sets",
+      parentId: di.inject(workloadsSidebarItemInjectable).id,
+      title: "ReplicaSets",
+      onClick: di.inject(navigateToReplicasetsInjectable),
+      isActive: di.inject(routeIsActiveInjectable, route),
+      isVisible: route.isEnabled,
+      orderNumber: 60,
+    };
   },
 
-  injectionToken: sidebarItemsInjectionToken,
+  injectionToken: sidebarItemInjectionToken,
 });
 
-export default replicasetsSidebarItemsInjectable;
+export default replicasetsSidebarItemInjectable;

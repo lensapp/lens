@@ -3,35 +3,30 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { computed } from "mobx";
 import helmChartsRouteInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/helm-charts-route.injectable";
-import { helmSidebarItemId } from "../helm/helm-sidebar-items.injectable";
-import { sidebarItemsInjectionToken } from "../layout/sidebar-items.injectable";
+import helmSidebarItemInjectable from "../helm/helm-sidebar-items.injectable";
+import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 
-const helmChartsSidebarItemsInjectable = getInjectable({
-  id: "helm-charts-sidebar-items",
+const helmChartsSidebarItemInjectable = getInjectable({
+  id: "helm-charts-sidebar-item",
 
   instantiate: (di) => {
     const route = di.inject(helmChartsRouteInjectable);
-    const navigateToHelmCharts = di.inject(navigateToHelmChartsInjectable);
-    const routeIsActive = di.inject(routeIsActiveInjectable, route);
 
-    return computed(() => [
-      {
-        id: "charts",
-        parentId: helmSidebarItemId,
-        title: "Charts",
-        onClick: navigateToHelmCharts,
-        isActive: routeIsActive,
-        isVisible: route.isEnabled,
-        orderNumber: 10,
-      },
-    ]);
+    return {
+      id: "charts",
+      parentId: di.inject(helmSidebarItemInjectable).id,
+      title: "Charts",
+      onClick: di.inject(navigateToHelmChartsInjectable),
+      isActive: di.inject(routeIsActiveInjectable, route),
+      isVisible: route.isEnabled,
+      orderNumber: 10,
+    };
   },
 
-  injectionToken: sidebarItemsInjectionToken,
+  injectionToken: sidebarItemInjectionToken,
 });
 
-export default helmChartsSidebarItemsInjectable;
+export default helmChartsSidebarItemInjectable;

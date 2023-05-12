@@ -179,6 +179,7 @@
   "dependencies": {
     "@k8slens/application": "^6.5.0-alpha.8",
     "@k8slens/application-for-electron-main": "^6.5.0-alpha.7",
+    "@k8slens/cluster-sidebar": "^1.0.0-alpha.0",
     "@k8slens/core": "^6.5.0-alpha.13",
     "@k8slens/ensure-binaries": "^6.5.0-alpha.6",
     "@k8slens/event-emitter": "^1.0.0-alpha.5",

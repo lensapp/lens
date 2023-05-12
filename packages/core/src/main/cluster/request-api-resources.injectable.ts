@@ -12,7 +12,7 @@ import { backoffCaller, withConcurrencyLimit } from "@k8slens/utilities";
 import requestKubeApiResourcesForInjectable from "./request-kube-api-resources-for.injectable";
 import type { AsyncResult } from "@k8slens/utilities";
 import broadcastConnectionUpdateInjectable from "./broadcast-connection-update.injectable";
-import { byOrderNumber } from "../../common/utils/composable-responsibilities/orderable/orderable";
+import { byOrderNumber } from "@k8slens/utilities";
 
 export type RequestApiResources = (cluster: Cluster) => AsyncResult<KubeApiResource[], Error>;
 

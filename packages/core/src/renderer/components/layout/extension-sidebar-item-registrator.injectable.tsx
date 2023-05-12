@@ -5,8 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import React from "react";
 import { extensionRegistratorInjectionToken } from "../../../extensions/extension-loader/extension-registrator-injection-token";
-import type { SidebarItemRegistration } from "./sidebar-items.injectable";
-import { sidebarItemsInjectionToken } from "./sidebar-items.injectable";
+import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import { computed } from "mobx";
 import routesInjectable from "../../routes/routes.injectable";
 import { matches, noop } from "lodash/fp";
@@ -25,71 +24,66 @@ const extensionSidebarItemRegistratorInjectable = getInjectable({
     const routes = di.inject(routesInjectable);
     const extensionShouldBeEnabledForClusterFrame = di.inject(extensionShouldBeEnabledForClusterFrameInjectable, extension);
 
-    const sidebarItemsForExtensionInjectable = getInjectable({
-      id: `sidebar-items-for-extension-${extension.sanitizedExtensionId}`,
-      injectionToken: sidebarItemsInjectionToken,
+    return computed(() => {
+      const extensionRoutes = routes.get().filter(matches({ extension }));
 
-      instantiate: (di) => {
-        return computed(() => {
-          const extensionRoutes = routes.get().filter(matches({ extension }));
+      return extension.clusterPageMenus.map((registration) => {
+        const targetRoutePath = getExtensionRoutePath(
+          extension,
+          registration.target?.pageId,
+        );
 
-          return extension.clusterPageMenus.map((registration) => {
-            const targetRoutePath = getExtensionRoutePath(
-              extension,
-              registration.target?.pageId,
-            );
+        const targetRoute = extensionRoutes.find(
+          matches({ path: targetRoutePath }),
+        );
 
-            const targetRoute = extensionRoutes.find(
-              matches({ path: targetRoutePath }),
-            );
+        const isVisible = computed(() => {
+          if (!extensionShouldBeEnabledForClusterFrame.value.get()) {
+            return false;
+          }
 
-            const isVisible = computed(() => {
-              if (!extensionShouldBeEnabledForClusterFrame.value.get()) {
-                return false;
-              }
+          if (!registration.visible) {
+            return true;
+          }
 
-              if (!registration.visible) {
-                return true;
-              }
-
-              return registration.visible.get();
-            });
-
-            const res: SidebarItemRegistration = {
-              id: `${extension.sanitizedExtensionId}-${registration.id}`,
-              orderNumber: registration.orderNumber ?? 9999,
-
-              parentId: registration.parentId
-                ? `${extension.sanitizedExtensionId}-${registration.parentId}`
-                : null,
-
-              isVisible,
-
-              title: registration.title,
-              getIcon: registration.components.Icon
-                ? () => <registration.components.Icon />
-                : undefined,
-              ...(targetRoute
-                ? {
-                  onClick: () => navigateToRoute(targetRoute),
-
-                  isActive: di.inject(
-                    routeIsActiveInjectable,
-                    targetRoute,
-                  ),
-                }
-                : { onClick: noop }),
-            };
-
-            return res;
-          });
+          return registration.visible.get();
         });
-      },
-    });
 
-    return [
-      sidebarItemsForExtensionInjectable,
-    ];
+        const id = registration.id ?
+          `${extension.sanitizedExtensionId}-${registration.id}`
+          : extension.sanitizedExtensionId;
+
+        return getInjectable({
+          id: `${id}-sidebar-item`,
+          instantiate: () => ({
+            id,
+            orderNumber: registration.orderNumber ?? 9999,
+
+            parentId: registration.parentId
+              ? `${extension.sanitizedExtensionId}-${registration.parentId}`
+              : null,
+
+            isVisible,
+
+            title: registration.title,
+            getIcon: registration.components.Icon
+              ? () => <registration.components.Icon />
+              : undefined,
+            ...(targetRoute
+              ? {
+                onClick: () => navigateToRoute(targetRoute),
+
+                isActive: di.inject(
+                  routeIsActiveInjectable,
+                  targetRoute,
+                ),
+              }
+              : { onClick: noop }),
+          }),
+          injectionToken: sidebarItemInjectionToken,
+        });
+      });
+    });
   },
 
   injectionToken: extensionRegistratorInjectionToken,

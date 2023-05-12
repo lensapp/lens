@@ -3,35 +3,30 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { computed } from "mobx";
-import { workloadsSidebarItemId } from "../workloads/workloads-sidebar-items.injectable";
-import { sidebarItemsInjectionToken } from "../layout/sidebar-items.injectable";
+import workloadsSidebarItemInjectable from "../workloads/workloads-sidebar-items.injectable";
+import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import replicationControllersRouteInjectable from "../../../common/front-end-routing/routes/cluster/workloads/replication-controllers/route.injectable";
 import navigateToReplicationControllersInjectable from "../../../common/front-end-routing/routes/cluster/workloads/replication-controllers/navigate-to.injectable";
 
-const replicationControllerSidebarItemsInjectable = getInjectable({
-  id: "replication-controller-sidebar-items",
+const replicationControllerSidebarItemInjectable = getInjectable({
+  id: "replication-controller-sidebar-item",
 
   instantiate: (di) => {
     const route = di.inject(replicationControllersRouteInjectable);
-    const navigateToPage = di.inject(navigateToReplicationControllersInjectable);
-    const routeIsActive = di.inject(routeIsActiveInjectable, route);
 
-    return computed(() => [
-      {
-        id: "replication-controllers",
-        parentId: workloadsSidebarItemId,
-        title: "Replication Controllers",
-        onClick: navigateToPage,
-        isActive: routeIsActive,
-        isVisible: route.isEnabled,
-        orderNumber: 61,
-      },
-    ]);
+    return {
+      id: "replication-controllers",
+      parentId: di.inject(workloadsSidebarItemInjectable).id,
+      title: "Replication Controllers",
+      onClick: di.inject(navigateToReplicationControllersInjectable),
+      isActive: di.inject(routeIsActiveInjectable, route),
+      isVisible: route.isEnabled,
+      orderNumber: 61,
+    };
   },
 
-  injectionToken: sidebarItemsInjectionToken,
+  injectionToken: sidebarItemInjectionToken,
 });
 
-export default replicationControllerSidebarItemsInjectable;
+export default replicationControllerSidebarItemInjectable;

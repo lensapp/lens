@@ -25,6 +25,7 @@ import { keyboardShortcutsFeature } from "@k8slens/keyboard-shortcuts";
 import { reactApplicationFeature } from "@k8slens/react-application";
 import { routingFeature } from "@k8slens/routing";
 import { loggerFeature } from "@k8slens/logger";
+import { clusterSidebarFeature } from "@k8slens/cluster-sidebar";
 
 const environment = "renderer";
 
@@ -49,7 +50,8 @@ runInAction(() => {
     keyboardShortcutsFeature,
     reactApplicationFeature,
     routingFeature,
-    metricsFeature
+    metricsFeature,
+    clusterSidebarFeature,
   );
 
   autoRegister({

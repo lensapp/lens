@@ -5,32 +5,22 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { Icon } from "../icon";
 import React from "react";
-import type {
-  SidebarItemRegistration } from "../layout/sidebar-items.injectable";
-import {
-  sidebarItemsInjectionToken,
-} from "../layout/sidebar-items.injectable";
-import { computed } from "mobx";
+import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import { noop } from "lodash/fp";
 
-export const configSidebarItemId = "config";
+const configSidebarItemInjectable = getInjectable({
+  id: "config-sidebar-item",
 
-const configSidebarItemsInjectable = getInjectable({
-  id: "config-sidebar-items",
+  instantiate: () => ({
+    id: "config",
+    parentId: null,
+    title: "Config",
+    getIcon: () => <Icon material="list" />,
+    onClick: noop,
+    orderNumber: 40,
+  }),
 
-  instantiate: () =>
-    computed((): SidebarItemRegistration[] => [
-      {
-        id: configSidebarItemId,
-        parentId: null,
-        title: "Config",
-        getIcon: () => <Icon material="list" />,
-        onClick: noop,
-        orderNumber: 40,
-      },
-    ]),
-
-  injectionToken: sidebarItemsInjectionToken,
+  injectionToken: sidebarItemInjectionToken,
 });
 
-export default configSidebarItemsInjectable;
+export default configSidebarItemInjectable;

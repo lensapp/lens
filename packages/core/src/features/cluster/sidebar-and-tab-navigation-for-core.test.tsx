@@ -8,8 +8,7 @@ import React from "react";
 import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
 import { routeSpecificComponentInjectionToken } from "../../renderer/routes/route-specific-component-injection-token";
-import type { SidebarItemRegistration } from "../../renderer/components/layout/sidebar-items.injectable";
-import { sidebarItemsInjectionToken } from "../../renderer/components/layout/sidebar-items.injectable";
+import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import { computed, runInAction } from "mobx";
 import { noop } from "lodash/fp";
 import routeIsActiveInjectable from "../../renderer/routes/route-is-active.injectable";
@@ -44,9 +43,12 @@ describe("cluster - sidebar and tab navigation for core", () => {
     beforeEach(() => {
       builder.beforeWindowStart(({ windowDi }) => {
         runInAction(() => {
-          windowDi.register(testRouteInjectable);
-          windowDi.register(testRouteComponentInjectable);
-          windowDi.register(testSidebarItemsInjectable);
+          windowDi.register(
+            testRouteInjectable,
+            testRouteComponentInjectable,
+            someParentSidebarItemInjectable,
+            someChildSidebarItemInjectable,
+          );
         });
       });
     });
@@ -292,36 +294,36 @@ describe("cluster - sidebar and tab navigation for core", () => {
   });
 });
 
-const testSidebarItemsInjectable = getInjectable({
-  id: "some-sidebar-items-injectable",
+const someParentSidebarItemInjectable = getInjectable({
+  id: "some-parent-sidebar-item",
+  instantiate: () => ({
+    id: "some-parent-id",
+    parentId: null,
+    title: "Some parent",
+    onClick: noop,
+    getIcon: () => <div data-testid="some-icon-for-parent" />,
+    orderNumber: 42,
+  }),
+  injectionToken: sidebarItemInjectionToken,
+});
 
+const someChildSidebarItemInjectable = getInjectable({
+  id: "some-child-sidebar-item",
   instantiate: (di) => {
     const route = di.inject(testRouteInjectable);
     const navigateToRoute = di.inject(navigateToRouteInjectionToken);
     const routeIsActive = di.inject(routeIsActiveInjectable, route);
 
-    return computed((): SidebarItemRegistration[] => [
-      {
-        id: "some-parent-id",
-        parentId: null,
-        title: "Some parent",
-        onClick: noop,
-        getIcon: () => <div data-testid="some-icon-for-parent" />,
-        orderNumber: 42,
-      },
-
-      {
-        id: "some-child-id",
-        parentId: "some-parent-id",
-        title: "Some child",
-        onClick: () => navigateToRoute(route),
-        isActive: routeIsActive,
-        orderNumber: 42,
-      },
-    ]);
+    return {
+      id: "some-child-id",
+      parentId: di.inject(someParentSidebarItemInjectable).id,
+      title: "Some child",
+      onClick: () => navigateToRoute(route),
+      isActive: routeIsActive,
+      orderNumber: 168,
+    };
   },
-
-  injectionToken: sidebarItemsInjectionToken,
+  injectionToken: sidebarItemInjectionToken,
 });
 
 const testRouteInjectable = getInjectable({
