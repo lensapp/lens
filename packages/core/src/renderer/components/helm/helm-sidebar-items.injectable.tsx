@@ -3,34 +3,24 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { computed } from "mobx";
 import React from "react";
-import type {
-  SidebarItemRegistration } from "../layout/sidebar-items.injectable";
-import {
-  sidebarItemsInjectionToken,
-} from "../layout/sidebar-items.injectable";
+import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import { Icon } from "../icon";
 import { noop } from "lodash/fp";
 
-export const helmSidebarItemId = "helm";
+const helmSidebarItemInjectable = getInjectable({
+  id: "helm-sidebar-item",
 
-const helmSidebarItemsInjectable = getInjectable({
-  id: "helm-sidebar-items",
+  instantiate: () => ({
+    id: "helm",
+    parentId: null,
+    getIcon: () => <Icon svg="helm" />,
+    title: "Helm",
+    onClick: noop,
+    orderNumber: 90,
+  }),
 
-  instantiate: () =>
-    computed((): SidebarItemRegistration[] => [
-      {
-        id: helmSidebarItemId,
-        parentId: null,
-        getIcon: () => <Icon svg="helm" />,
-        title: "Helm",
-        onClick: noop,
-        orderNumber: 90,
-      },
-    ]),
-
-  injectionToken: sidebarItemsInjectionToken,
+  injectionToken: sidebarItemInjectionToken,
 });
 
-export default helmSidebarItemsInjectable;
+export default helmSidebarItemInjectable;

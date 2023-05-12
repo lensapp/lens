@@ -5,7 +5,7 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
 import { computed } from "mobx";
-import { byOrderNumber } from "../../../common/utils/composable-responsibilities/orderable/orderable";
+import { byOrderNumber } from "@k8slens/utilities";
 import type { CatalogEntity } from "../../api/catalog-entity";
 import { entitySettingInjectionToken } from "./token";
 

@@ -3,36 +3,31 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { computed } from "mobx";
 
 import workloadsOverviewRouteInjectable from "../../../common/front-end-routing/routes/cluster/workloads/overview/workloads-overview-route.injectable";
-import { workloadsSidebarItemId } from "../workloads/workloads-sidebar-items.injectable";
-import { sidebarItemsInjectionToken } from "../layout/sidebar-items.injectable";
+import workloadsSidebarItemInjectable from "../workloads/workloads-sidebar-items.injectable";
+import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToWorkloadsOverviewInjectable from "../../../common/front-end-routing/routes/cluster/workloads/overview/navigate-to-workloads-overview.injectable";
 
-const workloadsOverviewSidebarItemsInjectable = getInjectable({
-  id: "workloads-overview-sidebar-items",
+const workloadsOverviewSidebarItemInjectable = getInjectable({
+  id: "workloads-overview-sidebar-item",
 
   instantiate: (di) => {
     const route = di.inject(workloadsOverviewRouteInjectable);
-    const navigateToWorkloadsOverview = di.inject(navigateToWorkloadsOverviewInjectable);
-    const routeIsActive = di.inject(routeIsActiveInjectable, route);
 
-    return computed(() => [
-      {
-        id: "overview",
-        parentId: workloadsSidebarItemId,
-        title: "Overview",
-        onClick: navigateToWorkloadsOverview,
-        isActive: routeIsActive,
-        isVisible: route.isEnabled,
-        orderNumber: 10,
-      },
-    ]);
+    return {
+      id: "overview",
+      parentId: di.inject(workloadsSidebarItemInjectable).id,
+      title: "Overview",
+      onClick: di.inject(navigateToWorkloadsOverviewInjectable),
+      isActive: di.inject(routeIsActiveInjectable, route),
+      isVisible: route.isEnabled,
+      orderNumber: 10,
+    };
   },
 
-  injectionToken: sidebarItemsInjectionToken,
+  injectionToken: sidebarItemInjectionToken,
 });
 
-export default workloadsOverviewSidebarItemsInjectable;
+export default workloadsOverviewSidebarItemInjectable;

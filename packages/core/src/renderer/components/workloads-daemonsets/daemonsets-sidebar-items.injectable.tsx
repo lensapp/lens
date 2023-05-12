@@ -3,36 +3,31 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { computed } from "mobx";
 
 import daemonsetsRouteInjectable from "../../../common/front-end-routing/routes/cluster/workloads/daemonsets/daemonsets-route.injectable";
-import { workloadsSidebarItemId } from "../workloads/workloads-sidebar-items.injectable";
-import { sidebarItemsInjectionToken } from "../layout/sidebar-items.injectable";
+import workloadsSidebarItemInjectable from "../workloads/workloads-sidebar-items.injectable";
+import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToDaemonsetsInjectable from "../../../common/front-end-routing/routes/cluster/workloads/daemonsets/navigate-to-daemonsets.injectable";
 
-const daemonsetsSidebarItemsInjectable = getInjectable({
-  id: "daemonsets-sidebar-items",
+const daemonsetsSidebarItemInjectable = getInjectable({
+  id: "daemonsets-sidebar-item",
 
   instantiate: (di) => {
     const route = di.inject(daemonsetsRouteInjectable);
-    const navigateToDaemonsets = di.inject(navigateToDaemonsetsInjectable);
-    const routeIsActive = di.inject(routeIsActiveInjectable, route);
 
-    return computed(() => [
-      {
-        id: "daemon-sets",
-        parentId: workloadsSidebarItemId,
-        title: "DaemonSets",
-        onClick: () => navigateToDaemonsets(),
-        isActive: routeIsActive,
-        isVisible: route.isEnabled,
-        orderNumber: 40,
-      },
-    ]);
+    return {
+      id: "daemon-sets",
+      parentId: di.inject(workloadsSidebarItemInjectable).id,
+      title: "DaemonSets",
+      onClick: di.inject(navigateToDaemonsetsInjectable),
+      isActive: di.inject(routeIsActiveInjectable, route),
+      isVisible: route.isEnabled,
+      orderNumber: 40,
+    };
   },
 
-  injectionToken: sidebarItemsInjectionToken,
+  injectionToken: sidebarItemInjectionToken,
 });
 
-export default daemonsetsSidebarItemsInjectable;
+export default daemonsetsSidebarItemInjectable;
