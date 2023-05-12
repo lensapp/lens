@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 
 import networkPoliciesRouteInjectable from "../../../common/front-end-routing/routes/cluster/network/network-policies/network-policies-route.injectable";
-import networkSidebarItemInjectable from "../network/network-sidebar-items.injectable";
+import networkSidebarItemInjectable from "../network/network-sidebar-item.injectable";
 import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToNetworkPoliciesInjectable from "../../../common/front-end-routing/routes/cluster/network/network-policies/navigate-to-network-policies.injectable";
