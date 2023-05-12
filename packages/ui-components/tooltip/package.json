@@ -17,6 +17,7 @@
   },
   "main": "dist/index.js",
   "exports": {
+    ".": "./dist/index.js",
     "./styles": "./dist/index.css"
   },
   "types": "dist/index.d.ts",
