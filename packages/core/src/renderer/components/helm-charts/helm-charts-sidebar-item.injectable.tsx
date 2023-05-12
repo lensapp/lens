@@ -10,14 +10,13 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 
 const helmChartsSidebarItemInjectable = getInjectable({
-  id: "helm-charts-sidebar-item",
+  id: "sidebar-item-helm-charts",
 
   instantiate: (di) => {
     const route = di.inject(helmChartsRouteInjectable);
 
     return {
-      id: "charts",
-      parentId: di.inject(helmSidebarItemInjectable).id,
+      parentId: helmSidebarItemInjectable.id,
       title: "Charts",
       onClick: di.inject(navigateToHelmChartsInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

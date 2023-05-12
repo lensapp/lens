@@ -11,14 +11,13 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToPriorityClassesInjectable from "../../../common/front-end-routing/routes/cluster/config/priority-classes/navigate-to-priority-classes.injectable";
 
 const priorityClassesSidebarItemInjectable = getInjectable({
-  id: "priority-classes-sidebar-item",
+  id: "sidebar-item-priority-classes",
 
   instantiate: (di) => {
     const route = di.inject(priorityClassesRouteInjectable);
 
     return {
-      id: "priority-classes",
-      parentId: di.inject(configSidebarItemInjectable).id,
+      parentId: configSidebarItemInjectable.id,
       title: "Priority Classes",
       onClick: di.inject(navigateToPriorityClassesInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

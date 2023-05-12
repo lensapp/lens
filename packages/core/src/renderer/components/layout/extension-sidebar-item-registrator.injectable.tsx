@@ -54,9 +54,8 @@ const extensionSidebarItemRegistratorInjectable = getInjectable({
           : extension.sanitizedExtensionId;
 
         return getInjectable({
-          id: `${id}-sidebar-item`,
+          id: `sidebar-item-${id}`,
           instantiate: () => ({
-            id,
             orderNumber: registration.orderNumber ?? 9999,
 
             parentId: registration.parentId

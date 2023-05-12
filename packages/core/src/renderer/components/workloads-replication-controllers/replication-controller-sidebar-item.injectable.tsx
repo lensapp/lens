@@ -10,14 +10,13 @@ import replicationControllersRouteInjectable from "../../../common/front-end-rou
 import navigateToReplicationControllersInjectable from "../../../common/front-end-routing/routes/cluster/workloads/replication-controllers/navigate-to.injectable";
 
 const replicationControllerSidebarItemInjectable = getInjectable({
-  id: "replication-controller-sidebar-item",
+  id: "sidebar-item-replication-controller",
 
   instantiate: (di) => {
     const route = di.inject(replicationControllersRouteInjectable);
 
     return {
-      id: "replication-controllers",
-      parentId: di.inject(workloadsSidebarItemInjectable).id,
+      parentId: workloadsSidebarItemInjectable.id,
       title: "Replication Controllers",
       onClick: di.inject(navigateToReplicationControllersInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

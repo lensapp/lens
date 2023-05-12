@@ -11,14 +11,13 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToSecretsInjectable from "../../../common/front-end-routing/routes/cluster/config/secrets/navigate-to-secrets.injectable";
 
 const secretsSidebarItemInjectable = getInjectable({
-  id: "secrets-sidebar-item",
+  id: "sidebar-item-secrets",
 
   instantiate: (di) => {
     const route = di.inject(secretsRouteInjectable);
 
     return {
-      id: "secrets",
-      parentId: di.inject(configSidebarItemInjectable).id,
+      parentId: configSidebarItemInjectable.id,
       title: "Secrets",
       onClick: di.inject(navigateToSecretsInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

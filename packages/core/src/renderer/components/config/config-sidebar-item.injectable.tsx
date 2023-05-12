@@ -9,10 +9,9 @@ import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import { noop } from "lodash/fp";
 
 const configSidebarItemInjectable = getInjectable({
-  id: "config-sidebar-item",
+  id: "sidebar-item-config",
 
   instantiate: () => ({
-    id: "config",
     parentId: null,
     title: "Config",
     getIcon: () => <Icon material="list" />,
