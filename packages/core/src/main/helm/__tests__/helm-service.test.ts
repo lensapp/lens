@@ -27,7 +27,7 @@ describe("Helm Service tests", () => {
 
     di.override(getActiveHelmRepositoriesInjectable, () => getActiveHelmRepositoriesMock);
 
-    di.unoverride(listHelmChartsInjectable);
+    // di.unoverride(listHelmChartsInjectable);
     di.permitSideEffects(listHelmChartsInjectable);
 
     listHelmCharts = di.inject(listHelmChartsInjectable);

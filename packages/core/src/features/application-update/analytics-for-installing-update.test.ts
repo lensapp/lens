@@ -52,7 +52,7 @@ describe("analytics for installing update", () => {
 
       mainDi.override(publishIsConfiguredInjectable, () => true);
 
-      mainDi.unoverride(emitEventInjectable);
+      // mainDi.unoverride(emitEventInjectable);
 
       const eventBus = mainDi.inject(appEventBusInjectable);
 

@@ -12,7 +12,7 @@ describe("get-editor-height-from-lines-number", () => {
   beforeEach(() => {
     const di = getDiForUnitTesting();
 
-    di.unoverride(getEditorHeightFromLinesCountInjectable);
+    // di.unoverride(getEditorHeightFromLinesCountInjectable);
 
     getEditorHeightFromLinesNumber = di.inject(getEditorHeightFromLinesCountInjectable);
   });
