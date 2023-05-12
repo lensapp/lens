@@ -323,7 +323,7 @@
     "@k8slens/application-for-electron-main": "^6.5.0-alpha.0",
     "@k8slens/button": "^1.0.0-alpha.5",
     "@k8slens/cluster-settings": "^6.5.0-alpha.1",
-    "@k8slens/error-boundary": "^1.0.0-alpha.6",
+    "@k8slens/error-boundary": "^1.0.0-alpha.5",
     "@k8slens/event-emitter": "^1.0.0-alpha.1",
     "@k8slens/kubectl-versions": "^1.0.0-alpha.0",
     "@k8slens/legacy-extensions": "^1.0.0-alpha.0",
