@@ -3,34 +3,24 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { computed } from "mobx";
-import type {
-  SidebarItemRegistration } from "../layout/sidebar-items.injectable";
-import {
-  sidebarItemsInjectionToken,
-} from "../layout/sidebar-items.injectable";
+import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import { Icon } from "@k8slens/icon";
 import React from "react";
 import { noop } from "lodash/fp";
 
-export const workloadsSidebarItemId = "workloads";
+const workloadsSidebarItemInjectable = getInjectable({
+  id: "workloads-sidebar-item",
 
-const workloadsSidebarItemsInjectable = getInjectable({
-  id: "workloads-sidebar-items",
+  instantiate: () => ({
+    id: "workloads",
+    parentId: null,
+    title: "Workloads",
+    getIcon: () => <Icon svg="workloads" />,
+    onClick: noop,
+    orderNumber: 20,
+  }),
 
-  instantiate: () =>
-    computed((): SidebarItemRegistration[] => [
-      {
-        id: workloadsSidebarItemId,
-        parentId: null,
-        title: "Workloads",
-        getIcon: () => <Icon svg="workloads" />,
-        onClick: noop,
-        orderNumber: 20,
-      },
-    ]),
-
-  injectionToken: sidebarItemsInjectionToken,
+  injectionToken: sidebarItemInjectionToken,
 });
 
-export default workloadsSidebarItemsInjectable;
+export default workloadsSidebarItemInjectable;

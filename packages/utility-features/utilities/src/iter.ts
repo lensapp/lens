@@ -11,7 +11,7 @@ interface Iterator<T> extends Iterable<T> {
   find(fn: (val: T) => unknown): T | undefined;
   collect<U>(fn: (values: Iterable<T>) => U): U;
   toArray(): T[];
-  toMap(): T extends [infer K, infer V] ? Map<K, V> : never;
+  toMap(): T extends readonly [infer K, infer V] ? Map<K, V[]> : never;
   toSet(): Set<T>;
   map<U>(fn: (val: T) => U): Iterator<U>;
   flatMap<U>(fn: (val: T) => U[]): Iterator<U>;
@@ -30,7 +30,22 @@ function chain<T>(src: IterableIterator<T>): Iterator<T> {
     join: (sep) => join(src, sep),
     collect: (fn) => fn(src),
     toArray: () => [...src],
-    toMap: () => new Map(src as IterableIterator<[any, any]>) as any,
+    toMap: () => {
+      const res = new Map();
+
+      for (const item of src[Symbol.iterator]()) {
+        const [key, val] = item as [unknown, unknown];
+        const existing = res.get(key);
+
+        if (existing) {
+          existing.push(val);
+        } else {
+          res.set(key, [val]);
+        }
+      }
+
+      return res as T extends readonly [infer K, infer V] ? Map<K, V[]> : never;
+    },
     toSet: () => new Set(src),
     concat: (src2) => chain(concat(src, src2)),
     take: (count) => chain(take(src, count)),

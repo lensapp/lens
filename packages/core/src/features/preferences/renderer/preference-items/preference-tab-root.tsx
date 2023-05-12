@@ -8,16 +8,19 @@ import type { RootComposite } from "../../../../common/utils/composite/interface
 import type { Discriminable } from "../../../../common/utils/composable-responsibilities/discriminable/discriminable";
 import type { ChildrenAreSeparated } from "./preference-item-injection-token";
 import styles from "./preference-tab-root.module.scss";
+import type { Orderable } from "@k8slens/utilities";
 
 export type PreferenceTabsRoot =
   & Discriminable<"preference-tabs-root">
   & RootComposite
-  & ChildrenAreSeparated;
+  & ChildrenAreSeparated
+  & Orderable;
 
 export const preferenceTabsRoot: PreferenceTabsRoot = {
   kind: "preference-tabs-root" as const,
   id: "preference-tabs",
   parentId: undefined,
+  orderNumber: Infinity,
 
   childSeparator: () => (
     <div className={styles.TabSeparator}>

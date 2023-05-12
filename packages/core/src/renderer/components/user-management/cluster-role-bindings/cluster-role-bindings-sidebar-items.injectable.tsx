@@ -3,36 +3,31 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { computed } from "mobx";
 
 import clusterRoleBindingsRouteInjectable from "../../../../common/front-end-routing/routes/cluster/user-management/cluster-role-bindings/cluster-role-bindings-route.injectable";
-import { userManagementSidebarItemId } from "../user-management-sidebar-items.injectable";
-import { sidebarItemsInjectionToken } from "../../layout/sidebar-items.injectable";
+import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import routeIsActiveInjectable from "../../../routes/route-is-active.injectable";
 import navigateToClusterRoleBindingsInjectable from "../../../../common/front-end-routing/routes/cluster/user-management/cluster-role-bindings/navigate-to-cluster-role-bindings.injectable";
+import userManagementSidebarItemInjectable from "../user-management-sidebar-items.injectable";
 
-const clusterRoleBindingsSidebarItemsInjectable = getInjectable({
-  id: "cluster-role-bindings-sidebar-items",
+const clusterRoleBindingsSidebarItemInjectable = getInjectable({
+  id: "cluster-role-bindings-sidebar-item",
 
   instantiate: (di) => {
     const route = di.inject(clusterRoleBindingsRouteInjectable);
-    const navigateToClusterRoleBindings = di.inject(navigateToClusterRoleBindingsInjectable);
-    const routeIsActive = di.inject(routeIsActiveInjectable, route);
 
-    return computed(() => [
-      {
-        id: "cluster-role-bindings",
-        parentId: userManagementSidebarItemId,
-        title: "Cluster Role Bindings",
-        onClick: navigateToClusterRoleBindings,
-        isActive: routeIsActive,
-        isVisible: route.isEnabled,
-        orderNumber: 40,
-      },
-    ]);
+    return {
+      id: "cluster-role-bindings",
+      parentId: di.inject(userManagementSidebarItemInjectable).id,
+      title: "Cluster Role Bindings",
+      onClick: di.inject(navigateToClusterRoleBindingsInjectable),
+      isActive: di.inject(routeIsActiveInjectable, route),
+      isVisible: route.isEnabled,
+      orderNumber: 40,
+    };
   },
 
-  injectionToken: sidebarItemsInjectionToken,
+  injectionToken: sidebarItemInjectionToken,
 });
 
-export default clusterRoleBindingsSidebarItemsInjectable;
+export default clusterRoleBindingsSidebarItemInjectable;

@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { routeSpecificComponentInjectionToken } from "../../routes/route-specific-component-injection-token";
-import crdListRouteInjectable from "../../../common/front-end-routing/routes/cluster/custom-resources/crd-list/crd-list-route.injectable";
+import crdListRouteInjectable from "../../../common/front-end-routing/routes/cluster/custom-resources/custom-resource-definitions.injectable";
 import { CustomResourceDefinitions } from "./crd-list";
 
 const crdListRouteComponentInjectable = getInjectable({

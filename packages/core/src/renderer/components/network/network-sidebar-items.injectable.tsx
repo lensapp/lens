@@ -3,34 +3,24 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { computed } from "mobx";
-import type {
-  SidebarItemRegistration } from "../layout/sidebar-items.injectable";
-import {
-  sidebarItemsInjectionToken,
-} from "../layout/sidebar-items.injectable";
+import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import { Icon } from "@k8slens/icon";
 import React from "react";
 import { noop } from "lodash/fp";
 
-export const networkSidebarItemId = "network";
+const networkSidebarItemInjectable = getInjectable({
+  id: "network-sidebar-item",
 
-const networkSidebarItemsInjectable = getInjectable({
-  id: "network-sidebar-items",
+  instantiate: () => ({
+    id: "network",
+    parentId: null,
+    getIcon: () => <Icon material="device_hub" />,
+    title: "Network",
+    onClick: noop,
+    orderNumber: 50,
+  }),
 
-  instantiate: () =>
-    computed((): SidebarItemRegistration[] => [
-      {
-        id: networkSidebarItemId,
-        parentId: null,
-        getIcon: () => <Icon material="device_hub" />,
-        title: "Network",
-        onClick: noop,
-        orderNumber: 50,
-      },
-    ]),
-
-  injectionToken: sidebarItemsInjectionToken,
+  injectionToken: sidebarItemInjectionToken,
 });
 
-export default networkSidebarItemsInjectable;
+export default networkSidebarItemInjectable;

@@ -6,15 +6,13 @@
 import styles from  "./sidebar-items.module.scss";
 
 import React from "react";
-import { computed, makeObservable } from "mobx";
-import { cssNames } from "@k8slens/utilities";
 import { observer } from "mobx-react";
 import { NavLink } from "react-router-dom";
 import { Icon } from "@k8slens/icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { SidebarStorageState } from "./sidebar-storage/sidebar-storage.injectable";
 import sidebarStorageInjectable from "./sidebar-storage/sidebar-storage.injectable";
-import type { HierarchicalSidebarItem } from "./sidebar-items.injectable";
+import type { HierarchicalSidebarItem } from "@k8slens/cluster-sidebar";
 import type { StorageLayer } from "../../utils/storage-helper";
 
 interface Dependencies {
@@ -25,97 +23,73 @@ export interface SidebarItemProps {
   item: HierarchicalSidebarItem;
 }
 
-@observer
-class NonInjectedSidebarItem extends React.Component<
-  SidebarItemProps & Dependencies
-> {
-  static displayName = "SidebarItem";
+const NonInjectedSidebarItem = observer((props: SidebarItemProps & Dependencies) => {
+  const { item, sidebarStorage } = props;
+  const id = item.id;
+  const expanded = sidebarStorage.get().expanded[id] ?? false;
+  const isExpandable = item.children.length > 0 && item.children.some(item => item.isVisible.get());
+  const isActive = item.isActive.get();
 
-  constructor(props: SidebarItemProps & Dependencies) {
-    super(props);
-    makeObservable(this);
-  }
-
-  get id(): string {
-    return this.item.id;
-  }
-
-  @computed get expanded(): boolean {
-    return Boolean(this.props.sidebarStorage.get().expanded[this.id]);
-  }
-
-  @computed get isExpandable(): boolean {
-    return this.props.item.children.length > 0;
-  }
-
-  @computed get isActive(): boolean {
-    return this.props.item.isActive.get();
-  }
-
-  get item() {
-    return this.props.item;
-  }
-
-  toggleExpand = () => {
-    this.props.sidebarStorage.merge((draft) => {
-      draft.expanded[this.id] = !draft.expanded[this.id];
+  const toggleExpand = () => {
+    sidebarStorage.merge((draft) => {
+      draft.expanded[id] = !draft.expanded[id];
     });
   };
-
-  renderSubMenu() {
-    const { isExpandable, expanded } = this;
-
+  const renderSubMenu = () => {
     if (!isExpandable || !expanded) {
       return null;
     }
 
     return (
-      <ul className={cssNames(styles.subMenu, { [styles.active]: this.isActive })}>
-        {this.props.item.children.map(item => <SidebarItem key={item.id} item={item} />)}
-      </ul>
-    );
-  }
-
-  render() {
-    return (
-      <div
-        className={styles.SidebarItem}
-        data-testid={`sidebar-item-${this.id}`}
-        data-is-active-test={this.isActive}
-        data-parent-id-test={this.item.parentId}
-      >
-        <NavLink
-          to={""}
-          isActive={() => this.isActive}
-          className={styles.navItem}
-          onClick={(event) => {
-            event.preventDefault();
-            event.stopPropagation();
-
-            if (this.isExpandable) {
-              this.toggleExpand();
-            } else {
-              this.item.onClick();
-            }
-          }}
-          data-testid={`sidebar-item-link-for-${this.id}`}
-        >
-          {this.item.getIcon?.()}
-          <span>{this.item.title}</span>
-          {this.isExpandable && (
-            <Icon
-              className={styles.expandIcon}
-              material={
-                this.expanded ? "keyboard_arrow_up" : "keyboard_arrow_down"
-              }
-            />
-          )}
-        </NavLink>
-        {this.renderSubMenu()}
+      <div className={styles.subMenu}>
+        {item.children.map((child) => (
+          <SidebarItem key={child.id} item={child} />
+        ))}
       </div>
     );
+  };
+
+  if (!item.isVisible.get()) {
+    return null;
   }
-}
+
+  return (
+    <div
+      className={styles.SidebarItem}
+      data-testid={`sidebar-item-${id}`}
+      data-is-active-test={isActive}
+      data-parent-id-test={item.parentId}
+    >
+      <NavLink
+        to={""}
+        isActive={() => isActive}
+        className={styles.navItem}
+        onClick={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+
+          if (isExpandable) {
+            toggleExpand();
+          } else {
+            item.onClick();
+          }
+        }}
+        data-testid={`sidebar-item-link-for-${id}`}
+      >
+        {item.getIcon?.()}
+        <span>{item.title}</span>
+        {isExpandable && (
+          <Icon
+            className={styles.expandIcon}
+            material={expanded ? "keyboard_arrow_up" : "keyboard_arrow_down"}
+            data-testid={`sidebar-item-expand-icon-for-${id}`}
+          />
+        )}
+      </NavLink>
+      {renderSubMenu()}
+    </div>
+  );
+});
 
 export const SidebarItem = withInjectables<Dependencies, SidebarItemProps>(NonInjectedSidebarItem, {
   getProps: (di, props) => ({
@@ -123,3 +97,5 @@ export const SidebarItem = withInjectables<Dependencies, SidebarItemProps>(NonIn
     sidebarStorage: di.inject(sidebarStorageInjectable),
   }),
 });
+
+SidebarItem.displayName = "SidebarItem";

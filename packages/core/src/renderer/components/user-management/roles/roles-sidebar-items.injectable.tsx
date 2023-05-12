@@ -3,36 +3,30 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { computed } from "mobx";
-
 import rolesRouteInjectable from "../../../../common/front-end-routing/routes/cluster/user-management/roles/roles-route.injectable";
-import { userManagementSidebarItemId } from "../user-management-sidebar-items.injectable";
-import { sidebarItemsInjectionToken } from "../../layout/sidebar-items.injectable";
+import userManagementSidebarItemInjectable from "../user-management-sidebar-items.injectable";
+import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import routeIsActiveInjectable from "../../../routes/route-is-active.injectable";
 import navigateToRolesInjectable from "../../../../common/front-end-routing/routes/cluster/user-management/roles/navigate-to-roles.injectable";
 
-const rolesSidebarItemsInjectable = getInjectable({
-  id: "roles-sidebar-items",
+const rolesSidebarItemInjectable = getInjectable({
+  id: "roles-sidebar-item",
 
   instantiate: (di) => {
     const route = di.inject(rolesRouteInjectable);
-    const navigateToRoles = di.inject(navigateToRolesInjectable);
-    const routeIsActive = di.inject(routeIsActiveInjectable, route);
 
-    return computed(() => [
-      {
-        id: "roles",
-        parentId: userManagementSidebarItemId,
-        title: "Roles",
-        onClick: navigateToRoles,
-        isActive: routeIsActive,
-        isVisible: route.isEnabled,
-        orderNumber: 30,
-      },
-    ]);
+    return {
+      id: "roles",
+      parentId: di.inject(userManagementSidebarItemInjectable).id,
+      title: "Roles",
+      onClick: di.inject(navigateToRolesInjectable),
+      isActive: di.inject(routeIsActiveInjectable, route),
+      isVisible: route.isEnabled,
+      orderNumber: 30,
+    };
   },
 
-  injectionToken: sidebarItemsInjectionToken,
+  injectionToken: sidebarItemInjectionToken,
 });
 
-export default rolesSidebarItemsInjectable;
+export default rolesSidebarItemInjectable;

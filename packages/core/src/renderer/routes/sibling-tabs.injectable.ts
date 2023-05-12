@@ -4,7 +4,7 @@
  */
 import { computed } from "mobx";
 import { getInjectable } from "@ogre-tools/injectable";
-import sidebarItemsInjectable from "../components/layout/sidebar-items.injectable";
+import { sidebarItemsInjectable } from "@k8slens/cluster-sidebar";
 
 const siblingTabsInjectable = getInjectable({
   id: "sibling-tabs",
@@ -12,11 +12,14 @@ const siblingTabsInjectable = getInjectable({
   instantiate: (di) => {
     const sidebarItems = di.inject(sidebarItemsInjectable);
 
-    return computed(() => {
-      const item = sidebarItems.get().find(({ isActive }) => isActive.get());
-
-      return item?.children ?? [];
-    });
+    return computed(() => (
+      sidebarItems
+        .get()
+        .find(({ isActive }) => isActive.get())
+        ?.children
+        .filter(({ isVisible }) => isVisible.get())
+        ?? []
+    ));
   },
 });
 

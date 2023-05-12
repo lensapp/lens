@@ -3,34 +3,24 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { computed } from "mobx";
-import type {
-  SidebarItemRegistration } from "../layout/sidebar-items.injectable";
-import {
-  sidebarItemsInjectionToken,
-} from "../layout/sidebar-items.injectable";
+import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import { Icon } from "@k8slens/icon";
 import React from "react";
 import { noop } from "lodash/fp";
 
-export const storageSidebarItemId = "storage";
+const storageSidebarItemInjectable = getInjectable({
+  id: "storage-sidebar-item",
 
-const storageSidebarItemsInjectable = getInjectable({
-  id: "storage-sidebar-items",
+  instantiate: () => ({
+    id: "storage",
+    parentId: null,
+    getIcon: () => <Icon material="storage" />,
+    title: "Storage",
+    onClick: noop,
+    orderNumber: 60,
+  }),
 
-  instantiate: () =>
-    computed((): SidebarItemRegistration[] => [
-      {
-        id: storageSidebarItemId,
-        parentId: null,
-        getIcon: () => <Icon material="storage" />,
-        title: "Storage",
-        onClick: noop,
-        orderNumber: 60,
-      },
-    ]),
-
-  injectionToken: sidebarItemsInjectionToken,
+  injectionToken: sidebarItemInjectionToken,
 });
 
-export default storageSidebarItemsInjectable;
+export default storageSidebarItemInjectable;
