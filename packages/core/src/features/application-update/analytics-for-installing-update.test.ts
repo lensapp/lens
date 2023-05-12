@@ -18,7 +18,7 @@ import downloadPlatformUpdateInjectable from "./main/download-update/download-pl
 import quitAndInstallUpdateInjectable from "./main/quit-and-install-update.injectable";
 import periodicalCheckForUpdatesInjectable from "./child-features/periodical-checking-of-updates/main/periodical-check-for-updates.injectable";
 import { advanceFakeTime, testUsingFakeTime } from "../../test-utils/use-fake-time";
-import emitEventInjectable from "../../common/app-event-bus/emit-event.injectable";
+// import emitEventInjectable from "../../common/app-event-bus/emit-event.injectable";
 import getBuildVersionInjectable from "../../main/electron-app/features/get-build-version.injectable";
 
 describe("analytics for installing update", () => {
