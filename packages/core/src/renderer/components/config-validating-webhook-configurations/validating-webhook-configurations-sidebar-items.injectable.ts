@@ -7,7 +7,7 @@ import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import validatingWebhookConfigurationsRouteInjectable from "../../../common/front-end-routing/routes/cluster/config/validating-webhook-configurations/validating-webhook-configurations-route.injectable";
 import navigateToValidatingWebhookConfigurationsInjectable from "../../../common/front-end-routing/routes/cluster/config/validating-webhook-configurations/navigate-to-validating-webhook-configurations.injectable";
-import configSidebarItemInjectable from "../config/config-sidebar-items.injectable";
+import configSidebarItemInjectable from "../config/config-sidebar-item.injectable";
 
 const validatingWebhookConfigurationsSidebarItemInjectable = getInjectable({
   id: "validating-webhook-configurations-sidebar-item",

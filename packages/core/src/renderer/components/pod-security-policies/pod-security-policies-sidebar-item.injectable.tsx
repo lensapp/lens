@@ -8,7 +8,7 @@ import podSecurityPoliciesRouteInjectable from "../../../common/front-end-routin
 import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToPodSecurityPoliciesInjectable from "../../../common/front-end-routing/routes/cluster/user-management/pod-security-policies/navigate-to-pod-security-policies.injectable";
-import userManagementSidebarItemInjectable from "../user-management/user-management-sidebar-items.injectable";
+import userManagementSidebarItemInjectable from "../user-management/user-management-sidebar-item.injectable";
 
 const podSecurityPoliciesSidebarItemInjectable = getInjectable({
   id: "pod-security-policies-sidebar-item",
