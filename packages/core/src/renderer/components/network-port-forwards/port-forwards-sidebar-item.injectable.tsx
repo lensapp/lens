@@ -11,14 +11,13 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToPortForwardsInjectable from "../../../common/front-end-routing/routes/cluster/network/port-forwards/navigate-to-port-forwards.injectable";
 
 const portForwardsSidebarItemInjectable = getInjectable({
-  id: "port-forwards-sidebar-item",
+  id: "sidebar-item-port-forwards",
 
   instantiate: (di) => {
     const route = di.inject(portForwardsRouteInjectable);
 
     return {
-      id: "port-forwards",
-      parentId: di.inject(networkSidebarItemInjectable).id,
+      parentId: networkSidebarItemInjectable.id,
       title: "Port Forwarding",
       onClick: di.inject(navigateToPortForwardsInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

@@ -11,14 +11,13 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToStatefulsetsInjectable from "../../../common/front-end-routing/routes/cluster/workloads/statefulsets/navigate-to-statefulsets.injectable";
 
 const statefulsetsSidebarItemInjectable = getInjectable({
-  id: "statefulsets-sidebar-item",
+  id: "sidebar-item-statefulsets",
 
   instantiate: (di) => {
     const route = di.inject(statefulsetsRouteInjectable);
 
     return {
-      id: "stateful-sets",
-      parentId: di.inject(workloadsSidebarItemInjectable).id,
+      parentId: workloadsSidebarItemInjectable.id,
       title: "StatefulSets",
       onClick: di.inject(navigateToStatefulsetsInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

@@ -11,14 +11,13 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToLimitRangesInjectable from "../../../common/front-end-routing/routes/cluster/config/limit-ranges/navigate-to-limit-ranges.injectable";
 
 const limitRangesSidebarItemInjectable = getInjectable({
-  id: "limit-ranges-sidebar-item",
+  id: "sidebar-item-limit-ranges",
 
   instantiate: (di) => {
     const route = di.inject(limitRangesRouteInjectable);
 
     return {
-      id: "limit-ranges",
-      parentId: di.inject(configSidebarItemInjectable).id,
+      parentId: configSidebarItemInjectable.id,
       title: "Limit Ranges",
       onClick: di.inject(navigateToLimitRangesInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

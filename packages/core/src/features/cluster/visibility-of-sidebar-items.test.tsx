@@ -27,7 +27,7 @@ describe("cluster - visibility of sidebar items", () => {
       runInAction(() => {
         windowDi.register(testRouteInjectable);
         windowDi.register(testRouteComponentInjectable);
-        windowDi.register(testSidebarItemsInjectable);
+        windowDi.register(testSidebarItemInjectable);
       });
     });
   });
@@ -94,15 +94,14 @@ const testRouteComponentInjectable = getInjectable({
   injectionToken: routeSpecificComponentInjectionToken,
 });
 
-const testSidebarItemsInjectable = getInjectable({
-  id: "some-sidebar-item-injectable",
+const testSidebarItemInjectable = getInjectable({
+  id: "sidebar-item-test",
 
   instantiate: (di) => {
     const testRoute = di.inject(testRouteInjectable);
     const navigateToRoute = di.inject(navigateToRouteInjectionToken);
 
     return {
-      id: "some-item-id",
       parentId: null,
       title: "Some item",
       onClick: () => navigateToRoute(testRoute),

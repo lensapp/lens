@@ -11,14 +11,13 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToNetworkPoliciesInjectable from "../../../common/front-end-routing/routes/cluster/network/network-policies/navigate-to-network-policies.injectable";
 
 const networkPoliciesSidebarItemInjectable = getInjectable({
-  id: "network-policies-sidebar-item",
+  id: "sidebar-item-network-policies",
 
   instantiate: (di) => {
     const route = di.inject(networkPoliciesRouteInjectable);
 
     return {
-      id: "network-policies",
-      parentId: di.inject(networkSidebarItemInjectable).id,
+      parentId: networkSidebarItemInjectable.id,
       title: "Network Policies",
       onClick: di.inject(navigateToNetworkPoliciesInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

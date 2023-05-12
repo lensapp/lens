@@ -11,14 +11,13 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToDaemonsetsInjectable from "../../../common/front-end-routing/routes/cluster/workloads/daemonsets/navigate-to-daemonsets.injectable";
 
 const daemonsetsSidebarItemInjectable = getInjectable({
-  id: "daemonsets-sidebar-item",
+  id: "sidebar-item-daemonsets",
 
   instantiate: (di) => {
     const route = di.inject(daemonsetsRouteInjectable);
 
     return {
-      id: "daemon-sets",
-      parentId: di.inject(workloadsSidebarItemInjectable).id,
+      parentId: workloadsSidebarItemInjectable.id,
       title: "DaemonSets",
       onClick: di.inject(navigateToDaemonsetsInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

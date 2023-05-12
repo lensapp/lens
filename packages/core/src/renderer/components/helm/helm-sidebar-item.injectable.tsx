@@ -9,10 +9,9 @@ import { Icon } from "@k8slens/icon";
 import { noop } from "lodash/fp";
 
 const helmSidebarItemInjectable = getInjectable({
-  id: "helm-sidebar-item",
+  id: "sidebar-item-helm",
 
   instantiate: () => ({
-    id: "helm",
     parentId: null,
     getIcon: () => <Icon svg="helm" />,
     title: "Helm",

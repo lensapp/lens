@@ -11,14 +11,13 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToResourceQuotasInjectable from "../../../common/front-end-routing/routes/cluster/config/resource-quotas/navigate-to-resource-quotas.injectable";
 
 const resourceQuotasSidebarItemInjectable = getInjectable({
-  id: "resource-quotas-sidebar-item",
+  id: "sidebar-item-resource-quotas",
 
   instantiate: (di) => {
     const route = di.inject(resourceQuotasRouteInjectable);
 
     return {
-      id: "resource-quotas",
-      parentId: di.inject(configSidebarItemInjectable).id,
+      parentId: configSidebarItemInjectable.id,
       title: "Resource Quotas",
       onClick: di.inject(navigateToResourceQuotasInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

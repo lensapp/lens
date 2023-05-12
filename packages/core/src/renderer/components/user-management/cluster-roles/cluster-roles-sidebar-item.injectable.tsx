@@ -11,14 +11,13 @@ import routeIsActiveInjectable from "../../../routes/route-is-active.injectable"
 import navigateToClusterRolesInjectable from "../../../../common/front-end-routing/routes/cluster/user-management/cluster-roles/navigate-to-cluster-roles.injectable";
 
 const clusterRolesSidebarItemInjectable = getInjectable({
-  id: "cluster-roles-sidebar-item",
+  id: "sidebar-item-cluster-roles",
 
   instantiate: (di) => {
     const route = di.inject(clusterRolesRouteInjectable);
 
     return {
-      id: "cluster-roles",
-      parentId: di.inject(userManagementSidebarItemInjectable).id,
+      parentId: userManagementSidebarItemInjectable.id,
       title: "Cluster Roles",
       onClick: di.inject(navigateToClusterRolesInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),
