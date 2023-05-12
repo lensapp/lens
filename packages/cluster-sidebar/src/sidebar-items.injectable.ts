@@ -1,26 +1,21 @@
-/* eslint-disable prettier/prettier */
-
-import { getInjectable } from "@ogre-tools/injectable";
+import { getInjectable, InjectionInstanceWithMeta } from "@ogre-tools/injectable";
 import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
-import { HierarchicalSidebarItem, sidebarItemInjectionToken, SidebarItemRegistration } from "./tokens";
+import { SidebarItemDeclaration, sidebarItemInjectionToken, SidebarItemRegistration } from "./tokens";
 import { computed } from "mobx";
 import { byOrderNumber } from "@k8slens/utilities";
 
 const getSidebarItemsHierarchy = (
-  registrations: SidebarItemRegistration[],
+  registrations: InjectionInstanceWithMeta<SidebarItemRegistration>[],
   parentId: string | null,
-): HierarchicalSidebarItem[] => (
+): SidebarItemDeclaration[] =>
   registrations
-    .filter((item) => item.parentId === parentId)
-    .map(({
-      isActive,
-      isVisible,
-      ...registration
-    }) => {
-      const children = getSidebarItemsHierarchy(registrations, registration.id);
+    .filter(({ instance }) => instance.parentId === parentId)
+    .map(({ instance: { isActive, isVisible, ...registration }, meta: { id } }) => {
+      const children = getSidebarItemsHierarchy(registrations, id);
 
       return {
         ...registration,
+        id,
         children,
         isVisible: computed(() => {
           if (children.length === 0) {
@@ -46,8 +41,7 @@ const getSidebarItemsHierarchy = (
         }),
       };
     })
-    .sort(byOrderNumber)
-);
+    .sort(byOrderNumber);
 
 const sidebarItemsInjectable = getInjectable({
   id: "sidebar-items",
@@ -55,7 +49,11 @@ const sidebarItemsInjectable = getInjectable({
     const computedInjectMany = di.inject(computedInjectManyInjectable);
     const sidebarItemRegistrations = computedInjectMany(sidebarItemInjectionToken);
 
-    return computed(() => getSidebarItemsHierarchy(sidebarItemRegistrations.get(), null));
+    return computed(() => {
+      void sidebarItemRegistrations.get();
+
+      return getSidebarItemsHierarchy(di.injectManyWithMeta(sidebarItemInjectionToken), null);
+    });
   },
 });
 

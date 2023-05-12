@@ -11,13 +11,12 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToClusterOverviewInjectable from "../../../common/front-end-routing/routes/cluster/overview/navigate-to-cluster-overview.injectable";
 
 const clusterOverviewSidebarItemInjectable = getInjectable({
-  id: "cluster-overview-sidebar-item",
+  id: "sidebar-item-cluster-overview",
 
   instantiate: (di) => {
     const route = di.inject(clusterOverviewRouteInjectable);
 
     return {
-      id: "cluster-overview",
       parentId: null,
       title: "Cluster",
       getIcon: () => <Icon svg="kube" />,

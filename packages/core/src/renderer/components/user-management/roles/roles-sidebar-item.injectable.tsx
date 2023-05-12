@@ -10,14 +10,13 @@ import routeIsActiveInjectable from "../../../routes/route-is-active.injectable"
 import navigateToRolesInjectable from "../../../../common/front-end-routing/routes/cluster/user-management/roles/navigate-to-roles.injectable";
 
 const rolesSidebarItemInjectable = getInjectable({
-  id: "roles-sidebar-item",
+  id: "sidebar-item-roles",
 
   instantiate: (di) => {
     const route = di.inject(rolesRouteInjectable);
 
     return {
-      id: "roles",
-      parentId: di.inject(userManagementSidebarItemInjectable).id,
+      parentId: userManagementSidebarItemInjectable.id,
       title: "Roles",
       onClick: di.inject(navigateToRolesInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

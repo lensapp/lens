@@ -10,14 +10,13 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToCronJobsInjectable from "../../../common/front-end-routing/routes/cluster/workloads/cron-jobs/navigate-to-cron-jobs.injectable";
 
 const cronJobsSidebarItemInjectable = getInjectable({
-  id: "cron-jobs-sidebar-item",
+  id: "sidebar-item-cron-jobs",
 
   instantiate: (di) => {
     const route = di.inject(cronJobsRouteInjectable);
 
     return {
-      id: "cron-jobs",
-      parentId: di.inject(workloadsSidebarItemInjectable).id,
+      parentId: workloadsSidebarItemInjectable.id,
       title: "CronJobs",
       onClick: di.inject(navigateToCronJobsInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

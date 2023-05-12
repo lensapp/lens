@@ -10,14 +10,13 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToVerticalPodAutoscalersInjectable from "../../../common/front-end-routing/routes/cluster/config/vertical-pod-autoscalers/navigate-to-vertical-pod-autoscalers.injectable";
 
 const verticalPodAutoScalersSidebarItemInjectable = getInjectable({
-  id: "vertical-pod-auto-scalers-sidebar-item",
+  id: "sidebar-item-vertical-pod-auto-scalers",
 
   instantiate: (di) => {
     const route = di.inject(verticalPodAutoscalersRouteInjectable);
 
     return {
-      id: "vertical-pod-auto-scalers",
-      parentId: di.inject(configSidebarItemInjectable).id,
+      parentId: configSidebarItemInjectable.id,
       title: "VPA",
       onClick: di.inject(navigateToVerticalPodAutoscalersInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

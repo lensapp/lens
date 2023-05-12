@@ -11,14 +11,13 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToReplicasetsInjectable from "../../../common/front-end-routing/routes/cluster/workloads/replicasets/navigate-to-replicasets.injectable";
 
 const replicasetsSidebarItemInjectable = getInjectable({
-  id: "replicasets-sidebar-item",
+  id: "sidebar-item-replicasets",
 
   instantiate: (di) => {
     const route = di.inject(replicasetsRouteInjectable);
 
     return {
-      id: "replica-sets",
-      parentId: di.inject(workloadsSidebarItemInjectable).id,
+      parentId: workloadsSidebarItemInjectable.id,
       title: "ReplicaSets",
       onClick: di.inject(navigateToReplicasetsInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

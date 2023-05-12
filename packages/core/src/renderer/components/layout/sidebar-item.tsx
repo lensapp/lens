@@ -12,7 +12,7 @@ import { Icon } from "../icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { SidebarStorageState } from "./sidebar-storage/sidebar-storage.injectable";
 import sidebarStorageInjectable from "./sidebar-storage/sidebar-storage.injectable";
-import type { HierarchicalSidebarItem } from "@k8slens/cluster-sidebar";
+import type { SidebarItemDeclaration } from "@k8slens/cluster-sidebar";
 import type { StorageLayer } from "../../utils/storage-helper";
 
 interface Dependencies {
@@ -20,7 +20,7 @@ interface Dependencies {
 }
 
 export interface SidebarItemProps {
-  item: HierarchicalSidebarItem;
+  item: SidebarItemDeclaration;
 }
 
 const NonInjectedSidebarItem = observer((props: SidebarItemProps & Dependencies) => {
@@ -56,7 +56,7 @@ const NonInjectedSidebarItem = observer((props: SidebarItemProps & Dependencies)
   return (
     <div
       className={styles.SidebarItem}
-      data-testid={`sidebar-item-${id}`}
+      data-testid={id}
       data-is-active-test={isActive}
       data-parent-id-test={item.parentId}
     >
@@ -74,7 +74,7 @@ const NonInjectedSidebarItem = observer((props: SidebarItemProps & Dependencies)
             item.onClick();
           }
         }}
-        data-testid={`sidebar-item-link-for-${id}`}
+        data-testid={`link-for-${id}`}
       >
         {item.getIcon?.()}
         <span>{item.title}</span>
@@ -82,7 +82,7 @@ const NonInjectedSidebarItem = observer((props: SidebarItemProps & Dependencies)
           <Icon
             className={styles.expandIcon}
             material={expanded ? "keyboard_arrow_up" : "keyboard_arrow_down"}
-            data-testid={`sidebar-item-expand-icon-for-${id}`}
+            data-testid={`expand-icon-for-${id}`}
           />
         )}
       </NavLink>
