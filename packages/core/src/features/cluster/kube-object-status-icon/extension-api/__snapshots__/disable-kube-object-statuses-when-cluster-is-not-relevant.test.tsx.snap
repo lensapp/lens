@@ -78,7 +78,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
             >
               <a
                 class="navItem"
-                data-testid="sidebar-item-link-for-workloads"
+                data-testid="link-for-sidebar-item-workloads"
                 href="/"
               >
                 <i
@@ -130,6 +130,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                 </span>
                 <i
                   class="Icon expandIcon material focusable"
+                  data-testid="expand-icon-for-sidebar-item-workloads"
                 >
                   <span
                     class="icon"
@@ -143,36 +144,11 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
             <div
               class="SidebarItem"
               data-is-active-test="false"
-              data-testid="sidebar-item-config"
-            >
-              <a
-                class="navItem"
-                data-testid="sidebar-item-link-for-config"
-                href="/"
-              >
-                <i
-                  class="Icon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="list"
-                  >
-                    list
-                  </span>
-                </i>
-                <span>
-                  Config
-                </span>
-              </a>
-            </div>
-            <div
-              class="SidebarItem"
-              data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
               <a
                 class="navItem"
-                data-testid="sidebar-item-link-for-network"
+                data-testid="link-for-sidebar-item-network"
                 href="/"
               >
                 <i
@@ -190,6 +166,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                 </span>
                 <i
                   class="Icon expandIcon material focusable"
+                  data-testid="expand-icon-for-sidebar-item-network"
                 >
                   <span
                     class="icon"
@@ -203,36 +180,11 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
             <div
               class="SidebarItem"
               data-is-active-test="false"
-              data-testid="sidebar-item-storage"
-            >
-              <a
-                class="navItem"
-                data-testid="sidebar-item-link-for-storage"
-                href="/"
-              >
-                <i
-                  class="Icon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="storage"
-                  >
-                    storage
-                  </span>
-                </i>
-                <span>
-                  Storage
-                </span>
-              </a>
-            </div>
-            <div
-              class="SidebarItem"
-              data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
               <a
                 class="navItem"
-                data-testid="sidebar-item-link-for-helm"
+                data-testid="link-for-sidebar-item-helm"
                 href="/"
               >
                 <i
@@ -284,66 +236,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                 </span>
                 <i
                   class="Icon expandIcon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="keyboard_arrow_down"
-                  >
-                    keyboard_arrow_down
-                  </span>
-                </i>
-              </a>
-            </div>
-            <div
-              class="SidebarItem"
-              data-is-active-test="false"
-              data-testid="sidebar-item-user-management"
-            >
-              <a
-                class="navItem"
-                data-testid="sidebar-item-link-for-user-management"
-                href="/"
-              >
-                <i
-                  class="Icon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="security"
-                  >
-                    security
-                  </span>
-                </i>
-                <span>
-                  Access Control
-                </span>
-              </a>
-            </div>
-            <div
-              class="SidebarItem"
-              data-is-active-test="false"
-              data-testid="sidebar-item-custom-resources"
-            >
-              <a
-                class="navItem"
-                data-testid="sidebar-item-link-for-custom-resources"
-                href="/"
-              >
-                <i
-                  class="Icon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="extension"
-                  >
-                    extension
-                  </span>
-                </i>
-                <span>
-                  Custom Resources
-                </span>
-                <i
-                  class="Icon expandIcon material focusable"
+                  data-testid="expand-icon-for-sidebar-item-helm"
                 >
                   <span
                     class="icon"
@@ -614,7 +507,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
             >
               <a
                 class="navItem"
-                data-testid="sidebar-item-link-for-workloads"
+                data-testid="link-for-sidebar-item-workloads"
                 href="/"
               >
                 <i
@@ -666,6 +559,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                 </span>
                 <i
                   class="Icon expandIcon material focusable"
+                  data-testid="expand-icon-for-sidebar-item-workloads"
                 >
                   <span
                     class="icon"
@@ -679,36 +573,11 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
             <div
               class="SidebarItem"
               data-is-active-test="false"
-              data-testid="sidebar-item-config"
-            >
-              <a
-                class="navItem"
-                data-testid="sidebar-item-link-for-config"
-                href="/"
-              >
-                <i
-                  class="Icon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="list"
-                  >
-                    list
-                  </span>
-                </i>
-                <span>
-                  Config
-                </span>
-              </a>
-            </div>
-            <div
-              class="SidebarItem"
-              data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
               <a
                 class="navItem"
-                data-testid="sidebar-item-link-for-network"
+                data-testid="link-for-sidebar-item-network"
                 href="/"
               >
                 <i
@@ -726,6 +595,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                 </span>
                 <i
                   class="Icon expandIcon material focusable"
+                  data-testid="expand-icon-for-sidebar-item-network"
                 >
                   <span
                     class="icon"
@@ -739,36 +609,11 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
             <div
               class="SidebarItem"
               data-is-active-test="false"
-              data-testid="sidebar-item-storage"
-            >
-              <a
-                class="navItem"
-                data-testid="sidebar-item-link-for-storage"
-                href="/"
-              >
-                <i
-                  class="Icon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="storage"
-                  >
-                    storage
-                  </span>
-                </i>
-                <span>
-                  Storage
-                </span>
-              </a>
-            </div>
-            <div
-              class="SidebarItem"
-              data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
               <a
                 class="navItem"
-                data-testid="sidebar-item-link-for-helm"
+                data-testid="link-for-sidebar-item-helm"
                 href="/"
               >
                 <i
@@ -820,66 +665,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
                 </span>
                 <i
                   class="Icon expandIcon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="keyboard_arrow_down"
-                  >
-                    keyboard_arrow_down
-                  </span>
-                </i>
-              </a>
-            </div>
-            <div
-              class="SidebarItem"
-              data-is-active-test="false"
-              data-testid="sidebar-item-user-management"
-            >
-              <a
-                class="navItem"
-                data-testid="sidebar-item-link-for-user-management"
-                href="/"
-              >
-                <i
-                  class="Icon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="security"
-                  >
-                    security
-                  </span>
-                </i>
-                <span>
-                  Access Control
-                </span>
-              </a>
-            </div>
-            <div
-              class="SidebarItem"
-              data-is-active-test="false"
-              data-testid="sidebar-item-custom-resources"
-            >
-              <a
-                class="navItem"
-                data-testid="sidebar-item-link-for-custom-resources"
-                href="/"
-              >
-                <i
-                  class="Icon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="extension"
-                  >
-                    extension
-                  </span>
-                </i>
-                <span>
-                  Custom Resources
-                </span>
-                <i
-                  class="Icon expandIcon material focusable"
+                  data-testid="expand-icon-for-sidebar-item-helm"
                 >
                   <span
                     class="icon"
@@ -1110,7 +896,7 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
             >
               <a
                 class="navItem"
-                data-testid="sidebar-item-link-for-workloads"
+                data-testid="link-for-sidebar-item-workloads"
                 href="/"
               >
                 <i
@@ -1162,6 +948,7 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
                 </span>
                 <i
                   class="Icon expandIcon material focusable"
+                  data-testid="expand-icon-for-sidebar-item-workloads"
                 >
                   <span
                     class="icon"
@@ -1175,36 +962,11 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
             <div
               class="SidebarItem"
               data-is-active-test="false"
-              data-testid="sidebar-item-config"
-            >
-              <a
-                class="navItem"
-                data-testid="sidebar-item-link-for-config"
-                href="/"
-              >
-                <i
-                  class="Icon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="list"
-                  >
-                    list
-                  </span>
-                </i>
-                <span>
-                  Config
-                </span>
-              </a>
-            </div>
-            <div
-              class="SidebarItem"
-              data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
               <a
                 class="navItem"
-                data-testid="sidebar-item-link-for-network"
+                data-testid="link-for-sidebar-item-network"
                 href="/"
               >
                 <i
@@ -1222,6 +984,7 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
                 </span>
                 <i
                   class="Icon expandIcon material focusable"
+                  data-testid="expand-icon-for-sidebar-item-network"
                 >
                   <span
                     class="icon"
@@ -1235,36 +998,11 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
             <div
               class="SidebarItem"
               data-is-active-test="false"
-              data-testid="sidebar-item-storage"
-            >
-              <a
-                class="navItem"
-                data-testid="sidebar-item-link-for-storage"
-                href="/"
-              >
-                <i
-                  class="Icon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="storage"
-                  >
-                    storage
-                  </span>
-                </i>
-                <span>
-                  Storage
-                </span>
-              </a>
-            </div>
-            <div
-              class="SidebarItem"
-              data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
               <a
                 class="navItem"
-                data-testid="sidebar-item-link-for-helm"
+                data-testid="link-for-sidebar-item-helm"
                 href="/"
               >
                 <i
@@ -1316,66 +1054,7 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
                 </span>
                 <i
                   class="Icon expandIcon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="keyboard_arrow_down"
-                  >
-                    keyboard_arrow_down
-                  </span>
-                </i>
-              </a>
-            </div>
-            <div
-              class="SidebarItem"
-              data-is-active-test="false"
-              data-testid="sidebar-item-user-management"
-            >
-              <a
-                class="navItem"
-                data-testid="sidebar-item-link-for-user-management"
-                href="/"
-              >
-                <i
-                  class="Icon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="security"
-                  >
-                    security
-                  </span>
-                </i>
-                <span>
-                  Access Control
-                </span>
-              </a>
-            </div>
-            <div
-              class="SidebarItem"
-              data-is-active-test="false"
-              data-testid="sidebar-item-custom-resources"
-            >
-              <a
-                class="navItem"
-                data-testid="sidebar-item-link-for-custom-resources"
-                href="/"
-              >
-                <i
-                  class="Icon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="extension"
-                  >
-                    extension
-                  </span>
-                </i>
-                <span>
-                  Custom Resources
-                </span>
-                <i
-                  class="Icon expandIcon material focusable"
+                  data-testid="expand-icon-for-sidebar-item-helm"
                 >
                   <span
                     class="icon"

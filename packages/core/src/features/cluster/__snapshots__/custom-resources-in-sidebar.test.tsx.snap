@@ -78,7 +78,7 @@ exports[`cluster - custom resources in sidebar renders 1`] = `
             <a
               aria-current="page"
               class="navItem active"
-              data-testid="sidebar-item-link-for-workloads"
+              data-testid="link-for-sidebar-item-workloads"
               href="/"
             >
               <i
@@ -93,7 +93,7 @@ exports[`cluster - custom resources in sidebar renders 1`] = `
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-workloads"
+                data-testid="expand-icon-for-sidebar-item-workloads"
               >
                 <span
                   class="icon"
@@ -111,7 +111,7 @@ exports[`cluster - custom resources in sidebar renders 1`] = `
           >
             <a
               class="navItem"
-              data-testid="sidebar-item-link-for-network"
+              data-testid="link-for-sidebar-item-network"
               href="/"
             >
               <i
@@ -129,7 +129,7 @@ exports[`cluster - custom resources in sidebar renders 1`] = `
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-network"
+                data-testid="expand-icon-for-sidebar-item-network"
               >
                 <span
                   class="icon"
@@ -147,7 +147,7 @@ exports[`cluster - custom resources in sidebar renders 1`] = `
           >
             <a
               class="navItem"
-              data-testid="sidebar-item-link-for-helm"
+              data-testid="link-for-sidebar-item-helm"
               href="/"
             >
               <i
@@ -162,7 +162,7 @@ exports[`cluster - custom resources in sidebar renders 1`] = `
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-helm"
+                data-testid="expand-icon-for-sidebar-item-helm"
               >
                 <span
                   class="icon"
@@ -192,7 +192,7 @@ exports[`cluster - custom resources in sidebar renders 1`] = `
           <div
             class="Tab flex gaps align-center active"
             data-is-active-test="true"
-            data-testid="tab-link-for-overview"
+            data-testid="tab-link-for-sidebar-item-workloads-overview"
             role="tab"
             tabindex="0"
           >
@@ -519,7 +519,7 @@ exports[`cluster - custom resources in sidebar when custom resource definitions 
             <a
               aria-current="page"
               class="navItem active"
-              data-testid="sidebar-item-link-for-workloads"
+              data-testid="link-for-sidebar-item-workloads"
               href="/"
             >
               <i
@@ -534,7 +534,7 @@ exports[`cluster - custom resources in sidebar when custom resource definitions 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-workloads"
+                data-testid="expand-icon-for-sidebar-item-workloads"
               >
                 <span
                   class="icon"
@@ -552,7 +552,7 @@ exports[`cluster - custom resources in sidebar when custom resource definitions 
           >
             <a
               class="navItem"
-              data-testid="sidebar-item-link-for-network"
+              data-testid="link-for-sidebar-item-network"
               href="/"
             >
               <i
@@ -570,7 +570,7 @@ exports[`cluster - custom resources in sidebar when custom resource definitions 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-network"
+                data-testid="expand-icon-for-sidebar-item-network"
               >
                 <span
                   class="icon"
@@ -588,7 +588,7 @@ exports[`cluster - custom resources in sidebar when custom resource definitions 
           >
             <a
               class="navItem"
-              data-testid="sidebar-item-link-for-helm"
+              data-testid="link-for-sidebar-item-helm"
               href="/"
             >
               <i
@@ -603,7 +603,7 @@ exports[`cluster - custom resources in sidebar when custom resource definitions 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-helm"
+                data-testid="expand-icon-for-sidebar-item-helm"
               >
                 <span
                   class="icon"
@@ -621,7 +621,7 @@ exports[`cluster - custom resources in sidebar when custom resource definitions 
           >
             <a
               class="navItem"
-              data-testid="sidebar-item-link-for-custom-resources"
+              data-testid="link-for-sidebar-item-custom-resources"
               href="/"
             >
               <i
@@ -639,7 +639,7 @@ exports[`cluster - custom resources in sidebar when custom resource definitions 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-custom-resources"
+                data-testid="expand-icon-for-sidebar-item-custom-resources"
               >
                 <span
                   class="icon"
@@ -669,7 +669,7 @@ exports[`cluster - custom resources in sidebar when custom resource definitions 
           <div
             class="Tab flex gaps align-center active"
             data-is-active-test="true"
-            data-testid="tab-link-for-overview"
+            data-testid="tab-link-for-sidebar-item-workloads-overview"
             role="tab"
             tabindex="0"
           >
@@ -996,7 +996,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists rende
             <a
               aria-current="page"
               class="navItem active"
-              data-testid="sidebar-item-link-for-workloads"
+              data-testid="link-for-sidebar-item-workloads"
               href="/"
             >
               <i
@@ -1011,7 +1011,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists rende
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-workloads"
+                data-testid="expand-icon-for-sidebar-item-workloads"
               >
                 <span
                   class="icon"
@@ -1029,7 +1029,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists rende
           >
             <a
               class="navItem"
-              data-testid="sidebar-item-link-for-network"
+              data-testid="link-for-sidebar-item-network"
               href="/"
             >
               <i
@@ -1047,7 +1047,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists rende
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-network"
+                data-testid="expand-icon-for-sidebar-item-network"
               >
                 <span
                   class="icon"
@@ -1065,7 +1065,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists rende
           >
             <a
               class="navItem"
-              data-testid="sidebar-item-link-for-helm"
+              data-testid="link-for-sidebar-item-helm"
               href="/"
             >
               <i
@@ -1080,7 +1080,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists rende
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-helm"
+                data-testid="expand-icon-for-sidebar-item-helm"
               >
                 <span
                   class="icon"
@@ -1110,7 +1110,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists rende
           <div
             class="Tab flex gaps align-center active"
             data-is-active-test="true"
-            data-testid="tab-link-for-overview"
+            data-testid="tab-link-for-sidebar-item-workloads-overview"
             role="tab"
             tabindex="0"
           >
@@ -1437,7 +1437,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
             <a
               aria-current="page"
               class="navItem active"
-              data-testid="sidebar-item-link-for-workloads"
+              data-testid="link-for-sidebar-item-workloads"
               href="/"
             >
               <i
@@ -1452,7 +1452,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-workloads"
+                data-testid="expand-icon-for-sidebar-item-workloads"
               >
                 <span
                   class="icon"
@@ -1470,7 +1470,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
           >
             <a
               class="navItem"
-              data-testid="sidebar-item-link-for-network"
+              data-testid="link-for-sidebar-item-network"
               href="/"
             >
               <i
@@ -1488,7 +1488,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-network"
+                data-testid="expand-icon-for-sidebar-item-network"
               >
                 <span
                   class="icon"
@@ -1506,7 +1506,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
           >
             <a
               class="navItem"
-              data-testid="sidebar-item-link-for-helm"
+              data-testid="link-for-sidebar-item-helm"
               href="/"
             >
               <i
@@ -1521,7 +1521,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-helm"
+                data-testid="expand-icon-for-sidebar-item-helm"
               >
                 <span
                   class="icon"
@@ -1539,7 +1539,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
           >
             <a
               class="navItem"
-              data-testid="sidebar-item-link-for-custom-resources"
+              data-testid="link-for-sidebar-item-custom-resources"
               href="/"
             >
               <i
@@ -1557,7 +1557,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-custom-resources"
+                data-testid="expand-icon-for-sidebar-item-custom-resources"
               >
                 <span
                   class="icon"
@@ -1587,7 +1587,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
           <div
             class="Tab flex gaps align-center active"
             data-is-active-test="true"
-            data-testid="tab-link-for-overview"
+            data-testid="tab-link-for-sidebar-item-workloads-overview"
             role="tab"
             tabindex="0"
           >
@@ -1914,7 +1914,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
             <a
               aria-current="page"
               class="navItem active"
-              data-testid="sidebar-item-link-for-workloads"
+              data-testid="link-for-sidebar-item-workloads"
               href="/"
             >
               <i
@@ -1929,7 +1929,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-workloads"
+                data-testid="expand-icon-for-sidebar-item-workloads"
               >
                 <span
                   class="icon"
@@ -1947,7 +1947,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
           >
             <a
               class="navItem"
-              data-testid="sidebar-item-link-for-network"
+              data-testid="link-for-sidebar-item-network"
               href="/"
             >
               <i
@@ -1965,7 +1965,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-network"
+                data-testid="expand-icon-for-sidebar-item-network"
               >
                 <span
                   class="icon"
@@ -1983,7 +1983,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
           >
             <a
               class="navItem"
-              data-testid="sidebar-item-link-for-helm"
+              data-testid="link-for-sidebar-item-helm"
               href="/"
             >
               <i
@@ -1998,7 +1998,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-helm"
+                data-testid="expand-icon-for-sidebar-item-helm"
               >
                 <span
                   class="icon"
@@ -2016,7 +2016,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
           >
             <a
               class="navItem"
-              data-testid="sidebar-item-link-for-custom-resources"
+              data-testid="link-for-sidebar-item-custom-resources"
               href="/"
             >
               <i
@@ -2034,7 +2034,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-custom-resources"
+                data-testid="expand-icon-for-sidebar-item-custom-resources"
               >
                 <span
                   class="icon"
@@ -2050,12 +2050,12 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
               <div
                 class="SidebarItem"
                 data-is-active-test="false"
-                data-parent-id-test="custom-resources"
+                data-parent-id-test="sidebar-item-custom-resources"
                 data-testid="sidebar-item-custom-resource-definitions"
               >
                 <a
                   class="navItem"
-                  data-testid="sidebar-item-link-for-custom-resource-definitions"
+                  data-testid="link-for-sidebar-item-custom-resource-definitions"
                   href="/"
                 >
                   <span>
@@ -2084,7 +2084,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
           <div
             class="Tab flex gaps align-center active"
             data-is-active-test="true"
-            data-testid="tab-link-for-overview"
+            data-testid="tab-link-for-sidebar-item-workloads-overview"
             role="tab"
             tabindex="0"
           >
@@ -2411,7 +2411,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
             <a
               aria-current="page"
               class="navItem active"
-              data-testid="sidebar-item-link-for-workloads"
+              data-testid="link-for-sidebar-item-workloads"
               href="/"
             >
               <i
@@ -2426,7 +2426,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-workloads"
+                data-testid="expand-icon-for-sidebar-item-workloads"
               >
                 <span
                   class="icon"
@@ -2444,7 +2444,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
           >
             <a
               class="navItem"
-              data-testid="sidebar-item-link-for-network"
+              data-testid="link-for-sidebar-item-network"
               href="/"
             >
               <i
@@ -2462,7 +2462,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-network"
+                data-testid="expand-icon-for-sidebar-item-network"
               >
                 <span
                   class="icon"
@@ -2480,7 +2480,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
           >
             <a
               class="navItem"
-              data-testid="sidebar-item-link-for-helm"
+              data-testid="link-for-sidebar-item-helm"
               href="/"
             >
               <i
@@ -2495,7 +2495,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-helm"
+                data-testid="expand-icon-for-sidebar-item-helm"
               >
                 <span
                   class="icon"
@@ -2513,7 +2513,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
           >
             <a
               class="navItem"
-              data-testid="sidebar-item-link-for-custom-resources"
+              data-testid="link-for-sidebar-item-custom-resources"
               href="/"
             >
               <i
@@ -2531,7 +2531,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-custom-resources"
+                data-testid="expand-icon-for-sidebar-item-custom-resources"
               >
                 <span
                   class="icon"
@@ -2561,7 +2561,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
           <div
             class="Tab flex gaps align-center active"
             data-is-active-test="true"
-            data-testid="tab-link-for-overview"
+            data-testid="tab-link-for-sidebar-item-workloads-overview"
             role="tab"
             tabindex="0"
           >
@@ -2888,7 +2888,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
             <a
               aria-current="page"
               class="navItem active"
-              data-testid="sidebar-item-link-for-workloads"
+              data-testid="link-for-sidebar-item-workloads"
               href="/"
             >
               <i
@@ -2903,7 +2903,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-workloads"
+                data-testid="expand-icon-for-sidebar-item-workloads"
               >
                 <span
                   class="icon"
@@ -2921,7 +2921,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
           >
             <a
               class="navItem"
-              data-testid="sidebar-item-link-for-network"
+              data-testid="link-for-sidebar-item-network"
               href="/"
             >
               <i
@@ -2939,7 +2939,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-network"
+                data-testid="expand-icon-for-sidebar-item-network"
               >
                 <span
                   class="icon"
@@ -2957,7 +2957,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
           >
             <a
               class="navItem"
-              data-testid="sidebar-item-link-for-helm"
+              data-testid="link-for-sidebar-item-helm"
               href="/"
             >
               <i
@@ -2972,7 +2972,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-helm"
+                data-testid="expand-icon-for-sidebar-item-helm"
               >
                 <span
                   class="icon"
@@ -2990,7 +2990,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
           >
             <a
               class="navItem"
-              data-testid="sidebar-item-link-for-custom-resources"
+              data-testid="link-for-sidebar-item-custom-resources"
               href="/"
             >
               <i
@@ -3008,7 +3008,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-custom-resources"
+                data-testid="expand-icon-for-sidebar-item-custom-resources"
               >
                 <span
                   class="icon"
@@ -3024,12 +3024,12 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
               <div
                 class="SidebarItem"
                 data-is-active-test="false"
-                data-parent-id-test="custom-resources"
+                data-parent-id-test="sidebar-item-custom-resources"
                 data-testid="sidebar-item-custom-resource-group-some-group"
               >
                 <a
                   class="navItem"
-                  data-testid="sidebar-item-link-for-custom-resource-group-some-group"
+                  data-testid="link-for-sidebar-item-custom-resource-group-some-group"
                   href="/"
                 >
                   <span>
@@ -3037,7 +3037,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
                   </span>
                   <i
                     class="Icon expandIcon material focusable"
-                    data-testid="sidebar-item-expand-icon-for-custom-resource-group-some-group"
+                    data-testid="expand-icon-for-sidebar-item-custom-resource-group-some-group"
                   >
                     <span
                       class="icon"
@@ -3069,7 +3069,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
           <div
             class="Tab flex gaps align-center active"
             data-is-active-test="true"
-            data-testid="tab-link-for-overview"
+            data-testid="tab-link-for-sidebar-item-workloads-overview"
             role="tab"
             tabindex="0"
           >
@@ -3396,7 +3396,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
             <a
               aria-current="page"
               class="navItem active"
-              data-testid="sidebar-item-link-for-workloads"
+              data-testid="link-for-sidebar-item-workloads"
               href="/"
             >
               <i
@@ -3411,7 +3411,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-workloads"
+                data-testid="expand-icon-for-sidebar-item-workloads"
               >
                 <span
                   class="icon"
@@ -3429,7 +3429,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
           >
             <a
               class="navItem"
-              data-testid="sidebar-item-link-for-network"
+              data-testid="link-for-sidebar-item-network"
               href="/"
             >
               <i
@@ -3447,7 +3447,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-network"
+                data-testid="expand-icon-for-sidebar-item-network"
               >
                 <span
                   class="icon"
@@ -3465,7 +3465,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
           >
             <a
               class="navItem"
-              data-testid="sidebar-item-link-for-helm"
+              data-testid="link-for-sidebar-item-helm"
               href="/"
             >
               <i
@@ -3480,7 +3480,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-helm"
+                data-testid="expand-icon-for-sidebar-item-helm"
               >
                 <span
                   class="icon"
@@ -3498,7 +3498,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
           >
             <a
               class="navItem"
-              data-testid="sidebar-item-link-for-custom-resources"
+              data-testid="link-for-sidebar-item-custom-resources"
               href="/"
             >
               <i
@@ -3516,7 +3516,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="sidebar-item-expand-icon-for-custom-resources"
+                data-testid="expand-icon-for-sidebar-item-custom-resources"
               >
                 <span
                   class="icon"
@@ -3532,12 +3532,12 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
               <div
                 class="SidebarItem"
                 data-is-active-test="false"
-                data-parent-id-test="custom-resources"
+                data-parent-id-test="sidebar-item-custom-resources"
                 data-testid="sidebar-item-custom-resource-group-some-group"
               >
                 <a
                   class="navItem"
-                  data-testid="sidebar-item-link-for-custom-resource-group-some-group"
+                  data-testid="link-for-sidebar-item-custom-resource-group-some-group"
                   href="/"
                 >
                   <span>
@@ -3545,7 +3545,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
                   </span>
                   <i
                     class="Icon expandIcon material focusable"
-                    data-testid="sidebar-item-expand-icon-for-custom-resource-group-some-group"
+                    data-testid="expand-icon-for-sidebar-item-custom-resource-group-some-group"
                   >
                     <span
                       class="icon"
@@ -3561,12 +3561,12 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
                   <div
                     class="SidebarItem"
                     data-is-active-test="false"
-                    data-parent-id-test="custom-resource-group-some-group"
+                    data-parent-id-test="sidebar-item-custom-resource-group-some-group"
                     data-testid="sidebar-item-custom-resource-group-some-group/some-resources"
                   >
                     <a
                       class="navItem"
-                      data-testid="sidebar-item-link-for-custom-resource-group-some-group/some-resources"
+                      data-testid="link-for-sidebar-item-custom-resource-group-some-group/some-resources"
                       href="/"
                     >
                       <span>
@@ -3597,7 +3597,7 @@ exports[`cluster - custom resources in sidebar when custom resource exists when 
           <div
             class="Tab flex gaps align-center active"
             data-is-active-test="true"
-            data-testid="tab-link-for-overview"
+            data-testid="tab-link-for-sidebar-item-workloads-overview"
             role="tab"
             tabindex="0"
           >
