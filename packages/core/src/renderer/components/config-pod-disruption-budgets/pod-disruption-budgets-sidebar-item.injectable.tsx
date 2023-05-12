@@ -11,14 +11,13 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToPodDisruptionBudgetsInjectable from "../../../common/front-end-routing/routes/cluster/config/pod-disruption-budgets/navigate-to-pod-disruption-budgets.injectable";
 
 const podDisruptionBudgetsSidebarItemInjectable = getInjectable({
-  id: "pod-disruption-budgets-sidebar-item",
+  id: "sidebar-item-pod-disruption-budgets",
 
   instantiate: (di) => {
     const route = di.inject(podDisruptionBudgetsRouteInjectable);
 
     return {
-      id: "pod-disruption-budgets",
-      parentId: di.inject(configSidebarItemInjectable).id,
+      parentId: configSidebarItemInjectable.id,
       title: "Pod Disruption Budgets",
       onClick: di.inject(navigateToPodDisruptionBudgetsInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

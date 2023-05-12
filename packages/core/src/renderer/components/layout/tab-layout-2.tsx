@@ -11,10 +11,10 @@ import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { Tab, Tabs } from "../tabs";
 import { ErrorBoundary } from "@k8slens/error-boundary";
-import type { HierarchicalSidebarItem } from "@k8slens/cluster-sidebar";
+import type { SidebarItemDeclaration } from "@k8slens/cluster-sidebar";
 
 export interface TabLayoutProps {
-  tabs?: HierarchicalSidebarItem[];
+  tabs?: SidebarItemDeclaration[];
   children?: StrictReactNode;
   scrollable?: boolean;
 }

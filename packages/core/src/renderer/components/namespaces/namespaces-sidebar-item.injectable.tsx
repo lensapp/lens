@@ -11,13 +11,12 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToNamespacesInjectable from "../../../common/front-end-routing/routes/cluster/namespaces/navigate-to-namespaces.injectable";
 
 const namespacesSidebarItemInjectable = getInjectable({
-  id: "namespaces-sidebar-item",
+  id: "sidebar-item-namespaces",
 
   instantiate: (di) => {
     const route = di.inject(namespacesRouteInjectable);
 
     return {
-      id: "namespaces",
       parentId: null,
       getIcon: () => <Icon material="layers" />,
       title: "Namespaces",
