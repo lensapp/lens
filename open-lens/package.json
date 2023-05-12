@@ -4,7 +4,7 @@
   "productName": "OpenLens",
   "description": "OpenLens - Open Source IDE for Kubernetes",
   "homepage": "https://github.com/lensapp/lens",
-  "version": "6.5.0-alpha.11",
+  "version": "6.5.0-alpha.12",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lensapp/lens.git"
@@ -183,7 +183,7 @@
     "@k8slens/application": "^6.5.0-alpha.6",
     "@k8slens/application-for-electron-main": "^6.5.0-alpha.5",
     "@k8slens/core": "^6.5.0-alpha.11",
-    "@k8slens/ensure-binaries": "^6.5.0-alpha.5",
+    "@k8slens/ensure-binaries": "^6.5.0-alpha.6",
     "@k8slens/event-emitter": "^1.0.0-alpha.3",
     "@k8slens/feature-core": "^6.5.0-alpha.5",
     "@k8slens/keyboard-shortcuts": "^1.0.0-alpha.5",
