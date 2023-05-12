@@ -78,7 +78,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
             >
               <a
                 class="navItem"
-                data-testid="sidebar-item-link-for-workloads"
+                data-testid="link-for-sidebar-item-workloads"
                 href="/"
               >
                 <i
@@ -93,6 +93,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
                 </span>
                 <i
                   class="Icon expandIcon material focusable"
+                  data-testid="expand-icon-for-sidebar-item-workloads"
                 >
                   <span
                     class="icon"
@@ -106,36 +107,11 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
             <div
               class="SidebarItem"
               data-is-active-test="false"
-              data-testid="sidebar-item-config"
-            >
-              <a
-                class="navItem"
-                data-testid="sidebar-item-link-for-config"
-                href="/"
-              >
-                <i
-                  class="Icon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="list"
-                  >
-                    list
-                  </span>
-                </i>
-                <span>
-                  Config
-                </span>
-              </a>
-            </div>
-            <div
-              class="SidebarItem"
-              data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
               <a
                 class="navItem"
-                data-testid="sidebar-item-link-for-network"
+                data-testid="link-for-sidebar-item-network"
                 href="/"
               >
                 <i
@@ -153,6 +129,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
                 </span>
                 <i
                   class="Icon expandIcon material focusable"
+                  data-testid="expand-icon-for-sidebar-item-network"
                 >
                   <span
                     class="icon"
@@ -166,36 +143,11 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
             <div
               class="SidebarItem"
               data-is-active-test="false"
-              data-testid="sidebar-item-storage"
-            >
-              <a
-                class="navItem"
-                data-testid="sidebar-item-link-for-storage"
-                href="/"
-              >
-                <i
-                  class="Icon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="storage"
-                  >
-                    storage
-                  </span>
-                </i>
-                <span>
-                  Storage
-                </span>
-              </a>
-            </div>
-            <div
-              class="SidebarItem"
-              data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
               <a
                 class="navItem"
-                data-testid="sidebar-item-link-for-helm"
+                data-testid="link-for-sidebar-item-helm"
                 href="/"
               >
                 <i
@@ -210,66 +162,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
                 </span>
                 <i
                   class="Icon expandIcon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="keyboard_arrow_down"
-                  >
-                    keyboard_arrow_down
-                  </span>
-                </i>
-              </a>
-            </div>
-            <div
-              class="SidebarItem"
-              data-is-active-test="false"
-              data-testid="sidebar-item-user-management"
-            >
-              <a
-                class="navItem"
-                data-testid="sidebar-item-link-for-user-management"
-                href="/"
-              >
-                <i
-                  class="Icon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="security"
-                  >
-                    security
-                  </span>
-                </i>
-                <span>
-                  Access Control
-                </span>
-              </a>
-            </div>
-            <div
-              class="SidebarItem"
-              data-is-active-test="false"
-              data-testid="sidebar-item-custom-resources"
-            >
-              <a
-                class="navItem"
-                data-testid="sidebar-item-link-for-custom-resources"
-                href="/"
-              >
-                <i
-                  class="Icon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="extension"
-                  >
-                    extension
-                  </span>
-                </i>
-                <span>
-                  Custom Resources
-                </span>
-                <i
-                  class="Icon expandIcon material focusable"
+                  data-testid="expand-icon-for-sidebar-item-helm"
                 >
                   <span
                     class="icon"
@@ -432,7 +325,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
 <body>
   <div>
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right enter"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -507,7 +400,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
               <a
                 aria-current="page"
                 class="navItem active"
-                data-testid="sidebar-item-link-for-workloads"
+                data-testid="link-for-sidebar-item-workloads"
                 href="/"
               >
                 <i
@@ -522,6 +415,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
                 </span>
                 <i
                   class="Icon expandIcon material focusable"
+                  data-testid="expand-icon-for-sidebar-item-workloads"
                 >
                   <span
                     class="icon"
@@ -535,36 +429,11 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
             <div
               class="SidebarItem"
               data-is-active-test="false"
-              data-testid="sidebar-item-config"
-            >
-              <a
-                class="navItem"
-                data-testid="sidebar-item-link-for-config"
-                href="/"
-              >
-                <i
-                  class="Icon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="list"
-                  >
-                    list
-                  </span>
-                </i>
-                <span>
-                  Config
-                </span>
-              </a>
-            </div>
-            <div
-              class="SidebarItem"
-              data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
               <a
                 class="navItem"
-                data-testid="sidebar-item-link-for-network"
+                data-testid="link-for-sidebar-item-network"
                 href="/"
               >
                 <i
@@ -582,6 +451,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
                 </span>
                 <i
                   class="Icon expandIcon material focusable"
+                  data-testid="expand-icon-for-sidebar-item-network"
                 >
                   <span
                     class="icon"
@@ -595,36 +465,11 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
             <div
               class="SidebarItem"
               data-is-active-test="false"
-              data-testid="sidebar-item-storage"
-            >
-              <a
-                class="navItem"
-                data-testid="sidebar-item-link-for-storage"
-                href="/"
-              >
-                <i
-                  class="Icon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="storage"
-                  >
-                    storage
-                  </span>
-                </i>
-                <span>
-                  Storage
-                </span>
-              </a>
-            </div>
-            <div
-              class="SidebarItem"
-              data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
               <a
                 class="navItem"
-                data-testid="sidebar-item-link-for-helm"
+                data-testid="link-for-sidebar-item-helm"
                 href="/"
               >
                 <i
@@ -639,66 +484,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
                 </span>
                 <i
                   class="Icon expandIcon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="keyboard_arrow_down"
-                  >
-                    keyboard_arrow_down
-                  </span>
-                </i>
-              </a>
-            </div>
-            <div
-              class="SidebarItem"
-              data-is-active-test="false"
-              data-testid="sidebar-item-user-management"
-            >
-              <a
-                class="navItem"
-                data-testid="sidebar-item-link-for-user-management"
-                href="/"
-              >
-                <i
-                  class="Icon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="security"
-                  >
-                    security
-                  </span>
-                </i>
-                <span>
-                  Access Control
-                </span>
-              </a>
-            </div>
-            <div
-              class="SidebarItem"
-              data-is-active-test="false"
-              data-testid="sidebar-item-custom-resources"
-            >
-              <a
-                class="navItem"
-                data-testid="sidebar-item-link-for-custom-resources"
-                href="/"
-              >
-                <i
-                  class="Icon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="extension"
-                  >
-                    extension
-                  </span>
-                </i>
-                <span>
-                  Custom Resources
-                </span>
-                <i
-                  class="Icon expandIcon material focusable"
+                  data-testid="expand-icon-for-sidebar-item-helm"
                 >
                   <span
                     class="icon"
@@ -728,7 +514,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
             <div
               class="Tab flex gaps align-center active"
               data-is-active-test="true"
-              data-testid="tab-link-for-overview"
+              data-testid="tab-link-for-sidebar-item-workloads-overview"
               role="tab"
               tabindex="0"
             >
@@ -982,7 +768,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known 
 <body>
   <div>
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right enter"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -1057,7 +843,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known 
               <a
                 aria-current="page"
                 class="navItem active"
-                data-testid="sidebar-item-link-for-workloads"
+                data-testid="link-for-sidebar-item-workloads"
                 href="/"
               >
                 <i
@@ -1072,6 +858,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known 
                 </span>
                 <i
                   class="Icon expandIcon material focusable"
+                  data-testid="expand-icon-for-sidebar-item-workloads"
                 >
                   <span
                     class="icon"
@@ -1085,36 +872,11 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known 
             <div
               class="SidebarItem"
               data-is-active-test="false"
-              data-testid="sidebar-item-config"
-            >
-              <a
-                class="navItem"
-                data-testid="sidebar-item-link-for-config"
-                href="/"
-              >
-                <i
-                  class="Icon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="list"
-                  >
-                    list
-                  </span>
-                </i>
-                <span>
-                  Config
-                </span>
-              </a>
-            </div>
-            <div
-              class="SidebarItem"
-              data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
               <a
                 class="navItem"
-                data-testid="sidebar-item-link-for-network"
+                data-testid="link-for-sidebar-item-network"
                 href="/"
               >
                 <i
@@ -1132,6 +894,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known 
                 </span>
                 <i
                   class="Icon expandIcon material focusable"
+                  data-testid="expand-icon-for-sidebar-item-network"
                 >
                   <span
                     class="icon"
@@ -1145,36 +908,11 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known 
             <div
               class="SidebarItem"
               data-is-active-test="false"
-              data-testid="sidebar-item-storage"
-            >
-              <a
-                class="navItem"
-                data-testid="sidebar-item-link-for-storage"
-                href="/"
-              >
-                <i
-                  class="Icon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="storage"
-                  >
-                    storage
-                  </span>
-                </i>
-                <span>
-                  Storage
-                </span>
-              </a>
-            </div>
-            <div
-              class="SidebarItem"
-              data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
               <a
                 class="navItem"
-                data-testid="sidebar-item-link-for-helm"
+                data-testid="link-for-sidebar-item-helm"
                 href="/"
               >
                 <i
@@ -1189,66 +927,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known 
                 </span>
                 <i
                   class="Icon expandIcon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="keyboard_arrow_down"
-                  >
-                    keyboard_arrow_down
-                  </span>
-                </i>
-              </a>
-            </div>
-            <div
-              class="SidebarItem"
-              data-is-active-test="false"
-              data-testid="sidebar-item-user-management"
-            >
-              <a
-                class="navItem"
-                data-testid="sidebar-item-link-for-user-management"
-                href="/"
-              >
-                <i
-                  class="Icon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="security"
-                  >
-                    security
-                  </span>
-                </i>
-                <span>
-                  Access Control
-                </span>
-              </a>
-            </div>
-            <div
-              class="SidebarItem"
-              data-is-active-test="false"
-              data-testid="sidebar-item-custom-resources"
-            >
-              <a
-                class="navItem"
-                data-testid="sidebar-item-link-for-custom-resources"
-                href="/"
-              >
-                <i
-                  class="Icon material focusable"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="extension"
-                  >
-                    extension
-                  </span>
-                </i>
-                <span>
-                  Custom Resources
-                </span>
-                <i
-                  class="Icon expandIcon material focusable"
+                  data-testid="expand-icon-for-sidebar-item-helm"
                 >
                   <span
                     class="icon"
@@ -1278,7 +957,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known 
             <div
               class="Tab flex gaps align-center active"
               data-is-active-test="true"
-              data-testid="tab-link-for-overview"
+              data-testid="tab-link-for-sidebar-item-workloads-overview"
               role="tab"
               tabindex="0"
             >

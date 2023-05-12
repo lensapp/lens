@@ -178,7 +178,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
             "/some-directory-for-lens-local-storage/some-cluster-id.json",
             {
               sidebar: {
-                expanded: { "some-extension-name-some-parent-id": true },
+                expanded: { "sidebar-item-some-extension-name-some-parent-id": true },
                 width: 200,
               },
             },
@@ -310,7 +310,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
       describe("when a parent sidebar item is expanded", () => {
         beforeEach(() => {
           const parentLink = rendered.getByTestId(
-            "sidebar-item-link-for-some-extension-name-some-parent-id",
+            "link-for-sidebar-item-some-extension-name-some-parent-id",
           );
 
           fireEvent.click(parentLink);
@@ -335,7 +335,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
         describe("when a child of the parent is selected", () => {
           beforeEach(() => {
             const childLink = rendered.getByTestId(
-              "sidebar-item-link-for-some-extension-name-some-child-id",
+              "link-for-sidebar-item-some-extension-name-some-child-id",
             );
 
             fireEvent.click(childLink);
@@ -367,7 +367,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
 
           it("tab for child page is active", () => {
             const tabLink = rendered.getByTestId(
-              "tab-link-for-some-extension-name-some-child-id",
+              "tab-link-for-sidebar-item-some-extension-name-some-child-id",
             );
 
             expect(tabLink.dataset.isActiveTest).toBe("true");
@@ -375,7 +375,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
 
           it("tab for sibling page is not active", () => {
             const tabLink = rendered.getByTestId(
-              "tab-link-for-some-extension-name-some-other-child-id",
+              "tab-link-for-sidebar-item-some-extension-name-some-other-child-id",
             );
 
             expect(tabLink.dataset.isActiveTest).toBe("false");
@@ -406,7 +406,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
 
             expect(actual).toEqual({
               sidebar: {
-                expanded: { "some-extension-name-some-parent-id": true },
+                expanded: { "sidebar-item-some-extension-name-some-parent-id": true },
                 width: 200,
               },
             });
@@ -415,7 +415,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
           describe("when selecting sibling tab", () => {
             beforeEach(() => {
               const childTabLink = rendered.getByTestId(
-                "tab-link-for-some-extension-name-some-other-child-id",
+                "tab-link-for-sidebar-item-some-extension-name-some-other-child-id",
               );
 
               fireEvent.click(childTabLink);
@@ -433,7 +433,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
 
             it("tab for sibling page is active", () => {
               const tabLink = rendered.getByTestId(
-                "tab-link-for-some-extension-name-some-other-child-id",
+                "tab-link-for-sidebar-item-some-extension-name-some-other-child-id",
               );
 
               expect(tabLink.dataset.isActiveTest).toBe("true");
@@ -441,7 +441,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
 
             it("tab for previous page is not active", () => {
               const tabLink = rendered.getByTestId(
-                "tab-link-for-some-extension-name-some-child-id",
+                "tab-link-for-sidebar-item-some-extension-name-some-child-id",
               );
 
               expect(tabLink.dataset.isActiveTest).toBe("false");
