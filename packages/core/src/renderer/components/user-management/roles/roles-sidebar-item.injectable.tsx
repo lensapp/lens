@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import rolesRouteInjectable from "../../../../common/front-end-routing/routes/cluster/user-management/roles/roles-route.injectable";
-import userManagementSidebarItemInjectable from "../user-management-sidebar-items.injectable";
+import userManagementSidebarItemInjectable from "../user-management-sidebar-item.injectable";
 import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import routeIsActiveInjectable from "../../../routes/route-is-active.injectable";
 import navigateToRolesInjectable from "../../../../common/front-end-routing/routes/cluster/user-management/roles/navigate-to-roles.injectable";
