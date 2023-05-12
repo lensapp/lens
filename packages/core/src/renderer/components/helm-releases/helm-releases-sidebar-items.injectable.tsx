@@ -3,36 +3,31 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { computed } from "mobx";
 
 import helmReleasesRouteInjectable from "../../../common/front-end-routing/routes/cluster/helm/releases/helm-releases-route.injectable";
-import { helmSidebarItemId } from "../helm/helm-sidebar-items.injectable";
-import { sidebarItemsInjectionToken } from "../layout/sidebar-items.injectable";
+import helmSidebarItemInjectable from "../helm/helm-sidebar-items.injectable";
+import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToHelmReleasesInjectable from "../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
 
-const helmReleasesSidebarItemsInjectable = getInjectable({
-  id: "helm-releases-sidebar-items",
+const helmReleasesSidebarItemInjectable = getInjectable({
+  id: "helm-releases-sidebar-item",
 
   instantiate: (di) => {
     const route = di.inject(helmReleasesRouteInjectable);
-    const navigateToHelmReleases = di.inject(navigateToHelmReleasesInjectable);
-    const routeIsActive = di.inject(routeIsActiveInjectable, route);
 
-    return computed(() => [
-      {
-        id: "releases",
-        parentId: helmSidebarItemId,
-        title: "Releases",
-        onClick: navigateToHelmReleases,
-        isActive: routeIsActive,
-        isVisible: route.isEnabled,
-        orderNumber: 20,
-      },
-    ]);
+    return {
+      id: "releases",
+      parentId: di.inject(helmSidebarItemInjectable).id,
+      title: "Releases",
+      onClick: di.inject(navigateToHelmReleasesInjectable),
+      isActive: di.inject(routeIsActiveInjectable, route),
+      isVisible: route.isEnabled,
+      orderNumber: 20,
+    };
   },
 
-  injectionToken: sidebarItemsInjectionToken,
+  injectionToken: sidebarItemInjectionToken,
 });
 
-export default helmReleasesSidebarItemsInjectable;
+export default helmReleasesSidebarItemInjectable;

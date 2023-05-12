@@ -28,6 +28,7 @@ import { reactApplicationFeature } from "@k8slens/react-application";
 import { routingFeature } from "@k8slens/routing";
 import { loggerFeature } from "@k8slens/logger";
 import { animateFeature } from "@k8slens/animate";
+import { clusterSidebarFeature } from "@k8slens/cluster-sidebar";
 
 const environment = "renderer";
 
@@ -54,6 +55,7 @@ runInAction(() => {
     routingFeature,
     metricsFeature,
     animateFeature,
+    clusterSidebarFeature,
   );
 
   autoRegister({

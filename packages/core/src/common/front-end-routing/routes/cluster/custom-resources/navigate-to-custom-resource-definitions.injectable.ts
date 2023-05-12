@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import crdListRouteInjectable from "./crd-list-route.injectable";
-import { navigateToRouteInjectionToken } from "../../../../navigate-to-route-injection-token";
+import { navigateToRouteInjectionToken } from "../../../navigate-to-route-injection-token";
+import crdListRouteInjectable from "./custom-resource-definitions.injectable";
 
 const navigateToCrdListInjectable = getInjectable({
   id: "navigate-to-crd-list",
