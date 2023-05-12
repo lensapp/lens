@@ -1,8 +1,8 @@
 import "@k8slens/core/styles";
-import "@k8slens/button/dist/index.css";
-import "@k8slens/error-boundary/dist/index.css";
-import "@k8slens/tooltip/dist/index.css";
-import "@k8slens/resizing-anchor/dist/index.css";
+import "@k8slens/button/styles";
+import "@k8slens/error-boundary/styles";
+import "@k8slens/tooltip/styles";
+import "@k8slens/resizing-anchor/styles";
 
 import { runInAction } from "mobx";
 import {

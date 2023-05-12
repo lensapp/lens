@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/resizing-anchor",
   "private": false,
-  "version": "1.0.0-alpha.7",
+  "version": "1.0.0-alpha.8",
   "description": "Highly extendable resizing-anchor in the Lens.",
   "type": "commonjs",
   "files": [
@@ -16,6 +16,9 @@
     "url": "git+https://github.com/lensapp/lens.git"
   },
   "main": "dist/index.js",
+  "exports": {
+    "./styles": "./dist/index.css"
+  },
   "types": "dist/index.d.ts",
   "author": {
     "name": "OpenLens Authors",
