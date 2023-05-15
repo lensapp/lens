@@ -172,219 +172,219 @@ const scenarios = [
   {
     expectedSelector: "div[data-testid='cluster-overview-page'] div.label",
     parentSidebarItemTestId: null,
-    sidebarItemTestId: "sidebar-item-link-for-cluster-overview",
+    sidebarItemTestId: "link-for-sidebar-item-cluster-overview",
   },
 
   {
     expectedSelector: "h5.title",
     parentSidebarItemTestId: null,
-    sidebarItemTestId: "sidebar-item-link-for-nodes",
+    sidebarItemTestId: "link-for-sidebar-item-nodes",
   },
 
   {
     expectedSelector: 'h5 >> text="Overview"',
-    parentSidebarItemTestId: "sidebar-item-link-for-workloads",
-    sidebarItemTestId: "sidebar-item-link-for-overview",
+    parentSidebarItemTestId: "link-for-sidebar-item-workloads",
+    sidebarItemTestId: "link-for-sidebar-item-workloads-overview",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-workloads",
-    sidebarItemTestId: "sidebar-item-link-for-pods",
+    parentSidebarItemTestId: "link-for-sidebar-item-workloads",
+    sidebarItemTestId: "link-for-sidebar-item-pods",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-workloads",
-    sidebarItemTestId: "sidebar-item-link-for-deployments",
+    parentSidebarItemTestId: "link-for-sidebar-item-workloads",
+    sidebarItemTestId: "link-for-sidebar-item-deployments",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-workloads",
-    sidebarItemTestId: "sidebar-item-link-for-daemon-sets",
+    parentSidebarItemTestId: "link-for-sidebar-item-workloads",
+    sidebarItemTestId: "link-for-sidebar-item-daemon-sets",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-workloads",
-    sidebarItemTestId: "sidebar-item-link-for-stateful-sets",
+    parentSidebarItemTestId: "link-for-sidebar-item-workloads",
+    sidebarItemTestId: "link-for-sidebar-item-stateful-sets",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-workloads",
-    sidebarItemTestId: "sidebar-item-link-for-replica-sets",
+    parentSidebarItemTestId: "link-for-sidebar-item-workloads",
+    sidebarItemTestId: "link-for-sidebar-item-replica-sets",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-workloads",
-    sidebarItemTestId: "sidebar-item-link-for-jobs",
+    parentSidebarItemTestId: "link-for-sidebar-item-workloads",
+    sidebarItemTestId: "link-for-sidebar-item-jobs",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-workloads",
-    sidebarItemTestId: "sidebar-item-link-for-cron-jobs",
+    parentSidebarItemTestId: "link-for-sidebar-item-workloads",
+    sidebarItemTestId: "link-for-sidebar-item-cron-jobs",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-config",
-    sidebarItemTestId: "sidebar-item-link-for-config-maps",
+    parentSidebarItemTestId: "link-for-sidebar-item-config",
+    sidebarItemTestId: "link-for-sidebar-item-config-maps",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-config",
-    sidebarItemTestId: "sidebar-item-link-for-secrets",
+    parentSidebarItemTestId: "link-for-sidebar-item-config",
+    sidebarItemTestId: "link-for-sidebar-item-secrets",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-config",
-    sidebarItemTestId: "sidebar-item-link-for-resource-quotas",
+    parentSidebarItemTestId: "link-for-sidebar-item-config",
+    sidebarItemTestId: "link-for-sidebar-item-resource-quotas",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-config",
-    sidebarItemTestId: "sidebar-item-link-for-limit-ranges",
+    parentSidebarItemTestId: "link-for-sidebar-item-config",
+    sidebarItemTestId: "link-for-sidebar-item-limit-ranges",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-config",
-    sidebarItemTestId: "sidebar-item-link-for-horizontal-pod-auto-scalers",
+    parentSidebarItemTestId: "link-for-sidebar-item-config",
+    sidebarItemTestId: "link-for-sidebar-item-horizontal-pod-auto-scalers",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-config",
-    sidebarItemTestId: "sidebar-item-link-for-pod-disruption-budgets",
+    parentSidebarItemTestId: "link-for-sidebar-item-config",
+    sidebarItemTestId: "link-for-sidebar-item-pod-disruption-budgets",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-network",
-    sidebarItemTestId: "sidebar-item-link-for-services",
+    parentSidebarItemTestId: "link-for-sidebar-item-network",
+    sidebarItemTestId: "link-for-sidebar-item-services",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-network",
-    sidebarItemTestId: "sidebar-item-link-for-endpoints",
+    parentSidebarItemTestId: "link-for-sidebar-item-network",
+    sidebarItemTestId: "link-for-sidebar-item-endpoints",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-network",
-    sidebarItemTestId: "sidebar-item-link-for-ingresses",
+    parentSidebarItemTestId: "link-for-sidebar-item-network",
+    sidebarItemTestId: "link-for-sidebar-item-ingresses",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-network",
-    sidebarItemTestId: "sidebar-item-link-for-network-policies",
+    parentSidebarItemTestId: "link-for-sidebar-item-network",
+    sidebarItemTestId: "link-for-sidebar-item-network-policies",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-storage",
-    sidebarItemTestId: "sidebar-item-link-for-persistent-volume-claims",
+    parentSidebarItemTestId: "link-for-sidebar-item-storage",
+    sidebarItemTestId: "link-for-sidebar-item-persistent-volume-claims",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-storage",
-    sidebarItemTestId: "sidebar-item-link-for-persistent-volumes",
+    parentSidebarItemTestId: "link-for-sidebar-item-storage",
+    sidebarItemTestId: "link-for-sidebar-item-persistent-volumes",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-storage",
-    sidebarItemTestId: "sidebar-item-link-for-storage-classes",
-  },
-
-  {
-    expectedSelector: "h5.title",
-    parentSidebarItemTestId: null,
-    sidebarItemTestId: "sidebar-item-link-for-namespaces",
+    parentSidebarItemTestId: "link-for-sidebar-item-storage",
+    sidebarItemTestId: "link-for-sidebar-item-storage-classes",
   },
 
   {
     expectedSelector: "h5.title",
     parentSidebarItemTestId: null,
-    sidebarItemTestId: "sidebar-item-link-for-events",
+    sidebarItemTestId: "link-for-sidebar-item-namespaces",
+  },
+
+  {
+    expectedSelector: "h5.title",
+    parentSidebarItemTestId: null,
+    sidebarItemTestId: "link-for-sidebar-item-events",
   },
 
   {
     expectedSelector: "div.HelmCharts input",
-    parentSidebarItemTestId: "sidebar-item-link-for-helm",
-    sidebarItemTestId: "sidebar-item-link-for-charts",
+    parentSidebarItemTestId: "link-for-sidebar-item-helm",
+    sidebarItemTestId: "link-for-sidebar-item-charts",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-helm",
-    sidebarItemTestId: "sidebar-item-link-for-releases",
+    parentSidebarItemTestId: "link-for-sidebar-item-helm",
+    sidebarItemTestId: "link-for-sidebar-item-releases",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-user-management",
-    sidebarItemTestId: "sidebar-item-link-for-service-accounts",
+    parentSidebarItemTestId: "link-for-sidebar-item-user-management",
+    sidebarItemTestId: "link-for-sidebar-item-service-accounts",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-user-management",
-    sidebarItemTestId: "sidebar-item-link-for-cluster-roles",
+    parentSidebarItemTestId: "link-for-sidebar-item-user-management",
+    sidebarItemTestId: "link-for-sidebar-item-cluster-roles",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-user-management",
-    sidebarItemTestId: "sidebar-item-link-for-roles",
+    parentSidebarItemTestId: "link-for-sidebar-item-user-management",
+    sidebarItemTestId: "link-for-sidebar-item-roles",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-user-management",
-    sidebarItemTestId: "sidebar-item-link-for-cluster-role-bindings",
+    parentSidebarItemTestId: "link-for-sidebar-item-user-management",
+    sidebarItemTestId: "link-for-sidebar-item-cluster-role-bindings",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-user-management",
-    sidebarItemTestId: "sidebar-item-link-for-role-bindings",
+    parentSidebarItemTestId: "link-for-sidebar-item-user-management",
+    sidebarItemTestId: "link-for-sidebar-item-role-bindings",
   },
 
   {
     expectedSelector: "h5.title",
     parentSidebarItemTestId: null,
-    sidebarItemTestId: "sidebar-item-link-for-custom-resources",
+    sidebarItemTestId: "link-for-sidebar-item-custom-resources",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-config",
-    sidebarItemTestId: "sidebar-item-link-for-validating-webhook-configurations",
+    parentSidebarItemTestId: "link-for-sidebar-item-config",
+    sidebarItemTestId: "link-for-sidebar-item-validating-webhook-configurations",
   },
 
   {
     expectedSelector: "h5.title",
-    parentSidebarItemTestId: "sidebar-item-link-for-config",
-    sidebarItemTestId: "sidebar-item-link-for-mutating-webhook-configurations",
+    parentSidebarItemTestId: "link-for-sidebar-item-config",
+    sidebarItemTestId: "link-for-sidebar-item-mutating-webhook-configurations",
   },
 ];
 
 const navigateToPods = async (frame: Frame) => {
-  await frame.click(`[data-testid="sidebar-item-link-for-workloads"]`);
-  await frame.click(`[data-testid="sidebar-item-link-for-pods"]`);
+  await frame.click(`[data-testid="link-for-sidebar-item-workloads"]`);
+  await frame.click(`[data-testid="link-for-sidebar-item-pods"]`);
 };
 
 const navigateToNamespaces = async (frame: Frame) => {
-  await frame.click(`[data-testid="sidebar-item-link-for-namespaces"]`);
+  await frame.click(`[data-testid="link-for-sidebar-item-namespaces"]`);
 };
