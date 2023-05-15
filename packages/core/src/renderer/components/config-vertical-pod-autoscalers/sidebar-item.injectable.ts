@@ -9,15 +9,15 @@ import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToVerticalPodAutoscalersInjectable from "../../../common/front-end-routing/routes/cluster/config/vertical-pod-autoscalers/navigate-to-vertical-pod-autoscalers.injectable";
 
-const verticalPodAutoScalersSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-vertical-pod-auto-scalers",
+const verticalPodAutoscalersSidebarItemInjectable = getInjectable({
+  id: "sidebar-item-vertical-pod-autoscalers",
 
   instantiate: (di) => {
     const route = di.inject(verticalPodAutoscalersRouteInjectable);
 
     return {
       parentId: configSidebarItemInjectable.id,
-      title: "VPA",
+      title: "Vertical Pod Autoscalers",
       onClick: di.inject(navigateToVerticalPodAutoscalersInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),
       isVisible: route.isEnabled,
@@ -28,4 +28,4 @@ const verticalPodAutoScalersSidebarItemInjectable = getInjectable({
   injectionToken: sidebarItemInjectionToken,
 });
 
-export default verticalPodAutoScalersSidebarItemInjectable;
+export default verticalPodAutoscalersSidebarItemInjectable;
