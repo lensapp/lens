@@ -4,29 +4,29 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 
-import statefulsetsRouteInjectable from "../../../common/front-end-routing/routes/cluster/workloads/statefulsets/statefulsets-route.injectable";
+import replicasetsRouteInjectable from "../../../common/front-end-routing/routes/cluster/workloads/replicasets/replicasets-route.injectable";
 import workloadsSidebarItemInjectable from "../workloads/workloads-sidebar-item.injectable";
 import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
-import navigateToStatefulsetsInjectable from "../../../common/front-end-routing/routes/cluster/workloads/statefulsets/navigate-to-statefulsets.injectable";
+import navigateToReplicasetsInjectable from "../../../common/front-end-routing/routes/cluster/workloads/replicasets/navigate-to-replicasets.injectable";
 
-const statefulsetsSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-statefulsets",
+const replicaSetsSidebarItemInjectable = getInjectable({
+  id: "sidebar-item-replica-sets",
 
   instantiate: (di) => {
-    const route = di.inject(statefulsetsRouteInjectable);
+    const route = di.inject(replicasetsRouteInjectable);
 
     return {
       parentId: workloadsSidebarItemInjectable.id,
-      title: "StatefulSets",
-      onClick: di.inject(navigateToStatefulsetsInjectable),
+      title: "Replica Sets",
+      onClick: di.inject(navigateToReplicasetsInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),
       isVisible: route.isEnabled,
-      orderNumber: 50,
+      orderNumber: 60,
     };
   },
 
   injectionToken: sidebarItemInjectionToken,
 });
 
-export default statefulsetsSidebarItemInjectable;
+export default replicaSetsSidebarItemInjectable;
