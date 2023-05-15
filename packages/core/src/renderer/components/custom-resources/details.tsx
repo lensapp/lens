@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./crd-resource-details.scss";
+import "./details.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -131,7 +131,7 @@ class NonInjectedCustomResourceDetails extends React.Component<CustomResourceDet
     const extraColumns = crd.getPrinterColumns();
 
     return (
-      <div className={cssNames("CrdResourceDetails", crd.getResourceKind())}>
+      <div className={cssNames("CustomResourceDetails", crd.getResourceKind())}>
         {this.renderAdditionalColumns(object, extraColumns)}
         {this.renderStatus(object, extraColumns)}
       </div>

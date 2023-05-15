@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-injection-token";
 import { computed } from "mobx";
-import { CRDDetails } from "../../../custom-resources";
+import { CustomResourceDefinitionDetails } from "../../../custom-resource-definitions/details";
 import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
 import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
 
@@ -16,7 +16,7 @@ const customResourceDefinitionsDetailItemInjectable = getInjectable({
     const kubeObject = di.inject(currentKubeObjectInDetailsInjectable);
 
     return {
-      Component: CRDDetails,
+      Component: CustomResourceDefinitionDetails,
       enabled: computed(() => isCustomResourceDefinition(kubeObject.value.get()?.object)),
       orderNumber: 10,
     };

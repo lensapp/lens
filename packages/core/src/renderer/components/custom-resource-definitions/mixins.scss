@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-// CRD conditions from here https://github.com/kubernetes/apiextensions-apiserver/blob/master/pkg/apis/apiextensions/types.go
-$crd-condition-colors: (
+// ref: https://github.com/kubernetes/apiextensions-apiserver/blob/master/pkg/apis/apiextensions/types.go
+$custom-resource-definitions-condition-colors: (
   Established: var(--colorSuccess),
   NamesAccepted: var(--colorOk),
   NonStructuralSchema: var(--colorError),
@@ -12,8 +12,8 @@ $crd-condition-colors: (
   KubernetesAPIApprovalPolicyConformant: var(--colorWarning)
 );
 
-@mixin crd-condition-bgc {
-  @each $status, $color in $crd-condition-colors {
+@mixin custom-resource-definitions-condition-colors {
+  @each $status, $color in $custom-resource-definitions-condition-colors {
     .#{$status} {
       background: $color;
       color: white;

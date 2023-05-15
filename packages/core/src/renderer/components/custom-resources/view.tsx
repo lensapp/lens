@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./crd-resources.scss";
+import "./view.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -14,11 +14,11 @@ import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { formatJSONValue, safeJSONPathValue } from "@k8slens/utilities";
 import { TabLayout } from "../layout/tab-layout-2";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import customResourcesRouteParametersInjectable from "./custom-resources-route-parameters.injectable";
+import customResourcesRouteParametersInjectable from "./route-parameters.injectable";
 import { KubeObjectAge } from "../kube-object/age";
-import type { CustomResourceDefinitionStore } from "./definition.store";
+import type { CustomResourceDefinitionStore } from "../custom-resource-definitions/store";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
-import customResourceDefinitionStoreInjectable from "./definition.store.injectable";
+import customResourceDefinitionStoreInjectable from "../custom-resource-definitions/store.injectable";
 import { NamespaceSelectBadge } from "../namespaces/namespace-select-badge";
 import type { TableCellProps } from "@k8slens/list-layout";
 
@@ -67,7 +67,7 @@ class NonInjectedCustomResources extends React.Component<Dependencies> {
           isConfigurable
           key={`crd_resources_${crd.getResourceApiBase()}`}
           tableId="crd_resources"
-          className="CrdResources"
+          className="CustomResources"
           store={store}
           sortingCallbacks={{
             [columnId.name]: customResource => customResource.getName(),

@@ -5,8 +5,8 @@
 
 import type { RenderResult } from "@testing-library/react";
 import { CustomResourceDefinition } from "../../extensions/common-api/k8s-api";
-import type { CustomResourceDefinitionStore } from "../../renderer/components/custom-resources/definition.store";
-import customResourceDefinitionStoreInjectable from "../../renderer/components/custom-resources/definition.store.injectable";
+import type { CustomResourceDefinitionStore } from "../../renderer/components/custom-resource-definitions/store";
+import customResourceDefinitionStoreInjectable from "../../renderer/components/custom-resource-definitions/store.injectable";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 
