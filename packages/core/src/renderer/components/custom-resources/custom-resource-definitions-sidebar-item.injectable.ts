@@ -20,7 +20,7 @@ const customResourceDefinitionsSidebarItemInjectable = getInjectable({
       onClick: di.inject(navigateToCustomResourcesInjectable),
       isActive: di.inject(routeIsActiveInjectable, customResourceDefinitionsRoute),
       isVisible: customResourceDefinitionsRoute.isEnabled,
-      orderNumber: 10,
+      orderNumber: 0,
     };
   },
   injectionToken: sidebarItemInjectionToken,
