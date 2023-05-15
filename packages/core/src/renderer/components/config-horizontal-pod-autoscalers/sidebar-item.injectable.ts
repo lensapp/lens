@@ -9,15 +9,15 @@ import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToHorizontalPodAutoscalersInjectable from "../../../common/front-end-routing/routes/cluster/config/horizontal-pod-autoscalers/navigate-to-horizontal-pod-autoscalers.injectable";
 
-const horizontalPodAutoScalersSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-horizontal-pod-auto-scalers",
+const horizontalPodAutoscalersSidebarItemInjectable = getInjectable({
+  id: "sidebar-item-horizontal-pod-autoscalers",
 
   instantiate: (di) => {
     const route = di.inject(horizontalPodAutoscalersRouteInjectable);
 
     return {
       parentId: configSidebarItemInjectable.id,
-      title: "HPA",
+      title: "Horizontal Pod Autoscalers",
       onClick: di.inject(navigateToHorizontalPodAutoscalersInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),
       isVisible: route.isEnabled,
@@ -28,4 +28,4 @@ const horizontalPodAutoScalersSidebarItemInjectable = getInjectable({
   injectionToken: sidebarItemInjectionToken,
 });
 
-export default horizontalPodAutoScalersSidebarItemInjectable;
+export default horizontalPodAutoscalersSidebarItemInjectable;
