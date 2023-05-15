@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { reaction } from "mobx";
 import { injectableDifferencingRegistratorWith } from "../../../common/utils/registrator-helper";
 import { beforeClusterFrameStartsSecondInjectionToken } from "../../before-frame-starts/tokens";
-import customResourceDefinitionGroupsSidebarItemsComputedInjectable from "./custom-resource-definition-groups-sidebar-items-computed.injectable";
+import customResourceDefinitionGroupsSidebarItemsComputedInjectable from "./groups-sidebar-items-computed.injectable";
 
 const customResourceDefinitionGroupsSidebarItemsRegistratorInjectable = getInjectable({
   id: "custom-resource-definition-groups-sidebar-items-registrator",
