@@ -7,7 +7,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
-import customResourceDefinitionStoreInjectable from "./definition.store.injectable";
+import customResourceDefinitionStoreInjectable from "./store.injectable";
 
 const customResourceDefinitionsInjectable = getInjectable({
   id: "custom-resource-definitions",

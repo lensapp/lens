@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-@import "crd.mixins";
+@import "./mixins.scss";
 
-.CRDDetails {
+.CustomResourceDefinitionDetails {
   .conditions {
-    @include crd-condition-bgc;
+    @include custom-resource-definitions-condition-colors;
   }
 
   .Table {

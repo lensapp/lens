@@ -7,7 +7,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import customResourceDefinitionsRouteInjectable from "../../../common/front-end-routing/routes/cluster/custom-resources/custom-resource-definitions.injectable";
 import navigateToCustomResourceDefinitionsInjectable from "../../../common/front-end-routing/routes/cluster/custom-resources/navigate-to-custom-resource-definitions.injectable";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
-import customResourcesSidebarItemInjectable from "./custom-resources-sidebar-item.injectable";
+import customResourcesSidebarItemInjectable from "../custom-resources/sidebar-item.injectable";
 
 const customResourceDefinitionsSidebarItemInjectable = getInjectable({
   id: "sidebar-item-custom-resource-definitions",

@@ -9,7 +9,7 @@ import customResourceDefinitionApiInjectable from "../../../common/k8s-api/endpo
 import { loggerInjectionToken } from "@k8slens/logger";
 import clusterFrameContextForClusterScopedResourcesInjectable from "../../cluster-frame-context/for-cluster-scoped-resources.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
-import { CustomResourceDefinitionStore } from "./definition.store";
+import { CustomResourceDefinitionStore } from "./store";
 
 const customResourceDefinitionStoreInjectable = getInjectable({
   id: "custom-resource-definition-store",
