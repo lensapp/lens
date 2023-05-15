@@ -19,7 +19,7 @@ jobs:
           registry-url: "https://npm.pkg.github.com"
 
       - name: Install specific npm version
-        run: npm install -g npm@9.6.5
+        run: npm install -g npm@^9.6.5
 
       - name: Install deps
         run: |
