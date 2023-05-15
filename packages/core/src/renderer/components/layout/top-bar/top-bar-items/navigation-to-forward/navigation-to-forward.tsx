@@ -5,7 +5,7 @@
 import React from "react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
-import { Icon } from "../../../../icon";
+import { Icon } from "@k8slens/icon";
 import topBarNextEnabledInjectable from "./next-enabled.injectable";
 import goForwardInjectable from "./go-forward/go-forward.injectable";
 import { observer } from "mobx-react";

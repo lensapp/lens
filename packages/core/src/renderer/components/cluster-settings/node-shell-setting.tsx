@@ -9,7 +9,7 @@ import { SubTitle } from "../layout/sub-title";
 import React from "react";
 import { Input } from "../input/input";
 import { observer } from "mobx-react";
-import { Icon } from "../icon/icon";
+import { Icon } from "@k8slens/icon";
 import { initialNodeShellImage } from "../../../common/cluster-types";
 import Gutter from "../gutter/gutter";
 

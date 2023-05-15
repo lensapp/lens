@@ -14,7 +14,7 @@ import type { CronJobStore } from "../workloads-cronjobs/store";
 import type { IComputedValue } from "mobx";
 import { makeObservable, observable, reaction } from "mobx";
 import { NamespaceSelectFilter } from "../namespaces/namespace-select-filter";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import { TooltipPosition } from "@k8slens/tooltip";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";

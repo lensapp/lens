@@ -14,7 +14,7 @@ import { observer } from "mobx-react";
 import { PreferencesNavigationTab } from "./preferences-navigation-tab";
 import { compositeHasDescendant } from "../../../../common/utils/composite/composite-has-descendant/composite-has-descendant";
 import type { PreferenceTabsRoot } from "../preference-items/preference-tab-root";
-import { Icon } from "../../../../renderer/components/icon";
+import { Icon } from "@k8slens/icon";
 import { checkThatAllDiscriminablesAreExhausted } from "../../../../common/utils/composable-responsibilities/discriminable/discriminable";
 import type { NavigateToPreferenceTab } from "./navigate-to-preference-tab/navigate-to-preference-tab.injectable";
 import navigateToPreferenceTabInjectable from "./navigate-to-preference-tab/navigate-to-preference-tab.injectable";

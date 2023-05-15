@@ -6,7 +6,7 @@ import React from "react";
 import type { KubeObjectMenuProps } from "../kube-object-menu";
 import type { Deployment } from "@k8slens/kube-object";
 import { MenuItem } from "../menu";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import type { OpenDeploymentScaleDialog } from "./scale/open.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import deploymentApiInjectable from "../../../common/k8s-api/endpoints/deployment.api.injectable";

@@ -8,7 +8,7 @@ import "./file-picker.scss";
 import React from "react";
 import fse from "fs-extra";
 import path from "path";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import { Spinner } from "../spinner";
 import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";

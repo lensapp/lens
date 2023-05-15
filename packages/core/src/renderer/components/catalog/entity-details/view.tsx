@@ -8,7 +8,7 @@ import React, { Component } from "react";
 import { observer } from "mobx-react";
 import { Drawer, DrawerItem } from "../../drawer";
 import type { CatalogCategory, CatalogEntity } from "../../../../common/catalog";
-import { Icon } from "../../icon";
+import { Icon } from "@k8slens/icon";
 import { CatalogEntityDrawerMenu } from "../catalog-entity-drawer-menu";
 import { cssNames } from "@k8slens/utilities";
 import { Avatar } from "../../avatar";

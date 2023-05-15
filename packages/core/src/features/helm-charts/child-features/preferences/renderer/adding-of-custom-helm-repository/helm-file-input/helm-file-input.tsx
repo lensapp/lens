@@ -4,7 +4,7 @@
  */
 import type { InputValidator } from "../../../../../../../renderer/components/input";
 import { Input } from "../../../../../../../renderer/components/input";
-import { Icon } from "../../../../../../../renderer/components/icon";
+import { Icon } from "@k8slens/icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
 import type { RequestFilePaths } from "./get-file-paths.injectable";

@@ -24,7 +24,7 @@ import type { IComputedValue } from "mobx";
 import { observable, runInAction } from "mobx";
 import type { WithConfirmation } from "../confirm-dialog/with-confirm.injectable";
 import type { Navigate } from "../../navigation/navigate.injectable";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import navigateInjectable from "../../navigation/navigate.injectable";
 import withConfirmationInjectable from "../confirm-dialog/with-confirm.injectable";
 import { observer } from "mobx-react";

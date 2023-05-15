@@ -11,7 +11,7 @@ import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import type { ShowNotification } from "../notifications";
 import { Button } from "@k8slens/button";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import { clipboard } from "electron";
 import { kebabCase } from "lodash/fp";
 import { withInjectables } from "@ogre-tools/injectable-react";

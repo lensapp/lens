@@ -7,7 +7,7 @@ import "./table-cell.scss";
 
 import React from "react";
 import { cssNames } from "@k8slens/utilities";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import { Checkbox } from "../checkbox";
 import autoBindReact from "auto-bind/react";
 import type { TableCellProps } from "@k8slens/list-layout";

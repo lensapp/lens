@@ -9,7 +9,7 @@ import type { DOMAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from 
 import React from "react";
 import type { StrictReactNode, SingleOrMany } from "@k8slens/utilities";
 import { debouncePromise, isPromiseSettledFulfilled, cssNames } from "@k8slens/utilities";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import type { TooltipProps } from "@k8slens/tooltip";
 import { Tooltip } from "@k8slens/tooltip";
 import * as Validators from "./input_validators";

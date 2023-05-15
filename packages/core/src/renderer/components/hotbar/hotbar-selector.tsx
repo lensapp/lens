@@ -5,7 +5,7 @@
 
 import styles from "./hotbar-selector.module.scss";
 import React, { useRef, useState } from "react";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import { Badge } from "../badge";
 import { HotbarSwitchCommand } from "./hotbar-switch-command";
 import { Tooltip, TooltipPosition } from "@k8slens/tooltip";

@@ -4,7 +4,7 @@
  */
 import React, { useState } from "react";
 import type { EnvVarKeySelector } from "@k8slens/kube-object";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import { base64, cssNames, isObject } from "@k8slens/utilities";
 import type { SecretStore } from "../config-secrets/store";
 import { withInjectables } from "@ogre-tools/injectable-react";

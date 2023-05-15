@@ -12,7 +12,7 @@ import { cssNames, prevDefault, isMiddleClick } from "@k8slens/utilities";
 import type { DockStore, DockTab as DockTabModel } from "./dock/store";
 import type { TabProps } from "../tabs";
 import { Tab } from "../tabs";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import { Menu, MenuItem } from "../menu";
 import { observable } from "mobx";
 import { withInjectables } from "@ogre-tools/injectable-react";

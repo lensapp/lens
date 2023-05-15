@@ -11,7 +11,7 @@ import React from "react";
 import type { Secret } from "@k8slens/kube-object";
 import type { StrictReactNode } from "@k8slens/utilities";
 import { prevDefault } from "@k8slens/utilities";
-import { Icon } from "../../icon";
+import { Icon } from "@k8slens/icon";
 
 export interface ServiceAccountsSecretProps {
   secret: Secret | string;

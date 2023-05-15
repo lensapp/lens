@@ -13,7 +13,7 @@ import { ingressClassSetDefaultInjectable } from "./ingress-class-set-default.in
 import { MenuItem } from "../menu";
 import type { IngressClass } from "@k8slens/kube-object";
 import type { KubeObjectMenuProps } from "../kube-object-menu";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import hideDetailsInjectable from "../kube-detail-params/hide-details.injectable";
 
 export interface IngressClassMenuProps extends KubeObjectMenuProps<IngressClass> {

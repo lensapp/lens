@@ -11,7 +11,7 @@ import type { CatalogEntity, CatalogEntityContextMenu } from "../../api/catalog-
 import { observer } from "mobx-react";
 import { observable } from "mobx";
 import { MenuItem } from "../menu";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import { HotbarToggleMenuItem } from "./hotbar-toggle-menu-item";
 import type { VisitEntityContextMenu } from "../../../common/catalog/visit-entity-context-menu.injectable";
 import visitEntityContextMenuInjectable from "../../../common/catalog/visit-entity-context-menu.injectable";

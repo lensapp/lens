@@ -6,7 +6,7 @@
 import "./catalog-add-button.scss";
 import React from "react";
 import { SpeedDial, SpeedDialAction } from "@material-ui/lab";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import { observer } from "mobx-react";
 import { observable, makeObservable, action } from "mobx";
 import type { CatalogCategory, CatalogEntityAddMenu } from "../../api/catalog-entity";

@@ -12,7 +12,7 @@ import React from "react";
 import { Button } from "@k8slens/button";
 import type { ShowNotification } from "../notifications";
 import { Dialog } from "../dialog";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import { Select } from "../select";
 import { Checkbox } from "../checkbox";
 import { withInjectables } from "@ogre-tools/injectable-react";

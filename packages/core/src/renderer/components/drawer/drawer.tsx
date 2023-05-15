@@ -10,7 +10,7 @@ import { clipboard } from "electron";
 import { createPortal } from "react-dom";
 import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames, noop } from "@k8slens/utilities";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import type { AnimateName } from "../animate";
 import { Animate } from "../animate";
 import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "@k8slens/resizing-anchor";

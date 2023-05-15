@@ -7,7 +7,7 @@ import type { IComputedValue } from "mobx";
 import { observable, action, computed, comparer } from "mobx";
 import type { NamespaceStore } from "../store";
 import type { ActionMeta, MultiValue } from "react-select";
-import { Icon } from "../../icon";
+import { Icon } from "@k8slens/icon";
 import type { SelectOption } from "../../select";
 import { observableCrate } from "@k8slens/utilities";
 import type { IsMultiSelectionKey } from "./is-selection-key.injectable";

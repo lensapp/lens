@@ -3,6 +3,7 @@ import "@k8slens/button/styles";
 import "@k8slens/error-boundary/styles";
 import "@k8slens/tooltip/styles";
 import "@k8slens/resizing-anchor/styles";
+import "@k8slens/icon/styles";
 
 import { runInAction } from "mobx";
 import {

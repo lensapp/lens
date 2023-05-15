@@ -46,6 +46,7 @@ module.exports = (rootDir) => {
     ...shared,
 
     moduleNameMapper: {
+      "\\.(jpg|jpeg|png|gif|webp|svg)$": "identity-obj-proxy",
       "\\.(css|scss)$": "identity-obj-proxy",
       ...shared.moduleNameMapper,
     },

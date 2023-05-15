@@ -1,0 +1,11 @@
+{
+  "extends": "@k8slens/typescript/config/base.json",
+  "files": [
+    "assets/custom.d.ts",
+    "assets/*.svg"
+  ],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+}

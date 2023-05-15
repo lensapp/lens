@@ -7,7 +7,7 @@ import React from "react";
 import type { KubeObjectMenuProps } from "../../kube-object-menu";
 import type { ServiceAccount } from "@k8slens/kube-object";
 import { MenuItem } from "../../menu";
-import { Icon } from "../../icon";
+import { Icon } from "@k8slens/icon";
 import type { OpenServiceAccountKubeConfigDialog } from "../../kubeconfig-dialog/open-service-account-kube-config-dialog.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import openServiceAccountKubeConfigDialogInjectable from "../../kubeconfig-dialog/open-service-account-kube-config-dialog.injectable";

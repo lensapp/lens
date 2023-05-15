@@ -9,7 +9,7 @@ $ npm install @k8slens/error-boundary
 ```
 
 ```typescript
-import "@k8slens/error-boundary/dist/index.css";
+import "@k8slens/error-boundary/styles";
 ```
 
 ## Extendability

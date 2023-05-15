@@ -11,28 +11,28 @@ import type { LocationDescriptor } from "history";
 import { cssNames } from "@k8slens/utilities";
 import { withTooltip } from "@k8slens/tooltip";
 import isNumber from "lodash/isNumber";
-import Configuration from "./configuration.svg";
-import Crane from "./crane.svg";
-import Group from "./group.svg";
-import Helm from "./helm.svg";
-import Install from "./install.svg";
-import Kube from "./kube.svg";
-import LensLogo from "./lens-logo.svg";
-import License from "./license.svg";
-import LogoLens from "./logo-lens.svg";
-import Logout from "./logout.svg";
-import Nodes from "./nodes.svg";
-import PushOff from "./push_off.svg";
-import PushPin from "./push_pin.svg";
-import Spinner from "./spinner.svg";
-import Ssh from "./ssh.svg";
-import Storage from "./storage.svg";
-import Terminal from "./terminal.svg";
-import Notice from "./notice.svg";
-import User from "./user.svg";
-import Users from "./users.svg";
-import Wheel from "./wheel.svg";
-import Workloads from "./workloads.svg";
+import Configuration from "../assets/configuration.svg";
+import Crane from "../assets/crane.svg";
+import Group from "../assets/group.svg";
+import Helm from "../assets/helm.svg";
+import Install from "../assets/install.svg";
+import Kube from "../assets/kube.svg";
+import LensLogo from "../assets/lens-logo.svg";
+import License from "../assets/license.svg";
+import LogoLens from "../assets/logo-lens.svg";
+import Logout from "../assets/logout.svg";
+import Nodes from "../assets/nodes.svg";
+import PushOff from "../assets/push_off.svg";
+import PushPin from "../assets/push_pin.svg";
+import Spinner from "../assets/spinner.svg";
+import Ssh from "../assets/ssh.svg";
+import Storage from "../assets/storage.svg";
+import Terminal from "../assets/terminal.svg";
+import Notice from "../assets/notice.svg";
+import User from "../assets/user.svg";
+import Users from "../assets/users.svg";
+import Wheel from "../assets/wheel.svg";
+import Workloads from "../assets/workloads.svg";
 import type { Logger } from "@k8slens/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { loggerInjectionToken } from "@k8slens/logger";
@@ -97,7 +97,7 @@ export type NamedSvg =
   | "workloads";
 
 export interface BaseIconProps {
-   /**
+  /**
    * One of the names from https://material.io/icons/
    */
   material?: string;
@@ -164,6 +164,7 @@ export interface IconProps extends React.HTMLAttributes<any>, BaseIconProps {
 
 export function isSvg(content: string): boolean {
   // source code of the asset
+  // eslint-disable-next-line xss/no-mixed-html
   return String(content).includes("<svg");
 }
 
@@ -176,11 +177,23 @@ const RawIcon = (props: IconProps & Dependencies) => {
 
   const {
     // skip passing props to icon's html element
-    className, href, link, material, svg, size, smallest, small, big,
-    disabled, sticker, active,
+    className,
+    href,
+    link,
+    material,
+    svg,
+    size,
+    smallest,
+    small,
+    big,
+    disabled,
+    sticker,
+    active,
     focusable = true,
     children,
-    interactive, onClick, onKeyDown,
+    interactive,
+    onClick,
+    onKeyDown,
     logger,
     ...elemProps
   } = props;
@@ -195,7 +208,7 @@ const RawIcon = (props: IconProps & Dependencies) => {
     switch (event.nativeEvent.code) {
       case "Space":
 
-        // fallthrough
+      // fallthrough
       case "Enter": {
         ref.current?.click();
         event.preventDefault();
@@ -208,26 +221,39 @@ const RawIcon = (props: IconProps & Dependencies) => {
 
   let iconContent: StrictReactNode;
   const iconProps: Partial<IconProps> = {
-    className: cssNames("Icon", className,
-      { svg, material, interactive: isInteractive, disabled, sticker, active, focusable },
-      !size ? { smallest, small, big } : {},
+    className: cssNames(
+      "Icon",
+      className,
+      {
+        svg,
+        material,
+        interactive: isInteractive,
+        disabled,
+        sticker,
+        active,
+        focusable,
+      },
+      !size ? { smallest, small, big } : {}
     ),
     onClick: isInteractive ? boundOnClick : undefined,
     onKeyDown: isInteractive ? boundOnKeyDown : undefined,
     tabIndex: isInteractive && focusable && !disabled ? 0 : undefined,
-    style: size ? { "--size": size + (isNumber(size) ? "px" : "") } as React.CSSProperties : undefined,
+    style: size
+      ? ({
+          "--size": size + (isNumber(size) ? "px" : ""),
+        } as React.CSSProperties)
+      : undefined,
     ...elemProps,
   };
 
   // render as inline svg-icon
   if (typeof svg === "string") {
-    const svgIconText = isSvg(svg)
-      ? svg
-      : localSvgIcons.get(svg) ?? "";
+    const svgIconText = isSvg(svg) ? svg : localSvgIcons.get(svg) ?? "";
 
     iconContent = (
       <span
         className="icon"
+        // eslint-disable-next-line xss/no-mixed-html
         dangerouslySetInnerHTML={{ __html: svgIconText }}
       />
     );
@@ -235,7 +261,11 @@ const RawIcon = (props: IconProps & Dependencies) => {
 
   // render as material-icon
   if (typeof material === "string") {
-    iconContent = <span className="icon" data-icon-name={material}>{material}</span>;
+    iconContent = (
+      <span className="icon" data-icon-name={material}>
+        {material}
+      </span>
+    );
   }
 
   // wrap icon's content passed from decorator
@@ -251,11 +281,7 @@ const RawIcon = (props: IconProps & Dependencies) => {
     const { className, children } = iconProps;
 
     return (
-      <NavLink
-        className={className}
-        to={link}
-        ref={ref}
-      >
+      <NavLink className={className} to={link} ref={ref}>
         {children}
       </NavLink>
     );
@@ -263,13 +289,8 @@ const RawIcon = (props: IconProps & Dependencies) => {
 
   if (href) {
     if (hrefIsSafe(href)) {
-      return (
-        <a
-          {...iconProps}
-          href={href}
-          ref={ref}
-        />
-      );
+      // eslint-disable-next-line jsx-a11y/anchor-has-content
+      return <a {...iconProps} href={href} ref={ref} />;
     }
 
     logger.warn("[ICON]: href prop is unsafe, blocking", { href });

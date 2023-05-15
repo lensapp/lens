@@ -6,7 +6,7 @@
 import React from "react";
 import type { Pod, PodSpecVolume, PodVolumeKind } from "@k8slens/kube-object";
 import { DrawerItem } from "../../../drawer";
-import { Icon } from "../../../icon";
+import { Icon } from "@k8slens/icon";
 import { AwsElasticBlockStore } from "./variants/aws-elastic-block-store";
 import { AzureDisk } from "./variants/azure-disk";
 import { AzureFile } from "./variants/azure-file";
