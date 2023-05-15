@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./crd-details.scss";
+import "./details.scss";
 
 import React from "react";
 import { Link } from "react-router-dom";
@@ -19,7 +19,7 @@ import type { Logger } from "@k8slens/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { loggerInjectionToken } from "@k8slens/logger";
 
-export interface CRDDetailsProps extends KubeObjectDetailsProps<CustomResourceDefinition> {
+export interface CustomResourceDefinitionDetailsProps extends KubeObjectDetailsProps<CustomResourceDefinition> {
 }
 
 interface Dependencies {
@@ -27,7 +27,7 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedCRDDetails extends React.Component<CRDDetailsProps & Dependencies> {
+class NonInjectedCustomResourceDefinitionDetails extends React.Component<CustomResourceDefinitionDetailsProps & Dependencies> {
   render() {
     const { object: crd } = this.props;
 
@@ -36,7 +36,7 @@ class NonInjectedCRDDetails extends React.Component<CRDDetailsProps & Dependenci
     }
 
     if (!(crd instanceof CustomResourceDefinition)) {
-      this.props.logger.error("[CRDDetails]: passed object that is not an instanceof CustomResourceDefinition", crd);
+      this.props.logger.error("[CustomResourceDefinitionDetails]: passed object that is not an instanceof CustomResourceDefinition", crd);
 
       return null;
     }
@@ -46,7 +46,7 @@ class NonInjectedCRDDetails extends React.Component<CRDDetailsProps & Dependenci
     const validation = crd.getValidation();
 
     return (
-      <div className="CRDDetails">
+      <div className="CustomResourceDefinitionDetails">
         <DrawerItem name="Group">
           {crd.getGroup()}
         </DrawerItem>
@@ -159,7 +159,7 @@ class NonInjectedCRDDetails extends React.Component<CRDDetailsProps & Dependenci
   }
 }
 
-export const CRDDetails = withInjectables<Dependencies, CRDDetailsProps>(NonInjectedCRDDetails, {
+export const CustomResourceDefinitionDetails = withInjectables<Dependencies, CustomResourceDefinitionDetailsProps>(NonInjectedCustomResourceDefinitionDetails, {
   getProps: (di, props) => ({
     ...props,
     logger: di.inject(loggerInjectionToken),

@@ -9,8 +9,8 @@ import type { RenderResult } from "@testing-library/react";
 import navigateToCustomResourcesInjectable from "../../common/front-end-routing/routes/cluster/custom-resources/navigate-to-custom-resources.injectable";
 import apiManagerInjectable from "../../common/k8s-api/api-manager/manager.injectable";
 import type { CustomResourceStore } from "../../common/k8s-api/api-manager/resource.store";
-import type { CustomResourceDefinitionStore } from "../../renderer/components/custom-resources/definition.store";
-import customResourceDefinitionStoreInjectable from "../../renderer/components/custom-resources/definition.store.injectable";
+import type { CustomResourceDefinitionStore } from "../../renderer/components/custom-resource-definitions/store";
+import customResourceDefinitionStoreInjectable from "../../renderer/components/custom-resource-definitions/store.injectable";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 
