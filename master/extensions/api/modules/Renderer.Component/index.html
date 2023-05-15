@@ -1554,7 +1554,6 @@
 <li><a href="../../interfaces/Renderer.Component.TabLayoutProps/">TabLayoutProps</a></li>
 <li><a href="../../interfaces/Renderer.Component.TabLayoutRoute/">TabLayoutRoute</a></li>
 <li><a href="../../interfaces/Renderer.Component.TabProps/">TabProps</a></li>
-<li><a href="../../interfaces/Renderer.Component.TableCellProps/">TableCellProps</a></li>
 <li><a href="../../interfaces/Renderer.Component.TableHeadProps/">TableHeadProps</a></li>
 <li><a href="../../interfaces/Renderer.Component.TableProps/">TableProps</a></li>
 <li><a href="../../interfaces/Renderer.Component.TableRowProps/">TableRowProps</a></li>
@@ -1697,14 +1696,14 @@
 <p>Ƭ <strong>DrawerPosition</strong>: <code>"top"</code> | <code>"left"</code> | <code>"right"</code> | <code>"bottom"</code></p>
 <hr />
 <h3 id="icondata">IconData<a class="headerlink" href="#icondata" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>IconData</strong>: <code>string</code> | <code>React.ReactNode</code> | (<code>opt</code>: <a href="../../interfaces/Renderer.Component.IconDataFnArg/"><code>IconDataFnArg</code></a>) =&gt; <code>React.ReactNode</code></p>
-<p>One of the folloing:
+<p>Ƭ <strong>IconData</strong>: <code>string</code> | <code>StrictReactNode</code> | (<code>opt</code>: <a href="../../interfaces/Renderer.Component.IconDataFnArg/"><code>IconDataFnArg</code></a>) =&gt; <code>StrictReactNode</code></p>
+<p>One of the following:
 - A material icon name
 - A react node
 - Or a function that produces a react node</p>
 <hr />
 <h3 id="inputprops">InputProps<a class="headerlink" href="#inputprops" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>InputProps</strong>: <code>Omit</code>&lt;<code>InputElementProps</code>, <code>"onChange"</code> | <code>"onSubmit"</code>> &amp; { <code>autoSelectOnFocus?</code>: <code>boolean</code> ; <code>blurOnEnter?</code>: <code>boolean</code> ; <code>className?</code>: <code>string</code> ; <code>contentRight?</code>: <code>string</code> | <code>React.ReactNode</code> ; <code>defaultValue?</code>: <code>string</code> ; <code>dirty?</code>: <code>boolean</code> ; <code>iconLeft?</code>: <a href="./#icondata"><code>IconData</code></a> ; <code>iconRight?</code>: <a href="./#icondata"><code>IconData</code></a> ; <code>maxRows?</code>: <code>number</code> ; <code>multiLine?</code>: <code>boolean</code> ; <code>showErrorsAsTooltip?</code>: <code>boolean</code> | <code>Omit</code>&lt;<a href="../../interfaces/Renderer.Component.TooltipProps/"><code>TooltipProps</code></a>, <code>"targetId"</code>> ; <code>showValidationLine?</code>: <code>boolean</code> ; <code>theme?</code>: <code>"round-black"</code> | <code>"round"</code> ; <code>trim?</code>: <code>boolean</code> ; <code>validators?</code>: <code>SingleOrMany</code>&lt;<a href="./#inputvalidator"><code>InputValidator</code></a>> ; <code>value?</code>: <code>string</code> ; <code>onChange?</code>: (<code>value</code>: <code>string</code>, <code>evt</code>: <code>ChangeEvent</code>&lt;<code>InputElement</code>>) =&gt; <code>void</code> ; <code>onSubmit?</code>: (<code>value</code>: <code>string</code>, <code>evt</code>: <code>KeyboardEvent</code>&lt;<code>InputElement</code>>) =&gt; <code>void</code>  }</p>
+<p>Ƭ <strong>InputProps</strong>: <code>Omit</code>&lt;<code>InputElementProps</code>, <code>"onChange"</code> | <code>"onSubmit"</code>> &amp; { <code>autoSelectOnFocus?</code>: <code>boolean</code> ; <code>blurOnEnter?</code>: <code>boolean</code> ; <code>className?</code>: <code>string</code> ; <code>contentRight?</code>: <code>string</code> | <code>StrictReactNode</code> ; <code>defaultValue?</code>: <code>string</code> ; <code>dirty?</code>: <code>boolean</code> ; <code>iconLeft?</code>: <a href="./#icondata"><code>IconData</code></a> ; <code>iconRight?</code>: <a href="./#icondata"><code>IconData</code></a> ; <code>maxRows?</code>: <code>number</code> ; <code>multiLine?</code>: <code>boolean</code> ; <code>showErrorsAsTooltip?</code>: <code>boolean</code> | <code>Omit</code>&lt;<a href="../../interfaces/Renderer.Component.TooltipProps/"><code>TooltipProps</code></a>, <code>"targetId"</code>> ; <code>showValidationLine?</code>: <code>boolean</code> ; <code>theme?</code>: <code>"round-black"</code> | <code>"round"</code> ; <code>trim?</code>: <code>boolean</code> ; <code>validators?</code>: <code>SingleOrMany</code>&lt;<a href="./#inputvalidator"><code>InputValidator</code></a>> ; <code>value?</code>: <code>string</code> ; <code>onChange?</code>: (<code>value</code>: <code>string</code>, <code>evt</code>: <code>ChangeEvent</code>&lt;<code>InputElement</code>>) =&gt; <code>void</code> ; <code>onSubmit?</code>: (<code>value</code>: <code>string</code>, <code>evt</code>: <code>KeyboardEvent</code>&lt;<code>InputElement</code>>) =&gt; <code>void</code>  }</p>
 <hr />
 <h3 id="inputvalidation">InputValidation<a class="headerlink" href="#inputvalidation" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>InputValidation</strong>&lt;<code>IsAsync</code>>: (<code>value</code>: <code>string</code>, <code>props?</code>: <a href="./#inputprops"><code>InputProps</code></a>) =&gt; <a href="./#inputvalidationresult"><code>InputValidationResult</code></a>&lt;<code>IsAsync</code>></p>
@@ -1877,10 +1876,10 @@
 <p><a href="../../interfaces/Common.Util.Disposer/"><code>Disposer</code></a></p>
 <hr />
 <h3 id="syncvalidationmessage">SyncValidationMessage<a class="headerlink" href="#syncvalidationmessage" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>SyncValidationMessage</strong>: <code>React.ReactNode</code> | (<code>value</code>: <code>string</code>, <code>props?</code>: <a href="./#inputprops"><code>InputProps</code></a>) =&gt; <code>React.ReactNode</code></p>
+<p>Ƭ <strong>SyncValidationMessage</strong>: <code>StrictReactNode</code> | (<code>value</code>: <code>string</code>, <code>props?</code>: <a href="./#inputprops"><code>InputProps</code></a>) =&gt; <code>StrictReactNode</code></p>
 <hr />
 <h3 id="tablecellelem">TableCellElem<a class="headerlink" href="#tablecellelem" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>TableCellElem</strong>: <code>React.ReactElement</code>&lt;<a href="../../interfaces/Renderer.Component.TableCellProps/"><code>TableCellProps</code></a>></p>
+<p>Ƭ <strong>TableCellElem</strong>: <code>React.ReactElement</code>&lt;<code>TableCellProps</code>></p>
 <hr />
 <h3 id="tableheadelem">TableHeadElem<a class="headerlink" href="#tableheadelem" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>TableHeadElem</strong>: <code>React.ReactElement</code>&lt;<a href="../../interfaces/Renderer.Component.TableHeadProps/"><code>TableHeadProps</code></a>></p>
@@ -2334,7 +2333,7 @@
 <tbody>
 <tr>
 <td align="left"><code>props</code></td>
-<td align="left"><code>FormControlLabelProps</code> &amp; { <code>children?</code>: <code>ReactNode</code>  }</td>
+<td align="left"><code>FormControlLabelProps</code> &amp; { <code>children?</code>: <code>StrictReactNode</code>  }</td>
 </tr>
 </tbody>
 </table>
@@ -3283,7 +3282,7 @@ valid if one of the input validators matches the input</p>
 </tr>
 <tr>
 <td align="left"><code>baseValidator.message</code></td>
-<td align="left"><code>null</code> | <code>string</code> | <code>number</code> | <code>boolean</code> | {} | <code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>> | <code>Iterable</code>&lt;<code>ReactNode</code>> | <code>ReactPortal</code> | (<code>value</code>: <code>string</code>, <code>props?</code>: <a href="./#inputprops"><code>InputProps</code></a>) =&gt; <code>ReactNode</code></td>
+<td align="left"><code>null</code> | <code>string</code> | <code>number</code> | <code>boolean</code> | <code>ReactPortal</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>> | <code>StrictReactFragment</code> | <code>Iterable</code>&lt;<code>StrictReactNode</code>> | (<code>value</code>: <code>string</code>, <code>props?</code>: <a href="./#inputprops"><code>InputProps</code></a>) =&gt; <code>StrictReactNode</code></td>
 </tr>
 <tr>
 <td align="left"><code>...validators</code></td>
