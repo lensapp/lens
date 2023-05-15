@@ -8,7 +8,7 @@ import type { MouseEventHandler } from "react";
 import React, { useState } from "react";
 import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 
 export interface TreeViewClasses {
   root?: string;

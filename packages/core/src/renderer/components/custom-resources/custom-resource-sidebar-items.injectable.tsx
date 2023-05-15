@@ -7,7 +7,7 @@ import { noop } from "lodash/fp";
 import { computed } from "mobx";
 import type { SidebarItemRegistration } from "../layout/sidebar-items.injectable";
 import { sidebarItemsInjectionToken } from "../layout/sidebar-items.injectable";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import React from "react";
 import crdListRouteInjectable from "../../../common/front-end-routing/routes/cluster/custom-resources/crd-list/crd-list-route.injectable";
 import sidebarItemsForDefinitionGroupsInjectable from "./sidebar-items-for-definition-groups.injectable";

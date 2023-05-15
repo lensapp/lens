@@ -11,7 +11,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { Button } from "@k8slens/button";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import { Spinner } from "../spinner";
 import type { DockStore, TabId } from "./dock/store";
 import type { ShowNotification } from "../notifications";

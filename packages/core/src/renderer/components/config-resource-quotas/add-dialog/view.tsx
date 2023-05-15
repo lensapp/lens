@@ -17,7 +17,7 @@ import { systemName } from "../../input/input_validators";
 import type { ResourceQuotaValues } from "@k8slens/kube-object";
 import type { ResourceQuotaApi } from "@k8slens/kube-api";
 import { Select } from "../../select";
-import { Icon } from "../../icon";
+import { Icon } from "@k8slens/icon";
 import { Button } from "@k8slens/button";
 import { NamespaceSelect } from "../../namespaces/namespace-select";
 import { SubTitle } from "../../layout/sub-title";

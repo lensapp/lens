@@ -13,7 +13,7 @@ import type { Cluster } from "../../../common/cluster/cluster";
 import type { IClassName } from "@k8slens/utilities";
 import { hasTypedProperty, isObject, isString, cssNames } from "@k8slens/utilities";
 import { Button } from "@k8slens/button";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import { Spinner } from "../spinner";
 import type { KubeAuthUpdate } from "../../../common/cluster-types";
 import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";

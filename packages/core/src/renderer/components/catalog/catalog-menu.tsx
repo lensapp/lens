@@ -7,7 +7,7 @@ import treeStyles from "./catalog-tree.module.scss";
 import styles from "./catalog-menu.module.scss";
 
 import React from "react";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import type { CatalogCategory } from "../../api/catalog-entity";
 import { observer } from "mobx-react";
 import { CatalogCategoryLabel } from "./catalog-category-label";

@@ -5,7 +5,7 @@
 
 import "./drawer-param-toggler.scss";
 import React from "react";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 

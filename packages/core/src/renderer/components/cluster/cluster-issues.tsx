@@ -9,7 +9,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { IComputedValue } from "mobx";
 import { computed, makeObservable } from "mobx";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import { SubHeader } from "../layout/sub-header";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { cssNames, prevDefault } from "@k8slens/utilities";

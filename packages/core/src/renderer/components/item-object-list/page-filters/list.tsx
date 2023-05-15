@@ -10,7 +10,7 @@ import { Badge } from "../../badge";
 import { cssNames } from "@k8slens/utilities";
 import type { Filter, PageFiltersStore } from "./store";
 import { FilterIcon } from "../filter-icon";
-import { Icon } from "../../icon";
+import { Icon } from "@k8slens/icon";
 import type { PageParam } from "../../../navigation/page-param";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import pageFiltersStoreInjectable from "./store.injectable";

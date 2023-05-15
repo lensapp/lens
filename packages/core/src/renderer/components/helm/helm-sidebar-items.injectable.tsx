@@ -10,7 +10,7 @@ import type {
 import {
   sidebarItemsInjectionToken,
 } from "../layout/sidebar-items.injectable";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import { noop } from "lodash/fp";
 
 export const helmSidebarItemId = "helm";

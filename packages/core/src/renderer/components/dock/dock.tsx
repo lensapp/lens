@@ -7,7 +7,7 @@ import "./dock.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { cssNames } from "@k8slens/utilities";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import { MenuItem } from "../menu";
 import { MenuActions } from "../menu/menu-actions";
 import { ResizeDirection, ResizingAnchor } from "@k8slens/resizing-anchor";

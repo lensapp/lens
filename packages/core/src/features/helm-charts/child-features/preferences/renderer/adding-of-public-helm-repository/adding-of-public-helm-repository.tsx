@@ -9,7 +9,7 @@ import publicHelmRepositoriesInjectable from "./public-helm-repositories/public-
 import type { HelmRepo } from "../../../../../../common/helm/helm-repo";
 import type { SelectOption } from "../../../../../../renderer/components/select";
 import { Select } from "../../../../../../renderer/components/select";
-import { Icon } from "../../../../../../renderer/components/icon";
+import { Icon } from "@k8slens/icon";
 import { observer } from "mobx-react";
 import type { SingleValue } from "react-select";
 import selectHelmRepositoryInjectable from "./select-helm-repository/select-helm-repository.injectable";

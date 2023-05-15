@@ -5,7 +5,7 @@
 import React from "react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
-import { Icon } from "../../../../icon";
+import { Icon } from "@k8slens/icon";
 import routeIsActiveInjectable from "../../../../../routes/route-is-active.injectable";
 import { observer } from "mobx-react";
 import welcomeRouteInjectable from "../../../../../../common/front-end-routing/routes/welcome/welcome-route.injectable";

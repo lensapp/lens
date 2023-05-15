@@ -9,7 +9,7 @@ import type {
 import {
   sidebarItemsInjectionToken,
 } from "../layout/sidebar-items.injectable";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import React from "react";
 import namespacesRouteInjectable from "../../../common/front-end-routing/routes/cluster/namespaces/namespaces-route.injectable";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";

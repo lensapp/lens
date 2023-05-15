@@ -7,7 +7,7 @@ import { getInjectionToken } from "@ogre-tools/injectable";
 import type { IObservableArray } from "mobx";
 import type { RequireAtLeastOne } from "type-fest";
 import type { KubeObject } from "@k8slens/kube-object";
-import type { BaseIconProps } from "../components/icon";
+import type { BaseIconProps } from "@k8slens/icon";
 
 export interface KubeObjectContextMenuItem {
   id?: string;

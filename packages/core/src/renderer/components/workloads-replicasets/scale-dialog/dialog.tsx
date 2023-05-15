@@ -12,7 +12,7 @@ import { observer } from "mobx-react";
 import type { DialogProps } from "../../dialog";
 import { Dialog } from "../../dialog";
 import { Wizard, WizardStep } from "../../wizard";
-import { Icon } from "../../icon";
+import { Icon } from "@k8slens/icon";
 import { Slider } from "../../slider";
 import { cssNames } from "@k8slens/utilities";
 import type { ReplicaSet } from "@k8slens/kube-object";

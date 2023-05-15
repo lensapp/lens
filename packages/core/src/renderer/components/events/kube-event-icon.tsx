@@ -6,7 +6,7 @@
 import "./kube-event-icon.scss";
 
 import React from "react";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import type { KubeObject, KubeEvent } from "@k8slens/kube-object";
 import { cssNames } from "@k8slens/utilities";
 import { KubeObjectAge } from "../kube-object/age";

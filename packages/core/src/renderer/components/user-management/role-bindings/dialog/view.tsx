@@ -14,7 +14,7 @@ import type { ClusterRole, Role, ServiceAccount, Subject } from "@k8slens/kube-o
 import type { DialogProps } from "../../../dialog";
 import { Dialog } from "../../../dialog";
 import { EditableList } from "../../../editable-list";
-import { Icon } from "../../../icon";
+import { Icon } from "@k8slens/icon";
 import { SubTitle } from "../../../layout/sub-title";
 import type { SelectOption } from "../../../select";
 import { onMultiSelectFor, Select } from "../../../select";

@@ -9,7 +9,7 @@ import type { PortForwardItem, PortForwardStore } from "../../port-forward";
 import type { MenuActionsProps } from "../menu/menu-actions";
 import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import type { ShowNotification } from "../notifications";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import portForwardDialogModelInjectable from "../../port-forward/port-forward-dialog-model/port-forward-dialog-model.injectable";

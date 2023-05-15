@@ -9,7 +9,7 @@ import { observer } from "mobx-react";
 import type { IComputedValue } from "mobx";
 import type { CarouselProps } from "react-material-ui-carousel";
 import LegacyCarousel from "react-material-ui-carousel";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import { forumsUrl } from "../../../common/vars";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import welcomeMenuItemsInjectable from "./welcome-menu-items/welcome-menu-items.injectable";

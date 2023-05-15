@@ -10,7 +10,7 @@ import { broadcastMessage } from "../../../common/ipc";
 import type { CatalogEntity, CatalogEntityContextMenu } from "../../api/catalog-entity";
 import { IpcRendererNavigationEvents } from "../../../common/ipc/navigation-events";
 import { Avatar } from "../avatar";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import { Menu, MenuItem } from "../menu";
 import { Tooltip } from "@k8slens/tooltip";
 import { withInjectables } from "@ogre-tools/injectable-react";

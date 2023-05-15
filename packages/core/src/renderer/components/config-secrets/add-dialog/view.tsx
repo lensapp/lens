@@ -19,7 +19,7 @@ import { reverseSecretTypeMap, SecretType } from "@k8slens/kube-object";
 import { SubTitle } from "../../layout/sub-title";
 import { NamespaceSelect } from "../../namespaces/namespace-select";
 import { Select } from "../../select";
-import { Icon } from "../../icon";
+import { Icon } from "@k8slens/icon";
 import { base64, iter, object } from "@k8slens/utilities";
 import upperFirst from "lodash/upperFirst";
 import type { ShowDetails } from "../../kube-detail-params/show-details.injectable";

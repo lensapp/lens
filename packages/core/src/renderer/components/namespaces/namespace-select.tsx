@@ -11,7 +11,7 @@ import { observer } from "mobx-react";
 import type { SelectProps } from "../select";
 import { Select } from "../select";
 import { cssNames } from "@k8slens/utilities";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
 import type { ClusterContext } from "../../cluster-frame-context/cluster-frame-context";

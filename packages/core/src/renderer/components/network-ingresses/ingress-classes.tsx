@@ -14,7 +14,7 @@ import type { IngressClassStore } from "./ingress-class-store";
 import ingressClassStoreInjectable from "./ingress-class-store.injectable";
 import type { IngressClass } from "@k8slens/kube-object";
 import { cssNames } from "@k8slens/utilities";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 
 enum columnId {
   name = "name",

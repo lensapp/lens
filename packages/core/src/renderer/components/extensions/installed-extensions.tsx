@@ -5,7 +5,7 @@
 
 import styles from "./installed-extensions.module.scss";
 import React from "react";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import { List } from "../list/list";
 import { MenuActions, MenuItem } from "../menu";
 import { Spinner } from "../spinner";

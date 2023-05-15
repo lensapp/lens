@@ -9,7 +9,7 @@ import type { Cluster } from "../../../common/cluster/cluster";
 import { Input } from "../input";
 import { SubTitle } from "../layout/sub-title";
 import type { ShowNotification } from "../notifications";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
 import type { ValidateDirectory } from "../../../common/fs/validate-directory.injectable";

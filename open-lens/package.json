@@ -30,7 +30,7 @@
     "dev:main": "cross-env NODE_ENV=development webpack --config webpack/main.ts --progress --watch",
     "dev:renderer": "cross-env NODE_ENV=development ts-node ./webpack/dev-server.ts",
     "test:integration": "jest -xyz --runInBand --modulePaths=[\"<rootDir>/integration/\"];",
-    "build:tray-icons": "npm run --workspace @k8slens/generate-tray-icons generate -- --output static/build/tray --input @k8slens/core/icons/logo-lens.svg --notice-icon @k8slens/core/icons/notice.svg --spinner-icon @k8slens/core/icons/arrow-spinner.svg",
+    "build:tray-icons": "npm run --workspace @k8slens/generate-tray-icons generate -- --output static/build/tray --input @k8slens/icon/icons/logo-lens.svg --notice-icon @k8slens/icon/icons/notice.svg --spinner-icon @k8slens/icon/icons/arrow-spinner.svg",
     "download:binaries": "npm run --workspace @k8slens/ensure-binaries ensure -- --package package.json --base-dir binaries/client",
     "postinstall": "electron-rebuild"
   },

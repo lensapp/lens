@@ -18,7 +18,7 @@ import { action } from "mobx";
 import submitCustomHelmRepositoryInjectable from "./submit-custom-helm-repository.injectable";
 import hideDialogForAddingCustomHelmRepositoryInjectable from "./dialog-visibility/hide-dialog-for-adding-custom-helm-repository.injectable";
 import { Button } from "@k8slens/button";
-import { Icon } from "../../../../../../renderer/components/icon";
+import { Icon } from "@k8slens/icon";
 import maximalCustomHelmRepoOptionsAreShownInjectable from "./maximal-custom-helm-repo-options-are-shown.injectable";
 import { SubTitle } from "../../../../../../renderer/components/layout/sub-title";
 import { Checkbox } from "../../../../../../renderer/components/checkbox";

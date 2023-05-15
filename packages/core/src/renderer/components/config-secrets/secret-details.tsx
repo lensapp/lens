@@ -13,7 +13,7 @@ import { Input } from "../input";
 import { Button } from "@k8slens/button";
 import type { ShowNotification } from "../notifications";
 import { base64, toggle } from "@k8slens/utilities";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Secret } from "@k8slens/kube-object";
 import type { Logger } from "@k8slens/logger";

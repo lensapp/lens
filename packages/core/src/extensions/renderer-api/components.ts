@@ -61,7 +61,7 @@ export const ConfirmDialog = Object.assign(_ConfirmDialog, {
   confirm: asLegacyGlobalFunctionForExtensionApi(confirmInjectable),
 });
 
-export * from "../../renderer/components/icon";
+export * from "@k8slens/icon";
 export * from "@k8slens/tooltip";
 export * from "../../renderer/components/tabs";
 export * from "../../renderer/components/table";

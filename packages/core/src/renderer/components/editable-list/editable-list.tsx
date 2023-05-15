@@ -8,7 +8,7 @@ import "./editable-list.scss";
 import { observer } from "mobx-react";
 import React from "react";
 
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import type { InputProps, InputValidator } from "../input";
 import { Input } from "../input";
 import type { StrictReactNode, SingleOrMany } from "@k8slens/utilities";
