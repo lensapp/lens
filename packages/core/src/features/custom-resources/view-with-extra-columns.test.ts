@@ -6,7 +6,7 @@
 import type { KubeObjectMetadata, KubeObjectScope } from "@k8slens/kube-object";
 import { KubeObject, CustomResourceDefinition } from "@k8slens/kube-object";
 import type { RenderResult } from "@testing-library/react";
-import navigateToCustomResourcesInjectable from "../../common/front-end-routing/routes/cluster/custom-resources/custom-resources/navigate-to-custom-resources.injectable";
+import navigateToCustomResourcesInjectable from "../../common/front-end-routing/routes/cluster/custom-resources/navigate-to-custom-resources.injectable";
 import apiManagerInjectable from "../../common/k8s-api/api-manager/manager.injectable";
 import type { CustomResourceStore } from "../../common/k8s-api/api-manager/resource.store";
 import type { CustomResourceDefinitionStore } from "../../renderer/components/custom-resources/definition.store";
