@@ -7,14 +7,16 @@ import { navigateToRouteInjectionToken } from "../../../navigate-to-route-inject
 import type { CustomResourcesPathParameters } from "./custom-resources-route.injectable";
 import customResourcesRouteInjectable from "./custom-resources-route.injectable";
 
+export type NavigateToCustomResources = (parameters: CustomResourcesPathParameters) => void;
+
 const navigateToCustomResourcesInjectable = getInjectable({
   id: "navigate-to-custom-resources",
 
-  instantiate: (di) => {
+  instantiate: (di): NavigateToCustomResources => {
     const navigateToRoute = di.inject(navigateToRouteInjectionToken);
     const route = di.inject(customResourcesRouteInjectable);
 
-    return (parameters?: CustomResourcesPathParameters) => navigateToRoute(route, { parameters });
+    return (parameters) => navigateToRoute(route, { parameters });
   },
 });
 
