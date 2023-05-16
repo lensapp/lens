@@ -122,7 +122,7 @@ const renderer: webpack.Configuration = {
             path.dirname(require.resolve("@k8slens/core/package.json")),
             corePackageJson.exports["./fonts"]
           ),
-          to: "[name][ext]",
+          to: "fonts/[name][ext]",
         },
       ],
     }),
