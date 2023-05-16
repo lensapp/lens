@@ -9,7 +9,7 @@ import type { KubeObject } from "./kube-object";
  * The metadata for LIST requests to the KubeApi
  */
 export interface KubeJsonApiListMetadata {
-  resourceVersion: string;
+  resourceVersion: string | number;
   selfLink?: string;
 }
 
@@ -229,7 +229,7 @@ export type KubeObjectMetadata<Namespaced extends KubeObjectScope = KubeObjectSc
     readonly selfLink: string;
     readonly uid: string;
     readonly name: string;
-    readonly resourceVersion: string;
+    readonly resourceVersion: string | number;
   };
 
 export type NamespaceScopedMetadata = KubeObjectMetadata<KubeObjectScope.Namespace>;
@@ -256,7 +256,7 @@ export interface EvictionObject {
     orphanDependents?: boolean;
     propagationPolicy?: string;
     preconditions?: {
-      resourceVersion: string;
+      resourceVersion: string | number;
       uid: string;
     }[];
   };

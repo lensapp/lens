@@ -97,7 +97,7 @@ export interface DerivedKubeApiOptions {
 
 export interface KubeApiQueryParams {
   watch?: boolean | number;
-  resourceVersion?: string;
+  resourceVersion?: string | number;
   timeoutSeconds?: number;
   limit?: number; // doesn't work with ?watch
   continue?: string; // might be used with ?limit from second request
@@ -272,7 +272,7 @@ export class KubeApi<
 
   public readonly objectConstructor: KubeObjectConstructor<Object, Data>;
   protected readonly request: KubeJsonApi;
-  protected readonly resourceVersions = new Map<string, string>();
+  protected readonly resourceVersions = new Map<string, string | number>();
   protected readonly watchDisposer: Disposer | undefined;
   private watchId = 1;
   protected readonly doCheckPreferredVersion: boolean;
@@ -385,7 +385,7 @@ export class KubeApi<
     }
   }
 
-  setResourceVersion(namespace = "", newVersion: string) {
+  setResourceVersion(namespace = "", newVersion: string | number) {
     this.resourceVersions.set(namespace, newVersion);
   }
 

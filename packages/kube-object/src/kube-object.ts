@@ -118,13 +118,6 @@ export class KubeObject<
       );
     }
 
-    if (!isString(data.metadata.resourceVersion)) {
-      throw new KubeCreationError(
-        `Cannot create a KubeObject from an object without metadata.resourceVersion being a string`,
-        data,
-      );
-    }
-
     if (!isString(data.metadata.selfLink)) {
       throw new KubeCreationError(
         `Cannot create a KubeObject from an object without metadata.selfLink being a string`,
