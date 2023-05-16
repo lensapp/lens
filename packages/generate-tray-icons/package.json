@@ -22,8 +22,7 @@
     "@swc/core": "^1.3.53",
     "@types/jsdom": "^20.0.1",
     "@types/node": "^16.18.25",
-    "@types/sharp": "^0.31.1",
-    "rimraf": "^4.4.1"
+    "@types/sharp": "^0.31.1"
   },
   "dependencies": {
     "arg": "^5.0.2",

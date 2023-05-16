@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-PACKAGE_JSON_PATHS=$(find packages/* -type f -name package.json -not -path "*/node_modules/*")
+PACKAGE_JSON_PATHS=$(find open-lens/* packages/* -type f -name package.json -not -path "*/node_modules/*")
 exitCode=0
 
 while IFS= read -r PACKAGE_JSON_PATH; do

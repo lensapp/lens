@@ -48,7 +48,6 @@
     "@types/react-router": "^5.1.20",
     "@types/readable-stream": "^2.3.15",
     "@types/semver": "^7.3.13",
-    "@types/tar": "^6.1.4",
-    "type-fest": "^2.14.0"
+    "@types/tar": "^6.1.4"
   }
 }

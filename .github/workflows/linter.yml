@@ -33,3 +33,6 @@ jobs:
 
       - name: Verify Publish Configurations
         run: ./scripts/lint-publish-configs.sh
+
+      - name: Verify No Duplicate Dependencies
+        run: ./scripts/lint-package-dependencies.sh
