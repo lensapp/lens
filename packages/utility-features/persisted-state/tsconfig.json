@@ -1,0 +1,4 @@
+{
+  "extends": "@k8slens/typescript/config/base.json",
+  "include": ["**/*.ts"]
+}

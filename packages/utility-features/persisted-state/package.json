@@ -1,0 +1,45 @@
+{
+  "name": "@k8slens/persisted-state",
+  "private": false,
+  "version": "0.1.0",
+  "description": "TBD",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lensapp/lens.git"
+  },
+  "type": "commonjs",
+  "author": {
+    "name": "OpenLens Authors",
+    "email": "info@k8slens.dev"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/lensapp/lens",
+  "scripts": {
+    "build": "lens-webpack-build",
+    "clean": "rimraf dist/",
+    "test:unit": "jest --coverage --runInBand",
+    "lint": "lens-lint",
+    "lint:fix": "lens-lint --fix"
+  },
+  "peerDependencies": {
+    "@k8slens/app-paths": "^0.1.0",
+    "@k8slens/file-system": "^0.1.0",
+    "@k8slens/logger": "1.0.0-alpha.6",
+    "@ogre-tools/fp": "^16.1.0",
+    "@ogre-tools/injectable": "^16.1.0",
+    "@ogre-tools/injectable-extension-for-auto-registration": "^16.1.0",
+    "@ogre-tools/injectable-extension-for-mobx": "^16.1.0",
+    "lodash": "^4.17.15",
+    "mobx": "^6.7.0"
+  },
+  "devDependencies": {
+    "@k8slens/eslint-config": "^6.5.0-alpha.3",
+    "@k8slens/react-testing-library-discovery": "^1.0.0-alpha.4",
+    "@k8slens/webpack": "^6.5.0-alpha.6"
+  }
+}
