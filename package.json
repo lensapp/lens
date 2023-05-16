@@ -40,7 +40,7 @@
     "@types/react": "^17"
   },
   "devDependencies": {
-    "@ogre-tools/linkable": "^15.8.1",
+    "@ogre-tools/linkable": "^16.1.0",
     "adr": "^1.4.3",
     "cross-env": "^7.0.3",
     "lerna": "^6.6.1",
