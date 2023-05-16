@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/legacy-extensions",
   "private": false,
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-alpha.7",
   "description": "Package for Lens extensions using the v1 API",
   "type": "commonjs",
   "files": [
@@ -34,6 +34,6 @@
   },
   "devDependencies": {
     "@k8slens/eslint-config": "^6.5.0-alpha.3",
-    "@k8slens/webpack": "^6.5.0-alpha.7"
+    "@k8slens/webpack": "^6.5.0-alpha.8"
   }
 }

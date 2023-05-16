@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/metrics",
   "private": false,
-  "version": "6.5.0-alpha.7",
+  "version": "6.5.0-alpha.8",
   "description": "Injection tokens for implementing metrics for Lens",
   "type": "commonjs",
   "publishConfig": {
@@ -39,7 +39,7 @@
   "devDependencies": {
     "@k8slens/eslint-config": "^6.5.0-alpha.3",
     "@k8slens/jest": "^6.5.0-alpha.5",
-    "@k8slens/typescript": "^6.5.0-alpha.2",
-    "@k8slens/webpack": "^6.5.0-alpha.7"
+    "@k8slens/typescript": "^6.5.0-alpha.3",
+    "@k8slens/webpack": "^6.5.0-alpha.8"
   }
 }
