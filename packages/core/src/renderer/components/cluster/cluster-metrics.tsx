@@ -8,8 +8,6 @@ import styles from "./cluster-metrics.module.scss";
 import React, { useState } from "react";
 import { observer } from "mobx-react";
 import type { ChartOptions, ChartPoint } from "chart.js";
-import type { ClusterOverviewStore } from "./cluster-overview-store/cluster-overview-store";
-import { MetricType } from "./cluster-overview-store/cluster-overview-store";
 import { BarChart } from "../chart";
 import { bytesToUnits, cssNames } from "@k8slens/utilities";
 import { Spinner } from "../spinner";
@@ -17,17 +15,34 @@ import { ZebraStripesPlugin } from "../chart/zebra-stripes.plugin";
 import { ClusterNoMetrics } from "./cluster-no-metrics";
 import { ClusterMetricSwitchers } from "./cluster-metric-switchers";
 import { getMetricLastPoints } from "../../../common/k8s-api/endpoints/metrics.api";
+import type { IAsyncComputed } from "@ogre-tools/injectable-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import clusterOverviewStoreInjectable from "./cluster-overview-store/cluster-overview-store.injectable";
+import type { ClusterMetricData } from "../../../common/k8s-api/endpoints/metrics.api/request-cluster-metrics-by-node-names.injectable";
+import type { SelectedMetricsType } from "./overview/selected-metrics-type.injectable";
+import type { SelectedNodeRoleForMetrics } from "./overview/selected-node-role-for-metrics.injectable";
+import clusterOverviewMetricsInjectable from "./cluster-metrics.injectable";
+import selectedMetricsTypeInjectable from "./overview/selected-metrics-type.injectable";
+import selectedNodeRoleForMetricsInjectable from "./overview/selected-node-role-for-metrics.injectable";
 
 interface Dependencies {
-  clusterOverviewStore: ClusterOverviewStore;
+  clusterOverviewMetrics: IAsyncComputed<ClusterMetricData | undefined>;
+  selectedMetricsType: SelectedMetricsType;
+  selectedNodeRoleForMetrics: SelectedNodeRoleForMetrics;
 }
 
-const NonInjectedClusterMetrics = observer(({ clusterOverviewStore: { metricType, metricNodeRole, getMetricsValues, metricsLoaded, metrics }}: Dependencies) => {
+const NonInjectedClusterMetrics = observer((props: Dependencies) => {
+  const {
+    clusterOverviewMetrics,
+    selectedMetricsType,
+    selectedNodeRoleForMetrics,
+  } = props;
+
+  const metrics = clusterOverviewMetrics.value.get();
   const [plugins] = useState([new ZebraStripesPlugin()]);
   const { memoryCapacity, cpuCapacity } = getMetricLastPoints(metrics ?? {});
-  const metricValues = getMetricsValues(metrics ?? {});
+  const metricValues = selectedMetricsType.metrics.get();
+  const metricType = selectedMetricsType.value.get();
+  const metricNodeRole = selectedNodeRoleForMetrics.value.get();
   const colors = { cpu: "#3D90CE", memory: "#C93DCE" };
   const data = metricValues.map(value => ({
     x: value[0],
@@ -86,10 +101,10 @@ const NonInjectedClusterMetrics = observer(({ clusterOverviewStore: { metricType
       },
     },
   };
-  const options = metricType === MetricType.CPU ? cpuOptions : memoryOptions;
+  const options = metricType === "cpu" ? cpuOptions : memoryOptions;
 
   const renderMetrics = () => {
-    if (!metricValues.length && !metricsLoaded) {
+    if (!metricValues.length && !metrics) {
       return <Spinner center/>;
     }
 
@@ -118,12 +133,10 @@ const NonInjectedClusterMetrics = observer(({ clusterOverviewStore: { metricType
   );
 });
 
-export const ClusterMetrics = withInjectables<Dependencies>(
-  NonInjectedClusterMetrics,
-
-  {
-    getProps: (di) => ({
-      clusterOverviewStore: di.inject(clusterOverviewStoreInjectable),
-    }),
-  },
-);
+export const ClusterMetrics = withInjectables<Dependencies>(NonInjectedClusterMetrics, {
+  getProps: (di) => ({
+    clusterOverviewMetrics: di.inject(clusterOverviewMetricsInjectable),
+    selectedMetricsType: di.inject(selectedMetricsTypeInjectable),
+    selectedNodeRoleForMetrics: di.inject(selectedNodeRoleForMetricsInjectable),
+  }),
+});
