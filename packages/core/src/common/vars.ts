@@ -6,7 +6,6 @@
 // App's common configuration for any process (main, renderer, build pipeline, etc.)
 import type { ThemeId } from "../renderer/themes/lens-theme";
 
-export const publicPath = "/build/" as string;
 export const defaultThemeId: ThemeId = "lens-dark";
 export const defaultFontSize = 12;
 export const defaultTerminalFontFamily = "RobotoMono";

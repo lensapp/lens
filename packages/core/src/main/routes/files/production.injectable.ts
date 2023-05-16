@@ -8,10 +8,8 @@ import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import staticFilesDirectoryInjectable from "../../../common/vars/static-files-directory.injectable";
 import type { LensApiRequest } from "../../router/route";
 import path from "path";
-import type { SupportedFileExtension } from "../../router/router-content-types";
 import { contentTypes } from "../../router/router-content-types";
-import { loggerInjectionToken } from "@k8slens/logger";
-import { publicPath } from "../../../common/vars";
+import { prefixedLoggerInjectable } from "@k8slens/logger";
 
 const prodStaticFileRouteHandlerInjectable = getInjectable({
   id: "prod-static-file-route-handler",
@@ -19,39 +17,31 @@ const prodStaticFileRouteHandlerInjectable = getInjectable({
     const readFileBuffer = di.inject(readFileBufferInjectable);
     const joinPaths = di.inject(joinPathsInjectable);
     const staticFilesDirectory = di.inject(staticFilesDirectoryInjectable);
-    const logger = di.inject(loggerInjectionToken);
+    const logger = di.inject(prefixedLoggerInjectable, "FILE-ROUTE");
 
     return async ({ params }: LensApiRequest<"/{path*}">) => {
-      let filePath = params.path;
+      const filePath = (!params.path || params.path === "/")
+        ? "/build/index.html"
+        : path.posix.extname(params.path)
+          ? params.path
+          : "/build/index.html";
 
+      const assetFilePath = joinPaths(staticFilesDirectory, filePath);
 
-      for (let retryCount = 0; retryCount < 5; retryCount += 1) {
-        const assetFilePath = joinPaths(staticFilesDirectory, filePath);
-
-        if (!assetFilePath.startsWith(staticFilesDirectory)) {
-          return { statusCode: 404 };
-        }
-
-        try {
-          const fileExtension = path
-            .extname(assetFilePath)
-            .slice(1) as SupportedFileExtension;
-
-          const contentType = contentTypes[fileExtension] || contentTypes.txt;
-
-          return { response: await readFileBuffer(assetFilePath), contentType };
-        } catch (err) {
-          if (retryCount > 5) {
-            logger.error("handleStaticFile:", String(err));
-
-            return { statusCode: 404 };
-          }
-
-          filePath = `${publicPath}/index.html`;
-        }
+      if (!assetFilePath.startsWith(staticFilesDirectory)) {
+        return { statusCode: 404 };
       }
 
-      return { statusCode: 404 };
+      const fileExtension = path.extname(assetFilePath).slice(1);
+      const contentType = contentTypes[fileExtension] || contentTypes.txt;
+
+      try {
+        return { response: await readFileBuffer(assetFilePath), contentType };
+      } catch (err) {
+        logger.error(`failed to find file "${filePath}"`, err);
+
+        return { statusCode: 404 };
+      }
     };
   },
 });

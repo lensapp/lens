@@ -5,9 +5,9 @@
 import type { LensApiResult } from "./route";
 
 export interface LensApiResultContentType {
-  resultMapper: (result: LensApiResult<any>) => ({
+  resultMapper: (result: LensApiResult<unknown>) => ({
     statusCode: number;
-    content: any;
+    content: unknown;
     headers: Record<string, string>;
   });
 }
@@ -22,9 +22,13 @@ const resultMapperFor =
 
 export type SupportedFileExtension = "json" | "txt" | "html" | "css" | "gif" | "jpg" | "png" | "svg" | "js" | "woff2" | "ttf";
 
-export const contentTypes: Record<SupportedFileExtension, LensApiResultContentType> = {
+export interface ContentTypes extends Record<SupportedFileExtension, LensApiResultContentType> {
+  [key: string]: LensApiResultContentType | undefined;
+}
+
+export const contentTypes: ContentTypes = {
   json: {
-    resultMapper: (result) => {
+    resultMapper: (result: LensApiResult<unknown>) => {
       const resultMapper = resultMapperFor("application/json");
 
       const mappedResult = resultMapper(result);
