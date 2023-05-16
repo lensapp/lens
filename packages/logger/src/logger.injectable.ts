@@ -12,18 +12,66 @@ export const loggerInjectionToken = getInjectionToken<Logger>({
 
 export const loggerInjectable = getInjectable({
   id: "logger",
-  instantiate: (di): Logger => {
-    const baseLogger = di.inject(winstonLoggerInjectable);
-
-    return {
-      debug: (message, ...data) => baseLogger.debug(message, ...data),
-      info: (message, ...data) => baseLogger.info(message, ...data),
-      warn: (message, ...data) => baseLogger.warn(message, ...data),
-      error: (message, ...data) => baseLogger.error(message, ...data),
-      silly: (message, ...data) => baseLogger.silly(message, ...data),
-    };
-  },
+  instantiate: (di): Logger => ({
+    debug: di.inject(logDebugInjectionToken),
+    info: di.inject(logInfoInjectionToken),
+    warn: di.inject(logWarningInjectionToken),
+    error: di.inject(logErrorInjectionToken),
+    silly: di.inject(logSillyInjectionToken),
+  }),
 
   decorable: false,
   injectionToken: loggerInjectionToken,
+});
+
+export type LogFunction = (message: string, ...data: any[]) => void;
+
+export const logDebugInjectionToken = getInjectionToken<LogFunction>({
+  id: "log-debug-injection-token",
+});
+
+export const logInfoInjectionToken = getInjectionToken<LogFunction>({
+  id: "log-info-injection-token",
+});
+
+export const logWarningInjectionToken = getInjectionToken<LogFunction>({
+  id: "log-warning-injection-token",
+});
+
+export const logErrorInjectionToken = getInjectionToken<LogFunction>({
+  id: "log-error-injection-token",
+});
+
+export const logSillyInjectionToken = getInjectionToken<LogFunction>({
+  id: "log-silly-injection-token",
+});
+
+export const logDebugInjectable = getInjectable({
+  id: "log-debug",
+  instantiate: (di): LogFunction => di.inject(winstonLoggerInjectable).debug,
+  injectionToken: logDebugInjectionToken,
+});
+
+export const logInfoInjectable = getInjectable({
+  id: "log-info",
+  instantiate: (di): LogFunction => di.inject(winstonLoggerInjectable).info,
+  injectionToken: logInfoInjectionToken,
+});
+
+export const logWarningInjectable = getInjectable({
+  id: "log-warning",
+  instantiate: (di): LogFunction => di.inject(winstonLoggerInjectable).warn,
+  injectionToken: logWarningInjectionToken,
+});
+
+export const logErrorInjectable = getInjectable({
+  id: "log-error",
+  instantiate: (di): LogFunction => di.inject(winstonLoggerInjectable).error,
+  injectionToken: logErrorInjectionToken,
+});
+
+export const logSillyInjectable = getInjectable({
+  id: "log-silly",
+  instantiate: (di): LogFunction => di.inject(winstonLoggerInjectable).silly,
+  injectionToken: logSillyInjectionToken,
 });
