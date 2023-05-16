@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.5.0-alpha.12 (2023-05-16)
+
+
+
+# 6.5.0-alpha.11 (2023-05-11)
+
+
+### Bug Fixes
+
+* Add missing styles to fix terminal resizing ([6902851](https://github.com/lensapp/lens/commit/6902851026e74428f515fc5f3e01e6dc8a4c2d50))
+
+
+
+
+
 # 6.5.0-alpha.11 (2023-05-11)
 
 
