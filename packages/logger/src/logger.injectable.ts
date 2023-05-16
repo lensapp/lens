@@ -13,6 +13,7 @@ import type { Logger } from "./logger";
 import { winstonLoggerInjectable } from "./winston-logger.injectable";
 import { pipeline } from "@ogre-tools/fp";
 
+/** @deprecated Use specific injectionToken, eg. logErrorInjectionToken */
 export const loggerInjectionToken = getInjectionToken<Logger>({
   id: "logger-injection-token",
 });
