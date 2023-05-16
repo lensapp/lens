@@ -1,6 +1,6 @@
 {
   "name": "@k8slens/cluster-settings",
-  "version": "6.5.0-alpha.6",
+  "version": "6.5.0-alpha.7",
   "description": "Injection token exporter for cluster settings configuration",
   "license": "MIT",
   "type": "commonjs",
@@ -19,7 +19,7 @@
     "build": "lens-webpack-build"
   },
   "devDependencies": {
-    "@k8slens/webpack": "^6.5.0-alpha.7",
+    "@k8slens/webpack": "^6.5.0-alpha.8",
     "rimraf": "^4.4.1"
   },
   "peerDependencies": {
