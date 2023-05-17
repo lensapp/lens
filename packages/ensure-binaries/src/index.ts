@@ -275,27 +275,27 @@ const downloadX64Binaries = () => {
   );
 }
 
-const downloadAmd64Binaries = () => {
+const downloadArm64Binaries = () => {
   downloaders.push(
     new LensK8sProxyDownloader({
       version: packageInfo.config.k8sProxyVersion,
       platform: normalizedPlatform,
-      downloadArch: "amd64",
-      fileArch: "amd64",
+      downloadArch: "arm64",
+      fileArch: "arm64",
       baseDir: pathToBaseDir,
     }, multiBar),
     new KubectlDownloader({
       version: packageInfo.config.bundledKubectlVersion,
       platform: normalizedPlatform,
-      downloadArch: "amd64",
-      fileArch: "amd64",
+      downloadArch: "arm64",
+      fileArch: "arm64",
       baseDir: pathToBaseDir,
     }, multiBar),
     new HelmDownloader({
       version: packageInfo.config.bundledHelmVersion,
       platform: normalizedPlatform,
-      downloadArch: "amd64",
-      fileArch: "amd64",
+      downloadArch: "arm64",
+      fileArch: "arm64",
       baseDir: pathToBaseDir,
     }, multiBar),
   );
@@ -303,11 +303,11 @@ const downloadAmd64Binaries = () => {
 
 if (process.env.DOWNLOAD_ALL_ARCHITECTURES === "true") {
   downloadX64Binaries();
-  downloadAmd64Binaries();
+  downloadArm64Binaries();
 } else if (arch === "x64") {
   downloadX64Binaries();
 } else if (arch === "arm64") {
-  downloadAmd64Binaries();
+  downloadArm64Binaries();
 }
 
 const settledResults = await Promise.allSettled(downloaders.map(downloader => (
