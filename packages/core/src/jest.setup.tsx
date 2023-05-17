@@ -10,7 +10,7 @@ import glob from "glob";
 import path from "path";
 import { enableMapSet, setAutoFreeze } from "immer";
 import React from "react";
-import { isObject } from "@k8slens/utilities";
+import { isReactNode } from "@k8slens/utilities";
 import type { TooltipDecoratorProps } from "@k8slens/tooltip";
 
 declare global {
@@ -71,7 +71,7 @@ jest.mock("@k8slens/tooltip", () => ({
           <>
             <ResolvedTarget {...props as (TargetProps & { children?: React.ReactNode })} />
             <div data-testid={testId && `tooltip-content-for-${testId}`}>
-              {isObject(tooltip) ? tooltip.children : tooltip}
+              {isReactNode(tooltip) ? tooltip : tooltip.children}
             </div>
           </>
         );

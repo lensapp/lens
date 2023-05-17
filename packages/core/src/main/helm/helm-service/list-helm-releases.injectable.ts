@@ -10,7 +10,7 @@ import listHelmReleasesInjectable from "../list-helm-releases.injectable";
 import type { AsyncResult } from "@k8slens/utilities";
 import type { ListedHelmRelease } from "../../../features/helm-releases/common/channels";
 
-export type ListClusterHelmReleases = (cluster: Cluster, namespace?: string) => AsyncResult<ListedHelmRelease[], string>;
+export type ListClusterHelmReleases = (cluster: Cluster, namespace?: string) => AsyncResult<ListedHelmRelease[], Error>;
 
 const listClusterHelmReleasesInjectable = getInjectable({
   id: "list-cluster-helm-releases",

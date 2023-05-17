@@ -5,7 +5,6 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import httpProxy from "http-proxy";
 import path from "path";
-import { webpackDevServerPort } from "../../../../webpack/vars";
 import type { LensApiRequest, RouteResponse } from "../../router/route";
 
 export const webpackDevServerPort = Number(process.env.WEBPACK_DEV_SERVER_PORT) || 9191;

@@ -155,7 +155,7 @@ class NonInjectedConfirmDialog extends React.Component<ConfirmDialogProps & Depe
             primary
             className="ok"
             label={labelOk}
-            onClick={prevDefault(this.ok)}
+            onClick={prevDefault(() => void this.ok())}
             waiting={this.isSaving}
             data-testid="confirm"
             {...okButtonProps}

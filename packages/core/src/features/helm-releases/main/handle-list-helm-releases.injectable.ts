@@ -23,7 +23,13 @@ const handleListHelmReleasesInjectable = getRequestChannelListenerInjectable({
         return result.error(`Cluster with id "${clusterId}" not found`);
       }
 
-      return listClusterHelmReleases(cluster, namespace);
+      const listResult = await listClusterHelmReleases(cluster, namespace);
+
+      if (listResult.isOk) {
+        return listResult;
+      }
+
+      return result.error(`Failed to list helm releases: ${listResult.error.message}`);
     };
   },
 });
