@@ -3,7 +3,7 @@
   "productName": "",
   "description": "Lens Desktop Core",
   "homepage": "https://github.com/lensapp/lens",
-  "version": "6.5.0-alpha.13",
+  "version": "6.5.0-alpha.14",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lensapp/lens.git"
@@ -186,7 +186,7 @@
   },
   "devDependencies": {
     "@async-fn/jest": "1.6.4",
-    "@k8slens/messaging-fake-bridge": "^1.0.0-alpha.7",
+    "@k8slens/messaging-fake-bridge": "^1.0.0-alpha.8",
     "@k8slens/react-testing-library-discovery": "^1.0.0-alpha.4",
     "@ogre-tools/linkable": "^16.1.0",
     "@sentry/types": "^6.19.7",
