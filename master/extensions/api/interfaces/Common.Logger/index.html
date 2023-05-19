@@ -802,8 +802,6 @@
 <p><a href="../../">@k8slens/extensions</a> / <a href="../../modules/">Exports</a> / <a href="../../modules/Common/">Common</a> / Logger</p>
 <h1 id="interface-logger">Interface: Logger<a class="headerlink" href="#interface-logger" title="Permanent link">#</a></h1>
 <p><a href="../../modules/Common/">Common</a>.Logger</p>
-<p>Copyright (c) OpenLens Authors. All rights reserved.
-Licensed under MIT License. See LICENSE in root directory for more information.</p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
@@ -815,134 +813,19 @@ Licensed under MIT License. See LICENSE in root directory for more information.<
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="debug">debug<a class="headerlink" href="#debug" title="Permanent link">#</a></h3>
-<p>• <strong>debug</strong>: (<code>message</code>: <code>string</code>, ...<code>args</code>: <code>any</code>) =&gt; <code>void</code></p>
-<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
-<p>▸ (<code>message</code>, <code>...args</code>): <code>void</code></p>
-<h5 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h5>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>message</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>...args</code></td>
-<td align="left"><code>any</code></td>
-</tr>
-</tbody>
-</table>
-<h5 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h5>
-<p><code>void</code></p>
+<p>• <strong>debug</strong>: <code>LogFunction</code></p>
 <hr />
 <h3 id="error">error<a class="headerlink" href="#error" title="Permanent link">#</a></h3>
-<p>• <strong>error</strong>: (<code>message</code>: <code>string</code>, ...<code>args</code>: <code>any</code>) =&gt; <code>void</code></p>
-<h4 id="type-declaration_1">Type declaration<a class="headerlink" href="#type-declaration_1" title="Permanent link">#</a></h4>
-<p>▸ (<code>message</code>, <code>...args</code>): <code>void</code></p>
-<h5 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h5>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>message</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>...args</code></td>
-<td align="left"><code>any</code></td>
-</tr>
-</tbody>
-</table>
-<h5 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h5>
-<p><code>void</code></p>
+<p>• <strong>error</strong>: <code>LogFunction</code></p>
 <hr />
 <h3 id="info">info<a class="headerlink" href="#info" title="Permanent link">#</a></h3>
-<p>• <strong>info</strong>: (<code>message</code>: <code>string</code>, ...<code>args</code>: <code>any</code>) =&gt; <code>void</code></p>
-<h4 id="type-declaration_2">Type declaration<a class="headerlink" href="#type-declaration_2" title="Permanent link">#</a></h4>
-<p>▸ (<code>message</code>, <code>...args</code>): <code>void</code></p>
-<h5 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h5>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>message</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>...args</code></td>
-<td align="left"><code>any</code></td>
-</tr>
-</tbody>
-</table>
-<h5 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h5>
-<p><code>void</code></p>
+<p>• <strong>info</strong>: <code>LogFunction</code></p>
 <hr />
 <h3 id="silly">silly<a class="headerlink" href="#silly" title="Permanent link">#</a></h3>
-<p>• <strong>silly</strong>: (<code>message</code>: <code>string</code>, ...<code>args</code>: <code>any</code>) =&gt; <code>void</code></p>
-<h4 id="type-declaration_3">Type declaration<a class="headerlink" href="#type-declaration_3" title="Permanent link">#</a></h4>
-<p>▸ (<code>message</code>, <code>...args</code>): <code>void</code></p>
-<h5 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h5>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>message</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>...args</code></td>
-<td align="left"><code>any</code></td>
-</tr>
-</tbody>
-</table>
-<h5 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h5>
-<p><code>void</code></p>
+<p>• <strong>silly</strong>: <code>LogFunction</code></p>
 <hr />
 <h3 id="warn">warn<a class="headerlink" href="#warn" title="Permanent link">#</a></h3>
-<p>• <strong>warn</strong>: (<code>message</code>: <code>string</code>, ...<code>args</code>: <code>any</code>) =&gt; <code>void</code></p>
-<h4 id="type-declaration_4">Type declaration<a class="headerlink" href="#type-declaration_4" title="Permanent link">#</a></h4>
-<p>▸ (<code>message</code>, <code>...args</code>): <code>void</code></p>
-<h5 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h5>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>message</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>...args</code></td>
-<td align="left"><code>any</code></td>
-</tr>
-</tbody>
-</table>
-<h5 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h5>
-<p><code>void</code></p>
+<p>• <strong>warn</strong>: <code>LogFunction</code></p>
 
 
   
