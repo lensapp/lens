@@ -95,7 +95,7 @@ export class NodeShellSession extends ShellSession {
         break;
     }
 
-    await this.openShellProcess(this.dependencies.directoryContainingKubectl, args, env);
+    await this.openShellProcess(await this.kubectl.getPath(), args, env);
   }
 
   protected createNodeShellPod(coreApi: CoreV1Api) {
