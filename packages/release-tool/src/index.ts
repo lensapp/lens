@@ -5,7 +5,7 @@
  */
 import assert from "assert";
 import chalk from "chalk";
-import child_process, { ExecFileOptions, spawn as _spawn } from "child_process";
+import child_process, { spawn as _spawn } from "child_process";
 import { readFile } from "fs/promises";
 import inquirer from "inquirer";
 import { createInterface, ReadLine } from "readline";
@@ -24,11 +24,15 @@ const exec = ((cmd, ...args) => {
   return _exec(cmd, ...args as any[]);
 }) as typeof _exec;
 
-const execFile = (file: string, args: string[], opts?: ExecFileOptions) => {
-  console.log("EXEC", file, args);
+const execFile = ((file, ...rest) => {
+  if (Array.isArray(rest[0])) {
+    console.log("EXEC-FILE", file, rest[0]);
+  } else {
+    console.log("EXEC-FILE", file);
+  }
 
-  return _execFile(file, args, opts);
-};
+  return _execFile(file, ...rest as [any, any]);
+}) as typeof _execFile;
 
 const spawn = ((file, ...args) => {
   console.log("SPAWN", file);
@@ -168,6 +172,33 @@ function formatVersionForPickingPrs(version: SemVer): string {
   return `${version.major}.${version.minor}.${version.patch+1}`;
 }
 
+async function deleteAndClosePreviousReleaseBranch(prBase: string, prBranch: string) {
+  try {
+    await pipeExecFile("gh", [
+      "pr",
+      "view",
+      prBranch,
+      "--json",
+      "number",
+    ]);
+  } catch {
+    return;
+  }
+
+  await pipeExecFile("gh", [
+    "pr",
+    "close",
+    prBranch,
+  ]);
+
+  await pipeExecFile("git", [
+    "push",
+    "origin",
+    "--delete",
+    prBranch,
+  ]);
+}
+
 async function createReleaseBranchAndCommit(prBase: string, version: SemVer, prBody: string): Promise<void> {
   const prBranch = `release/v${version.format()}`;
 
@@ -184,6 +215,8 @@ async function createReleaseBranchAndCommit(prBase: string, version: SemVer, prB
 
     throw error;
   }
+
+  await deleteAndClosePreviousReleaseBranch(prBase, prBranch);
 
   await pipeExecFile("git", ["push", "--set-upstream", "origin", prBranch]);
 
