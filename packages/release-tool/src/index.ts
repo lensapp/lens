@@ -398,13 +398,53 @@ function formatChangelog(previousReleasedVersion: string, prs: ExtendedGithubPrD
   ].join("\n");
 }
 
+async function getCommitsOfPr(pr: ExtendedGithubPrData) {
+  const commits: components["schemas"]["commit"][] = [];
+
+  for (let page = 1; ; page += 1) {
+    const pageResult = await octokit.request("GET /repos/{owner}/{repo}/pulls/{pull_number}/commits", {
+      owner: "lensapp",
+      repo: "lens",
+      pull_number: pr.number,
+      headers: {
+        'X-GitHub-Api-Version': '2022-11-28'
+      },
+      per_page: 100,
+      page,
+    });
+
+    commits.push(...pageResult.data);
+
+    if (pageResult.data.length < 100) {
+      break;
+    }
+  }
+
+  return commits;
+}
+
+async function computeIfPrWasSquashed(pr: ExtendedGithubPrData, commits: components["schemas"]["commit"][]): Promise<boolean> {
+  const { stdout: mergeCommitSubject } = await execFile("git", ["log", "-1", "--format=%s", pr.mergeCommitSha]);
+
+  return commits.every(commit => commit.commit.message !== mergeCommitSubject);
+}
+
 async function cherryPickCommits(prs: ExtendedGithubPrData[]): Promise<void> {
   const rl = createInterface(process.stdin);
   const cherryPickCommit = cherryPickCommitWith(rl);
 
   for (const pr of prs) {
     if (pr.shouldAttemptCherryPick) {
-      await cherryPickCommit(pr.mergeCommitSha);
+      const commits = await getCommitsOfPr(pr);
+      const wasSquashed = await computeIfPrWasSquashed(pr, commits);
+
+      if (wasSquashed) {
+        await cherryPickCommit(pr.mergeCommitSha);
+      } else {
+        for (const commit of commits) {
+          await cherryPickCommit(commit.sha);
+        }
+      }
     } else {
       console.log(`Skipping cherry picking of #${pr.number} - ${pr.title}`);
     }
