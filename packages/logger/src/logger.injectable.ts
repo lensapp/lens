@@ -9,9 +9,16 @@ import {
   getInjectionToken,
   lifecycleEnum,
 } from "@ogre-tools/injectable";
-import type { Logger } from "./logger";
 import { winstonLoggerInjectable } from "./winston-logger.injectable";
 import { pipeline } from "@ogre-tools/fp";
+
+export interface Logger {
+  info: LogFunction;
+  error: LogFunction;
+  debug: LogFunction;
+  warn: LogFunction;
+  silly: LogFunction;
+}
 
 /** @deprecated Use specific injectionToken, eg. logErrorInjectionToken */
 export const loggerInjectionToken = getInjectionToken<Logger>({
@@ -21,18 +28,18 @@ export const loggerInjectionToken = getInjectionToken<Logger>({
 export const loggerInjectable = getInjectable({
   id: "logger",
   instantiate: (di): Logger => ({
-    debug: di.inject(logDebugInjectionToken),
-    info: di.inject(logInfoInjectionToken),
-    warn: di.inject(logWarningInjectionToken),
-    error: di.inject(logErrorInjectionToken),
-    silly: di.inject(logSillyInjectionToken),
+    debug: getLogFunctionFor("debug", undefined)(di),
+    info: getLogFunctionFor("info", undefined)(di),
+    warn: getLogFunctionFor("warn", undefined)(di),
+    error: getLogFunctionFor("error", undefined)(di),
+    silly: getLogFunctionFor("silly", undefined)(di),
   }),
 
   decorable: false,
   injectionToken: loggerInjectionToken,
 });
 
-export type LogFunction = (message: string, ...data: any[]) => void;
+export type LogFunction = (message: string, ...data: unknown[]) => void;
 
 export const logDebugInjectionToken = getInjectionToken<LogFunction>({
   id: "log-debug-injection-token",
@@ -56,24 +63,23 @@ export const logSillyInjectionToken = getInjectionToken<LogFunction>({
 
 const screamingKebabCase = (str: string) => pipeline(str, kebabCase, toUpper);
 
-const getLogFunctionFor =
-  (scenario: keyof Logger) =>
-  (di: DiContainerForInjection): LogFunction => {
+const getLogFunctionFor = (scenario: keyof Logger, namespace: string | undefined) => {
+  const prefix = namespace
+    ? `[${screamingKebabCase(namespace.replace(/-feature$/, ""))}]: `
+    : "";
+
+  return (di: DiContainerForInjection): LogFunction => {
     const winstonLogger = di.inject(winstonLoggerInjectable);
 
     return (message, ...data) => {
-      winstonLogger[scenario](
-        di.sourceNamespace
-          ? `[${screamingKebabCase(di.sourceNamespace)}]: ${message}`
-          : message,
-        ...data
-      );
+      winstonLogger[scenario](`${prefix}${message}`, ...data);
     };
   };
+};
 
 export const logDebugInjectable = getInjectable({
   id: "log-debug",
-  instantiate: getLogFunctionFor("debug"),
+  instantiate: (di) => getLogFunctionFor("debug", di.sourceNamespace)(di),
   injectionToken: logDebugInjectionToken,
   lifecycle: lifecycleEnum.keyedSingleton({
     getInstanceKey: (di) => di.sourceNamespace,
@@ -82,7 +88,7 @@ export const logDebugInjectable = getInjectable({
 
 export const logInfoInjectable = getInjectable({
   id: "log-info",
-  instantiate: getLogFunctionFor("info"),
+  instantiate: (di) => getLogFunctionFor("info", di.sourceNamespace)(di),
   injectionToken: logInfoInjectionToken,
   lifecycle: lifecycleEnum.keyedSingleton({
     getInstanceKey: (di) => di.sourceNamespace,
@@ -91,7 +97,7 @@ export const logInfoInjectable = getInjectable({
 
 export const logWarningInjectable = getInjectable({
   id: "log-warning",
-  instantiate: getLogFunctionFor("warn"),
+  instantiate: (di) => getLogFunctionFor("warn", di.sourceNamespace)(di),
   injectionToken: logWarningInjectionToken,
   lifecycle: lifecycleEnum.keyedSingleton({
     getInstanceKey: (di) => di.sourceNamespace,
@@ -100,7 +106,7 @@ export const logWarningInjectable = getInjectable({
 
 export const logErrorInjectable = getInjectable({
   id: "log-error",
-  instantiate: getLogFunctionFor("error"),
+  instantiate: (di) => getLogFunctionFor("error", di.sourceNamespace)(di),
   injectionToken: logErrorInjectionToken,
   lifecycle: lifecycleEnum.keyedSingleton({
     getInstanceKey: (di) => di.sourceNamespace,
@@ -109,7 +115,7 @@ export const logErrorInjectable = getInjectable({
 
 export const logSillyInjectable = getInjectable({
   id: "log-silly",
-  instantiate: getLogFunctionFor("silly"),
+  instantiate: (di) => getLogFunctionFor("silly", di.sourceNamespace)(di),
   injectionToken: logSillyInjectionToken,
   lifecycle: lifecycleEnum.keyedSingleton({
     getInstanceKey: (di) => di.sourceNamespace,

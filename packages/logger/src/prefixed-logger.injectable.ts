@@ -3,8 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import type { Logger } from "./logger";
-import { loggerInjectionToken } from "./logger.injectable";
+import { Logger, loggerInjectionToken } from "./logger.injectable";
 
 /** @deprecated Use specific injectionToken, eg. logErrorInjectionToken */
 export const prefixedLoggerInjectable = getInjectable({

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-export type { LogFunction } from "./src/logger.injectable";
+export type { LogFunction, Logger } from "./src/logger.injectable";
 export {
   logDebugInjectionToken,
   logErrorInjectionToken,
@@ -12,7 +12,6 @@ export {
   logWarningInjectionToken,
 } from "./src/logger.injectable";
 
-export type { Logger } from "./src/logger";
 /** @deprecated Use specific injectionToken, eg. logErrorInjectionToken */
 export { loggerInjectionToken } from "./src/logger.injectable";
 /** @deprecated Use specific injectionToken, eg. logErrorInjectionToken */
