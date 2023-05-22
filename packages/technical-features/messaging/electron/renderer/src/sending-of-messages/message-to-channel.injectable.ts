@@ -1,6 +1,11 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import sendToIpcInjectable from "./send-to-ipc.injectable";
 import { SendMessageToChannel, sendMessageToChannelInjectionToken } from "@k8slens/messaging";
+import { getMessageChannel } from "@k8slens/messaging";
+
+type BroadcasterChannelMessage = { targetChannelId: string; message: unknown };
+
+const broadcasterChannel = getMessageChannel<BroadcasterChannelMessage>("messaging-broadcaster-in-main");
 
 const messageToChannelInjectable = getInjectable({
   id: "message-to-channel",
@@ -8,8 +13,8 @@ const messageToChannelInjectable = getInjectable({
   instantiate: (di) => {
     const sendToIpc = di.inject(sendToIpcInjectable);
 
-    return ((channel, message) => {
-      sendToIpc(channel.id, message);
+    return ((targetChannel, message) => {
+      sendToIpc(broadcasterChannel.id, { targetChannelId: targetChannel.id, message });
     }) as SendMessageToChannel;
   },
 

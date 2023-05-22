@@ -31,8 +31,11 @@ describe("message-from-channel", () => {
       sendMessageToChannel(someChannel, 42);
     });
 
-    it("sends to ipcRenderer of Electron", () => {
-      expect(sendToIpcMock).toHaveBeenCalledWith("some-channel-id", 42);
+    it("sends message to broadcasting channel using IPC", () => {
+      expect(sendToIpcMock).toHaveBeenCalledWith("messaging-broadcaster-in-main", {
+        targetChannelId: "some-channel-id",
+        message: 42,
+      });
     });
   });
 });

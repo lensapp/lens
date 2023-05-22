@@ -5,6 +5,7 @@ import { getMessageChannel, sendMessageToChannelInjectionToken } from "@k8slens/
 import getWebContentsInjectable from "./get-web-contents.injectable";
 import type { WebContents } from "electron";
 import allowCommunicationListenerInjectable from "./allow-communication-listener.injectable";
+import { getMessageChannelListenerInjectable } from "@k8slens/messaging";
 
 const someChannel = getMessageChannel<string>("some-channel");
 
@@ -17,12 +18,24 @@ describe("send-message-to-channel", () => {
     registerFeature(di, messagingFeatureForMain);
   });
 
-  it("given no web contents, when sending a message, does not do anything", () => {
+  it("given no web contents but with local listeners, when sending a message, messages the local listeners", () => {
     di.override(getWebContentsInjectable, () => () => []);
+
+    const localHandlerMock = jest.fn();
+
+    const someLocalListenerInjectable = getMessageChannelListenerInjectable({
+      id: "some-local-listener",
+      channel: someChannel,
+      getHandler: () => localHandlerMock,
+    });
+
+    di.register(someLocalListenerInjectable);
 
     const sendMessageToChannel = di.inject(sendMessageToChannelInjectionToken);
 
-    expect(() => sendMessageToChannel(someChannel, "some-message")).not.toThrow();
+    sendMessageToChannel(someChannel, "some-message");
+
+    expect(localHandlerMock).toHaveBeenCalledWith("some-message");
   });
 
   describe("given web content that is alive", () => {
