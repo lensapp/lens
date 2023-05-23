@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import horizontalPodAutoscalersRouteInjectable from "../../../common/front-end-routing/routes/cluster/config/horizontal-pod-autoscalers/horizontal-pod-autoscalers-route.injectable";
-import configSidebarItemInjectable from "../config/config-sidebar-item.injectable";
+import configSidebarItemInjectable from "../config/config-sidebar-items.injectable";
 import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToHorizontalPodAutoscalersInjectable from "../../../common/front-end-routing/routes/cluster/config/horizontal-pod-autoscalers/navigate-to-horizontal-pod-autoscalers.injectable";

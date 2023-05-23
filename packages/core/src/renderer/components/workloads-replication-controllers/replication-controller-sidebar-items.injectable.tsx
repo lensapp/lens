@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import workloadsSidebarItemInjectable from "../workloads/workloads-sidebar-item.injectable";
+import workloadsSidebarItemInjectable from "../workloads/workloads-sidebar-items.injectable";
 import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import replicationControllersRouteInjectable from "../../../common/front-end-routing/routes/cluster/workloads/replication-controllers/route.injectable";

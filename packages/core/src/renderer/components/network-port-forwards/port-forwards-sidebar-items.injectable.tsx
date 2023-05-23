@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 
 import portForwardsRouteInjectable from "../../../common/front-end-routing/routes/cluster/network/port-forwards/port-forwards-route.injectable";
-import networkSidebarItemInjectable from "../network/network-sidebar-item.injectable";
+import networkSidebarItemInjectable from "../network/network-sidebar-items.injectable";
 import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToPortForwardsInjectable from "../../../common/front-end-routing/routes/cluster/network/port-forwards/navigate-to-port-forwards.injectable";
