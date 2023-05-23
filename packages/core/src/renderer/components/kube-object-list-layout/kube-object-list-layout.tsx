@@ -31,6 +31,7 @@ import type { ClusterContext } from "../../cluster-frame-context/cluster-frame-c
 import type { GeneralKubeObjectListLayoutColumn, SpecificKubeListLayoutColumn } from "@k8slens/list-layout";
 import { kubeObjectListLayoutColumnInjectionToken } from "@k8slens/list-layout";
 import { sortBy } from "lodash";
+import { TableDataContext } from "@k8slens/table-tokens";
 
 export type KubeItemListStore<K extends KubeObject> = ItemListStore<K, false> & SubscribableStore & {
   getByPath: (path: string) => K | undefined;
@@ -186,7 +187,7 @@ class NonInjectedKubeObjectListLayout<
       ...targetColumns,
     ], (v) => -v.priority).map((col) => col.header);
 
-    return (
+    const itemsListLayout = (
       <ItemListLayout<K, false>
         className={cssNames("KubeObjectListLayout", className)}
         store={store}
@@ -232,6 +233,15 @@ class NonInjectedKubeObjectListLayout<
         spinnerTestId="kube-object-list-layout-spinner"
         {...layoutProps}
       />
+    );
+
+    return (
+      <TableDataContext.Provider
+        value={{
+          columns: targetColumns as GeneralKubeObjectListLayoutColumn[],
+        }}>
+        {itemsListLayout}
+      </TableDataContext.Provider>
     );
   }
 }
