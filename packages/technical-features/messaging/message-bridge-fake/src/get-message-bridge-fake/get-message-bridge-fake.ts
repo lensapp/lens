@@ -47,7 +47,7 @@ const overrideMessaging = ({
   messageListenersByDi.set(di, messageHandlersByChannel);
 
   di.override(sendMessageToChannelInjectionToken, () => (channel, message) => {
-    const allOtherDis = [...messageListenersByDi.keys()].filter((x) => x !== di);
+    const allOtherDis = [...messageListenersByDi.keys()]; //.filter((x) => x !== di);
 
     allOtherDis.forEach((otherDi) => {
       const listeners = messageListenersByDi.get(otherDi);

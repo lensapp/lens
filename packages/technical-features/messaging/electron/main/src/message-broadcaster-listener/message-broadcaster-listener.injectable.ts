@@ -13,7 +13,6 @@ export const messageBroadcasterListenerInjectable = getMessageChannelListenerInj
     const sendMessageToChannel = di.inject(sendMessageToChannelInjectionToken);
 
     return ({ targetChannelId, message }, extraData) => {
-      console.log("mikkomikko", { targetChannelId, message });
       sendMessageToChannel({ id: targetChannelId }, message, extraData);
     };
   },

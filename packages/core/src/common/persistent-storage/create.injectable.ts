@@ -7,18 +7,15 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { Options } from "conf/dist/source";
 import { isEqual, kebabCase } from "lodash";
 import type { IEqualsComparer } from "mobx";
-import { reaction } from "mobx";
+import { action, runInAction, reaction } from "mobx";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
 import getBasenameOfPathInjectable from "../path/get-basename.injectable";
-import { enlistMessageChannelListenerInjectionToken, sendMessageToChannelInjectionToken } from "@k8slens/messaging";
+import { sendMessageToChannelInjectionToken, getMessageChannelListenerInjectable } from "@k8slens/messaging";
 import type { MessageChannel } from "@k8slens/messaging";
-import { persistentStorageIpcChannelPrefixesInjectionToken } from "./channel-prefix";
-import { shouldPersistentStorageDisableSyncInIpcListenerInjectionToken } from "./disable-sync";
 import { persistStateToConfigInjectionToken } from "./save-to-file";
 import type { Migrations } from "./migrations.injectable";
-import { nextTick } from "process";
 
 export interface PersistentStorage {
   /**
@@ -65,10 +62,8 @@ const createPersistentStorageInjectable = getInjectable({
     const getConfigurationFileModel = di.inject(getConfigurationFileModelInjectable);
     const logger = di.inject(loggerInjectionToken);
     const getBasenameOfPath = di.inject(getBasenameOfPathInjectable);
-    const ipcChannelPrefixes = di.inject(persistentStorageIpcChannelPrefixesInjectionToken);
     const persistStateToConfig = di.inject(persistStateToConfigInjectionToken);
-    const enlistMessageChannelListener = di.inject(enlistMessageChannelListenerInjectionToken);
-    const shouldDisableSyncInListener = di.inject(shouldPersistentStorageDisableSyncInIpcListenerInjectionToken);
+    // const shouldDisableSyncInListener = di.inject(shouldPersistentStorageDisableSyncInIpcListenerInjectionToken);
     const sendMessageToChannel = di.inject(sendMessageToChannelInjectionToken);
 
     return <T extends object>(rawParams: PersistentStorageParams<T>) => {
@@ -101,47 +96,53 @@ const createPersistentStorageInjectable = getInjectable({
         logger.info(`[${displayName}]: LOADED from ${config.path}`);
 
         const syncDisposers = disposer();
-        const sendChannel: MessageChannel<T> = {
-          id: `${ipcChannelPrefixes.remote}:${config.path}`,
+
+        const targetChannel: MessageChannel<T> = {
+          id: config.path,
         };
-        const receiveChannel: MessageChannel<T> = {
-          id: `${ipcChannelPrefixes.local}:${config.path}`,
-        };
+
         const name = getBasenameOfPath(config.path);
 
-        const disableSync = () => syncDisposers();
+        // const disableSync = () => syncDisposers();
         const enableSync = () => {
+          const mikkoInjectable = getMessageChannelListenerInjectable({
+            id: `persistent-storage-sync-${displayName}`,
+            channel: targetChannel,
+            getHandler: () => (model) => {
+              logger.silly(`[${displayName}]: syncing ${name}`, { model });
+
+              // if (shouldDisableSyncInListener) {
+              //   disableSync();
+              // }
+
+              // todo: use "resourceVersion" if merge required (to avoid equality checks => better performance)
+              if (!isEqual(toJSON(), model)) {
+                fromStore(model);
+              }
+
+              // if (shouldDisableSyncInListener) {
+              //   nextTick(() => {
+              //     enableSync();
+              //   });
+              // }
+            },
+          });
+
+          runInAction(() => {
+            di.register(mikkoInjectable);
+          });
+
           syncDisposers.push(
             reaction(
               () => toJSON(),
-              model => {
+              (model) => {
                 persistStateToConfig(config, model);
-                sendMessageToChannel(sendChannel, model);
+                sendMessageToChannel(targetChannel, model);
               },
               syncOptions,
             ),
-            enlistMessageChannelListener({
-              id: "persistent-storage-sync",
-              channel: receiveChannel,
-              handler: (model) => {
-                logger.silly(`[${displayName}]: syncing ${name}`, { model });
 
-                if (shouldDisableSyncInListener) {
-                  disableSync();
-                }
-
-                // todo: use "resourceVersion" if merge required (to avoid equality checks => better performance)
-                if (!isEqual(toJSON(), model)) {
-                  fromStore(model);
-                }
-
-                if (shouldDisableSyncInListener) {
-                  nextTick(() => {
-                    enableSync();
-                  });
-                }
-              },
-            }),
+            action(() => di.deregister(mikkoInjectable)),
           );
         };
 
