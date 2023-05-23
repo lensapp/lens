@@ -3,30 +3,35 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import { computed } from "mobx";
 import endpointsRouteInjectable from "../../../common/front-end-routing/routes/cluster/network/endpoints/endpoints-route.injectable";
-import networkSidebarItemInjectable from "../network/network-sidebar-items.injectable";
-import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
+import { networkSidebarItemId } from "../network/network-sidebar-items.injectable";
+import { sidebarItemsInjectionToken } from "../layout/sidebar-items.injectable";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToEndpointsInjectable from "../../../common/front-end-routing/routes/cluster/network/endpoints/navigate-to-endpoints.injectable";
 
-const endpointsSidebarItemInjectable = getInjectable({
-  id: "endpoints-sidebar-item",
+const endpointsSidebarItemsInjectable = getInjectable({
+  id: "endpoints-sidebar-items",
 
   instantiate: (di) => {
     const route = di.inject(endpointsRouteInjectable);
+    const navigateToEndpoints = di.inject(navigateToEndpointsInjectable);
+    const routeIsActive = di.inject(routeIsActiveInjectable, route);
 
-    return {
-      id: "endpoints",
-      parentId: di.inject(networkSidebarItemInjectable).id,
-      title: "Endpoints",
-      onClick: di.inject(navigateToEndpointsInjectable),
-      isActive: di.inject(routeIsActiveInjectable, route),
-      isVisible: route.isEnabled,
-      orderNumber: 20,
-    };
+    return computed(() => [
+      {
+        id: "endpoints",
+        parentId: networkSidebarItemId,
+        title: "Endpoints",
+        onClick: navigateToEndpoints,
+        isActive: routeIsActive,
+        isVisible: route.isEnabled,
+        orderNumber: 20,
+      },
+    ]);
   },
 
-  injectionToken: sidebarItemInjectionToken,
+  injectionToken: sidebarItemsInjectionToken,
 });
 
-export default endpointsSidebarItemInjectable;
+export default endpointsSidebarItemsInjectable;

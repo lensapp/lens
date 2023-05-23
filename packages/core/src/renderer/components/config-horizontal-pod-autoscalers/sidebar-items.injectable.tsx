@@ -3,30 +3,36 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import { computed } from "mobx";
 import horizontalPodAutoscalersRouteInjectable from "../../../common/front-end-routing/routes/cluster/config/horizontal-pod-autoscalers/horizontal-pod-autoscalers-route.injectable";
-import configSidebarItemInjectable from "../config/config-sidebar-items.injectable";
-import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
+import { configSidebarItemId } from "../config/config-sidebar-items.injectable";
+import type { SidebarItemRegistration } from "../layout/sidebar-items.injectable";
+import { sidebarItemsInjectionToken } from "../layout/sidebar-items.injectable";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToHorizontalPodAutoscalersInjectable from "../../../common/front-end-routing/routes/cluster/config/horizontal-pod-autoscalers/navigate-to-horizontal-pod-autoscalers.injectable";
 
-const horizontalPodAutoScalersSidebarItemInjectable = getInjectable({
-  id: "horizontal-pod-auto-scalers-sidebar-item",
+const horizontalPodAutoScalersSidebarItemsInjectable = getInjectable({
+  id: "horizontal-pod-auto-scalers-sidebar-items",
 
   instantiate: (di) => {
     const route = di.inject(horizontalPodAutoscalersRouteInjectable);
+    const navigateToHorizontalPodAutoscalers = di.inject(navigateToHorizontalPodAutoscalersInjectable);
+    const routeIsActive = di.inject(routeIsActiveInjectable, route);
 
-    return {
-      id: "horizontal-pod-auto-scalers",
-      parentId: di.inject(configSidebarItemInjectable).id,
-      title: "HPA",
-      onClick: di.inject(navigateToHorizontalPodAutoscalersInjectable),
-      isActive: di.inject(routeIsActiveInjectable, route),
-      isVisible: route.isEnabled,
-      orderNumber: 50,
-    };
+    return computed((): SidebarItemRegistration[] => [
+      {
+        id: "horizontal-pod-auto-scalers",
+        parentId: configSidebarItemId,
+        title: "HPA",
+        onClick: navigateToHorizontalPodAutoscalers,
+        isActive: routeIsActive,
+        isVisible: route.isEnabled,
+        orderNumber: 50,
+      },
+    ]);
   },
 
-  injectionToken: sidebarItemInjectionToken,
+  injectionToken: sidebarItemsInjectionToken,
 });
 
-export default horizontalPodAutoScalersSidebarItemInjectable;
+export default horizontalPodAutoScalersSidebarItemsInjectable;

@@ -12,8 +12,8 @@ import { SidebarItem } from "./sidebar-item";
 import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
 import { SidebarCluster } from "./sidebar-cluster";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { HierarchicalSidebarItem } from "@k8slens/cluster-sidebar";
-import { sidebarItemsInjectable } from "@k8slens/cluster-sidebar";
+import type { HierarchicalSidebarItem } from "./sidebar-items.injectable";
+import sidebarItemsInjectable from "./sidebar-items.injectable";
 import type { IComputedValue } from "mobx";
 import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
 

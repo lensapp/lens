@@ -5,8 +5,9 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
-import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
-import { runInAction } from "mobx";
+import type { SidebarItemRegistration } from "../../renderer/components/layout/sidebar-items.injectable";
+import { sidebarItemsInjectionToken } from "../../renderer/components/layout/sidebar-items.injectable";
+import { computed, runInAction } from "mobx";
 import { noop } from "lodash/fp";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
@@ -22,14 +23,7 @@ describe("cluster - order of sidebar items", () => {
 
     builder.beforeWindowStart(({ windowDi }) => {
       runInAction(() => {
-        windowDi.register(
-          someParentSidebarItemInjectable,
-          someOtherParentSidebarItemInjectable,
-          someAnotherParentSidebarItemInjectable,
-          someChildSidebarItemInjectable,
-          someOtherChildSidebarItemInjectable,
-          someAnotherChildSidebarItemInjectable,
-        );
+        windowDi.register(testSidebarItemsInjectable);
       });
     });
   });
@@ -84,74 +78,54 @@ describe("cluster - order of sidebar items", () => {
   });
 });
 
-const someParentSidebarItemInjectable = getInjectable({
-  id: "some-parent-sidebar-item",
-  instantiate: () => ({
-    id: "some-parent-id",
-    parentId: null,
-    title: "Some parent",
-    onClick: noop,
-    orderNumber: 42,
-  }),
-  injectionToken: sidebarItemInjectionToken,
-});
+const testSidebarItemsInjectable = getInjectable({
+  id: "some-sidebar-item-injectable",
 
-const someOtherParentSidebarItemInjectable = getInjectable({
-  id: "some-other-parent-sidebar-item",
-  instantiate: () => ({
-    id: "some-other-parent-id",
-    parentId: null,
-    title: "Some other parent",
-    onClick: noop,
-    orderNumber: 126,
-  }),
-  injectionToken: sidebarItemInjectionToken,
-});
+  instantiate: () =>
+    computed((): SidebarItemRegistration[] => [
+      {
+        id: "some-parent-id",
+        parentId: null,
+        title: "Some parent",
+        onClick: noop,
+        orderNumber: 42,
+      },
+      {
+        id: "some-other-parent-id",
+        parentId: null,
+        title: "Some other parent",
+        onClick: noop,
+        orderNumber: 126,
+      },
+      {
+        id: "some-another-parent-id",
+        parentId: null,
+        title: "Some another parent",
+        onClick: noop,
+        orderNumber: 84,
+      },
+      {
+        id: "some-child-id",
+        parentId: "some-parent-id",
+        title: "Some child",
+        onClick: noop,
+        orderNumber: 168,
+      },
+      {
+        id: "some-other-child-id",
+        parentId: "some-parent-id",
+        title: "Some other child",
+        onClick: noop,
+        orderNumber: 252,
+      },
+      {
+        id: "some-another-child-id",
+        parentId: "some-parent-id",
+        title: "Some another child",
+        onClick: noop,
+        orderNumber: 210,
+      },
+    ]),
 
-const someAnotherParentSidebarItemInjectable = getInjectable({
-  id: "some-another-parent-sidebar-item",
-  instantiate: () => ({
-    id: "some-another-parent-id",
-    parentId: null,
-    title: "Some another parent",
-    onClick: noop,
-    orderNumber: 84,
-  }),
-  injectionToken: sidebarItemInjectionToken,
-});
-
-const someChildSidebarItemInjectable = getInjectable({
-  id: "some-child-sidebar-item",
-  instantiate: (di) => ({
-    id: "some-child-id",
-    parentId: di.inject(someParentSidebarItemInjectable).id,
-    title: "Some child",
-    onClick: noop,
-    orderNumber: 168,
-  }),
-  injectionToken: sidebarItemInjectionToken,
-});
-
-const someOtherChildSidebarItemInjectable = getInjectable({
-  id: "some-other-child-sidebar-item",
-  instantiate: (di) => ({
-    id: "some-other-child-id",
-    parentId: di.inject(someParentSidebarItemInjectable).id,
-    title: "Some other child",
-    onClick: noop,
-    orderNumber: 252,
-  }),
-  injectionToken: sidebarItemInjectionToken,
-});
-
-const someAnotherChildSidebarItemInjectable = getInjectable({
-  id: "some-another-child-sidebar-item",
-  instantiate: (di) => ({
-    id: "some-another-child-id",
-    parentId: di.inject(someParentSidebarItemInjectable).id,
-    title: "Some another child",
-    onClick: noop,
-    orderNumber: 210,
-  }),
-  injectionToken: sidebarItemInjectionToken,
+  injectionToken: sidebarItemsInjectionToken,
 });

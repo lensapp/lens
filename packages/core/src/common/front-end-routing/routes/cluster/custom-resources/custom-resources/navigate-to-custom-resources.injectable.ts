@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { navigateToRouteInjectionToken } from "../../../navigate-to-route-injection-token";
 import type { CustomResourcesPathParameters } from "./custom-resources-route.injectable";
 import customResourcesRouteInjectable from "./custom-resources-route.injectable";
+import { navigateToRouteInjectionToken } from "../../../../navigate-to-route-injection-token";
 
 const navigateToCustomResourcesInjectable = getInjectable({
   id: "navigate-to-custom-resources",
@@ -14,7 +14,8 @@ const navigateToCustomResourcesInjectable = getInjectable({
     const navigateToRoute = di.inject(navigateToRouteInjectionToken);
     const route = di.inject(customResourcesRouteInjectable);
 
-    return (parameters?: CustomResourcesPathParameters) => navigateToRoute(route, { parameters });
+    return (parameters?: CustomResourcesPathParameters) =>
+      navigateToRoute(route, { parameters });
   },
 });
 

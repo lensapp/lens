@@ -3,31 +3,36 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import { computed } from "mobx";
 
 import deploymentsRouteInjectable from "../../../common/front-end-routing/routes/cluster/workloads/deployments/deployments-route.injectable";
-import workloadsSidebarItemInjectable from "../workloads/workloads-sidebar-items.injectable";
-import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
+import { workloadsSidebarItemId } from "../workloads/workloads-sidebar-items.injectable";
+import { sidebarItemsInjectionToken } from "../layout/sidebar-items.injectable";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToDeploymentsInjectable from "../../../common/front-end-routing/routes/cluster/workloads/deployments/navigate-to-deployments.injectable";
 
-const deploymentsSidebarItemInjectable = getInjectable({
-  id: "deployments-sidebar-item",
+const deploymentsSidebarItemsInjectable = getInjectable({
+  id: "deployments-sidebar-items",
 
   instantiate: (di) => {
     const route = di.inject(deploymentsRouteInjectable);
+    const navigateToDeployments = di.inject(navigateToDeploymentsInjectable);
+    const routeIsActive = di.inject(routeIsActiveInjectable, route);
 
-    return {
-      id: "deployments",
-      parentId: di.inject(workloadsSidebarItemInjectable).id,
-      title: "Deployments",
-      onClick: di.inject(navigateToDeploymentsInjectable),
-      isActive: di.inject(routeIsActiveInjectable, route),
-      isVisible: route.isEnabled,
-      orderNumber: 30,
-    };
+    return computed(() => [
+      {
+        id: "deployments",
+        parentId: workloadsSidebarItemId,
+        title: "Deployments",
+        onClick: navigateToDeployments,
+        isActive: routeIsActive,
+        isVisible: route.isEnabled,
+        orderNumber: 30,
+      },
+    ]);
   },
 
-  injectionToken: sidebarItemInjectionToken,
+  injectionToken: sidebarItemsInjectionToken,
 });
 
-export default deploymentsSidebarItemInjectable;
+export default deploymentsSidebarItemsInjectable;

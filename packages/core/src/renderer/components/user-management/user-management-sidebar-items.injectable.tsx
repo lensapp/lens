@@ -3,24 +3,34 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
+import { computed } from "mobx";
+import type {
+  SidebarItemRegistration } from "../layout/sidebar-items.injectable";
+import {
+  sidebarItemsInjectionToken,
+} from "../layout/sidebar-items.injectable";
 import { Icon } from "../icon";
 import React from "react";
 import { noop } from "lodash/fp";
 
-const userManagementSidebarItemInjectable = getInjectable({
-  id: "user-management-sidebar-item",
+export const userManagementSidebarItemId = "user-management";
 
-  instantiate: () => ({
-    id: "user-management",
-    parentId: null,
-    getIcon: () => <Icon material="security" />,
-    title: "Access Control",
-    onClick: noop,
-    orderNumber: 100,
-  }),
+const userManagementSidebarItemsInjectable = getInjectable({
+  id: "user-management-sidebar-items",
 
-  injectionToken: sidebarItemInjectionToken,
+  instantiate: () =>
+    computed((): SidebarItemRegistration[] => [
+      {
+        id: userManagementSidebarItemId,
+        parentId: null,
+        getIcon: () => <Icon material="security" />,
+        title: "Access Control",
+        onClick: noop,
+        orderNumber: 100,
+      },
+    ]),
+
+  injectionToken: sidebarItemsInjectionToken,
 });
 
-export default userManagementSidebarItemInjectable;
+export default userManagementSidebarItemsInjectable;
