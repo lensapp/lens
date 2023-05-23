@@ -5,7 +5,7 @@
 import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import { getInjectable } from "@ogre-tools/injectable";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
-import networkSidebarItemInjectable from "../network/network-sidebar-item.injectable";
+import networkSidebarItemInjectable from "../network/network-sidebar-items.injectable";
 import navigateToIngressClassesInjectable from "../../../common/front-end-routing/routes/cluster/network/ingress-class/navigate-to-ingress-classes.injectable";
 import ingressClassesRouteInjectable from "../../../common/front-end-routing/routes/cluster/network/ingress-class/ingress-classes-route.injectable";
 

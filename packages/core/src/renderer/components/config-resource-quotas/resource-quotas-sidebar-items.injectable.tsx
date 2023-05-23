@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 
 import resourceQuotasRouteInjectable from "../../../common/front-end-routing/routes/cluster/config/resource-quotas/resource-quotas-route.injectable";
-import configSidebarItemInjectable from "../config/config-sidebar-item.injectable";
+import configSidebarItemInjectable from "../config/config-sidebar-items.injectable";
 import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToResourceQuotasInjectable from "../../../common/front-end-routing/routes/cluster/config/resource-quotas/navigate-to-resource-quotas.injectable";

@@ -8,7 +8,7 @@ import clusterRoleBindingsRouteInjectable from "../../../../common/front-end-rou
 import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import routeIsActiveInjectable from "../../../routes/route-is-active.injectable";
 import navigateToClusterRoleBindingsInjectable from "../../../../common/front-end-routing/routes/cluster/user-management/cluster-role-bindings/navigate-to-cluster-role-bindings.injectable";
-import userManagementSidebarItemInjectable from "../user-management-sidebar-item.injectable";
+import userManagementSidebarItemInjectable from "../user-management-sidebar-items.injectable";
 
 const clusterRoleBindingsSidebarItemInjectable = getInjectable({
   id: "cluster-role-bindings-sidebar-item",
