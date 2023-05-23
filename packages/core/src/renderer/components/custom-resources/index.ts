@@ -3,5 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-.CustomResources {
-}
+export * from "./crd-list";
+export * from "./crd-details";
+export * from "./crd-resources";
+export * from "./crd-resource-details";

@@ -8,7 +8,7 @@ import { CustomResourceDefinition, KubeObject } from "@k8slens/kube-object";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
-import { CustomResourceDetails } from "../details";
+import { CustomResourceDetails } from "../crd-resource-details";
 
 describe("<CustomResourceDetails />", () => {
   let render: DiRender;

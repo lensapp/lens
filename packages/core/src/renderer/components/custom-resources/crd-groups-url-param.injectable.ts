@@ -5,18 +5,16 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import createPageParamInjectable from "../../navigation/create-page-param.injectable";
 
-const selectedCustomResourceDefinitionGroupsUrlParamInjectable = getInjectable({
+const crdGroupsUrlParamInjectable = getInjectable({
   id: "crd-groups-url-param",
   instantiate: (di) => {
     const createPageParam = di.inject(createPageParamInjectable);
 
-    return createPageParam({
+    return createPageParam<string[]>({
       name: "groups",
-      defaultValue: new Set<string>(),
-      parse: (value: string[]) => new Set<string>(value),
-      stringify: (value) => Array.from(value),
+      defaultValue: [],
     });
   },
 });
 
-export default selectedCustomResourceDefinitionGroupsUrlParamInjectable;
+export default crdGroupsUrlParamInjectable;

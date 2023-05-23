@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-@import "./mixins.scss";
+@import "crd.mixins";
 
-.CustomResourceDefinitions {
+.CrdList {
   .TableCell {
     &.kind {
       flex: 1.5;

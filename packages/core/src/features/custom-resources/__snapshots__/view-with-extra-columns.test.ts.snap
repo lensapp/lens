@@ -77,7 +77,7 @@ exports[`Viewing Custom Resources with extra columns renders 1`] = `
           >
             <a
               class="navItem"
-              data-testid="link-for-sidebar-item-workloads"
+              data-testid="sidebar-item-link-for-workloads"
               href="/"
             >
               <i
@@ -92,7 +92,6 @@ exports[`Viewing Custom Resources with extra columns renders 1`] = `
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-workloads"
               >
                 <span
                   class="icon"
@@ -106,11 +105,36 @@ exports[`Viewing Custom Resources with extra columns renders 1`] = `
           <div
             class="SidebarItem"
             data-is-active-test="false"
+            data-testid="sidebar-item-config"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-config"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="list"
+                >
+                  list
+                </span>
+              </i>
+              <span>
+                Config
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
             <a
               class="navItem"
-              data-testid="link-for-sidebar-item-network"
+              data-testid="sidebar-item-link-for-network"
               href="/"
             >
               <i
@@ -128,7 +152,6 @@ exports[`Viewing Custom Resources with extra columns renders 1`] = `
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-network"
               >
                 <span
                   class="icon"
@@ -142,11 +165,36 @@ exports[`Viewing Custom Resources with extra columns renders 1`] = `
           <div
             class="SidebarItem"
             data-is-active-test="false"
+            data-testid="sidebar-item-storage"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-storage"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="storage"
+                >
+                  storage
+                </span>
+              </i>
+              <span>
+                Storage
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
             <a
               class="navItem"
-              data-testid="link-for-sidebar-item-helm"
+              data-testid="sidebar-item-link-for-helm"
               href="/"
             >
               <i
@@ -161,7 +209,67 @@ exports[`Viewing Custom Resources with extra columns renders 1`] = `
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-helm"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="keyboard_arrow_down"
+                >
+                  keyboard_arrow_down
+                </span>
+              </i>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-user-management"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-user-management"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="security"
+                >
+                  security
+                </span>
+              </i>
+              <span>
+                Access Control
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="true"
+            data-testid="sidebar-item-custom-resources"
+          >
+            <a
+              aria-current="page"
+              class="navItem active"
+              data-testid="sidebar-item-link-for-custom-resources"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="extension"
+                >
+                  extension
+                </span>
+              </i>
+              <span>
+                Custom Resources
+              </span>
+              <i
+                class="Icon expandIcon material focusable"
               >
                 <span
                   class="icon"
@@ -189,7 +297,7 @@ exports[`Viewing Custom Resources with extra columns renders 1`] = `
           class=""
         >
           <div
-            class="ItemListLayout flex column KubeObjectListLayout CustomResources"
+            class="ItemListLayout flex column KubeObjectListLayout CrdResources"
           >
             <div
               class="header flex gaps align-center"
@@ -237,7 +345,7 @@ exports[`Viewing Custom Resources with extra columns renders 1`] = `
               class="items box grow flex column"
             >
               <div
-                class="Table flex column KubeObjectListLayout CustomResources box grow dark selectable scrollable sortable autoSize virtual"
+                class="Table flex column KubeObjectListLayout CrdResources box grow dark selectable scrollable sortable autoSize virtual"
               >
                 <div
                   class="TableHead sticky nowrap topLine"
@@ -339,7 +447,7 @@ exports[`Viewing Custom Resources with extra columns renders 1`] = `
                   </div>
                 </div>
                 <div
-                  class="VirtualList KubeObjectListLayout CustomResources box grow dark"
+                  class="VirtualList KubeObjectListLayout CrdResources box grow dark"
                 >
                   <div>
                     <div
