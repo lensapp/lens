@@ -14,10 +14,13 @@ const routeIsActiveInjectable = getInjectable({
   instantiate: (di, route: Route<unknown>) => {
     const currentPath = di.inject(currentPathInjectable);
 
-    return computed(() => !!matchPath(currentPath.get(), {
-      path: route.path,
-      exact: true,
-    }));
+    return computed(
+      () =>
+        !!matchPath(currentPath.get(), {
+          path: route.path,
+          exact: true,
+        }),
+    );
   },
 
   lifecycle: lifecycleEnum.keyedSingleton({

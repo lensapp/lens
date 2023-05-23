@@ -105,7 +105,7 @@ describe("cluster - custom resources in sidebar", () => {
       });
 
       it("shows Custom Resources sidebar as expandable", () => {
-        expect(result.getByTestId("expand-icon-for-sidebar-item-custom-resources")).toBeInTheDocument();
+        expect(result.getByTestId("sidebar-item-expand-icon-for-custom-resources")).toBeInTheDocument();
       });
 
       it("does not show SomeResources sidebar", () => {
@@ -118,7 +118,7 @@ describe("cluster - custom resources in sidebar", () => {
 
       describe("when custom resources sidebar item is expanded", () => {
         beforeEach(() => {
-          result.getByTestId("expand-icon-for-sidebar-item-custom-resources").click();
+          result.getByTestId("sidebar-item-expand-icon-for-custom-resources").click();
         });
 
         it("renders", () => {
@@ -130,7 +130,7 @@ describe("cluster - custom resources in sidebar", () => {
         });
 
         it("shows Custom Resources sidebar as expandable", () => {
-          expect(result.getByTestId("expand-icon-for-sidebar-item-custom-resources")).toBeInTheDocument();
+          expect(result.getByTestId("sidebar-item-expand-icon-for-custom-resources")).toBeInTheDocument();
         });
 
         it("shows some-group group sidebar item", () => {
@@ -143,7 +143,7 @@ describe("cluster - custom resources in sidebar", () => {
 
         describe("when custom resources group sidebar item is expanded", () => {
           beforeEach(() => {
-            result.getByTestId("expand-icon-for-sidebar-item-custom-resource-group-some-group").click();
+            result.getByTestId("sidebar-item-expand-icon-for-custom-resource-group-some-group").click();
           });
 
           it("renders", () => {
@@ -178,7 +178,7 @@ describe("cluster - custom resources in sidebar", () => {
       });
 
       it("shows Custom Resources sidebar as expandable", () => {
-        expect(result.getByTestId("expand-icon-for-sidebar-item-custom-resources")).toBeInTheDocument();
+        expect(result.getByTestId("sidebar-item-expand-icon-for-custom-resources")).toBeInTheDocument();
       });
 
       it("does not show SomeResources sidebar", () => {
@@ -191,7 +191,7 @@ describe("cluster - custom resources in sidebar", () => {
 
       describe("when custom resources sidebar item is expanded", () => {
         beforeEach(() => {
-          result.getByTestId("expand-icon-for-sidebar-item-custom-resources").click();
+          result.getByTestId("sidebar-item-expand-icon-for-custom-resources").click();
         });
 
         it("renders", () => {
@@ -203,7 +203,7 @@ describe("cluster - custom resources in sidebar", () => {
         });
 
         it("shows Custom Resources sidebar as expandable", () => {
-          expect(result.getByTestId("expand-icon-for-sidebar-item-custom-resources")).toBeInTheDocument();
+          expect(result.getByTestId("sidebar-item-expand-icon-for-custom-resources")).toBeInTheDocument();
         });
 
         it("does not show SomeResources sidebar", () => {
@@ -234,7 +234,7 @@ describe("cluster - custom resources in sidebar", () => {
     });
 
     it("shows Custom Resources sidebar as expandable", () => {
-      expect(result.getByTestId("expand-icon-for-sidebar-item-custom-resources")).toBeInTheDocument();
+      expect(result.getByTestId("sidebar-item-expand-icon-for-custom-resources")).toBeInTheDocument();
     });
 
     it("does not show Custom Resources Definitions sidebar", () => {

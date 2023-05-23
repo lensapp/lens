@@ -8,7 +8,7 @@ import { extensionRegistratorInjectionToken } from "../../../extensions/extensio
 import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import { computed } from "mobx";
 import routesInjectable from "../../routes/routes.injectable";
-import { matches } from "lodash/fp";
+import { matches, noop } from "lodash/fp";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import { navigateToRouteInjectionToken } from "../../../common/front-end-routing/navigate-to-route-injection-token";
 import { getExtensionRoutePath } from "../../routes/for-extension";
@@ -23,55 +23,66 @@ const extensionSidebarItemRegistratorInjectable = getInjectable({
     const navigateToRoute = di.inject(navigateToRouteInjectionToken);
     const routes = di.inject(routesInjectable);
     const extensionShouldBeEnabledForClusterFrame = di.inject(extensionShouldBeEnabledForClusterFrameInjectable, extension);
-    const extensionRoutes = computed(() => routes.get().filter(matches({ extension })));
 
-    return computed(() => extension.clusterPageMenus.map((registration) => {
-      const {
-        components,
-        title,
-        orderNumber = 9999,
-        parentId: rawParentId,
-        visible,
-        id: rawId,
-        target,
-      } = registration;
-      const id = rawId
-        ? `sidebar-item-${extension.sanitizedExtensionId}-${rawId}`
-        : `sidebar-item-${extension.sanitizedExtensionId}`;
-      const parentId = rawParentId
-        ? `sidebar-item-${extension.sanitizedExtensionId}-${rawParentId}`
-        : null;
-      const targetRoutePath = getExtensionRoutePath(extension, target?.pageId);
-      const targetRoute = computed(() => extensionRoutes.get().find(matches({ path: targetRoutePath })));
+    return computed(() => {
+      const extensionRoutes = routes.get().filter(matches({ extension }));
 
-      return getInjectable({
-        id,
-        instantiate: () => ({
-          orderNumber,
-          parentId,
-          isVisible: computed(() => extensionShouldBeEnabledForClusterFrame.value.get() && (visible?.get() ?? true)),
-          title,
-          getIcon: () => (components.Icon && <components.Icon />),
-          onClick: () => {
-            const route = targetRoute.get();
+      return extension.clusterPageMenus.map((registration) => {
+        const targetRoutePath = getExtensionRoutePath(
+          extension,
+          registration.target?.pageId,
+        );
 
-            if (route) {
-              navigateToRoute(route);
-            }
-          },
-          isActive: computed(() => {
-            const route = targetRoute.get();
+        const targetRoute = extensionRoutes.find(
+          matches({ path: targetRoutePath }),
+        );
 
-            if (!route) {
-              return false;
-            }
+        const isVisible = computed(() => {
+          if (!extensionShouldBeEnabledForClusterFrame.value.get()) {
+            return false;
+          }
 
-            return di.inject(routeIsActiveInjectable, route).get();
+          if (!registration.visible) {
+            return true;
+          }
+
+          return registration.visible.get();
+        });
+
+        const id = registration.id ?
+          `${extension.sanitizedExtensionId}-${registration.id}`
+          : extension.sanitizedExtensionId;
+
+        return getInjectable({
+          id: `sidebar-item-${id}`,
+          instantiate: () => ({
+            orderNumber: registration.orderNumber ?? 9999,
+
+            parentId: registration.parentId
+              ? `${extension.sanitizedExtensionId}-${registration.parentId}`
+              : null,
+
+            isVisible,
+
+            title: registration.title,
+            getIcon: registration.components.Icon
+              ? () => <registration.components.Icon />
+              : undefined,
+            ...(targetRoute
+              ? {
+                onClick: () => navigateToRoute(targetRoute),
+
+                isActive: di.inject(
+                  routeIsActiveInjectable,
+                  targetRoute,
+                ),
+              }
+              : { onClick: noop }),
           }),
-        }),
-        injectionToken: sidebarItemInjectionToken,
+          injectionToken: sidebarItemInjectionToken,
+        });
       });
-    }));
+    });
   },
 
   injectionToken: extensionRegistratorInjectionToken,

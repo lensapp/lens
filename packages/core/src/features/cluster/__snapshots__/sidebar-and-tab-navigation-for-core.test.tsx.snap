@@ -78,7 +78,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             <a
               aria-current="page"
               class="navItem active"
-              data-testid="link-for-sidebar-item-workloads"
+              data-testid="sidebar-item-link-for-workloads"
               href="/"
             >
               <i
@@ -93,7 +93,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-workloads"
               >
                 <span
                   class="icon"
@@ -107,11 +106,36 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           <div
             class="SidebarItem"
             data-is-active-test="false"
-            data-testid="sidebar-item-some-parent"
+            data-testid="sidebar-item-config"
           >
             <a
               class="navItem"
-              data-testid="link-for-sidebar-item-some-parent"
+              data-testid="sidebar-item-link-for-config"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="list"
+                >
+                  list
+                </span>
+              </i>
+              <span>
+                Config
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-some-parent-id"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-some-parent-id"
               href="/"
             >
               <div
@@ -122,7 +146,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-some-parent"
               >
                 <span
                   class="icon"
@@ -140,7 +163,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           >
             <a
               class="navItem"
-              data-testid="link-for-sidebar-item-network"
+              data-testid="sidebar-item-link-for-network"
               href="/"
             >
               <i
@@ -158,7 +181,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-network"
               >
                 <span
                   class="icon"
@@ -172,11 +194,36 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           <div
             class="SidebarItem"
             data-is-active-test="false"
+            data-testid="sidebar-item-storage"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-storage"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="storage"
+                >
+                  storage
+                </span>
+              </i>
+              <span>
+                Storage
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
             <a
               class="navItem"
-              data-testid="link-for-sidebar-item-helm"
+              data-testid="sidebar-item-link-for-helm"
               href="/"
             >
               <i
@@ -191,7 +238,66 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-helm"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="keyboard_arrow_down"
+                >
+                  keyboard_arrow_down
+                </span>
+              </i>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-user-management"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-user-management"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="security"
+                >
+                  security
+                </span>
+              </i>
+              <span>
+                Access Control
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-custom-resources"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-custom-resources"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="extension"
+                >
+                  extension
+                </span>
+              </i>
+              <span>
+                Custom Resources
+              </span>
+              <i
+                class="Icon expandIcon material focusable"
               >
                 <span
                   class="icon"
@@ -221,7 +327,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           <div
             class="Tab flex gaps align-center active"
             data-is-active-test="true"
-            data-testid="tab-link-for-sidebar-item-workloads-overview"
+            data-testid="tab-link-for-overview"
             role="tab"
             tabindex="0"
           >
@@ -548,7 +654,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             <a
               aria-current="page"
               class="navItem active"
-              data-testid="link-for-sidebar-item-workloads"
+              data-testid="sidebar-item-link-for-workloads"
               href="/"
             >
               <i
@@ -563,7 +669,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-workloads"
               >
                 <span
                   class="icon"
@@ -577,11 +682,36 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           <div
             class="SidebarItem"
             data-is-active-test="false"
-            data-testid="sidebar-item-some-parent"
+            data-testid="sidebar-item-config"
           >
             <a
               class="navItem"
-              data-testid="link-for-sidebar-item-some-parent"
+              data-testid="sidebar-item-link-for-config"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="list"
+                >
+                  list
+                </span>
+              </i>
+              <span>
+                Config
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-some-parent-id"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-some-parent-id"
               href="/"
             >
               <div
@@ -592,7 +722,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-some-parent"
               >
                 <span
                   class="icon"
@@ -610,7 +739,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           >
             <a
               class="navItem"
-              data-testid="link-for-sidebar-item-network"
+              data-testid="sidebar-item-link-for-network"
               href="/"
             >
               <i
@@ -628,7 +757,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-network"
               >
                 <span
                   class="icon"
@@ -642,11 +770,36 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           <div
             class="SidebarItem"
             data-is-active-test="false"
+            data-testid="sidebar-item-storage"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-storage"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="storage"
+                >
+                  storage
+                </span>
+              </i>
+              <span>
+                Storage
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
             <a
               class="navItem"
-              data-testid="link-for-sidebar-item-helm"
+              data-testid="sidebar-item-link-for-helm"
               href="/"
             >
               <i
@@ -661,7 +814,66 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-helm"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="keyboard_arrow_down"
+                >
+                  keyboard_arrow_down
+                </span>
+              </i>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-user-management"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-user-management"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="security"
+                >
+                  security
+                </span>
+              </i>
+              <span>
+                Access Control
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-custom-resources"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-custom-resources"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="extension"
+                >
+                  extension
+                </span>
+              </i>
+              <span>
+                Custom Resources
+              </span>
+              <i
+                class="Icon expandIcon material focusable"
               >
                 <span
                   class="icon"
@@ -691,7 +903,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           <div
             class="Tab flex gaps align-center active"
             data-is-active-test="true"
-            data-testid="tab-link-for-sidebar-item-workloads-overview"
+            data-testid="tab-link-for-overview"
             role="tab"
             tabindex="0"
           >
@@ -1018,7 +1230,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             <a
               aria-current="page"
               class="navItem active"
-              data-testid="link-for-sidebar-item-workloads"
+              data-testid="sidebar-item-link-for-workloads"
               href="/"
             >
               <i
@@ -1033,7 +1245,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-workloads"
               >
                 <span
                   class="icon"
@@ -1047,11 +1258,36 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           <div
             class="SidebarItem"
             data-is-active-test="false"
-            data-testid="sidebar-item-some-parent"
+            data-testid="sidebar-item-config"
           >
             <a
               class="navItem"
-              data-testid="link-for-sidebar-item-some-parent"
+              data-testid="sidebar-item-link-for-config"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="list"
+                >
+                  list
+                </span>
+              </i>
+              <span>
+                Config
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-some-parent-id"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-some-parent-id"
               href="/"
             >
               <div
@@ -1062,7 +1298,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-some-parent"
               >
                 <span
                   class="icon"
@@ -1072,18 +1307,18 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 </span>
               </i>
             </a>
-            <div
+            <ul
               class="subMenu"
             >
               <div
                 class="SidebarItem"
                 data-is-active-test="false"
-                data-parent-id-test="sidebar-item-some-parent"
-                data-testid="sidebar-item-some-child"
+                data-parent-id-test="some-parent-id"
+                data-testid="sidebar-item-some-child-id"
               >
                 <a
                   class="navItem"
-                  data-testid="link-for-sidebar-item-some-child"
+                  data-testid="sidebar-item-link-for-some-child-id"
                   href="/"
                 >
                   <span>
@@ -1091,7 +1326,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                   </span>
                 </a>
               </div>
-            </div>
+            </ul>
           </div>
           <div
             class="SidebarItem"
@@ -1100,7 +1335,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           >
             <a
               class="navItem"
-              data-testid="link-for-sidebar-item-network"
+              data-testid="sidebar-item-link-for-network"
               href="/"
             >
               <i
@@ -1118,7 +1353,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-network"
               >
                 <span
                   class="icon"
@@ -1132,11 +1366,36 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           <div
             class="SidebarItem"
             data-is-active-test="false"
+            data-testid="sidebar-item-storage"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-storage"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="storage"
+                >
+                  storage
+                </span>
+              </i>
+              <span>
+                Storage
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
             <a
               class="navItem"
-              data-testid="link-for-sidebar-item-helm"
+              data-testid="sidebar-item-link-for-helm"
               href="/"
             >
               <i
@@ -1151,7 +1410,66 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-helm"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="keyboard_arrow_down"
+                >
+                  keyboard_arrow_down
+                </span>
+              </i>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-user-management"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-user-management"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="security"
+                >
+                  security
+                </span>
+              </i>
+              <span>
+                Access Control
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-custom-resources"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-custom-resources"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="extension"
+                >
+                  extension
+                </span>
+              </i>
+              <span>
+                Custom Resources
+              </span>
+              <i
+                class="Icon expandIcon material focusable"
               >
                 <span
                   class="icon"
@@ -1181,7 +1499,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           <div
             class="Tab flex gaps align-center active"
             data-is-active-test="true"
-            data-testid="tab-link-for-sidebar-item-workloads-overview"
+            data-testid="tab-link-for-overview"
             role="tab"
             tabindex="0"
           >
@@ -1507,7 +1825,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           >
             <a
               class="navItem"
-              data-testid="link-for-sidebar-item-workloads"
+              data-testid="sidebar-item-link-for-workloads"
               href="/"
             >
               <i
@@ -1522,7 +1840,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-workloads"
               >
                 <span
                   class="icon"
@@ -1535,13 +1852,38 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           </div>
           <div
             class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-config"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-config"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="list"
+                >
+                  list
+                </span>
+              </i>
+              <span>
+                Config
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
             data-is-active-test="true"
-            data-testid="sidebar-item-some-parent"
+            data-testid="sidebar-item-some-parent-id"
           >
             <a
               aria-current="page"
               class="navItem active"
-              data-testid="link-for-sidebar-item-some-parent"
+              data-testid="sidebar-item-link-for-some-parent-id"
               href="/"
             >
               <div
@@ -1552,7 +1894,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-some-parent"
               >
                 <span
                   class="icon"
@@ -1562,19 +1903,19 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 </span>
               </i>
             </a>
-            <div
-              class="subMenu"
+            <ul
+              class="subMenu active"
             >
               <div
                 class="SidebarItem"
                 data-is-active-test="true"
-                data-parent-id-test="sidebar-item-some-parent"
-                data-testid="sidebar-item-some-child"
+                data-parent-id-test="some-parent-id"
+                data-testid="sidebar-item-some-child-id"
               >
                 <a
                   aria-current="page"
                   class="navItem active"
-                  data-testid="link-for-sidebar-item-some-child"
+                  data-testid="sidebar-item-link-for-some-child-id"
                   href="/"
                 >
                   <span>
@@ -1582,7 +1923,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                   </span>
                 </a>
               </div>
-            </div>
+            </ul>
           </div>
           <div
             class="SidebarItem"
@@ -1591,7 +1932,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           >
             <a
               class="navItem"
-              data-testid="link-for-sidebar-item-network"
+              data-testid="sidebar-item-link-for-network"
               href="/"
             >
               <i
@@ -1609,7 +1950,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-network"
               >
                 <span
                   class="icon"
@@ -1623,11 +1963,36 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           <div
             class="SidebarItem"
             data-is-active-test="false"
+            data-testid="sidebar-item-storage"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-storage"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="storage"
+                >
+                  storage
+                </span>
+              </i>
+              <span>
+                Storage
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
             <a
               class="navItem"
-              data-testid="link-for-sidebar-item-helm"
+              data-testid="sidebar-item-link-for-helm"
               href="/"
             >
               <i
@@ -1642,7 +2007,66 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-helm"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="keyboard_arrow_down"
+                >
+                  keyboard_arrow_down
+                </span>
+              </i>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-user-management"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-user-management"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="security"
+                >
+                  security
+                </span>
+              </i>
+              <span>
+                Access Control
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-custom-resources"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-custom-resources"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="extension"
+                >
+                  extension
+                </span>
+              </i>
+              <span>
+                Custom Resources
+              </span>
+              <i
+                class="Icon expandIcon material focusable"
               >
                 <span
                   class="icon"
@@ -1875,7 +2299,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           >
             <a
               class="navItem"
-              data-testid="link-for-sidebar-item-workloads"
+              data-testid="sidebar-item-link-for-workloads"
               href="/"
             >
               <i
@@ -1890,7 +2314,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-workloads"
               >
                 <span
                   class="icon"
@@ -1903,13 +2326,38 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           </div>
           <div
             class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-config"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-config"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="list"
+                >
+                  list
+                </span>
+              </i>
+              <span>
+                Config
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
             data-is-active-test="true"
-            data-testid="sidebar-item-some-parent"
+            data-testid="sidebar-item-some-parent-id"
           >
             <a
               aria-current="page"
               class="navItem active"
-              data-testid="link-for-sidebar-item-some-parent"
+              data-testid="sidebar-item-link-for-some-parent-id"
               href="/"
             >
               <div
@@ -1920,7 +2368,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-some-parent"
               >
                 <span
                   class="icon"
@@ -1938,7 +2385,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           >
             <a
               class="navItem"
-              data-testid="link-for-sidebar-item-network"
+              data-testid="sidebar-item-link-for-network"
               href="/"
             >
               <i
@@ -1956,7 +2403,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-network"
               >
                 <span
                   class="icon"
@@ -1970,11 +2416,36 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           <div
             class="SidebarItem"
             data-is-active-test="false"
+            data-testid="sidebar-item-storage"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-storage"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="storage"
+                >
+                  storage
+                </span>
+              </i>
+              <span>
+                Storage
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
             <a
               class="navItem"
-              data-testid="link-for-sidebar-item-helm"
+              data-testid="sidebar-item-link-for-helm"
               href="/"
             >
               <i
@@ -1989,7 +2460,66 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-helm"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="keyboard_arrow_down"
+                >
+                  keyboard_arrow_down
+                </span>
+              </i>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-user-management"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-user-management"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="security"
+                >
+                  security
+                </span>
+              </i>
+              <span>
+                Access Control
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-custom-resources"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-custom-resources"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="extension"
+                >
+                  extension
+                </span>
+              </i>
+              <span>
+                Custom Resources
+              </span>
+              <i
+                class="Icon expandIcon material focusable"
               >
                 <span
                   class="icon"
@@ -2223,7 +2753,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             <a
               aria-current="page"
               class="navItem active"
-              data-testid="link-for-sidebar-item-workloads"
+              data-testid="sidebar-item-link-for-workloads"
               href="/"
             >
               <i
@@ -2238,7 +2768,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-workloads"
               >
                 <span
                   class="icon"
@@ -2252,11 +2781,36 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           <div
             class="SidebarItem"
             data-is-active-test="false"
-            data-testid="sidebar-item-some-parent"
+            data-testid="sidebar-item-config"
           >
             <a
               class="navItem"
-              data-testid="link-for-sidebar-item-some-parent"
+              data-testid="sidebar-item-link-for-config"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="list"
+                >
+                  list
+                </span>
+              </i>
+              <span>
+                Config
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-some-parent-id"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-some-parent-id"
               href="/"
             >
               <div
@@ -2267,7 +2821,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-some-parent"
               >
                 <span
                   class="icon"
@@ -2277,18 +2830,18 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 </span>
               </i>
             </a>
-            <div
+            <ul
               class="subMenu"
             >
               <div
                 class="SidebarItem"
                 data-is-active-test="false"
-                data-parent-id-test="sidebar-item-some-parent"
-                data-testid="sidebar-item-some-child"
+                data-parent-id-test="some-parent-id"
+                data-testid="sidebar-item-some-child-id"
               >
                 <a
                   class="navItem"
-                  data-testid="link-for-sidebar-item-some-child"
+                  data-testid="sidebar-item-link-for-some-child-id"
                   href="/"
                 >
                   <span>
@@ -2296,7 +2849,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                   </span>
                 </a>
               </div>
-            </div>
+            </ul>
           </div>
           <div
             class="SidebarItem"
@@ -2305,7 +2858,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           >
             <a
               class="navItem"
-              data-testid="link-for-sidebar-item-network"
+              data-testid="sidebar-item-link-for-network"
               href="/"
             >
               <i
@@ -2323,7 +2876,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-network"
               >
                 <span
                   class="icon"
@@ -2337,11 +2889,36 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           <div
             class="SidebarItem"
             data-is-active-test="false"
+            data-testid="sidebar-item-storage"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-storage"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="storage"
+                >
+                  storage
+                </span>
+              </i>
+              <span>
+                Storage
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
             <a
               class="navItem"
-              data-testid="link-for-sidebar-item-helm"
+              data-testid="sidebar-item-link-for-helm"
               href="/"
             >
               <i
@@ -2356,7 +2933,66 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-helm"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="keyboard_arrow_down"
+                >
+                  keyboard_arrow_down
+                </span>
+              </i>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-user-management"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-user-management"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="security"
+                >
+                  security
+                </span>
+              </i>
+              <span>
+                Access Control
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-custom-resources"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-custom-resources"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="extension"
+                >
+                  extension
+                </span>
+              </i>
+              <span>
+                Custom Resources
+              </span>
+              <i
+                class="Icon expandIcon material focusable"
               >
                 <span
                   class="icon"
@@ -2386,7 +3022,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           <div
             class="Tab flex gaps align-center active"
             data-is-active-test="true"
-            data-testid="tab-link-for-sidebar-item-workloads-overview"
+            data-testid="tab-link-for-overview"
             role="tab"
             tabindex="0"
           >
@@ -2713,7 +3349,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             <a
               aria-current="page"
               class="navItem active"
-              data-testid="link-for-sidebar-item-workloads"
+              data-testid="sidebar-item-link-for-workloads"
               href="/"
             >
               <i
@@ -2728,7 +3364,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-workloads"
               >
                 <span
                   class="icon"
@@ -2742,11 +3377,36 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           <div
             class="SidebarItem"
             data-is-active-test="false"
-            data-testid="sidebar-item-some-parent"
+            data-testid="sidebar-item-config"
           >
             <a
               class="navItem"
-              data-testid="link-for-sidebar-item-some-parent"
+              data-testid="sidebar-item-link-for-config"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="list"
+                >
+                  list
+                </span>
+              </i>
+              <span>
+                Config
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-some-parent-id"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-some-parent-id"
               href="/"
             >
               <div
@@ -2757,7 +3417,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-some-parent"
               >
                 <span
                   class="icon"
@@ -2775,7 +3434,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           >
             <a
               class="navItem"
-              data-testid="link-for-sidebar-item-network"
+              data-testid="sidebar-item-link-for-network"
               href="/"
             >
               <i
@@ -2793,7 +3452,6 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-network"
               >
                 <span
                   class="icon"
@@ -2807,11 +3465,36 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           <div
             class="SidebarItem"
             data-is-active-test="false"
+            data-testid="sidebar-item-storage"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-storage"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="storage"
+                >
+                  storage
+                </span>
+              </i>
+              <span>
+                Storage
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
             <a
               class="navItem"
-              data-testid="link-for-sidebar-item-helm"
+              data-testid="sidebar-item-link-for-helm"
               href="/"
             >
               <i
@@ -2826,7 +3509,66 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               </span>
               <i
                 class="Icon expandIcon material focusable"
-                data-testid="expand-icon-for-sidebar-item-helm"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="keyboard_arrow_down"
+                >
+                  keyboard_arrow_down
+                </span>
+              </i>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-user-management"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-user-management"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="security"
+                >
+                  security
+                </span>
+              </i>
+              <span>
+                Access Control
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-custom-resources"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-custom-resources"
+              href="/"
+            >
+              <i
+                class="Icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="extension"
+                >
+                  extension
+                </span>
+              </i>
+              <span>
+                Custom Resources
+              </span>
+              <i
+                class="Icon expandIcon material focusable"
               >
                 <span
                   class="icon"
@@ -2856,7 +3598,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           <div
             class="Tab flex gaps align-center active"
             data-is-active-test="true"
-            data-testid="tab-link-for-sidebar-item-workloads-overview"
+            data-testid="tab-link-for-overview"
             role="tab"
             tabindex="0"
           >
