@@ -8,15 +8,15 @@ import type { Route } from "../../../front-end-route-injection-token";
 import { frontEndRouteInjectionToken } from "../../../front-end-route-injection-token";
 
 export interface CustomResourcesPathParameters {
-  group: string;
-  name: string;
+  group?: string;
+  name?: string;
 }
 
 const customResourcesRouteInjectable = getInjectable({
   id: "custom-resources-route",
 
   instantiate: (): Route<CustomResourcesPathParameters> => ({
-    path: "/crd/:group/:name",
+    path: "/crd/:group?/:name?",
     clusterFrame: true,
     isEnabled: computed(() => true),
   }),
