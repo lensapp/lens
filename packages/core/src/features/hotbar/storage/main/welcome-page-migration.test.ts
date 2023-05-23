@@ -9,15 +9,14 @@ import type { HotbarData } from "../common/hotbar";
 import type { HotbarItem } from "../common/types";
 import v640HotbarStoreMigrationInjectable from "./welcome-page-migration.injectable";
 import { defaultHotbarCells } from "../common/types";
-import { array } from "@k8slens/utilities";
 
-function fillWithEmpties(items: (HotbarItem | null)[])  {
-  const emptyHotBarItems = array.filled(defaultHotbarCells, null);
+function fillWithEmpties(items: HotbarItem[])  {
+  const emptyHotBarItems = new Array(defaultHotbarCells).fill(null);
 
   return [...items, ...emptyHotBarItems.slice(items.length)];
 }
 
-function setFirstHotbarItems(store: MigrationStore, items: (HotbarItem | null)[]) {
+function setFirstHotbarItems(store: MigrationStore, items: HotbarItem[]) {
   const oldHotbars = store.get("hotbars") as HotbarData[];
   // empty hotbar items are nulls
   const itemsWithEmptyCells = fillWithEmpties(items);
