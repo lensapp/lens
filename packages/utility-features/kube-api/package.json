@@ -36,7 +36,7 @@
   },
   "peerDependencies": {
     "@k8slens/json-api": "^1.0.0-alpha.1",
-    "@k8slens/kube-object": "^1.0.0-alpha.1",
+    "@k8slens/kube-object": "^1.0.0-alpha.5",
     "@k8slens/logger": "^1.0.0-alpha.5",
     "@k8slens/utilities": "^1.0.0-alpha.1",
     "@ogre-tools/injectable": "^16.1.0",
