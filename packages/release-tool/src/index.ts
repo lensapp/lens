@@ -240,11 +240,25 @@ async function createReleaseBranchAndCommit(prBase: string, version: SemVer, prB
       'X-GitHub-Api-Version': '2022-11-28'
     },
   });
+  const milestones = await octokit.request("GET /repos/{owner}/{repo}/milestones", {
+    owner: "lensapp",
+    repo: "lens",
+    headers: {
+      'X-GitHub-Api-Version': '2022-11-28'
+    },
+  });
+  const milestoneTitle = formatSemverForMilestone(version);
+  const milestoneNumber = milestones.data.find(milestone => milestone.title === milestoneTitle)?.number;
+
+  if (!milestoneNumber) {
+    throw new Error(`Cannot find milestone for ${milestoneTitle}`);
+  }
+
   await octokit.request("PATCH /repos/{owner}/{repo}/issues/{issue_number}", {
     owner: "lensapp",
     repo: "lens",
     issue_number: newReleasePR.data.number,
-    milestone: formatSemverForMilestone(version),
+    milestone: milestoneNumber,
     headers: {
       'X-GitHub-Api-Version': '2022-11-28'
     },
