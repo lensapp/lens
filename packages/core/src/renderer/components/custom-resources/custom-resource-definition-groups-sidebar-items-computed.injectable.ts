@@ -17,12 +17,6 @@ import routePathParametersInjectable from "../../routes/route-path-parameters.in
 import customResourcesSidebarItemInjectable from "./custom-resources-sidebar-item.injectable";
 import customResourceDefinitionsInjectable from "./custom-resources.injectable";
 
-const titleCaseSplitRegex = /(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/;
-
-const formatResourceKind = (resourceKind: string) => (
-  resourceKind.split(titleCaseSplitRegex).join(" ")
-);
-
 const customResourceDefinitionGroupsSidebarItemsComputedInjectable = getInjectable({
   id: "custom-resource-definition-groups-sidebar-items-computed",
   instantiate: (di) => {
@@ -37,7 +31,7 @@ const customResourceDefinitionGroupsSidebarItemsComputedInjectable = getInjectab
         instantiate: (): SidebarItemRegistration => ({
           parentId: customResourcesSidebarItemInjectable.id,
           onClick: noop,
-          title: group.replaceAll(".", "\u200b."), // Replace dots with zero-width spaces to allow line breaks
+          title: group,
           orderNumber: 10 * index,
         }),
         injectionToken: sidebarItemInjectionToken,
@@ -53,7 +47,7 @@ const customResourceDefinitionGroupsSidebarItemsComputedInjectable = getInjectab
           instantiate: (di): SidebarItemRegistration => ({
             parentId: customResourceGroupSidebarItem.id,
             onClick: () => navigateToCustomResources(parameters),
-            title: formatResourceKind(definition.getResourceKind()),
+            title: definition.getResourceKind(),
             isActive: computedAnd(
               di.inject(routeIsActiveInjectable, customResourcesRoute),
               computed(() => matches(parameters)(pathParameters.get())),
