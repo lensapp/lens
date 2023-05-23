@@ -240,7 +240,7 @@ async function createReleaseBranchAndCommit(prBase: string, version: SemVer, prB
       'X-GitHub-Api-Version': '2022-11-28'
     },
   });
-  await octokit.request("POST /repos/{owner}/{repo}/issues/{issue_number}/milestone", {
+  await octokit.request("PATCH /repos/{owner}/{repo}/issues/{issue_number}", {
     owner: "lensapp",
     repo: "lens",
     issue_number: newReleasePR.data.number,
