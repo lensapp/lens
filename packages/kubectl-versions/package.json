@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/kubectl-versions",
   "private": false,
-  "version": "1.0.0-alpha.7",
+  "version": "1.0.0-alpha.8",
   "description": "Package of kubectl versions at build time",
   "files": [
     "dist"
