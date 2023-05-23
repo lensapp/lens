@@ -9,7 +9,7 @@
 
   "scripts": {
     "all:reinstall": "npm run clean:node_modules && npm run all:install",
-    "all:install": "npx --yes --package npm@9.6.5 npm install",
+    "all:install": "npx --yes --package npm@^9.6.7 npm install",
     "adr:create": "echo \"What is the title?\"; read title; adr new \"$title\"",
     "adr:change-status": "echo \"Decision number?:\"; read decision; adr status $decision",
     "adr:update-readme": "adr update",
@@ -47,6 +47,6 @@
     "rimraf": "^4.4.1"
   },
   "engines": {
-    "npm": "^9.6.5"
+    "npm": "9.6.7"
   }
 }
