@@ -9,7 +9,6 @@ import type { ApplicationBuilder } from "../../../renderer/components/test-utils
 import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import type { KubernetesCluster } from "../../../common/catalog-entities";
 import React from "react";
-import { act } from "react-dom/test-utils";
 
 describe("disable sidebar items when cluster is not relevant", () => {
   let builder: ApplicationBuilder;
@@ -60,15 +59,17 @@ describe("disable sidebar items when cluster is not relevant", () => {
     });
 
     it("does not show the sidebar item", () => {
-      expect(rendered.queryByTestId("sidebar-item-test-extension-sidebar-item-some")).not.toBeInTheDocument();
+      const actual = rendered.queryByTestId(
+        "sidebar-item-sidebar-item-some-extension-name-some",
+      );
+
+      expect(actual).not.toBeInTheDocument();
     });
   });
 
   describe("given extension shouldn't be enabled for the cluster", () => {
     beforeEach(async () => {
-      await act(async () => {
-        await isEnabledForClusterMock.resolve(false);
-      });
+      await isEnabledForClusterMock.resolve(false);
     });
 
     it("renders", () => {
@@ -76,15 +77,17 @@ describe("disable sidebar items when cluster is not relevant", () => {
     });
 
     it("does not show the sidebar item", () => {
-      expect(rendered.queryByTestId("sidebar-item-test-extension-sidebar-item-some")).not.toBeInTheDocument();
+      const actual = rendered.queryByTestId(
+        "sidebar-item-sidebar-item-some-extension-name-some",
+      );
+
+      expect(actual).not.toBeInTheDocument();
     });
   });
 
   describe("given extension should be enabled for the cluster", () => {
     beforeEach(async () => {
-      await act(async () => {
-        await isEnabledForClusterMock.resolve(true);
-      });
+      await isEnabledForClusterMock.resolve(true);
     });
 
     it("renders", () => {
@@ -92,7 +95,11 @@ describe("disable sidebar items when cluster is not relevant", () => {
     });
 
     it("shows the sidebar item", () => {
-      expect(rendered.getByTestId("sidebar-item-test-extension-sidebar-item-some")).toBeInTheDocument();
+      const actual = rendered.getByTestId(
+        "sidebar-item-sidebar-item-test-extension-some",
+      );
+
+      expect(actual).toBeInTheDocument();
     });
   });
 });

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`cluster - visibility of sidebar items given kube resource for route is not allowed renders 1`] = `
+exports[`cluster - order of sidebar items when rendered renders 1`] = `
 <div>
   <div
     class="Animate slide-right Drawer KubeObjectDetails flex column right enter"
@@ -131,6 +131,31 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
           <div
             class="SidebarItem"
             data-is-active-test="false"
+            data-testid="sidebar-item-some-parent-id"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-some-parent-id"
+              href="/"
+            >
+              <span>
+                Some parent
+              </span>
+              <i
+                class="Icon expandIcon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="keyboard_arrow_down"
+                >
+                  keyboard_arrow_down
+                </span>
+              </i>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
             <a
@@ -185,6 +210,21 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
               </i>
               <span>
                 Storage
+              </span>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-some-another-parent-id"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-some-another-parent-id"
+              href="/"
+            >
+              <span>
+                Some another parent
               </span>
             </a>
           </div>
@@ -278,6 +318,21 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
                   keyboard_arrow_down
                 </span>
               </i>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-some-other-parent-id"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-some-other-parent-id"
+              href="/"
+            >
+              <span>
+                Some other parent
+              </span>
             </a>
           </div>
         </div>
@@ -548,7 +603,7 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
 </div>
 `;
 
-exports[`cluster - visibility of sidebar items given kube resource for route is not allowed when kube resource becomes allowed renders 1`] = `
+exports[`cluster - order of sidebar items when rendered when parent is expanded renders 1`] = `
 <div>
   <div
     class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
@@ -679,17 +734,79 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
           <div
             class="SidebarItem"
             data-is-active-test="false"
-            data-testid="sidebar-item-some-item-id"
+            data-testid="sidebar-item-some-parent-id"
           >
             <a
               class="navItem"
-              data-testid="sidebar-item-link-for-some-item-id"
+              data-testid="sidebar-item-link-for-some-parent-id"
               href="/"
             >
               <span>
-                Some item
+                Some parent
               </span>
+              <i
+                class="Icon expandIcon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="keyboard_arrow_up"
+                >
+                  keyboard_arrow_up
+                </span>
+              </i>
             </a>
+            <ul
+              class="subMenu"
+            >
+              <div
+                class="SidebarItem"
+                data-is-active-test="false"
+                data-parent-id-test="some-parent-id"
+                data-testid="sidebar-item-some-child-id"
+              >
+                <a
+                  class="navItem"
+                  data-testid="sidebar-item-link-for-some-child-id"
+                  href="/"
+                >
+                  <span>
+                    Some child
+                  </span>
+                </a>
+              </div>
+              <div
+                class="SidebarItem"
+                data-is-active-test="false"
+                data-parent-id-test="some-parent-id"
+                data-testid="sidebar-item-some-another-child-id"
+              >
+                <a
+                  class="navItem"
+                  data-testid="sidebar-item-link-for-some-another-child-id"
+                  href="/"
+                >
+                  <span>
+                    Some another child
+                  </span>
+                </a>
+              </div>
+              <div
+                class="SidebarItem"
+                data-is-active-test="false"
+                data-parent-id-test="some-parent-id"
+                data-testid="sidebar-item-some-other-child-id"
+              >
+                <a
+                  class="navItem"
+                  data-testid="sidebar-item-link-for-some-other-child-id"
+                  href="/"
+                >
+                  <span>
+                    Some other child
+                  </span>
+                </a>
+              </div>
+            </ul>
           </div>
           <div
             class="SidebarItem"
@@ -754,25 +871,15 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
           <div
             class="SidebarItem"
             data-is-active-test="false"
-            data-testid="sidebar-item-namespaces"
+            data-testid="sidebar-item-some-another-parent-id"
           >
             <a
               class="navItem"
-              data-testid="sidebar-item-link-for-namespaces"
+              data-testid="sidebar-item-link-for-some-another-parent-id"
               href="/"
             >
-              <i
-                class="Icon material focusable"
-              >
-                <span
-                  class="icon"
-                  data-icon-name="layers"
-                >
-                  layers
-                </span>
-              </i>
               <span>
-                Namespaces
+                Some another parent
               </span>
             </a>
           </div>
@@ -866,6 +973,21 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
                   keyboard_arrow_down
                 </span>
               </i>
+            </a>
+          </div>
+          <div
+            class="SidebarItem"
+            data-is-active-test="false"
+            data-testid="sidebar-item-some-other-parent-id"
+          >
+            <a
+              class="navItem"
+              data-testid="sidebar-item-link-for-some-other-parent-id"
+              href="/"
+            >
+              <span>
+                Some other parent
+              </span>
             </a>
           </div>
         </div>

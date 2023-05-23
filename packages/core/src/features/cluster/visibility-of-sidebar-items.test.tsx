@@ -60,7 +60,7 @@ describe("cluster - visibility of sidebar items", () => {
       });
 
       it("related sidebar item exists", () => {
-        const item = rendered.queryByTestId("sidebar-item-test");
+        const item = rendered.queryByTestId("sidebar-item-some-item-id");
 
         expect(item).not.toBeNull();
       });
