@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/cluster-sidebar",
   "private": false,
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "Injection tokens for adding new sidebar items within the Cluster View",
   "type": "commonjs",
   "publishConfig": {
@@ -43,6 +43,6 @@
     "@k8slens/eslint-config": "^6.5.0-alpha.3",
     "@k8slens/jest": "^6.5.0-alpha.5",
     "@k8slens/typescript": "^6.5.0-alpha.2",
-    "@k8slens/webpack": "^6.5.0-alpha.5"
+    "@k8slens/webpack": "^6.5.0-alpha.9"
   }
 }
