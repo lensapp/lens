@@ -34,13 +34,13 @@ import navigateToDaemonsetsInjectable from "../../../../common/front-end-routing
 import navigateToStatefulsetsInjectable from "../../../../common/front-end-routing/routes/cluster/workloads/statefulsets/navigate-to-statefulsets.injectable";
 import navigateToJobsInjectable from "../../../../common/front-end-routing/routes/cluster/workloads/jobs/navigate-to-jobs.injectable";
 import navigateToCronJobsInjectable from "../../../../common/front-end-routing/routes/cluster/workloads/cron-jobs/navigate-to-cron-jobs.injectable";
+import navigateToCustomResourcesInjectable from "../../../../common/front-end-routing/routes/cluster/custom-resources/navigate-to-custom-resources.injectable";
 import navigateToEntitySettingsInjectable from "../../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 
 // TODO: Importing from features is not OK. Make commands to comply with Open Closed Principle to allow moving implementation under a feature
 import navigateToPreferencesInjectable from "../../../../features/preferences/common/navigate-to-preferences.injectable";
 import type { HasCatalogEntitySettingItems } from "../../entity-settings/has-settings.injectable";
 import hasCatalogEntitySettingItemsInjectable from "../../entity-settings/has-settings.injectable";
-import navigateToCustomResourceDefinitionsInjectable from "../../../../common/front-end-routing/routes/cluster/custom-resources/navigate-to-custom-resource-definitions.injectable";
 
 export function isKubernetesClusterActive(context: CommandContext): boolean {
   return context.entity?.kind === "KubernetesCluster";
@@ -71,7 +71,7 @@ interface Dependencies {
   navigateToStatefulsets: () => void;
   navigateToJobs: () => void;
   navigateToCronJobs: () => void;
-  navigateToCustomResourceDefinitions: () => void;
+  navigateToCustomResources: () => void;
   navigateToEntitySettings: (entityId: string) => void;
 }
 
@@ -206,7 +206,7 @@ function getInternalCommands(dependencies: Dependencies): CommandRegistration[] 
       id: "cluster.viewCustomResourceDefinitions",
       title: "Cluster: View Custom Resource Definitions",
       isActive: isKubernetesClusterActive,
-      action: () => dependencies.navigateToCustomResourceDefinitions(),
+      action: () => dependencies.navigateToCustomResources(),
     },
     {
       id: "entity.viewSettings",
@@ -278,7 +278,7 @@ const internalCommandsInjectable = getInjectable({
     navigateToStatefulsets: di.inject(navigateToStatefulsetsInjectable),
     navigateToJobs: di.inject(navigateToJobsInjectable),
     navigateToCronJobs: di.inject(navigateToCronJobsInjectable),
-    navigateToCustomResourceDefinitions: di.inject(navigateToCustomResourceDefinitionsInjectable),
+    navigateToCustomResources: di.inject(navigateToCustomResourcesInjectable),
     navigateToEntitySettings: di.inject(navigateToEntitySettingsInjectable),
   }),
 });
