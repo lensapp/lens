@@ -31,7 +31,7 @@ const sendMessageToChannelInjectable = getInjectable({
           (channelId: string, ...args: any[]) => webContent.send(channelId, ...args),
 
           ...[...frameIds].map(({ frameId, processId }) => (channelId: string, ...args: any[]) => {
-            webContent.sendToFrame([frameId, processId], channelId, ...args);
+            webContent.sendToFrame([processId, frameId], channelId, ...args);
           }),
         ]),
 

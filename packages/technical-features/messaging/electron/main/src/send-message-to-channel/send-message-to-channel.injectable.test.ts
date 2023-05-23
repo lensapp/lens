@@ -84,11 +84,11 @@ describe("send-message-to-channel", () => {
 
         it("sends the message to individual frames in webcontents", () => {
           expect(sendToFrameMock.mock.calls).toEqual([
-            ["first", [42, 126], "some-channel", "some-message"],
-            ["first", [84, 168], "some-channel", "some-message"],
+            ["first", [126, 42], "some-channel", "some-message"],
+            ["first", [168, 84], "some-channel", "some-message"],
 
-            ["second", [42, 126], "some-channel", "some-message"],
-            ["second", [84, 168], "some-channel", "some-message"],
+            ["second", [126, 42], "some-channel", "some-message"],
+            ["second", [168, 84], "some-channel", "some-message"],
           ]);
         });
       });
