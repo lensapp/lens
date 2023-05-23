@@ -6,8 +6,8 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { navigateToRouteInjectionToken } from "../../../navigate-to-route-injection-token";
 import crdListRouteInjectable from "./custom-resource-definitions.injectable";
 
-const navigateToCustomResourceDefinitionsInjectable = getInjectable({
-  id: "navigate-to-custom-resource-definitions",
+const navigateToCrdListInjectable = getInjectable({
+  id: "navigate-to-crd-list",
 
   instantiate: (di) => {
     const navigateToRoute = di.inject(navigateToRouteInjectionToken);
@@ -17,4 +17,4 @@ const navigateToCustomResourceDefinitionsInjectable = getInjectable({
   },
 });
 
-export default navigateToCustomResourceDefinitionsInjectable;
+export default navigateToCrdListInjectable;
