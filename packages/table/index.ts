@@ -16,8 +16,8 @@ type Column = (
 export interface TableComponentProps {
   tableId?: string;
   columns?: Column[];
-  save: (state: object) => void;
-  load: (tableId: string) => object;
+  save?: (state: object) => void;
+  load?: (tableId: string) => object;
 }
 
 export interface TableDataContextValue {
