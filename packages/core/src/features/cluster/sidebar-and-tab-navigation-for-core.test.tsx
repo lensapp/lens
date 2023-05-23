@@ -295,8 +295,9 @@ describe("cluster - sidebar and tab navigation for core", () => {
 });
 
 const someParentSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-some-parent",
+  id: "some-parent-sidebar-item",
   instantiate: () => ({
+    id: "some-parent-id",
     parentId: null,
     title: "Some parent",
     onClick: noop,
@@ -307,14 +308,15 @@ const someParentSidebarItemInjectable = getInjectable({
 });
 
 const someChildSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-some-child",
+  id: "some-child-sidebar-item",
   instantiate: (di) => {
     const route = di.inject(testRouteInjectable);
     const navigateToRoute = di.inject(navigateToRouteInjectionToken);
     const routeIsActive = di.inject(routeIsActiveInjectable, route);
 
     return {
-      parentId: someParentSidebarItemInjectable.id,
+      id: "some-child-id",
+      parentId: di.inject(someParentSidebarItemInjectable).id,
       title: "Some child",
       onClick: () => navigateToRoute(route),
       isActive: routeIsActive,

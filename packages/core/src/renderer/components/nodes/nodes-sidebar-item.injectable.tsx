@@ -15,12 +15,13 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToNodesInjectable from "../../../common/front-end-routing/routes/cluster/nodes/navigate-to-nodes.injectable";
 
 const nodesSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-nodes",
+  id: "nodes-sidebar-item",
 
   instantiate: (di) => {
     const route = di.inject(nodesRouteInjectable);
 
     return {
+      id: "nodes",
       parentId: null,
       getIcon: () => <Icon svg="nodes" />,
       title: "Nodes",

@@ -9,9 +9,10 @@ import { Icon } from "../icon";
 import { noop } from "lodash/fp";
 
 const helmSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-helm",
+  id: "helm-sidebar-item",
 
   instantiate: () => ({
+    id: "helm",
     parentId: null,
     getIcon: () => <Icon svg="helm" />,
     title: "Helm",

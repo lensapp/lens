@@ -9,9 +9,10 @@ import React from "react";
 import { noop } from "lodash/fp";
 
 const workloadsSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-workloads",
+  id: "workloads-sidebar-item",
 
   instantiate: () => ({
+    id: "workloads",
     parentId: null,
     title: "Workloads",
     getIcon: () => <Icon svg="workloads" />,

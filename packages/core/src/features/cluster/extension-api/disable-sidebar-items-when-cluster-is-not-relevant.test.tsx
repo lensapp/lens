@@ -37,7 +37,7 @@ describe("disable sidebar items when cluster is not relevant", () => {
 
         clusterPageMenus: [
           {
-            id: "sidebar-item-some",
+            id: "some-sidebar-item",
             title: "Some sidebar item",
 
             components: {
@@ -60,7 +60,7 @@ describe("disable sidebar items when cluster is not relevant", () => {
 
     it("does not show the sidebar item", () => {
       const actual = rendered.queryByTestId(
-        "sidebar-item-sidebar-item-some-extension-name-some",
+        "sidebar-item-some-extension-name-some-sidebar-item",
       );
 
       expect(actual).not.toBeInTheDocument();
@@ -78,7 +78,7 @@ describe("disable sidebar items when cluster is not relevant", () => {
 
     it("does not show the sidebar item", () => {
       const actual = rendered.queryByTestId(
-        "sidebar-item-sidebar-item-some-extension-name-some",
+        "sidebar-item-some-extension-name-some-sidebar-item",
       );
 
       expect(actual).not.toBeInTheDocument();
@@ -96,7 +96,7 @@ describe("disable sidebar items when cluster is not relevant", () => {
 
     it("shows the sidebar item", () => {
       const actual = rendered.getByTestId(
-        "sidebar-item-sidebar-item-test-extension-some",
+        "sidebar-item-test-extension-some-sidebar-item",
       );
 
       expect(actual).toBeInTheDocument();

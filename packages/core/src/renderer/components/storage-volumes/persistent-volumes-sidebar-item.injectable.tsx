@@ -11,13 +11,14 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToPersistentVolumesInjectable from "../../../common/front-end-routing/routes/cluster/storage/persistent-volumes/navigate-to-persistent-volumes.injectable";
 
 const persistentVolumesSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-persistent-volumes",
+  id: "persistent-volumes-sidebar-item",
 
   instantiate: (di) => {
     const route = di.inject(persistentVolumesRouteInjectable);
 
     return {
-      parentId: storageSidebarItemInjectable.id,
+      id: "persistent-volumes",
+      parentId: di.inject(storageSidebarItemInjectable).id,
       title: "Persistent Volumes",
       onClick: di.inject(navigateToPersistentVolumesInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

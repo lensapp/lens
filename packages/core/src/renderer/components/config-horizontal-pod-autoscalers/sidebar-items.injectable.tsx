@@ -10,13 +10,14 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToHorizontalPodAutoscalersInjectable from "../../../common/front-end-routing/routes/cluster/config/horizontal-pod-autoscalers/navigate-to-horizontal-pod-autoscalers.injectable";
 
 const horizontalPodAutoScalersSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-horizontal-pod-auto-scalers",
+  id: "horizontal-pod-auto-scalers-sidebar-item",
 
   instantiate: (di) => {
     const route = di.inject(horizontalPodAutoscalersRouteInjectable);
 
     return {
-      parentId: configSidebarItemInjectable.id,
+      id: "horizontal-pod-auto-scalers",
+      parentId: di.inject(configSidebarItemInjectable).id,
       title: "HPA",
       onClick: di.inject(navigateToHorizontalPodAutoscalersInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

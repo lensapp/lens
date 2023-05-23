@@ -11,13 +11,14 @@ import routeIsActiveInjectable from "../../../routes/route-is-active.injectable"
 import navigateToServiceAccountsInjectable from "../../../../common/front-end-routing/routes/cluster/user-management/service-accounts/navigate-to-service-accounts.injectable";
 
 const serviceAccountsSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-service-accounts",
+  id: "service-accounts-sidebar-item",
 
   instantiate: (di) => {
     const route = di.inject(serviceAccountsRouteInjectable);
 
     return {
-      parentId: userManagementSidebarItemInjectable.id,
+      id: "service-accounts",
+      parentId: di.inject(userManagementSidebarItemInjectable).id,
       title: "Service Accounts",
       onClick: di.inject(navigateToServiceAccountsInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

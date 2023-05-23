@@ -11,13 +11,14 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToDeploymentsInjectable from "../../../common/front-end-routing/routes/cluster/workloads/deployments/navigate-to-deployments.injectable";
 
 const deploymentsSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-deployments",
+  id: "deployments-sidebar-item",
 
   instantiate: (di) => {
     const route = di.inject(deploymentsRouteInjectable);
 
     return {
-      parentId: workloadsSidebarItemInjectable.id,
+      id: "deployments",
+      parentId: di.inject(workloadsSidebarItemInjectable).id,
       title: "Deployments",
       onClick: di.inject(navigateToDeploymentsInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

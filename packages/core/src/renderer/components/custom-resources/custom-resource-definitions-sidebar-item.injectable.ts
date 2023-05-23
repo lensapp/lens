@@ -10,12 +10,13 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import customResourcesSidebarItemInjectable from "./custom-resources-sidebar-item.injectable";
 
 const customResourceDefinitionsSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-custom-resource-definitions",
+  id: "custom-resource-definitions-sidebar-item",
   instantiate: (di) => {
     const customResourceDefinitionsRoute = di.inject(customResourceDefinitionsRouteInjectable);
 
     return {
-      parentId: customResourcesSidebarItemInjectable.id,
+      id: "custom-resource-definitions",
+      parentId: di.inject(customResourcesSidebarItemInjectable).id,
       title: "Definitions",
       onClick: di.inject(navigateToCustomResourcesInjectable),
       isActive: di.inject(routeIsActiveInjectable, customResourceDefinitionsRoute),

@@ -11,13 +11,14 @@ import navigateToClusterRoleBindingsInjectable from "../../../../common/front-en
 import userManagementSidebarItemInjectable from "../user-management-sidebar-item.injectable";
 
 const clusterRoleBindingsSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-cluster-role-bindings",
+  id: "cluster-role-bindings-sidebar-item",
 
   instantiate: (di) => {
     const route = di.inject(clusterRoleBindingsRouteInjectable);
 
     return {
-      parentId: userManagementSidebarItemInjectable.id,
+      id: "cluster-role-bindings",
+      parentId: di.inject(userManagementSidebarItemInjectable).id,
       title: "Cluster Role Bindings",
       onClick: di.inject(navigateToClusterRoleBindingsInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

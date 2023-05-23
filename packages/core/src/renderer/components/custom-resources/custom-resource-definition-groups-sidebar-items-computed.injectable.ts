@@ -27,9 +27,10 @@ const customResourceDefinitionGroupsSidebarItemsComputedInjectable = getInjectab
 
     const toCustomResourceGroupToSidebarItems = ([group, definitions]: [string, CustomResourceDefinition[]], index: number) => {
       const customResourceGroupSidebarItem = getInjectable({
-        id: `sidebar-item-custom-resource-group-${group}`,
-        instantiate: (): SidebarItemRegistration => ({
-          parentId: customResourcesSidebarItemInjectable.id,
+        id: `custom-resource-group-${group}-sidebar-item`,
+        instantiate: (di): SidebarItemRegistration => ({
+          id: `custom-resource-group-${group}`,
+          parentId: di.inject(customResourcesSidebarItemInjectable).id,
           onClick: noop,
           title: group,
           orderNumber: 10 * index,
@@ -43,9 +44,10 @@ const customResourceDefinitionGroupsSidebarItemsComputedInjectable = getInjectab
         };
 
         return getInjectable({
-          id: `sidebar-item-custom-resource-group-${group}/${definition.getPluralName()}`,
+          id: `custom-resource-group-${group}/${definition.getPluralName()}-sidebar-item`,
           instantiate: (di): SidebarItemRegistration => ({
-            parentId: customResourceGroupSidebarItem.id,
+            id: `custom-resource-group-${group}/${definition.getPluralName()}`,
+            parentId: di.inject(customResourceGroupSidebarItem).id,
             onClick: () => navigateToCustomResources(parameters),
             title: definition.getResourceKind(),
             isActive: computedAnd(

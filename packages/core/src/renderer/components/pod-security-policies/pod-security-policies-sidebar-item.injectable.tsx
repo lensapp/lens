@@ -11,13 +11,14 @@ import navigateToPodSecurityPoliciesInjectable from "../../../common/front-end-r
 import userManagementSidebarItemInjectable from "../user-management/user-management-sidebar-item.injectable";
 
 const podSecurityPoliciesSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-pod-security-policies",
+  id: "pod-security-policies-sidebar-item",
 
   instantiate: (di) => {
     const route = di.inject(podSecurityPoliciesRouteInjectable);
 
     return {
-      parentId: userManagementSidebarItemInjectable.id,
+      id: "pod-security-policies",
+      parentId: di.inject(userManagementSidebarItemInjectable).id,
       title: "Pod Security Policies",
       onClick: di.inject(navigateToPodSecurityPoliciesInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

@@ -10,12 +10,13 @@ import navigateToIngressClassesInjectable from "../../../common/front-end-routin
 import ingressClassesRouteInjectable from "../../../common/front-end-routing/routes/cluster/network/ingress-class/ingress-classes-route.injectable";
 
 const ingressClassesSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-ingress-classes",
+  id: "ingress-classes-sidebar-item",
   instantiate: (di) => {
     const ingressClassRoute = di.inject(ingressClassesRouteInjectable);
 
     return {
-      parentId: networkSidebarItemInjectable.id,
+      id: "ingressclasses",
+      parentId: di.inject(networkSidebarItemInjectable).id,
       title: "Ingress Classes",
       onClick: di.inject(navigateToIngressClassesInjectable),
       isActive: di.inject(routeIsActiveInjectable, ingressClassRoute),

@@ -10,13 +10,14 @@ import navigateToMutatingWebhookConfigurationsInjectable from "../../../common/f
 import configSidebarItemInjectable from "../config/config-sidebar-item.injectable";
 
 const mutatingWebhookConfigurationsSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-mutating-webhook-configurations",
+  id: "mutating-webhook-configurations-sidebar-item",
 
   instantiate: (di) => {
     const route = di.inject(mutatingWebhookConfigurationsRouteInjectable);
 
     return {
-      parentId: configSidebarItemInjectable.id,
+      id: "mutating-webhook-configurations",
+      parentId: di.inject(configSidebarItemInjectable).id,
       title: "Mutating Webhook Configs",
       onClick: di.inject(navigateToMutatingWebhookConfigurationsInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

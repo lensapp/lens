@@ -9,8 +9,9 @@ import React from "react";
 import { Icon } from "../icon";
 
 const customResourcesSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-custom-resources",
+  id: "custom-resources-sidebar-item",
   instantiate: () => ({
+    id: "custom-resources",
     parentId: null,
     title: "Custom Resources",
     getIcon: () => <Icon material="extension" />,
