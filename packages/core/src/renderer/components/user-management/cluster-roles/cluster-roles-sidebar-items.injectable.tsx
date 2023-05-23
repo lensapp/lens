@@ -3,31 +3,36 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import { computed } from "mobx";
 
 import clusterRolesRouteInjectable from "../../../../common/front-end-routing/routes/cluster/user-management/cluster-roles/cluster-roles-route.injectable";
-import userManagementSidebarItemInjectable from "../user-management-sidebar-items.injectable";
-import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
+import { userManagementSidebarItemId } from "../user-management-sidebar-items.injectable";
+import { sidebarItemsInjectionToken } from "../../layout/sidebar-items.injectable";
 import routeIsActiveInjectable from "../../../routes/route-is-active.injectable";
 import navigateToClusterRolesInjectable from "../../../../common/front-end-routing/routes/cluster/user-management/cluster-roles/navigate-to-cluster-roles.injectable";
 
-const clusterRolesSidebarItemInjectable = getInjectable({
-  id: "cluster-roles-sidebar-item",
+const clusterRolesSidebarItemsInjectable = getInjectable({
+  id: "cluster-roles-sidebar-items",
 
   instantiate: (di) => {
     const route = di.inject(clusterRolesRouteInjectable);
+    const navigateToClusterRoles = di.inject(navigateToClusterRolesInjectable);
+    const routeIsActive = di.inject(routeIsActiveInjectable, route);
 
-    return {
-      id: "cluster-roles",
-      parentId: di.inject(userManagementSidebarItemInjectable).id,
-      title: "Cluster Roles",
-      onClick: di.inject(navigateToClusterRolesInjectable),
-      isActive: di.inject(routeIsActiveInjectable, route),
-      isVisible: route.isEnabled,
-      orderNumber: 20,
-    };
+    return computed(() => [
+      {
+        id: "cluster-roles",
+        parentId: userManagementSidebarItemId,
+        title: "Cluster Roles",
+        onClick: navigateToClusterRoles,
+        isActive: routeIsActive,
+        isVisible: route.isEnabled,
+        orderNumber: 20,
+      },
+    ]);
   },
 
-  injectionToken: sidebarItemInjectionToken,
+  injectionToken: sidebarItemsInjectionToken,
 });
 
-export default clusterRolesSidebarItemInjectable;
+export default clusterRolesSidebarItemsInjectable;

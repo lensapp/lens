@@ -10,7 +10,6 @@ import type { IComputedValue } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { NodeStore } from "../nodes/store";
 import type { PodStore } from "../workloads-pods/store";
-import { byOrderNumber } from "@k8slens/utilities";
 import { TabLayout } from "../layout/tab-layout";
 import { Spinner } from "../spinner";
 import { ClusterIssues } from "./cluster-issues";
@@ -26,6 +25,7 @@ import nodeStoreInjectable from "../nodes/store.injectable";
 import enabledMetricsInjectable from "../../api/catalog/entity/metrics-enabled.injectable";
 import type { ClusterOverviewUIBlock } from "@k8slens/metrics";
 import { clusterOverviewUIBlockInjectionToken } from "@k8slens/metrics";
+import { orderByOrderNumber } from "../../../common/utils/composable-responsibilities/orderable/orderable";
 import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
 import type { ClusterMetricData } from "../../../common/k8s-api/endpoints/metrics.api/request-cluster-metrics-by-node-names.injectable";
 import clusterOverviewMetricsInjectable from "./cluster-metrics.injectable";
@@ -56,9 +56,10 @@ class NonInjectedClusterOverview extends React.Component<Dependencies> {
     return (
       <>
         {
-          [...this.props.uiBlocks.get()]
-            .sort(byOrderNumber)
-            .map(block => <block.Component key={block.id}/>)
+          orderByOrderNumber(this.props.uiBlocks.get())
+            .map((block) => (
+              <block.Component key={block.id} />
+            ))
         }
         <ClusterIssues />
       </>

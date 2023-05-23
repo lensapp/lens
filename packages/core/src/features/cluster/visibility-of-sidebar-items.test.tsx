@@ -4,8 +4,9 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { RenderResult } from "@testing-library/react";
-import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
-import { runInAction } from "mobx";
+import type { SidebarItemRegistration } from "../../renderer/components/layout/sidebar-items.injectable";
+import { sidebarItemsInjectionToken } from "../../renderer/components/layout/sidebar-items.injectable";
+import { computed, runInAction } from "mobx";
 import { routeSpecificComponentInjectionToken } from "../../renderer/routes/route-specific-component-injection-token";
 import React from "react";
 import { frontEndRouteInjectionToken } from "../../common/front-end-routing/front-end-route-injection-token";
@@ -101,16 +102,18 @@ const testSidebarItemsInjectable = getInjectable({
     const testRoute = di.inject(testRouteInjectable);
     const navigateToRoute = di.inject(navigateToRouteInjectionToken);
 
-    return {
-      id: "some-item-id",
-      parentId: null,
-      title: "Some item",
-      onClick: () => navigateToRoute(testRoute),
-      isVisible: testRoute.isEnabled,
-      orderNumber: 42,
-    };
+    return computed((): SidebarItemRegistration[] => [
+      {
+        id: "some-item-id",
+        parentId: null,
+        title: "Some item",
+        onClick: () => navigateToRoute(testRoute),
+        isVisible: testRoute.isEnabled,
+        orderNumber: 42,
+      },
+    ]);
   },
 
-  injectionToken: sidebarItemInjectionToken,
+  injectionToken: sidebarItemsInjectionToken,
 });
 

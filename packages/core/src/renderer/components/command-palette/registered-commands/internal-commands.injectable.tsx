@@ -34,7 +34,7 @@ import navigateToDaemonsetsInjectable from "../../../../common/front-end-routing
 import navigateToStatefulsetsInjectable from "../../../../common/front-end-routing/routes/cluster/workloads/statefulsets/navigate-to-statefulsets.injectable";
 import navigateToJobsInjectable from "../../../../common/front-end-routing/routes/cluster/workloads/jobs/navigate-to-jobs.injectable";
 import navigateToCronJobsInjectable from "../../../../common/front-end-routing/routes/cluster/workloads/cron-jobs/navigate-to-cron-jobs.injectable";
-import navigateToCustomResourcesInjectable from "../../../../common/front-end-routing/routes/cluster/custom-resources/navigate-to-custom-resources.injectable";
+import navigateToCustomResourcesInjectable from "../../../../common/front-end-routing/routes/cluster/custom-resources/custom-resources/navigate-to-custom-resources.injectable";
 import navigateToEntitySettingsInjectable from "../../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 
 // TODO: Importing from features is not OK. Make commands to comply with Open Closed Principle to allow moving implementation under a feature

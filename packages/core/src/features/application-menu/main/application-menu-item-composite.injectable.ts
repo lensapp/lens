@@ -4,17 +4,18 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import applicationMenuItemsInjectable from "./application-menu-items.injectable";
+import type { Composite } from "../../../common/utils/composite/get-composite/get-composite";
 import { getCompositeFor } from "../../../common/utils/composite/get-composite/get-composite";
 import { computed } from "mobx";
+import { pipeline } from "@ogre-tools/fp";
 import type { ApplicationMenuItemTypes } from "./menu-items/application-menu-item-injection-token";
 import type { RootComposite } from "../../../common/utils/composite/interfaces";
 import type { Discriminable } from "../../../common/utils/composable-responsibilities/discriminable/discriminable";
+import { orderByOrderNumber } from "../../../common/utils/composable-responsibilities/orderable/orderable";
 import logErrorInjectable from "../../../common/log-error.injectable";
 import { isShown } from "../../../common/utils/composable-responsibilities/showable/showable";
-import type { Orderable } from "@k8slens/utilities";
-import { byOrderNumber } from "@k8slens/utilities";
 
-export type MenuItemRoot = Discriminable<"root"> & RootComposite<"root"> & Orderable;
+export type MenuItemRoot = Discriminable<"root"> & RootComposite<"root">;
 
 const applicationMenuItemCompositeInjectable = getInjectable({
   id: "application-menu-item-composite",
@@ -23,30 +24,40 @@ const applicationMenuItemCompositeInjectable = getInjectable({
     const menuItems = di.inject(applicationMenuItemsInjectable);
     const logError = di.inject(logErrorInjectable);
 
-    const getComposite = getCompositeFor<ApplicationMenuItemTypes | MenuItemRoot>({
-      getId: (x) => x.id,
-      getParentId: (x) => x.parentId,
-      transformChildren: (children) => (
-        [...children]
-          .sort(byOrderNumber)
-          .filter(isShown)
-      ),
-      handleMissingParentIds: ({ missingParentIds }) => {
-        const ids = missingParentIds.join('", "');
+    return computed((): Composite<ApplicationMenuItemTypes | MenuItemRoot> => {
+      const items = menuItems.get();
 
-        logError(`[MENU]: cannot render menu item for missing parentIds: "${ids}"`);
-      },
+      return pipeline(
+        [
+          {
+            parentId: undefined,
+            id: "root",
+            kind: "root",
+          } as const,
+
+          ...items,
+        ],
+
+        getCompositeFor({
+          getId: (x) => x.id,
+          getParentId: (x) => x.parentId,
+          transformChildren: (children) =>
+            pipeline(
+              children,
+              orderByOrderNumber,
+              (children) => children.filter(isShown),
+            ),
+
+          handleMissingParentIds: ({ missingParentIds }) => {
+            logError(
+              `[MENU]: cannot render menu item for missing parentIds: "${missingParentIds.join(
+                '", "',
+              )}"`,
+            );
+          },
+        }),
+      );
     });
-
-    return computed(() => getComposite([
-      {
-        parentId: undefined,
-        id: "root",
-        kind: "root",
-        orderNumber: -Infinity,
-      } as const,
-      ...menuItems.get(),
-    ]));
   },
 });
 

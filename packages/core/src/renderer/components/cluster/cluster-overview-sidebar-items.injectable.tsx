@@ -5,30 +5,39 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { Icon } from "../icon";
 import React from "react";
-import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
+import type {
+  SidebarItemRegistration } from "../layout/sidebar-items.injectable";
+import {
+  sidebarItemsInjectionToken,
+} from "../layout/sidebar-items.injectable";
+import { computed } from "mobx";
 import clusterOverviewRouteInjectable from "../../../common/front-end-routing/routes/cluster/overview/cluster-overview-route.injectable";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToClusterOverviewInjectable from "../../../common/front-end-routing/routes/cluster/overview/navigate-to-cluster-overview.injectable";
 
-const clusterOverviewSidebarItemInjectable = getInjectable({
-  id: "cluster-overview-sidebar-item",
+const clusterOverviewSidebarItemsInjectable = getInjectable({
+  id: "cluster-overview-sidebar-items",
 
   instantiate: (di) => {
     const route = di.inject(clusterOverviewRouteInjectable);
+    const navigateToClusterOverview = di.inject(navigateToClusterOverviewInjectable);
+    const routeIsActive = di.inject(routeIsActiveInjectable, route);
 
-    return {
-      id: "cluster-overview",
-      parentId: null,
-      title: "Cluster",
-      getIcon: () => <Icon svg="kube" />,
-      onClick: di.inject(navigateToClusterOverviewInjectable),
-      isActive: di.inject(routeIsActiveInjectable, route),
-      isVisible: route.isEnabled,
-      orderNumber: 10,
-    };
+    return computed((): SidebarItemRegistration[] => [
+      {
+        id: "cluster-overview",
+        parentId: null,
+        title: "Cluster",
+        getIcon: () => <Icon svg="kube" />,
+        onClick: navigateToClusterOverview,
+        isActive: routeIsActive,
+        isVisible: route.isEnabled,
+        orderNumber: 10,
+      },
+    ]);
   },
 
-  injectionToken: sidebarItemInjectionToken,
+  injectionToken: sidebarItemsInjectionToken,
 });
 
-export default clusterOverviewSidebarItemInjectable;
+export default clusterOverviewSidebarItemsInjectable;

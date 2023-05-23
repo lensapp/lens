@@ -3,31 +3,36 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import { computed } from "mobx";
 
 import statefulsetsRouteInjectable from "../../../common/front-end-routing/routes/cluster/workloads/statefulsets/statefulsets-route.injectable";
-import workloadsSidebarItemInjectable from "../workloads/workloads-sidebar-items.injectable";
-import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
+import { workloadsSidebarItemId } from "../workloads/workloads-sidebar-items.injectable";
+import { sidebarItemsInjectionToken } from "../layout/sidebar-items.injectable";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToStatefulsetsInjectable from "../../../common/front-end-routing/routes/cluster/workloads/statefulsets/navigate-to-statefulsets.injectable";
 
-const statefulsetsSidebarItemInjectable = getInjectable({
-  id: "statefulsets-sidebar-item",
+const statefulsetsSidebarItemsInjectable = getInjectable({
+  id: "statefulsets-sidebar-items",
 
   instantiate: (di) => {
     const route = di.inject(statefulsetsRouteInjectable);
+    const navigateToStatefulsets = di.inject(navigateToStatefulsetsInjectable);
+    const routeIsActive = di.inject(routeIsActiveInjectable, route);
 
-    return {
-      id: "stateful-sets",
-      parentId: di.inject(workloadsSidebarItemInjectable).id,
-      title: "StatefulSets",
-      onClick: di.inject(navigateToStatefulsetsInjectable),
-      isActive: di.inject(routeIsActiveInjectable, route),
-      isVisible: route.isEnabled,
-      orderNumber: 50,
-    };
+    return computed(() => [
+      {
+        id: "stateful-sets",
+        parentId: workloadsSidebarItemId,
+        title: "StatefulSets",
+        onClick: navigateToStatefulsets,
+        isActive: routeIsActive,
+        isVisible: route.isEnabled,
+        orderNumber: 50,
+      },
+    ]);
   },
 
-  injectionToken: sidebarItemInjectionToken,
+  injectionToken: sidebarItemsInjectionToken,
 });
 
-export default statefulsetsSidebarItemInjectable;
+export default statefulsetsSidebarItemsInjectable;

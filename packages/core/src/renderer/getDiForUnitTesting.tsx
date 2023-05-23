@@ -21,7 +21,6 @@ import { registerFeature } from "@k8slens/feature-core";
 import { messagingFeature, testUtils as messagingTestUtils } from "@k8slens/messaging";
 import { routingFeature } from "@k8slens/routing";
 import { loggerFeature } from "@k8slens/logger";
-import { clusterSidebarFeature } from "@k8slens/cluster-sidebar";
 
 export const getDiForUnitTesting = () => {
   const environment = "renderer";
@@ -39,7 +38,6 @@ export const getDiForUnitTesting = () => {
       messagingTestUtils.messagingFeatureForUnitTesting,
       routingFeature,
       loggerFeature,
-      clusterSidebarFeature,
     );
   });
 

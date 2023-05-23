@@ -3,31 +3,36 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import { computed } from "mobx";
 
 import serviceAccountsRouteInjectable from "../../../../common/front-end-routing/routes/cluster/user-management/service-accounts/service-accounts-route.injectable";
-import userManagementSidebarItemInjectable from "../user-management-sidebar-items.injectable";
-import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
+import { userManagementSidebarItemId } from "../user-management-sidebar-items.injectable";
+import { sidebarItemsInjectionToken } from "../../layout/sidebar-items.injectable";
 import routeIsActiveInjectable from "../../../routes/route-is-active.injectable";
 import navigateToServiceAccountsInjectable from "../../../../common/front-end-routing/routes/cluster/user-management/service-accounts/navigate-to-service-accounts.injectable";
 
-const serviceAccountsSidebarItemInjectable = getInjectable({
-  id: "service-accounts-sidebar-item",
+const serviceAccountsSidebarItemsInjectable = getInjectable({
+  id: "service-accounts-sidebar-items",
 
   instantiate: (di) => {
     const route = di.inject(serviceAccountsRouteInjectable);
+    const navigateToServiceAccounts = di.inject(navigateToServiceAccountsInjectable);
+    const routeIsActive = di.inject(routeIsActiveInjectable, route);
 
-    return {
-      id: "service-accounts",
-      parentId: di.inject(userManagementSidebarItemInjectable).id,
-      title: "Service Accounts",
-      onClick: di.inject(navigateToServiceAccountsInjectable),
-      isActive: di.inject(routeIsActiveInjectable, route),
-      isVisible: route.isEnabled,
-      orderNumber: 10,
-    };
+    return computed(() => [
+      {
+        id: "service-accounts",
+        parentId: userManagementSidebarItemId,
+        title: "Service Accounts",
+        onClick: navigateToServiceAccounts,
+        isActive: routeIsActive,
+        isVisible: route.isEnabled,
+        orderNumber: 10,
+      },
+    ]);
   },
 
-  injectionToken: sidebarItemInjectionToken,
+  injectionToken: sidebarItemsInjectionToken,
 });
 
-export default serviceAccountsSidebarItemInjectable;
+export default serviceAccountsSidebarItemsInjectable;

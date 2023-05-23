@@ -3,31 +3,37 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import { computed } from "mobx";
 
 import portForwardsRouteInjectable from "../../../common/front-end-routing/routes/cluster/network/port-forwards/port-forwards-route.injectable";
-import networkSidebarItemInjectable from "../network/network-sidebar-items.injectable";
-import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
+import { networkSidebarItemId } from "../network/network-sidebar-items.injectable";
+import { sidebarItemsInjectionToken } from "../layout/sidebar-items.injectable";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToPortForwardsInjectable from "../../../common/front-end-routing/routes/cluster/network/port-forwards/navigate-to-port-forwards.injectable";
 
-const portForwardsSidebarItemInjectable = getInjectable({
-  id: "port-forwards-sidebar-item",
+const portForwardsSidebarItemsInjectable = getInjectable({
+  id: "port-forwards-sidebar-items",
 
   instantiate: (di) => {
     const route = di.inject(portForwardsRouteInjectable);
+    const navigateToPortForwards = di.inject(navigateToPortForwardsInjectable);
+    const routeIsActive = di.inject(routeIsActiveInjectable, route);
 
-    return {
-      id: "port-forwards",
-      parentId: di.inject(networkSidebarItemInjectable).id,
-      title: "Port Forwarding",
-      onClick: di.inject(navigateToPortForwardsInjectable),
-      isActive: di.inject(routeIsActiveInjectable, route),
-      isVisible: route.isEnabled,
-      orderNumber: 50,
-    };
+    return computed(() => [
+      {
+        id: "port-forwards",
+        parentId: networkSidebarItemId,
+
+        title: "Port Forwarding",
+        onClick: navigateToPortForwards,
+        isActive: routeIsActive,
+        isVisible: route.isEnabled,
+        orderNumber: 50,
+      },
+    ]);
   },
 
-  injectionToken: sidebarItemInjectionToken,
+  injectionToken: sidebarItemsInjectionToken,
 });
 
-export default portForwardsSidebarItemInjectable;
+export default portForwardsSidebarItemsInjectable;

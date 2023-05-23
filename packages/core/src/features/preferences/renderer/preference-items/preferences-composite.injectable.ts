@@ -7,12 +7,13 @@ import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-f
 import { computed } from "mobx";
 import type { PreferenceItemTypes } from "./preference-item-injection-token";
 import { preferenceItemInjectionToken } from "./preference-item-injection-token";
+import { pipeline } from "@ogre-tools/fp";
 import type { PreferenceTabsRoot } from "./preference-tab-root";
 import { preferenceTabsRoot } from "./preference-tab-root";
 import logErrorInjectable from "../../../../common/log-error.injectable";
 import { isShown } from "../../../../common/utils/composable-responsibilities/showable/showable";
+import { orderByOrderNumber } from "../../../../common/utils/composable-responsibilities/orderable/orderable";
 import { getCompositeFor } from "../../../../common/utils/composite/get-composite/get-composite";
-import { byOrderNumber } from "@k8slens/utilities";
 
 const preferencesCompositeInjectable = getInjectable({
   id: "preferences-composite",
@@ -26,25 +27,27 @@ const preferencesCompositeInjectable = getInjectable({
       getId: (x) => x.id,
       getParentId: (x) => x.parentId,
 
-      handleMissingParentIds: ({ missingParentIds, availableParentIds }) => {
-        const missingIds = missingParentIds.join('", "');
-        const availableIds = availableParentIds.join("\n");
-
-        logError([
-          `Tried to create preferences, but encountered references to unknown ids: "${missingIds}".`,
-          "Available ids are:",
-          availableIds,
-        ].join("\n\n"));
+      handleMissingParentIds: (ids) => {
+        logError(
+          `Tried to create preferences, but encountered references to unknown ids: "${ids.missingParentIds.join(
+            '", "',
+          )}".\n\nAvailable ids are:\n\n${ids.availableParentIds.join("\n")}`,
+        );
       },
 
-      transformChildren: (children) => (
-        children
-          .filter(isShown)
-          .sort(byOrderNumber)
-      ),
+      transformChildren: (children) =>
+        pipeline(
+          children.filter(isShown),
+          orderByOrderNumber,
+        ),
     });
 
-    return computed(() => getComposite([preferenceTabsRoot, ...preferenceItems.get()]));
+    return computed(() =>
+      pipeline(
+        [preferenceTabsRoot, ...preferenceItems.get()],
+        getComposite,
+      ),
+    );
   },
 });
 
