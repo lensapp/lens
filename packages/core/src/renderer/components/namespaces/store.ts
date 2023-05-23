@@ -171,6 +171,20 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
     this.dependencies.storage.set([...nextState]);
   }
 
+  deselectSingle(namespace: string) {
+    const nextState = new Set(this.contextNamespaces);
+
+    nextState.delete(namespace);
+    this.dependencies.storage.set([...nextState]);
+  }
+
+  includeSingle(namespace: string) {
+    const nextState = new Set(this.contextNamespaces);
+
+    nextState.add(namespace);
+    this.dependencies.storage.set([...nextState]);
+  }
+
   /**
    * Makes the given namespace the sole selected namespace
    */

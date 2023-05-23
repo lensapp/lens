@@ -4,75 +4,86 @@
   }
 }
 
-.NamespaceSelectFilterParent {
-  max-width: 300px;
-}
+.namespace-select-filter {
+  width: 300px;
+  position: relative;
 
-.NamespaceSelectFilter {
-  --gradientColor: var(--select-menu-bgc);
+  .list-container {
+    position: absolute;
+    top: 30px;
+    z-index: 10;
+    background: var(--mainBackground);
+    border-radius: var(--border-radius);
 
-  .Select {
-    &__placeholder {
-      white-space: nowrap;
-      overflow: scroll hidden!important;
-      text-overflow: unset!important;
-      margin-left: -8px;
-      padding-left: 8px;
-      margin-right: -8px;
-      padding-right: 8px;
-      line-height: 1.1;
+    li.option {
+      cursor: pointer;
+      padding: calc(var(--padding) / 2) var(--padding);
+      list-style: none;
 
-      &::-webkit-scrollbar {
-        display: none;
+      &:hover {
+        color: white;
+      }
+
+      .selected-icon:hover {
+        color: var(--buttonAccentBackground);
+      }
+
+      .add-selection-icon:hover {
+        color: var(--colorSuccess);
       }
     }
+  }
 
-    &__value-container {
+  .menu {
+    width: 300px;
+    border-radius: var(--border-radius);
+    border: 1px solid;
+    border-color: var(--halfGray);
+    padding: calc(var(--padding) / 2) var(--padding);
+    display: flex;
+
+    .non-icon {
+      width: -webkit-fill-available;
       position: relative;
 
-      &::before, &::after {
-        content: ' ';
-        position: absolute;
-        z-index: 20;
-        display: block;
-        width: 8px;
-        height: var(--font-size);
-      }
-
-      &::before {
-        left: 0;
-        background: linear-gradient(to right, var(--gradientColor) 0px, transparent);
-      }
-
-      &::after {
-        right: 0;
-        background: linear-gradient(to left, var(--gradientColor) 0px, transparent);
-      }
-    }
-  }
-}
-
-.NamespaceSelectFilterMenu {
-  right: 0;
-
-  .Select {
-    &__menu-list {
-      max-width: 400px;
-    }
-
-    &__option {
-      white-space: normal;
-      word-break: break-all;
-      padding: 4px 8px;
-      border-radius: 3px;
-
-      &--is-selected:not(&--is-focused) {
+      input {
+        width: 100%;
         background: transparent;
       }
-    }
-  }
 
-  .Icon {
-    margin-right: $margin * 0.5;
+      label {
+        white-space: nowrap;
+        overflow: scroll hidden!important;
+        text-overflow: unset!important;
+        margin-left: -16px;
+        padding-left: 8px;
+        padding-right: 8px;
+        width: calc(100% + 4px);
+        position: absolute;
+        left: 9px;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
+
+      .gradient {
+        position: absolute;
+        width: 10px;
+        top: 0;
+        height: 20px;
+        z-index: 21;
+
+        &.left {
+          left: -7px;
+          background: linear-gradient(to right, var(--contentColor) 0%, rgba(255, 255, 255, 0) 100%);
+        }
+
+        &.right {
+          right: 2px;
+          background: linear-gradient(to left, var(--contentColor) 0%, rgba(255, 255, 255, 0) 100%);
+        }
+      }
+    }
   }
 }

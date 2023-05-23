@@ -9,10 +9,10 @@ import type { Disposer } from "@k8slens/utilities";
 export type AddWindowEventListener = typeof addWindowEventListener;
 export type WindowEventListener<K extends keyof WindowEventMap> = (this: Window, ev: WindowEventMap[K]) => any;
 
-function addWindowEventListener<K extends keyof WindowEventMap>(type: K, listener: WindowEventListener<K>, options?: boolean | AddEventListenerOptions): Disposer {
+export function addWindowEventListener<K extends keyof WindowEventMap>(type: K, listener: WindowEventListener<K>, options?: boolean | AddEventListenerOptions): Disposer {
   window.addEventListener(type, listener, options);
 
-  return () => void window.removeEventListener(type, listener);
+  return () => void window.removeEventListener(type, listener, options);
 }
 
 const windowAddEventListenerInjectable = getInjectable({

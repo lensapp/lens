@@ -2,16 +2,14 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import React from "react";
-import type { IComputedValue } from "mobx";
+import type React from "react";
+import type { IComputedValue, IObservableValue } from "mobx";
 import { observable, action, computed, comparer } from "mobx";
 import type { NamespaceStore } from "../store";
-import type { ActionMeta, MultiValue } from "react-select";
-import { Icon } from "@k8slens/icon";
-import type { SelectOption } from "../../select";
 import { observableCrate } from "@k8slens/utilities";
 import type { IsMultiSelectionKey } from "./is-selection-key.injectable";
 import type { ClusterContext } from "../../../cluster-frame-context/cluster-frame-context";
+import GlobToRegExp from "glob-to-regexp";
 
 interface Dependencies {
   context: ClusterContext;
@@ -22,28 +20,49 @@ interface Dependencies {
 export const selectAllNamespaces = Symbol("all-namespaces-selected");
 
 export type SelectAllNamespaces = typeof selectAllNamespaces;
-export type NamespaceSelectFilterOption = SelectOption<string | SelectAllNamespaces>;
+export interface NamespaceSelectFilterOption {
+  value: string | SelectAllNamespaces;
+  label: string;
+  id: string | SelectAllNamespaces;
+}
 
 export interface NamespaceSelectFilterModel {
-  readonly options: IComputedValue<readonly NamespaceSelectFilterOption[]>;
+  readonly options: IComputedValue<NamespaceSelectFilterOption[]>;
+  readonly filteredOptions: IComputedValue<NamespaceSelectFilterOption[]>;
+  readonly selectedOptions: IComputedValue<NamespaceSelectFilterOption[]>;
   readonly menu: {
     open: () => void;
     close: () => void;
+    toggle: () => void;
     readonly isOpen: IComputedValue<boolean>;
+    readonly hasSelectedAll: IComputedValue<boolean>;
+    onKeyDown: React.KeyboardEventHandler;
+    onKeyUp: React.KeyboardEventHandler;
   };
-  onChange: (newValue: MultiValue<NamespaceSelectFilterOption>, actionMeta: ActionMeta<NamespaceSelectFilterOption>) => void;
-  onClick: () => void;
-  onKeyDown: React.KeyboardEventHandler;
-  onKeyUp: React.KeyboardEventHandler;
+  onClick: (options: NamespaceSelectFilterOption) => void;
+  deselect: (namespace: string) => void;
+  select: (namespace: string) => void;
+  readonly filterText: IObservableValue<string>;
   reset: () => void;
   isOptionSelected: (option: NamespaceSelectFilterOption) => boolean;
-  formatOptionLabel: (option: NamespaceSelectFilterOption) => JSX.Element;
 }
 
 enum SelectMenuState {
   Close = "close",
   Open = "open",
 }
+
+const filterBasedOnText = (filterText: string) => {
+  const regexp = new RegExp(GlobToRegExp(filterText, { extended: true, flags: "gi" }));
+
+  return (options: NamespaceSelectFilterOption) => {
+    if (options.value === selectAllNamespaces) {
+      return true;
+    }
+
+    return Boolean(options.value.match(regexp));
+  };
+};
 
 export function namespaceSelectFilterModelFor(dependencies: Dependencies): NamespaceSelectFilterModel {
   const { isMultiSelectionKey, namespaceStore, context } = dependencies;
@@ -58,6 +77,7 @@ export function namespaceSelectFilterModelFor(dependencies: Dependencies): Names
       didToggle = false;
     },
   }]);
+  const filterText = observable.box("");
   const selectedNames = computed(() => new Set(context.contextNamespaces), {
     equals: comparer.structural,
   });
@@ -74,7 +94,7 @@ export function namespaceSelectFilterModelFor(dependencies: Dependencies): Names
       ? 1
       : -1;
   };
-  const options = computed((): readonly NamespaceSelectFilterOption[] => [
+  const options = computed((): NamespaceSelectFilterOption[] => [
     {
       value: selectAllNamespaces,
       label: "All Namespaces",
@@ -89,6 +109,8 @@ export function namespaceSelectFilterModelFor(dependencies: Dependencies): Names
         id: namespace,
       })),
   ]);
+  const filteredOptions = computed(() => options.get().filter(filterBasedOnText(filterText.get())));
+  const selectedOptions = computed(() => options.get().filter(model.isOptionSelected));
   const menuIsOpen = computed(() => menuState.get() === SelectMenuState.Open);
   const isOptionSelected: NamespaceSelectFilterModel["isOptionSelected"] = (option) => {
     if (option.value === selectAllNamespaces) {
@@ -100,82 +122,66 @@ export function namespaceSelectFilterModelFor(dependencies: Dependencies): Names
 
   const model: NamespaceSelectFilterModel = {
     options,
+    filteredOptions,
+    selectedOptions,
     menu: {
       close: action(() => {
         menuState.set(SelectMenuState.Close);
+        filterText.set("");
       }),
       open: action(() => {
         menuState.set(SelectMenuState.Open);
       }),
+      toggle: () => {
+        if (menuIsOpen.get()) {
+          model.menu.close();
+        } else {
+          model.menu.open();
+        }
+      },
       isOpen: menuIsOpen,
-    },
-    onChange: (_, action) => {
-      switch (action.action) {
-        case "clear":
-          namespaceStore.selectAll();
-          break;
-        case "deselect-option":
-        case "select-option":
-          if (action.option) {
-            didToggle = true;
-
-            if (action.option.value === selectAllNamespaces) {
-              namespaceStore.selectAll();
-            } else if (isMultiSelection) {
-              namespaceStore.toggleSingle(action.option.value);
-            } else {
-              namespaceStore.selectSingle(action.option.value);
-            }
-          }
-          break;
-      }
-    },
-    onClick: () => {
-      if (!menuIsOpen.get()) {
-        model.menu.open();
-      } else if (!isMultiSelection) {
-        model.menu.close();
-      }
-    },
-    onKeyDown: (event) => {
-      if (isMultiSelectionKey(event)) {
-        isMultiSelection = true;
-      }
-    },
-    onKeyUp: (event) => {
-      if (isMultiSelectionKey(event)) {
-        isMultiSelection = false;
-
-        if (didToggle) {
+      hasSelectedAll: computed(() => namespaceStore.areAllSelectedImplicitly),
+      onKeyDown: (event) => {
+        if (isMultiSelectionKey(event)) {
+          isMultiSelection = true;
+        } else if (event.key === "Escape") {
           model.menu.close();
         }
-      }
+      },
+      onKeyUp: (event) => {
+        if (isMultiSelectionKey(event)) {
+          isMultiSelection = false;
+
+          if (didToggle) {
+            model.menu.close();
+          }
+        }
+      },
     },
+    onClick: action((option) => {
+      if (option.value === selectAllNamespaces) {
+        namespaceStore.selectAll();
+        model.menu.close();
+      } else if (isMultiSelection) {
+        didToggle = true;
+        namespaceStore.toggleSingle(option.value);
+      } else {
+        namespaceStore.selectSingle(option.value);
+        model.menu.close();
+      }
+    }),
+    deselect: action((namespace) => {
+      namespaceStore.deselectSingle(namespace);
+    }),
+    select: action((namespace) => {
+      namespaceStore.includeSingle(namespace);
+    }),
+    filterText,
     reset: action(() => {
       isMultiSelection = false;
       model.menu.close();
     }),
     isOptionSelected,
-    formatOptionLabel: (option) => {
-      if (option.value === selectAllNamespaces) {
-        return <>All Namespaces</>;
-      }
-
-      return (
-        <div className="flex gaps align-center">
-          <Icon small material="layers" />
-          <span>{option.value}</span>
-          {isOptionSelected(option) && (
-            <Icon
-              small
-              material="check"
-              className="box right"
-              data-testid={`namespace-select-filter-option-${option.value}-selected`}
-            />
-          )}
-        </div>
-      );
-    },
   };
 
   return model;
