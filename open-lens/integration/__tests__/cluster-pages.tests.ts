@@ -322,13 +322,13 @@ const scenarios = [
   {
     expectedSelector: "div.HelmCharts input",
     parentSidebarItemTestId: "link-for-sidebar-item-helm",
-    sidebarItemTestId: "link-for-sidebar-item-helm-charts",
+    sidebarItemTestId: "link-for-sidebar-item-charts",
   },
 
   {
     expectedSelector: "h5.title",
     parentSidebarItemTestId: "link-for-sidebar-item-helm",
-    sidebarItemTestId: "link-for-sidebar-item-helm-releases",
+    sidebarItemTestId: "link-for-sidebar-item-releases",
   },
 
   {
