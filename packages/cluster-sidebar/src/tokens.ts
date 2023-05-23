@@ -8,7 +8,7 @@ import type { IComputedValue } from "mobx";
 import type { StrictReactNode } from "@k8slens/utilities";
 
 export interface SidebarItemRegistration {
-  id?: undefined;
+  id: string;
   parentId: string | null;
   title: StrictReactNode;
   onClick: () => void;
@@ -18,7 +18,7 @@ export interface SidebarItemRegistration {
   orderNumber: number;
 }
 
-export interface SidebarItemDeclaration {
+export interface SidebarItem {
   id: string;
   parentId: string | null;
   title: StrictReactNode;
@@ -26,7 +26,10 @@ export interface SidebarItemDeclaration {
   getIcon?: () => StrictReactNode;
   isActive: IComputedValue<boolean>;
   isVisible: IComputedValue<boolean>;
-  children: SidebarItemDeclaration[];
+}
+
+export interface HierarchicalSidebarItem extends SidebarItem {
+  children: HierarchicalSidebarItem[];
 }
 
 export const sidebarItemInjectionToken = getInjectionToken<SidebarItemRegistration>({

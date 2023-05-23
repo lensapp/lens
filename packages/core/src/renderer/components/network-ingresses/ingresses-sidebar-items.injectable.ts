@@ -10,12 +10,13 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import networkSidebarItemInjectable from "../network/network-sidebar-item.injectable";
 
 const ingressesSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-ingresses",
+  id: "ingresses-sidebar-item",
   instantiate: (di) => {
     const ingressRoute = di.inject(ingressesRouteInjectable);
 
     return {
-      parentId: networkSidebarItemInjectable.id,
+      id: "ingresses",
+      parentId: di.inject(networkSidebarItemInjectable).id,
       title: "Ingresses",
       onClick: di.inject(navigateToIngressesInjectable),
       isActive: di.inject(routeIsActiveInjectable, ingressRoute),

@@ -1,21 +1,26 @@
-import { getInjectable, InjectionInstanceWithMeta } from "@ogre-tools/injectable";
+/* eslint-disable prettier/prettier */
+
+import { getInjectable } from "@ogre-tools/injectable";
 import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
-import { SidebarItemDeclaration, sidebarItemInjectionToken, SidebarItemRegistration } from "./tokens";
+import { HierarchicalSidebarItem, sidebarItemInjectionToken, SidebarItemRegistration } from "./tokens";
 import { computed } from "mobx";
 import { byOrderNumber } from "@k8slens/utilities";
 
 const getSidebarItemsHierarchy = (
-  registrations: InjectionInstanceWithMeta<SidebarItemRegistration>[],
+  registrations: SidebarItemRegistration[],
   parentId: string | null,
-): SidebarItemDeclaration[] =>
+): HierarchicalSidebarItem[] => (
   registrations
-    .filter(({ instance }) => instance.parentId === parentId)
-    .map(({ instance: { isActive, isVisible, ...registration }, meta: { id } }) => {
-      const children = getSidebarItemsHierarchy(registrations, id);
+    .filter((item) => item.parentId === parentId)
+    .map(({
+      isActive,
+      isVisible,
+      ...registration
+    }) => {
+      const children = getSidebarItemsHierarchy(registrations, registration.id);
 
       return {
         ...registration,
-        id,
         children,
         isVisible: computed(() => {
           if (children.length === 0) {
@@ -41,7 +46,8 @@ const getSidebarItemsHierarchy = (
         }),
       };
     })
-    .sort(byOrderNumber);
+    .sort(byOrderNumber)
+);
 
 const sidebarItemsInjectable = getInjectable({
   id: "sidebar-items",
@@ -49,11 +55,7 @@ const sidebarItemsInjectable = getInjectable({
     const computedInjectMany = di.inject(computedInjectManyInjectable);
     const sidebarItemRegistrations = computedInjectMany(sidebarItemInjectionToken);
 
-    return computed(() => {
-      void sidebarItemRegistrations.get();
-
-      return getSidebarItemsHierarchy(di.injectManyWithMeta(sidebarItemInjectionToken), null);
-    });
+    return computed(() => getSidebarItemsHierarchy(sidebarItemRegistrations.get(), null));
   },
 });
 

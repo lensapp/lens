@@ -11,13 +11,14 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToRuntimeClassesInjectable from "../../../common/front-end-routing/routes/cluster/config/runtime-classes/navigate-to-runtime-classes.injectable";
 
 const runtimeClassesSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-runtime-classes",
+  id: "runtime-classes-sidebar-item",
 
   instantiate: (di) => {
     const route = di.inject(runtimeClassesRouteInjectable);
 
     return {
-      parentId: configSidebarItemInjectable.id,
+      id: "runtime-classes",
+      parentId: di.inject(configSidebarItemInjectable).id,
       title: "Runtime Classes",
       onClick: di.inject(navigateToRuntimeClassesInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

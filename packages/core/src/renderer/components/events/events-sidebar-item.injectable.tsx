@@ -13,12 +13,13 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToEventsInjectable from "../../../common/front-end-routing/routes/cluster/events/navigate-to-events.injectable";
 
 const eventsSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-events",
+  id: "events-sidebar-item",
 
   instantiate: (di) => {
     const route = di.inject(eventsRouteInjectable);
 
     return {
+      id: "events",
       parentId: null,
       getIcon: () => <Icon material="access_time" />,
       title: "Events",

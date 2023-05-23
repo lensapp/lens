@@ -9,9 +9,10 @@ import React from "react";
 import { noop } from "lodash/fp";
 
 const userManagementSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-user-management",
+  id: "user-management-sidebar-item",
 
   instantiate: () => ({
+    id: "user-management",
     parentId: null,
     getIcon: () => <Icon material="security" />,
     title: "Access Control",

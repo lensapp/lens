@@ -11,13 +11,14 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToPodsInjectable from "../../../common/front-end-routing/routes/cluster/workloads/pods/navigate-to-pods.injectable";
 
 const podsSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-pods",
+  id: "pods-sidebar-item",
 
   instantiate: (di) => {
     const route = di.inject(podsRouteInjectable);
 
     return {
-      parentId: workloadsSidebarItemInjectable.id,
+      id: "pods",
+      parentId: di.inject(workloadsSidebarItemInjectable).id,
       title: "Pods",
       onClick: di.inject(navigateToPodsInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

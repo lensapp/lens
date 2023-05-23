@@ -9,9 +9,10 @@ import React from "react";
 import { noop } from "lodash/fp";
 
 const storageSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-storage",
+  id: "storage-sidebar-item",
 
   instantiate: () => ({
+    id: "storage",
     parentId: null,
     getIcon: () => <Icon material="storage" />,
     title: "Storage",

@@ -11,13 +11,14 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToLeasesInjectable from "../../../common/front-end-routing/routes/cluster/config/leases/navigate-to-leases.injectable";
 
 const leasesSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-leases",
+  id: "leases-sidebar-item",
 
   instantiate: (di) => {
     const route = di.inject(leasesRouteInjectable);
 
     return {
-      parentId: configSidebarItemInjectable.id,
+      id: "leases",
+      parentId: di.inject(configSidebarItemInjectable).id,
       title: "Leases",
       onClick: di.inject(navigateToLeasesInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

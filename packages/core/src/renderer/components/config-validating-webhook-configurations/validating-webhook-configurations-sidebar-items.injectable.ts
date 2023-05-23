@@ -10,13 +10,14 @@ import navigateToValidatingWebhookConfigurationsInjectable from "../../../common
 import configSidebarItemInjectable from "../config/config-sidebar-item.injectable";
 
 const validatingWebhookConfigurationsSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-validating-webhook-configurations",
+  id: "validating-webhook-configurations-sidebar-item",
 
   instantiate: (di) => {
     const route = di.inject(validatingWebhookConfigurationsRouteInjectable);
 
     return {
-      parentId: configSidebarItemInjectable.id,
+      id: "validating-webhook-configurations",
+      parentId: di.inject(configSidebarItemInjectable).id,
       title: "Validating Webhook Configs",
       onClick: di.inject(navigateToValidatingWebhookConfigurationsInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

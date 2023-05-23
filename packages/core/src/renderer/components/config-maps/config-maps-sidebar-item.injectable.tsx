@@ -11,13 +11,14 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToConfigMapsInjectable from "../../../common/front-end-routing/routes/cluster/config/config-maps/navigate-to-config-maps.injectable";
 
 const configMapsSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-config-maps",
+  id: "config-maps-sidebar-item",
 
   instantiate: (di) => {
     const route = di.inject(configMapsRouteInjectable);
 
     return {
-      parentId: configSidebarItemInjectable.id,
+      id: "config-maps",
+      parentId: di.inject(configSidebarItemInjectable).id,
       title: "ConfigMaps",
       onClick: di.inject(navigateToConfigMapsInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),

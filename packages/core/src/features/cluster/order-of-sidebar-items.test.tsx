@@ -85,8 +85,9 @@ describe("cluster - order of sidebar items", () => {
 });
 
 const someParentSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-some-parent",
+  id: "some-parent-sidebar-item",
   instantiate: () => ({
+    id: "some-parent-id",
     parentId: null,
     title: "Some parent",
     onClick: noop,
@@ -96,8 +97,9 @@ const someParentSidebarItemInjectable = getInjectable({
 });
 
 const someOtherParentSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-some-other-parent",
+  id: "some-other-parent-sidebar-item",
   instantiate: () => ({
+    id: "some-other-parent-id",
     parentId: null,
     title: "Some other parent",
     onClick: noop,
@@ -107,8 +109,9 @@ const someOtherParentSidebarItemInjectable = getInjectable({
 });
 
 const someAnotherParentSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-some-another-parent",
+  id: "some-another-parent-sidebar-item",
   instantiate: () => ({
+    id: "some-another-parent-id",
     parentId: null,
     title: "Some another parent",
     onClick: noop,
@@ -118,9 +121,10 @@ const someAnotherParentSidebarItemInjectable = getInjectable({
 });
 
 const someChildSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-some-child",
-  instantiate: () => ({
-    parentId: someParentSidebarItemInjectable.id,
+  id: "some-child-sidebar-item",
+  instantiate: (di) => ({
+    id: "some-child-id",
+    parentId: di.inject(someParentSidebarItemInjectable).id,
     title: "Some child",
     onClick: noop,
     orderNumber: 168,
@@ -129,9 +133,10 @@ const someChildSidebarItemInjectable = getInjectable({
 });
 
 const someOtherChildSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-some-other-child",
-  instantiate: () => ({
-    parentId: someParentSidebarItemInjectable.id,
+  id: "some-other-child-sidebar-item",
+  instantiate: (di) => ({
+    id: "some-other-child-id",
+    parentId: di.inject(someParentSidebarItemInjectable).id,
     title: "Some other child",
     onClick: noop,
     orderNumber: 252,
@@ -140,9 +145,10 @@ const someOtherChildSidebarItemInjectable = getInjectable({
 });
 
 const someAnotherChildSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-some-another-child",
-  instantiate: () => ({
-    parentId: someParentSidebarItemInjectable.id,
+  id: "some-another-child-sidebar-item",
+  instantiate: (di) => ({
+    id: "some-another-child-id",
+    parentId: di.inject(someParentSidebarItemInjectable).id,
     title: "Some another child",
     onClick: noop,
     orderNumber: 210,

@@ -11,13 +11,14 @@ import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToStorageClassesInjectable from "../../../common/front-end-routing/routes/cluster/storage/storage-classes/navigate-to-storage-classes.injectable";
 
 const storageClassesSidebarItemInjectable = getInjectable({
-  id: "sidebar-item-storage-classes",
+  id: "storage-classes-sidebar-item",
 
   instantiate: (di) => {
     const route = di.inject(storageClassesRouteInjectable);
 
     return {
-      parentId: storageSidebarItemInjectable.id,
+      id: "storage-classes",
+      parentId: di.inject(storageSidebarItemInjectable).id,
       title: "Storage Classes",
       onClick: di.inject(navigateToStorageClassesInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),
