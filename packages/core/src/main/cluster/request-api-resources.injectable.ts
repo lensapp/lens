@@ -8,10 +8,11 @@ import { loggerInjectionToken } from "@k8slens/logger";
 import type { KubeApiResource } from "../../common/rbac";
 import type { Cluster } from "../../common/cluster/cluster";
 import { apiVersionsRequesterInjectionToken } from "./api-versions-requester";
-import { backoffCaller, withConcurrencyLimit, byOrderNumber } from "@k8slens/utilities";
+import { backoffCaller, withConcurrencyLimit } from "@k8slens/utilities";
 import requestKubeApiResourcesForInjectable from "./request-kube-api-resources-for.injectable";
 import type { AsyncResult } from "@k8slens/utilities";
 import broadcastConnectionUpdateInjectable from "./broadcast-connection-update.injectable";
+import { byOrderNumber } from "@k8slens/utilities";
 
 export type RequestApiResources = (cluster: Cluster) => AsyncResult<KubeApiResource[], Error>;
 
