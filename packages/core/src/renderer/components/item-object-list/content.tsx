@@ -35,6 +35,7 @@ import type { ToggleTableColumnVisibility } from "../../../features/user-prefere
 import toggleTableColumnVisibilityInjectable from "../../../features/user-preferences/common/toggle-table-column-visibility.injectable";
 import type { IsTableColumnHidden } from "../../../features/user-preferences/common/is-table-column-hidden.injectable";
 import isTableColumnHiddenInjectable from "../../../features/user-preferences/common/is-table-column-hidden.injectable";
+import { TableComponent, TableDataContext, TableDataContextValue, tableComponentInjectionToken } from "@k8slens/table-tokens";
 
 export interface ItemListLayoutContentProps<Item extends ItemObject, PreLoadStores extends boolean> {
   getFilters: () => Filter[];
@@ -79,6 +80,7 @@ interface Dependencies {
   openConfirmDialog: OpenConfirmDialog;
   toggleTableColumnVisibility: ToggleTableColumnVisibility;
   isTableColumnHidden: IsTableColumnHidden;
+  table?: TableComponent;
 }
 
 @observer
@@ -86,6 +88,9 @@ class NonInjectedItemListLayoutContent<
   Item extends ItemObject,
   PreLoadStores extends boolean,
 > extends React.Component<ItemListLayoutContentProps<Item, PreLoadStores> & Dependencies> {
+  static contextType = TableDataContext;
+  declare context: TableDataContextValue;
+
   constructor(props: ItemListLayoutContentProps<Item, PreLoadStores> & Dependencies) {
     super(props);
     makeObservable(this);
@@ -299,11 +304,16 @@ class NonInjectedItemListLayoutContent<
     const {
       store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks,
       detailsItem, className, tableProps = {}, tableId, getItems, activeTheme,
+      table,
     } = this.props;
     const selectedItemId = detailsItem && detailsItem.getId();
     const classNames = cssNames(className, "box", "grow", activeTheme.get().type);
     const items = getItems();
     const selectedItems = store.pickOnlySelected(items);
+
+    if (table) {
+      return <table.Component tableId={tableId} columns={this.context.columns} save={() => null} load={() => noop} />
+    }
 
     return (
       <div className="items box grow flex column">
@@ -385,5 +395,6 @@ export const ItemListLayoutContent = withInjectables<Dependencies, ItemListLayou
     openConfirmDialog: di.inject(openConfirmDialogInjectable),
     toggleTableColumnVisibility: di.inject(toggleTableColumnVisibilityInjectable),
     isTableColumnHidden: di.inject(isTableColumnHiddenInjectable),
+    table: di.inject(tableComponentInjectionToken),
   }),
 }) as <Item extends ItemObject, PreLoadStores extends boolean>(props: ItemListLayoutContentProps<Item, PreLoadStores>) => React.ReactElement;
