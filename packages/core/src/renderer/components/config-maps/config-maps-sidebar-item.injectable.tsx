@@ -18,7 +18,7 @@ const configMapsSidebarItemInjectable = getInjectable({
 
     return {
       parentId: configSidebarItemInjectable.id,
-      title: "Config Maps",
+      title: "ConfigMaps",
       onClick: di.inject(navigateToConfigMapsInjectable),
       isActive: di.inject(routeIsActiveInjectable, route),
       isVisible: route.isEnabled,
