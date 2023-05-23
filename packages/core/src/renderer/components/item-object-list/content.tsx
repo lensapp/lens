@@ -312,7 +312,7 @@ class NonInjectedItemListLayoutContent<
     const selectedItems = store.pickOnlySelected(items);
 
     if (table) {
-      return <table.Component tableId={tableId} columns={this.context.columns} />
+      return <table.Component tableId={tableId} columns={this.context.columns} {...this.props} />
     }
 
     return (
