@@ -35,7 +35,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install specific npm version
-        run: npm install -g npm@^9.6.5
+        run: npm install -g npm@^9.6.7
 
       - name: Get npm cache directory path
         if: ${{ runner.os != 'Windows' }}
@@ -105,7 +105,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install specific npm version
-        run: npm install -g npm@^9.6.5
+        run: npm install -g npm@latest
 
       - name: Get npm cache directory path
         if: ${{ runner.os != 'Windows' }}
