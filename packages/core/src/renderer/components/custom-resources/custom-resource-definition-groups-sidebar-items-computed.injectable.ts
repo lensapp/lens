@@ -38,7 +38,7 @@ const customResourceDefinitionGroupsSidebarItemsComputedInjectable = getInjectab
           parentId: customResourcesSidebarItemInjectable.id,
           onClick: noop,
           title: group.replaceAll(".", "\u200b."), // Replace dots with zero-width spaces to allow line breaks
-          orderNumber: index + 1,
+          orderNumber: 10 * index,
         }),
         injectionToken: sidebarItemInjectionToken,
       });
@@ -62,7 +62,7 @@ const customResourceDefinitionGroupsSidebarItemsComputedInjectable = getInjectab
               group: definition.getGroup(),
               apiName: definition.getPluralName(),
             }),
-            orderNumber: index,
+            orderNumber: 10 * index,
           }),
           injectionToken: sidebarItemInjectionToken,
         });
