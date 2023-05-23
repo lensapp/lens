@@ -14,8 +14,8 @@ import navigateToCustomResourcesInjectable from "../../../common/front-end-routi
 import { shouldShowResourceInjectionToken } from "../../../features/cluster/showing-kube-resources/common/allowed-resources-injection-token";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import routePathParametersInjectable from "../../routes/route-path-parameters.injectable";
-import customResourcesSidebarItemInjectable from "../custom-resources/sidebar-item.injectable";
-import customResourceDefinitionsInjectable from "./definitions.injectable";
+import customResourcesSidebarItemInjectable from "./custom-resources-sidebar-item.injectable";
+import customResourceDefinitionsInjectable from "./custom-resources.injectable";
 
 const titleCaseSplitRegex = /(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/;
 

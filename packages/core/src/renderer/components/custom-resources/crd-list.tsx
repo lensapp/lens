@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./view.scss";
+import "./crd-list.scss";
 
 import React from "react";
-import { computed, makeObservable } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { iter, stopPropagation } from "@k8slens/utilities";
@@ -16,10 +16,10 @@ import { Icon } from "../icon";
 import { KubeObjectAge } from "../kube-object/age";
 import { TabLayout } from "../layout/tab-layout-2";
 import type { PageParam } from "../../navigation/page-param";
-import type { CustomResourceDefinitionStore } from "./store";
+import type { CustomResourceDefinitionStore } from "./definition.store";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import selectedCustomResourceDefinitionGroupsUrlParamInjectable from "./selected-groups-url-param.injectable";
-import customResourceDefinitionStoreInjectable from "./store.injectable";
+import crdGroupsUrlParamInjectable from "./crd-groups-url-param.injectable";
+import customResourceDefinitionStoreInjectable from "./definition.store.injectable";
 
 enum columnId {
   kind = "kind",
@@ -30,54 +30,53 @@ enum columnId {
 }
 
 interface Dependencies {
-  selectedGroups: PageParam<Set<string>>;
+  crdGroupsUrlParam: PageParam<string[]>;
   customResourceDefinitionStore: CustomResourceDefinitionStore;
 }
 
 @observer
 class NonInjectedCustomResourceDefinitions extends React.Component<Dependencies> {
+  private readonly selectedGroups = observable.set(this.props.crdGroupsUrlParam.get());
+
   constructor(props: Dependencies) {
     super(props);
     makeObservable(this);
   }
 
   @computed get items() {
-    const selectedGroups = this.props.selectedGroups.get();
-
-    if (selectedGroups.size) {
-      return this.props.customResourceDefinitionStore.items.filter(item => selectedGroups.has(item.getGroup()));
+    if (this.selectedGroups.size) {
+      return this.props.customResourceDefinitionStore.items.filter(item => this.selectedGroups.has(item.getGroup()));
     }
 
     return this.props.customResourceDefinitionStore.items; // show all by default
   }
 
   @computed get groupSelectOptions() {
-    const selectedGroups = this.props.selectedGroups.get();
-
     return Object.keys(this.props.customResourceDefinitionStore.groups)
       .map(group => ({
         value: group,
         label: group,
-        isSelected: selectedGroups.has(group),
+        isSelected: this.selectedGroups.has(group),
       }));
   }
 
   toggleSelection = (options: readonly ({ value: string })[]) => {
-    this.props.selectedGroups.setRaw(options.map(({ value }) => value));
+    const groups = options.map(({ value }) => value);
+
+    this.selectedGroups.replace(groups);
+    this.props.crdGroupsUrlParam.set(groups);
   };
 
   private getPlaceholder() {
-    const selectedGroups = this.props.selectedGroups.get();
-
-    if (selectedGroups.size === 0)  {
+    if (this.selectedGroups.size === 0)  {
       return "All groups";
     }
 
-    const prefix = selectedGroups.size === 1
+    const prefix = this.selectedGroups.size === 1
       ? "Group"
       : "Groups";
 
-    return `${prefix}: ${iter.join(selectedGroups.values(), ", ")}`;
+    return `${prefix}: ${iter.join(this.selectedGroups.values(), ", ")}`;
   }
 
   render() {
@@ -86,7 +85,7 @@ class NonInjectedCustomResourceDefinitions extends React.Component<Dependencies>
         <KubeObjectListLayout
           isConfigurable
           tableId="crd"
-          className="CustomResourceDefinitions"
+          className="CrdList"
           store={this.props.customResourceDefinitionStore}
           // Don't subscribe the `customResourceDefinitionStore` because <Sidebar> already has and is always mounted
           subscribeStores={false}
@@ -167,7 +166,7 @@ class NonInjectedCustomResourceDefinitions extends React.Component<Dependencies>
 export const CustomResourceDefinitions = withInjectables<Dependencies>(NonInjectedCustomResourceDefinitions, {
   getProps: (di, props) => ({
     ...props,
-    selectedGroups: di.inject(selectedCustomResourceDefinitionGroupsUrlParamInjectable),
+    crdGroupsUrlParam: di.inject(crdGroupsUrlParamInjectable),
     customResourceDefinitionStore: di.inject(customResourceDefinitionStoreInjectable),
   }),
 });
