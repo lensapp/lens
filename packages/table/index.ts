@@ -1,4 +1,3 @@
-import React from "react";
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { KubeObject } from "@k8slens/kube-object/src/kube-object";
 import type {
@@ -6,25 +5,33 @@ import type {
   GeneralKubeObjectListLayoutColumn,
   SpecificKubeListLayoutColumn,
 } from "@k8slens/list-layout/src/kube-list-layout-column";
+import React from "react";
+
+type Column = (
+  | BaseKubeObjectListLayoutColumn<KubeObject>
+  | SpecificKubeListLayoutColumn<KubeObject>
+  | GeneralKubeObjectListLayoutColumn
+);
+
+export interface TableComponentProps {
+  tableId?: string;
+  columns?: Column[];
+  save: (state: object) => void;
+  load: (tableId: string) => object;
+}
 
 export interface TableDataContextValue {
-  columns?: (
-    | BaseKubeObjectListLayoutColumn<KubeObject>
-    | SpecificKubeListLayoutColumn<KubeObject>
-    | GeneralKubeObjectListLayoutColumn
-  )[];
+  columns?: Column[];
 }
 
 export const TableDataContext = React.createContext<TableDataContextValue>({
   columns: [],
 });
 
-export type CreateTableState<Props> = (context: TableDataContextValue, props: Props) => any;
+export interface TableComponent {
+  Component: React.ComponentType<TableComponentProps>;
+}
 
-export const createTableStateInjectionToken = getInjectionToken<CreateTableState<any>>({
-  id: "create-table-state-injection-token",
-});
-
-export const tableComponentInjectionToken = getInjectionToken<React.ComponentType<any>>({
+export const tableComponentInjectionToken = getInjectionToken<TableComponent>({
   id: "table-component-injection-token",
 });
