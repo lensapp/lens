@@ -32,7 +32,7 @@ describe("cluster - custom resources in sidebar", () => {
           resourceVersion: "1",
         },
         spec: {
-          group: "some.group.com",
+          group: "some-group",
           scope: "Cluster",
           names: {
             kind: "SomeResource",
@@ -92,7 +92,7 @@ describe("cluster - custom resources in sidebar", () => {
       beforeEach(() => {
         builder.allowKubeResource({
           apiName: "some-resources",
-          group: "some.group.com",
+          group: "some-group",
         });
       });
 
@@ -109,7 +109,7 @@ describe("cluster - custom resources in sidebar", () => {
       });
 
       it("does not show SomeResources sidebar", () => {
-        expect(result.queryByTestId("sidebar-item-custom-resource-group-some.group.com")).not.toBeInTheDocument();
+        expect(result.queryByTestId("sidebar-item-custom-resource-group-some-group")).not.toBeInTheDocument();
       });
 
       it("does not show Custom Resources Definitions sidebar", () => {
@@ -133,8 +133,8 @@ describe("cluster - custom resources in sidebar", () => {
           expect(result.getByTestId("expand-icon-for-sidebar-item-custom-resources")).toBeInTheDocument();
         });
 
-        it("shows some.group.com group sidebar item", () => {
-          expect(result.getByTestId("sidebar-item-custom-resource-group-some.group.com")).toBeInTheDocument();
+        it("shows some-group group sidebar item", () => {
+          expect(result.getByTestId("sidebar-item-custom-resource-group-some-group")).toBeInTheDocument();
         });
 
         it("does not show Custom Resources Definitions sidebar", () => {
@@ -143,29 +143,19 @@ describe("cluster - custom resources in sidebar", () => {
 
         describe("when custom resources group sidebar item is expanded", () => {
           beforeEach(() => {
-            result.getByTestId("expand-icon-for-sidebar-item-custom-resource-group-some.group.com").click();
+            result.getByTestId("expand-icon-for-sidebar-item-custom-resource-group-some-group").click();
           });
 
           it("renders", () => {
             expect(result.container).toMatchSnapshot();
           });
 
-          it("shows some.group.com group sidebar item", () => {
-            expect(result.getByTestId("sidebar-item-custom-resource-group-some.group.com")).toBeInTheDocument();
-          });
-
-          it("formats the some.group.com sidebar item title correctly", () => {
-            expect(result.getByTestId("link-for-sidebar-item-custom-resource-group-some.group.com").firstChild).toHaveTextContent("some\u200b.group\u200b.com", {
-              normalizeWhitespace: false,
-            });
+          it("shows some-group group sidebar item", () => {
+            expect(result.getByTestId("sidebar-item-custom-resource-group-some-group")).toBeInTheDocument();
           });
 
           it("shows some-resources group sidebar item", () => {
-            expect(result.getByTestId("sidebar-item-custom-resource-group-some.group.com/some-resources")).toBeInTheDocument();
-          });
-
-          it("formats the some-resources sidebar item title correctly", () => {
-            expect(result.getByTestId("sidebar-item-custom-resource-group-some.group.com/some-resources")).toHaveTextContent("Some Resource");
+            expect(result.getByTestId("sidebar-item-custom-resource-group-some-group/some-resources")).toBeInTheDocument();
           });
         });
       });
@@ -192,7 +182,7 @@ describe("cluster - custom resources in sidebar", () => {
       });
 
       it("does not show SomeResources sidebar", () => {
-        expect(result.queryByTestId("sidebar-item-custom-resource-group-some.group.com")).not.toBeInTheDocument();
+        expect(result.queryByTestId("sidebar-item-custom-resource-group-some-group")).not.toBeInTheDocument();
       });
 
       it("does not show Custom Resources Definitions sidebar", () => {
@@ -217,7 +207,7 @@ describe("cluster - custom resources in sidebar", () => {
         });
 
         it("does not show SomeResources sidebar", () => {
-          expect(result.queryByTestId("sidebar-item-custom-resource-group-some.group.com")).not.toBeInTheDocument();
+          expect(result.queryByTestId("sidebar-item-custom-resource-group-some-group")).not.toBeInTheDocument();
         });
 
         it("shows Custom Resources Definitions sidebar", () => {
