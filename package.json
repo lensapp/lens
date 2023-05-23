@@ -1,12 +1,10 @@
 {
   "name": "lens-monorepo",
   "private": true,
-
   "workspaces": [
     "packages/**/*",
     "open-lens"
   ],
-
   "scripts": {
     "all:reinstall": "npm run clean:node_modules && npm run all:install",
     "all:install": "npx --yes --package npm@^9.6.7 npm install",
@@ -44,6 +42,7 @@
     "adr": "^1.4.3",
     "cross-env": "^7.0.3",
     "lerna": "^6.6.1",
+    "npm": "^9.6.7",
     "rimraf": "^4.4.1"
   },
   "engines": {
