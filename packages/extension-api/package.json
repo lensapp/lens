@@ -2,7 +2,7 @@
   "name": "@k8slens/extensions",
   "productName": "OpenLens extensions",
   "description": "OpenLens - Open Source Kubernetes IDE: extensions",
-  "version": "6.5.0-alpha.13",
+  "version": "6.5.0-alpha.14",
   "copyright": "© 2022 OpenLens Authors",
   "license": "MIT",
   "main": "dist/extension-api.js",
@@ -25,7 +25,7 @@
     "clean": "rimraf dist/"
   },
   "dependencies": {
-    "@k8slens/core": "6.5.0-alpha.13"
+    "@k8slens/core": "6.5.0-alpha.14"
   },
   "devDependencies": {
     "@types/node": "^16.18.25",

@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.5.0-alpha.14 (2023-05-23)
+
+
+
+# 6.5.0-alpha.13 (2023-05-16)
+
+
+### Bug Fixes
+
+* Copy fonts from @k8slens/core to open-lens correctly ([33a9f3e](https://github.com/lensapp/lens/commit/33a9f3ea3501c04738c8d74b82725bbe83e148bb))
+
+
+
+# 6.5.0-alpha.12 (2023-05-16)
+
+
+
+# 6.5.0-alpha.11 (2023-05-11)
+
+
+### Bug Fixes
+
+* Add missing styles to fix terminal resizing ([6902851](https://github.com/lensapp/lens/commit/6902851026e74428f515fc5f3e01e6dc8a4c2d50))
+
+
+
+
+
 # 6.5.0-alpha.13 (2023-05-16)
 
 
