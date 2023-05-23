@@ -256,7 +256,7 @@ const scenarios = [
   {
     expectedSelector: "h5.title",
     parentSidebarItemTestId: "link-for-sidebar-item-config",
-    sidebarItemTestId: "link-for-sidebar-item-horizontal-pod-autoscalers",
+    sidebarItemTestId: "link-for-sidebar-item-horizontal-pod-auto-scalers",
   },
 
   {
