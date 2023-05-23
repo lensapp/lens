@@ -5,7 +5,7 @@
 import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import { getInjectable } from "@ogre-tools/injectable";
 import customResourceDefinitionsRouteInjectable from "../../../common/front-end-routing/routes/cluster/custom-resources/custom-resource-definitions.injectable";
-import navigateToCustomResourceDefinitionsInjectable from "../../../common/front-end-routing/routes/cluster/custom-resources/navigate-to-custom-resource-definitions.injectable";
+import navigateToCustomResourcesInjectable from "../../../common/front-end-routing/routes/cluster/custom-resources/navigate-to-custom-resources.injectable";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import customResourcesSidebarItemInjectable from "./custom-resources-sidebar-item.injectable";
 
@@ -17,7 +17,7 @@ const customResourceDefinitionsSidebarItemInjectable = getInjectable({
     return {
       parentId: customResourcesSidebarItemInjectable.id,
       title: "Definitions",
-      onClick: di.inject(navigateToCustomResourceDefinitionsInjectable),
+      onClick: di.inject(navigateToCustomResourcesInjectable),
       isActive: di.inject(routeIsActiveInjectable, customResourceDefinitionsRoute),
       isVisible: customResourceDefinitionsRoute.isEnabled,
       orderNumber: 0,
