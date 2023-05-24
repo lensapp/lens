@@ -35,7 +35,8 @@ import type { ToggleTableColumnVisibility } from "../../../features/user-prefere
 import toggleTableColumnVisibilityInjectable from "../../../features/user-preferences/common/toggle-table-column-visibility.injectable";
 import type { IsTableColumnHidden } from "../../../features/user-preferences/common/is-table-column-hidden.injectable";
 import isTableColumnHiddenInjectable from "../../../features/user-preferences/common/is-table-column-hidden.injectable";
-import { TableComponent, TableDataContext, TableDataContextValue, tableComponentInjectionToken } from "@k8slens/table-tokens";
+import type { TableComponent, TableDataContextValue } from "@k8slens/table-tokens";
+import { TableDataContext, tableComponentInjectionToken } from "@k8slens/table-tokens";
 
 export interface ItemListLayoutContentProps<Item extends ItemObject, PreLoadStores extends boolean> {
   getFilters: () => Filter[];

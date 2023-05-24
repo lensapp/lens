@@ -90,7 +90,6 @@ describe("logger", () => {
         instantiate: (di) => di.inject(injectionToken),
       });
 
-
       const someFeature = getFeature({
         id: "some-feature",
 
@@ -124,11 +123,13 @@ describe("logger", () => {
 
     registerFeature(di, loggerFeature);
 
-    di.register(getInjectable({
-      id: "some-transport",
-      instantiate: () => new TransportStream({ log }),
-      injectionToken: loggerTransportInjectionToken,
-    }))
+    di.register(
+      getInjectable({
+        id: "some-transport",
+        instantiate: () => new TransportStream({ log }),
+        injectionToken: loggerTransportInjectionToken,
+      })
+    );
 
     const logger = di.inject(loggerInjectable);
 

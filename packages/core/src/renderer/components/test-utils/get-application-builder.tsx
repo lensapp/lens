@@ -257,7 +257,7 @@ export const getApplicationBuilder = () => {
       registerFeature(
         windowDi,
         applicationFeature,
-        tableFeature
+        tableFeature,
       );
 
       windowDi.register(rendererExtensionsStateInjectable);
