@@ -36,7 +36,7 @@
   },
   "peerDependencies": {
     "@k8slens/event-emitter": "^1.0.0-alpha.1",
-    "@k8slens/logger": "^1.0.0-alpha.5",
+    "@k8slens/logger": "^1.0.0-alpha.7",
     "@k8slens/utilities": "^1.0.0-alpha.1",
     "lodash": "^4.17.15",
     "rfc6902": "^5.0.1"
