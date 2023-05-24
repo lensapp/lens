@@ -25,8 +25,8 @@ export interface KubeJsonApiData<
   Status = unknown,
   Spec = unknown,
 > {
-  kind: string;
-  apiVersion: string;
+  readonly kind: string;
+  readonly apiVersion: string;
   metadata: Metadata;
   status?: Status;
   spec?: Spec;
@@ -227,9 +227,6 @@ export type KubeJsonApiObjectMetadata<Namespaced extends KubeObjectScope = KubeO
 export type KubeObjectMetadata<Namespaced extends KubeObjectScope = KubeObjectScope> =
   KubeJsonApiObjectMetadata<Namespaced> & {
     readonly selfLink: string;
-    readonly uid: string;
-    readonly name: string;
-    readonly resourceVersion: string;
   };
 
 export type NamespaceScopedMetadata = KubeObjectMetadata<KubeObjectScope.Namespace>;
