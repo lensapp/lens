@@ -80,7 +80,7 @@ interface Dependencies {
   openConfirmDialog: OpenConfirmDialog;
   toggleTableColumnVisibility: ToggleTableColumnVisibility;
   isTableColumnHidden: IsTableColumnHidden;
-  table?: TableComponent;
+  table: TableComponent;
 }
 
 @observer
@@ -311,14 +311,11 @@ class NonInjectedItemListLayoutContent<
     const items = getItems();
     const selectedItems = store.pickOnlySelected(items);
 
-    if (table) {
-      return <table.Component tableId={tableId} columns={this.context.columns} {...this.props} />
-    }
-
     return (
       <div className="items box grow flex column">
-        <Table
+        <table.Component
           tableId={tableId}
+          columns={this.context.columns}
           virtual={virtual}
           selectable={hasDetailsView}
           sortable={sortingCallbacks}
@@ -332,7 +329,7 @@ class NonInjectedItemListLayoutContent<
         >
           {this.renderTableHeader()}
           {this.renderItems()}
-        </Table>
+        </table.Component>
 
         <Observer>
           {() => (
