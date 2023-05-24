@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { type KubeConfig, HttpError } from "@kubernetes/client-node";
+import type { KubeConfig } from "@kubernetes/client-node";
+import { ApiException } from "@kubernetes/client-node";
 import { reaction, comparer, runInAction } from "mobx";
 import { ClusterStatus } from "../../common/cluster-types";
 import type { CreateListNamespaces } from "../../common/cluster/list-namespaces.injectable";
@@ -375,10 +376,8 @@ class ClusterConnection {
       const ctx = proxyConfig.getContextObject(this.cluster.contextName.get());
       const namespaceList = [ctx?.namespace].filter(isDefined);
 
-      if (namespaceList.length === 0 && error instanceof HttpError && error.statusCode === 403) {
-        const { response } = error as HttpError & { response: Response };
-
-        this.dependencies.logger.info("[CLUSTER]: listing namespaces is forbidden, broadcasting", { clusterId: this.cluster.id, error: response.body });
+      if (namespaceList.length === 0 && error instanceof ApiException && error.code === 403) {
+        this.dependencies.logger.info("[CLUSTER]: listing namespaces is forbidden, broadcasting", { clusterId: this.cluster.id, error: error.body || error.message });
         this.dependencies.broadcastMessage(clusterListNamespaceForbiddenChannel, this.cluster.id);
       }
 

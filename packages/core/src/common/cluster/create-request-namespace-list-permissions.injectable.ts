@@ -25,10 +25,12 @@ const createRequestNamespaceListPermissionsInjectable = getInjectable({
 
     return (api) => async (namespace) => {
       try {
-        const { body: { status }} = await api.createSelfSubjectRulesReview({
-          apiVersion: "authorization.k8s.io/v1",
-          kind: "SelfSubjectRulesReview",
-          spec: { namespace },
+        const { status } = await api.createSelfSubjectRulesReview({
+          body: {
+            apiVersion: "authorization.k8s.io/v1",
+            kind: "SelfSubjectRulesReview",
+            spec: { namespace },
+          },
         });
 
         if (!status || status.incomplete) {
