@@ -11,7 +11,7 @@ import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-release
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { ItemListStore } from "../item-object-list";
 import { ItemListLayout } from "../item-object-list";
-import { NamespaceSelectFilter } from "../namespace-select-filter/namespace-select-filter";
+import { NamespaceSelectFilter } from "../namespace-select-filter/component";
 import { kebabCase } from "lodash/fp";
 import { HelmReleaseMenu } from "./release-menu";
 import { ReleaseRollbackDialog } from "./dialog/dialog";

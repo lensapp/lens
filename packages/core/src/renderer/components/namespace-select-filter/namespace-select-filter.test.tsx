@@ -23,7 +23,7 @@ import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-create
 import type { Disposer } from "@k8slens/utilities";
 import { disposer } from "@k8slens/utilities";
 import { renderFor } from "../test-utils/renderFor";
-import { NamespaceSelectFilter } from "./namespace-select-filter";
+import { NamespaceSelectFilter } from "./component";
 import type { NamespaceStore } from "../namespaces/store";
 import namespaceStoreInjectable from "../namespaces/store.injectable";
 
