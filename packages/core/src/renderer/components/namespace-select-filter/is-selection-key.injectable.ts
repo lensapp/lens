@@ -12,10 +12,9 @@ const isMultiSelectionKeyInjectable = getInjectable({
   id: "is-multi-selection-key",
   instantiate: (di): IsMultiSelectionKey => {
     const isMac = di.inject(isMacInjectable);
+    const specificKey = isMac ? "Meta" : "Control";
 
-    return isMac
-      ? ({ key }) => key === "Meta"
-      : ({ key }) => key === "Control";
+    return ({ key }) => key === specificKey;
   },
 });
 
