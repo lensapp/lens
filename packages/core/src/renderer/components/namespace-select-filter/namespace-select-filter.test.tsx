@@ -113,7 +113,7 @@ describe("<NamespaceSelectFilter />", () => {
 
     describe("when clicked", () => {
       beforeEach(() => {
-        result.getByTestId("namespace-select-filter").click();
+        result.getByTestId("namespace-select-filter-input").click();
       });
 
       it("renders", () => {
@@ -121,12 +121,12 @@ describe("<NamespaceSelectFilter />", () => {
       });
 
       it("opens menu", () => {
-        expect(result.baseElement.querySelector("#react-select-namespace-select-filter-listbox")).not.toBeNull();
+        expect(result.getByTestId("namespace-select-filter-list-container")).not.toBeNull();
       });
 
       describe("when 'test-2' is clicked", () => {
         beforeEach(() => {
-          result.getByText("test-2").click();
+          result.getByTestId("namespace-select-filter-option-test-2").click();
         });
 
         it("renders", () => {
@@ -138,12 +138,12 @@ describe("<NamespaceSelectFilter />", () => {
         });
 
         it("closes menu", () => {
-          expect(result.baseElement.querySelector("#react-select-namespace-select-filter-listbox")).toBeNull();
+          expect(result.queryByTestId("namespace-select-filter-list-container")).toBeNull();
         });
 
         describe("when clicked again", () => {
           beforeEach(() => {
-            result.getByTestId("namespace-select-filter").click();
+            result.getByTestId("namespace-select-filter-input").click();
           });
 
           it("renders", () => {
@@ -160,7 +160,7 @@ describe("<NamespaceSelectFilter />", () => {
 
           describe("when 'test-1' is clicked", () => {
             beforeEach(() => {
-              result.getByText("test-1").click();
+              result.getByTestId("namespace-select-filter-option-test-1").click();
             });
 
             it("renders", () => {
@@ -172,12 +172,12 @@ describe("<NamespaceSelectFilter />", () => {
             });
 
             it("closes menu", () => {
-              expect(result.baseElement.querySelector("#react-select-namespace-select-filter-listbox")).toBeNull();
+              expect(result.queryByTestId("namespace-select-filter-list-container")).toBeNull();
             });
 
             describe("when clicked again, then holding down multi select key", () => {
               beforeEach(() => {
-                const filter = result.getByTestId("namespace-select-filter");
+                const filter = result.getByTestId("namespace-select-filter-input");
 
                 filter.click();
                 fireEvent.keyDown(filter, { key: "Meta" });
@@ -185,7 +185,7 @@ describe("<NamespaceSelectFilter />", () => {
 
               describe("when 'test-3' is clicked", () => {
                 beforeEach(() => {
-                  result.getByText("test-3").click();
+                  result.getByTestId("namespace-select-filter-option-test-3").click();
                 });
 
                 it("renders", () => {
@@ -197,7 +197,7 @@ describe("<NamespaceSelectFilter />", () => {
                 });
 
                 it("keeps menu open", () => {
-                  expect(result.baseElement.querySelector("#react-select-namespace-select-filter-listbox")).not.toBeNull();
+                  expect(result.getByTestId("namespace-select-filter-list-container")).not.toBeNull();
                 });
 
                 it("does not show 'kube-system' as selected", () => {
@@ -206,42 +206,44 @@ describe("<NamespaceSelectFilter />", () => {
 
                 describe("when 'test-13' is clicked", () => {
                   beforeEach(() => {
-                    result.getByText("test-13").click();
+                    result.getByTestId("namespace-select-filter-option-test-13").click();
                   });
 
                   it("has all of 'test-1', 'test-3', and 'test-13' selected in the store", () => {
                     expect(new Set(namespaceStore.contextNamespaces)).toEqual(new Set(["test-1", "test-3", "test-13"]));
                   });
 
-                  it("'test-13' is not sorted to the top of the list", () => {
-                    const topLevelElement = result.getByText("test-13").parentElement?.parentElement as HTMLElement;
+                  it("keeps menu open", () => {
+                    expect(result.getByTestId("namespace-select-filter-list-container")).not.toBeNull();
+                  });
 
-                    expect(topLevelElement.previousSibling).not.toBe(null);
+                  it("'test-13' is not sorted to the top of the list", () => {
+                    expect(result.getByTestId("namespace-select-filter-option-test-13").previousSibling).not.toBe(null);
                   });
                 });
 
                 describe("when releasing multi select key", () => {
                   beforeEach(() => {
-                    const filter = result.getByTestId("namespace-select-filter");
+                    const filter = result.getByTestId("namespace-select-filter-input");
 
                     fireEvent.keyUp(filter, { key: "Meta" });
                   });
 
                   it("closes menu", () => {
-                    expect(result.baseElement.querySelector("#react-select-namespace-select-filter-listbox")).toBeNull();
+                    expect(result.queryByTestId("namespace-select-filter-list-container")).toBeNull();
                   });
                 });
               });
 
               describe("when releasing multi select key", () => {
                 beforeEach(() => {
-                  const filter = result.getByTestId("namespace-select-filter");
+                  const filter = result.getByTestId("namespace-select-filter-input");
 
                   fireEvent.keyUp(filter, { key: "Meta" });
                 });
 
                 it("keeps menu open", () => {
-                  expect(result.baseElement.querySelector("#react-select-namespace-select-filter-listbox")).not.toBeNull();
+                  expect(result.getByTestId("namespace-select-filter-list-container")).not.toBeNull();
                 });
               });
             });
@@ -251,42 +253,42 @@ describe("<NamespaceSelectFilter />", () => {
 
       describe("when multi-selection key is pressed", () => {
         beforeEach(() => {
-          const filter = result.getByTestId("namespace-select-filter");
+          const filter = result.getByTestId("namespace-select-filter-input");
 
           fireEvent.keyDown(filter, { key: "Meta" });
         });
 
         it("should show placeholder text as 'All namespaces'", () => {
-          expect(result.baseElement.querySelector("#react-select-namespace-select-filter-placeholder")).toHaveTextContent("All namespaces");
+          expect(result.getByTestId("namespace-select-filter")).toHaveTextContent("All namespaces");
         });
 
         describe("when 'test-2' is clicked", () => {
           beforeEach(() => {
-            result.getByText("test-2").click();
+            result.getByTestId("namespace-select-filter-option-test-2").click();
           });
 
           it("should not show placeholder text as 'All namespaces'", () => {
-            expect(result.baseElement.querySelector("#react-select-namespace-select-filter-placeholder")).not.toHaveTextContent("All namespaces");
+            expect(result.getByTestId("namespace-select-filter")).not.toHaveTextContent("All namespaces");
           });
 
           describe("when 'test-2' is clicked", () => {
             beforeEach(() => {
-              result.getByText("test-2").click();
+              result.getByTestId("namespace-select-filter-option-test-2").click();
             });
 
             it("should not show placeholder as 'All namespaces'", () => {
-              expect(result.baseElement.querySelector("#react-select-namespace-select-filter-placeholder")).not.toHaveTextContent("All namespaces");
+              expect(result.getByTestId("namespace-select-filter")).not.toHaveTextContent("All namespaces");
             });
 
             describe("when multi-selection key is raised", () => {
               beforeEach(() => {
-                const filter = result.getByTestId("namespace-select-filter");
+                const filter = result.getByTestId("namespace-select-filter-input");
 
                 fireEvent.keyUp(filter, { key: "Meta" });
               });
 
               it("should show placeholder text as 'All namespaces'", () => {
-                expect(result.baseElement.querySelector("#react-select-namespace-select-filter-placeholder")).not.toHaveTextContent("All namespaces");
+                expect(result.getByTestId("namespace-select-filter")).not.toHaveTextContent("All namespaces");
               });
             });
           });

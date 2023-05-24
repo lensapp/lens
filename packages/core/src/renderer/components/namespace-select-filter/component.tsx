@@ -43,6 +43,7 @@ const NamespaceSelectFilterMenu = observer(({ id, model }: Dependencies & Namesp
           value={model.filterText.get()}
           onChange={(event) => model.filterText.set(event.target.value)}
           onClick={model.menu.open}
+          data-testid="namespace-select-filter-input"
         />
         <Gradient type="left" />
         <label htmlFor={`${id}-filter`}>
@@ -100,6 +101,7 @@ const NonInjectedNamespaceSelectFilter = observer(({ model, id }: Dependencies &
       {model.menu.isOpen.get() && (
         <div
           className="list-container"
+          data-testid="namespace-select-filter-list-container"
         >
           <VariableSizeList
             className="list"
@@ -168,6 +170,7 @@ const NamespaceSelectFilterRow = observer(({ index, style, data: { model, items 
         "single-namespace": option.value !== selectAllNamespaces,
       })}
       onClick={() => model.onClick(option)}
+      data-testid={`namespace-select-filter-option-${option.label}`}
     >
       {option.value === selectAllNamespaces
         ? <span className="data">All Namespaces</span>
