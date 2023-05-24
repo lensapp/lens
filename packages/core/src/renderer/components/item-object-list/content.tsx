@@ -11,7 +11,7 @@ import { computed, makeObservable } from "mobx";
 import { Observer, observer } from "mobx-react";
 import type { ConfirmDialogParams } from "../confirm-dialog";
 import type { TableProps, TableRowProps, TableSortCallbacks } from "../table";
-import { Table, TableCell, TableHead, TableRow } from "../table";
+import { TableCell, TableHead, TableRow } from "../table";
 import type { IClassName, StrictReactNode } from "@k8slens/utilities";
 import { cssNames, isDefined, isReactNode, noop, prevDefault, stopPropagation } from "@k8slens/utilities";
 import type { AddRemoveButtonsProps } from "../add-remove-buttons";
