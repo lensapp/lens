@@ -86,7 +86,7 @@ class NonInjectedClusterRoleBindingDialog extends React.Component<ClusterRoleBin
   }
 
   @observable selectedRoleRef: ClusterRole | undefined = undefined;
-  selectedAccounts = new ObservableHashSet<ServiceAccount>([], sa => sa.metadata.uid);
+  selectedAccounts = new ObservableHashSet<ServiceAccount>([], sa => sa.getId());
   selectedUsers = observable.set<string>([]);
   selectedGroups = observable.set<string>([]);
 
