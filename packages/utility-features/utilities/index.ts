@@ -42,3 +42,5 @@ export * from "./src/types";
 export * from "./src/union-env-path";
 export * from "./src/wait";
 export * from "./src/with-concurrency-limit";
+export * from "./src/fatality-of-call/call-result/call-result";
+export * from "./src/fatality-of-call/with-thrown-failures/with-thrown-failures";
