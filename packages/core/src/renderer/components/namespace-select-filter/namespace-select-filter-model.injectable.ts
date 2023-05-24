@@ -4,9 +4,9 @@
  */
 import { namespaceSelectFilterModelFor } from "./namespace-select-filter-model";
 import { getInjectable } from "@ogre-tools/injectable";
-import namespaceStoreInjectable from "../store.injectable";
+import namespaceStoreInjectable from "../namespaces/store.injectable";
 import isMultiSelectionKeyInjectable from "./is-selection-key.injectable";
-import clusterFrameContextForNamespacedResourcesInjectable from "../../../cluster-frame-context/for-namespaced-resources.injectable";
+import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
 
 const namespaceSelectFilterModelInjectable = getInjectable({
   id: "namespace-select-filter-model",

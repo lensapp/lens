@@ -13,7 +13,7 @@ import type { JobStore } from "../workloads-jobs/store";
 import type { CronJobStore } from "../workloads-cronjobs/store";
 import type { IComputedValue } from "mobx";
 import { makeObservable, observable, reaction } from "mobx";
-import { NamespaceSelectFilter } from "../namespaces/namespace-select-filter";
+import { NamespaceSelectFilter } from "../namespace-select-filter/namespace-select-filter";
 import { Icon } from "@k8slens/icon";
 import { TooltipPosition } from "@k8slens/tooltip";
 import { withInjectables } from "@ogre-tools/injectable-react";

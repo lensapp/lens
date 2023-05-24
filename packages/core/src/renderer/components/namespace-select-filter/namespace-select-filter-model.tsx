@@ -5,10 +5,10 @@
 import type React from "react";
 import type { IComputedValue, IObservableValue } from "mobx";
 import { observable, action, computed, comparer } from "mobx";
-import type { NamespaceStore } from "../store";
+import type { NamespaceStore } from "../namespaces/store";
 import { observableCrate } from "@k8slens/utilities";
 import type { IsMultiSelectionKey } from "./is-selection-key.injectable";
-import type { ClusterContext } from "../../../cluster-frame-context/cluster-frame-context";
+import type { ClusterContext } from "../../cluster-frame-context/cluster-frame-context";
 import GlobToRegExp from "glob-to-regexp";
 
 interface Dependencies {
