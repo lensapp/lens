@@ -62,6 +62,7 @@ const NamespaceSelectFilterMenu = observer(({ id, model }: Dependencies & Namesp
       <Icon
         className="expand-icon"
         material={model.menu.isOpen.get() ? "expand_less" : "expand_more"}
+        data-testid="namespace-select-filter-expand-icon"
         onClick={model.menu.toggle}
       />
     </div>
@@ -184,6 +185,7 @@ const NamespaceSelectFilterRow = observer(({ index, style, data: { model, items 
                 preferredPositions: TooltipPosition.LEFT,
                 children: `Select only ${option.value}`,
               }}
+              data-testid={`namespace-select-filter-option-${option.value}-select-only`}
             />
             <span className="data">{option.value}</span>
             {renderSingleOptionIcons(option.value, option, model)}

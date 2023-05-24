@@ -26,6 +26,7 @@ import { renderFor } from "../test-utils/renderFor";
 import { NamespaceSelectFilter } from "./component";
 import type { NamespaceStore } from "../namespaces/store";
 import namespaceStoreInjectable from "../namespaces/store.injectable";
+import userEvent from "@testing-library/user-event";
 
 function createNamespace(name: string): Namespace {
   return new Namespace({
@@ -111,6 +112,34 @@ describe("<NamespaceSelectFilter />", () => {
       expect(result.baseElement).toMatchSnapshot();
     });
 
+    describe("when menu expand icon is clicked", () => {
+      beforeEach(() => {
+        result.getByTestId("namespace-select-filter-expand-icon").click();
+      });
+
+      it("renders", () => {
+        expect(result.baseElement).toMatchSnapshot();
+      });
+
+      it("menu is open", () => {
+        expect(result.getByTestId("namespace-select-filter-list-container")).toBeInTheDocument();
+      });
+
+      describe("when menu expand icon is clicked again", () => {
+        beforeEach(() => {
+          result.getByTestId("namespace-select-filter-expand-icon").click();
+        });
+
+        it("renders", () => {
+          expect(result.baseElement).toMatchSnapshot();
+        });
+
+        it("menu is closed", () => {
+          expect(result.queryByTestId("namespace-select-filter-list-container")).not.toBeInTheDocument();
+        });
+      });
+    });
+
     describe("when clicked", () => {
       beforeEach(() => {
         result.getByTestId("namespace-select-filter-input").click();
@@ -121,7 +150,11 @@ describe("<NamespaceSelectFilter />", () => {
       });
 
       it("opens menu", () => {
-        expect(result.getByTestId("namespace-select-filter-list-container")).not.toBeNull();
+        expect(result.getByTestId("namespace-select-filter-list-container")).toBeInTheDocument();
+      });
+
+      it("has all namespaces selected in the store", () => {
+        expect(namespaceStore.contextNamespaces.length).toBe(13);
       });
 
       describe("when 'test-2' is clicked", () => {
@@ -151,7 +184,7 @@ describe("<NamespaceSelectFilter />", () => {
           });
 
           it("shows 'test-2' as selected", () => {
-            expect(result.queryByTestId("namespace-select-filter-option-test-2-selected")).not.toBeNull();
+            expect(result.queryByTestId("namespace-select-filter-option-test-2-selected")).toBeInTheDocument();
           });
 
           it("does not show 'test-1' as selected", () => {
@@ -197,7 +230,7 @@ describe("<NamespaceSelectFilter />", () => {
                 });
 
                 it("keeps menu open", () => {
-                  expect(result.getByTestId("namespace-select-filter-list-container")).not.toBeNull();
+                  expect(result.getByTestId("namespace-select-filter-list-container")).toBeInTheDocument();
                 });
 
                 it("does not show 'kube-system' as selected", () => {
@@ -214,7 +247,7 @@ describe("<NamespaceSelectFilter />", () => {
                   });
 
                   it("keeps menu open", () => {
-                    expect(result.getByTestId("namespace-select-filter-list-container")).not.toBeNull();
+                    expect(result.getByTestId("namespace-select-filter-list-container")).toBeInTheDocument();
                   });
 
                   it("'test-13' is not sorted to the top of the list", () => {
@@ -243,7 +276,7 @@ describe("<NamespaceSelectFilter />", () => {
                 });
 
                 it("keeps menu open", () => {
-                  expect(result.getByTestId("namespace-select-filter-list-container")).not.toBeNull();
+                  expect(result.getByTestId("namespace-select-filter-list-container")).toBeInTheDocument();
                 });
               });
             });
@@ -289,6 +322,156 @@ describe("<NamespaceSelectFilter />", () => {
 
               it("should show placeholder text as 'All namespaces'", () => {
                 expect(result.getByTestId("namespace-select-filter")).not.toHaveTextContent("All namespaces");
+              });
+            });
+          });
+        });
+      });
+
+      describe("when clicked again", () => {
+        beforeEach(() => {
+          result.getByTestId("namespace-select-filter-input").click();
+        });
+
+        it("renders", () => {
+          expect(result.baseElement).toMatchSnapshot();
+        });
+
+        it("menu is still open", () => {
+          expect(result.getByTestId("namespace-select-filter-list-container")).toBeInTheDocument();
+        });
+      });
+
+      describe("when typing in the filter input", () => {
+        beforeEach(() => {
+          userEvent.type(result.getByTestId("namespace-select-filter-input"), "1");
+        });
+
+        it("renders", () => {
+          expect(result.baseElement).toMatchSnapshot();
+        });
+
+        it("menu is still open", () => {
+          expect(result.getByTestId("namespace-select-filter-list-container")).toBeInTheDocument();
+        });
+
+        it("shows 'test-1' option", () => {
+          expect(result.getByTestId("namespace-select-filter-option-test-1")).toBeInTheDocument();
+        });
+
+        it("shows 'test-10' option", () => {
+          expect(result.getByTestId("namespace-select-filter-option-test-10")).toBeInTheDocument();
+        });
+
+        it("does not show 'test-2' option", () => {
+          expect(result.queryByTestId("namespace-select-filter-option-test-2")).not.toBeInTheDocument();
+        });
+      });
+
+      describe("when typing a glob style filter into the filter input", () => {
+        beforeEach(() => {
+          userEvent.type(result.getByTestId("namespace-select-filter-input"), "1*");
+        });
+
+        it("renders", () => {
+          expect(result.baseElement).toMatchSnapshot();
+        });
+
+        it("menu is still open", () => {
+          expect(result.getByTestId("namespace-select-filter-list-container")).toBeInTheDocument();
+        });
+
+        it("shows 'test-1' option", () => {
+          expect(result.getByTestId("namespace-select-filter-option-test-1")).toBeInTheDocument();
+        });
+
+        it("shows 'test-10' option", () => {
+          expect(result.getByTestId("namespace-select-filter-option-test-10")).toBeInTheDocument();
+        });
+
+        it("does not show 'test-2' option", () => {
+          expect(result.queryByTestId("namespace-select-filter-option-test-2")).not.toBeInTheDocument();
+        });
+      });
+
+      describe("when clicking the remove from selection button for 'test-2'", () => {
+        beforeEach(() => {
+          result.getByTestId("namespace-select-filter-option-test-2-selected").click();
+        });
+
+        it("renders", () => {
+          expect(result.baseElement).toMatchSnapshot();
+        });
+
+        it("shows an 'add to selection' button for 'test-2'", () => {
+          expect(result.getByTestId("namespace-select-filter-option-test-2-add-to-selection")).toBeInTheDocument();
+        });
+
+        it("does not have 'test-2' as selected in the store", () => {
+          expect(namespaceStore.contextNamespaces.includes("test-2")).toBe(false);
+        });
+
+        it("menu is still open", () => {
+          expect(result.getByTestId("namespace-select-filter-list-container")).toBeInTheDocument();
+        });
+
+        describe("when clicking the remove from selection button for 'test-3'", () => {
+          beforeEach(() => {
+            result.getByTestId("namespace-select-filter-option-test-3-selected").click();
+          });
+
+          it("renders", () => {
+            expect(result.baseElement).toMatchSnapshot();
+          });
+
+          it("shows an 'add to selection' button for 'test-3'", () => {
+            expect(result.getByTestId("namespace-select-filter-option-test-3-add-to-selection")).toBeInTheDocument();
+          });
+
+          it("does not have 'test-3' as selected in the store", () => {
+            expect(namespaceStore.contextNamespaces.includes("test-3")).toBe(false);
+          });
+
+          it("menu is still open", () => {
+            expect(result.getByTestId("namespace-select-filter-list-container")).toBeInTheDocument();
+          });
+
+          describe("when clicking the add to selection button for 'test-2'", () => {
+            beforeEach(() => {
+              result.getByTestId("namespace-select-filter-option-test-2-add-to-selection").click();
+            });
+
+            it("renders", () => {
+              expect(result.baseElement).toMatchSnapshot();
+            });
+
+            it("shows a 'remove from selection' button for 'test-2'", () => {
+              expect(result.getByTestId("namespace-select-filter-option-test-2-selected")).toBeInTheDocument();
+            });
+
+            it("does have 'test-2' as selected in the store", () => {
+              expect(namespaceStore.contextNamespaces.includes("test-2")).toBe(true);
+            });
+
+            it("menu is still open", () => {
+              expect(result.getByTestId("namespace-select-filter-list-container")).toBeInTheDocument();
+            });
+
+            describe("when clicking the 'select only' button for 'test-5'", () => {
+              beforeEach(() => {
+                result.getByTestId("namespace-select-filter-option-test-5-select-only").click();
+              });
+
+              it("renders", () => {
+                expect(result.baseElement).toMatchSnapshot();
+              });
+
+              it("only has 'test-5' as selected in the store", () => {
+                expect(namespaceStore.contextNamespaces).toEqual(["test-5"]);
+              });
+
+              it("menu is now closed", () => {
+                expect(result.queryByTestId("namespace-select-filter-list-container")).not.toBeInTheDocument();
               });
             });
           });
