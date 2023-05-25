@@ -111,20 +111,6 @@ export class KubeObject<
       );
     }
 
-    if (!isString(data.metadata.uid)) {
-      throw new KubeCreationError(
-        `Cannot create a KubeObject from an object without metadata.uid being a string`,
-        data,
-      );
-    }
-
-    if (!isString(data.metadata.resourceVersion)) {
-      throw new KubeCreationError(
-        `Cannot create a KubeObject from an object without metadata.resourceVersion being a string`,
-        data,
-      );
-    }
-
     if (!isString(data.metadata.selfLink)) {
       throw new KubeCreationError(
         `Cannot create a KubeObject from an object without metadata.selfLink being a string`,
@@ -136,23 +122,23 @@ export class KubeObject<
     autoBind(this);
   }
 
-  get selfLink() {
+  get selfLink(): string {
     return this.metadata.selfLink;
   }
 
-  getId() {
-    return this.metadata.uid;
+  getId(): string {
+    return this.metadata.uid ?? this.metadata.selfLink;
   }
 
-  getResourceVersion() {
-    return this.metadata.resourceVersion;
+  getResourceVersion(): string {
+    return this.metadata.resourceVersion ?? "";
   }
 
   getScopedName() {
     return [this.getNs(), this.getName()].filter(Boolean).join("/");
   }
 
-  getName() {
+  getName(): string {
     return this.metadata.name;
   }
 

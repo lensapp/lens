@@ -73,7 +73,7 @@ class NonInjectedRoleBindingDialog extends React.Component<RoleBindingDialogProp
   @observable.ref selectedRoleRef: Role | ClusterRole | null | undefined = null;
   @observable bindingName = "";
   @observable bindingNamespace: string | null = null;
-  selectedAccounts = new ObservableHashSet<ServiceAccount>([], sa => sa.metadata.uid);
+  selectedAccounts = new ObservableHashSet<ServiceAccount>([], sa => sa.getId());
   selectedUsers = observable.set<string>([]);
   selectedGroups = observable.set<string>([]);
 
