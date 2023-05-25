@@ -14,21 +14,21 @@ const getStubData = () => ({
 });
 
 describe("kube object tests", () => {
-  it("should allow an object to be created when missing uid", () => {
+  it("given '.metadata.uid' is missing, then KubeObject constructor does not throw", () => {
     const data = getStubData();
 
     delete data.metadata.uid;
     expect(() => new KubeObject(data)).not.toThrow();
   });
 
-  it("should allow an object to be created when missing resourceVersion", () => {
+  it("given '.metadata.resourceVersion' is missing, then KubeObject constructor does not throw", () => {
     const data = getStubData();
 
     delete data.metadata.resourceVersion;
     expect(() => new KubeObject(data)).not.toThrow();
   });
 
-  it("should allow an object to be created when missing resourceVersion and uid", () => {
+  it("given both '.metadata.resourceVersion' and '.metadata.uid' are missing, then KubeObject constructor does not throw", () => {
     const data = getStubData();
 
     delete data.metadata.uid;
@@ -36,14 +36,14 @@ describe("kube object tests", () => {
     expect(() => new KubeObject(data)).not.toThrow();
   });
 
-  it("KubeObject.getId() should return the uid if present", () => {
+  it("given '.metadata.uid' exist, then KubeObject.getId() should return it", () => {
     const data = getStubData();
     const obj = new KubeObject(data);
 
     expect(obj.getId()).toEqual("123");
   });
 
-  it("KubeObject.getId() should return the selfLink if uid is missing", () => {
+  it("given '.metadata.uid' is missing, then KubeObject.getId() should return '.metadata.selfLink'", () => {
     const data = getStubData();
 
     delete data.metadata.uid;
@@ -54,14 +54,14 @@ describe("kube object tests", () => {
     );
   });
 
-  it("KubeObject.getResourceVersion() should return the resourceVersion if it is present", () => {
+  it("given '.metadata.resourceVersion' exist, then KubeObject.getResourceVersion() should return it", () => {
     const data = getStubData();
     const obj = new KubeObject(data);
 
     expect(obj.getResourceVersion()).toEqual("foobar");
   });
 
-  it("KubeObject.getResourceVersion() should return '' if the resourceVersion is missing", () => {
+  it("given '.metadata.resourceVersion' is missing, then KubeObject.getResourceVersion() should return an empty string", () => {
     const data = getStubData();
 
     delete data.metadata.resourceVersion;
