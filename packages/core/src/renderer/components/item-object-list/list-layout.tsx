@@ -13,7 +13,9 @@ import type { TableProps, TableRowProps, TableSortCallbacks } from "../table";
 import type { IClassName, StrictReactNode, SingleOrMany } from "@k8slens/utilities";
 import { cssNames, noop } from "@k8slens/utilities";
 import type { AddRemoveButtonsProps } from "../add-remove-buttons";
-import type { ItemObject, TableCellProps } from "@k8slens/list-layout";
+import type { ItemObject, TableCellProps,
+  GeneralKubeObjectListLayoutColumn,
+} from "@k8slens/list-layout";
 import type { SearchInputUrlProps } from "../input";
 import type { PageFiltersStore } from "./page-filters/store";
 import { FilterType } from "./page-filters/store";
@@ -31,9 +33,6 @@ import selectedFilterNamespacesInjectable from "../../../common/k8s-api/selected
 import pageFiltersStoreInjectable from "./page-filters/store.injectable";
 import type { StorageLayer } from "../../utils/storage-helper";
 import autoBindReact from "auto-bind/react";
-import type {
-  GeneralKubeObjectListLayoutColumn
-} from "@k8slens/list-layout";
 
 export type SearchFilter<I extends ItemObject> = (item: I) => SingleOrMany<string | number | undefined | null>;
 export type SearchFilters<I extends ItemObject> = Record<string, SearchFilter<I>>;
