@@ -6,8 +6,6 @@
 import type { IKubeApiParsed } from "./kube-api-parse";
 import { parseKubeApi } from "./kube-api-parse";
 
-jest.mock("@k8slens/kube-api");
-
 /**
  * [<input-url>, <expected-result>]
  */
@@ -15,66 +13,14 @@ type KubeApiParseTestData = [string, IKubeApiParsed];
 
 const tests: KubeApiParseTestData[] = [
   [
-    "/apis/apiextensions.k8s.io/v1beta1/customresourcedefinitions/prometheuses.monitoring.coreos.com",
+    "http://some-irrelevant-domain/api/v1/secrets?some-irrelevant-parameter=some-irrelevant-value",
     {
-      apiBase: "/apis/apiextensions.k8s.io/v1beta1/customresourcedefinitions",
-      apiPrefix: "/apis",
-      apiGroup: "apiextensions.k8s.io",
-      apiVersion: "v1beta1",
-      apiVersionWithGroup: "apiextensions.k8s.io/v1beta1",
-      namespace: undefined,
-      resource: "customresourcedefinitions",
-      name: "prometheuses.monitoring.coreos.com",
-    },
-  ],
-  [
-    "/api/v1/namespaces/kube-system/pods/coredns-6955765f44-v8p27",
-    {
-      apiBase: "/api/v1/pods",
+      apiBase: "/api/v1/secrets",
       apiPrefix: "/api",
       apiGroup: "",
       apiVersion: "v1",
       apiVersionWithGroup: "v1",
-      namespace: "kube-system",
-      resource: "pods",
-      name: "coredns-6955765f44-v8p27",
-    },
-  ],
-  [
-    "/apis/stable.example.com/foo1/crontabs",
-    {
-      apiBase: "/apis/stable.example.com/foo1/crontabs",
-      apiPrefix: "/apis",
-      apiGroup: "stable.example.com",
-      apiVersion: "foo1",
-      apiVersionWithGroup: "stable.example.com/foo1",
-      resource: "crontabs",
-      name: undefined,
-      namespace: undefined,
-    },
-  ],
-  [
-    "/apis/cluster.k8s.io/v1alpha1/clusters",
-    {
-      apiBase: "/apis/cluster.k8s.io/v1alpha1/clusters",
-      apiPrefix: "/apis",
-      apiGroup: "cluster.k8s.io",
-      apiVersion: "v1alpha1",
-      apiVersionWithGroup: "cluster.k8s.io/v1alpha1",
-      resource: "clusters",
-      name: undefined,
-      namespace: undefined,
-    },
-  ],
-  [
-    "/api/v1/namespaces",
-    {
-      apiBase: "/api/v1/namespaces",
-      apiPrefix: "/api",
-      apiGroup: "",
-      apiVersion: "v1",
-      apiVersionWithGroup: "v1",
-      resource: "namespaces",
+      resource: "secrets",
       name: undefined,
       namespace: undefined,
     },
@@ -88,6 +34,19 @@ const tests: KubeApiParseTestData[] = [
       apiVersion: "v1",
       apiVersionWithGroup: "v1",
       resource: "secrets",
+      name: undefined,
+      namespace: undefined,
+    },
+  ],
+  [
+    "/api/v1/namespaces",
+    {
+      apiBase: "/api/v1/namespaces",
+      apiPrefix: "/api",
+      apiGroup: "",
+      apiVersion: "v1",
+      apiVersionWithGroup: "v1",
+      resource: "namespaces",
       name: undefined,
       namespace: undefined,
     },
@@ -131,16 +90,120 @@ const tests: KubeApiParseTestData[] = [
       namespace: undefined,
     },
   ],
+  [
+    "/apis/stable.example.com/foo1/crontabs",
+    {
+      apiBase: "/apis/stable.example.com/foo1/crontabs",
+      apiPrefix: "/apis",
+      apiGroup: "stable.example.com",
+      apiVersion: "foo1",
+      apiVersionWithGroup: "stable.example.com/foo1",
+      resource: "crontabs",
+      name: undefined,
+      namespace: undefined,
+    },
+  ],
+  [
+    "/apis/cluster.k8s.io/v1alpha1/clusters",
+    {
+      apiBase: "/apis/cluster.k8s.io/v1alpha1/clusters",
+      apiPrefix: "/apis",
+      apiGroup: "cluster.k8s.io",
+      apiVersion: "v1alpha1",
+      apiVersionWithGroup: "cluster.k8s.io/v1alpha1",
+      resource: "clusters",
+      name: undefined,
+      namespace: undefined,
+    },
+  ],
+  [
+    "/api/v1/namespaces/kube-system/pods/coredns-6955765f44-v8p27",
+    {
+      apiBase: "/api/v1/pods",
+      apiPrefix: "/api",
+      apiGroup: "",
+      apiVersion: "v1",
+      apiVersionWithGroup: "v1",
+      namespace: "kube-system",
+      resource: "pods",
+      name: "coredns-6955765f44-v8p27",
+    },
+  ],
+  [
+    "/apis/apps/v1/namespaces/default/deployments/some-deployment",
+    {
+      apiBase: "/apis/apps/v1/deployments",
+      apiGroup: "apps",
+      apiPrefix: "/apis",
+      apiVersion: "v1",
+      apiVersionWithGroup: "apps/v1",
+      name: "some-deployment",
+      namespace: "default",
+      resource: "deployments",
+    },
+  ],
+  [
+    "/apis/apiextensions.k8s.io/v1beta1/customresourcedefinitions/prometheuses.monitoring.coreos.com",
+    {
+      apiBase: "/apis/apiextensions.k8s.io/v1beta1/customresourcedefinitions",
+      apiPrefix: "/apis",
+      apiGroup: "apiextensions.k8s.io",
+      apiVersion: "v1beta1",
+      apiVersionWithGroup: "apiextensions.k8s.io/v1beta1",
+      namespace: undefined,
+      resource: "customresourcedefinitions",
+      name: "prometheuses.monitoring.coreos.com",
+    },
+  ],
+  [
+    "/api/v1/namespaces/kube-system/pods",
+    {
+      apiBase: "/api/v1/pods",
+      apiPrefix: "/api",
+      apiGroup: "",
+      apiVersion: "v1",
+      apiVersionWithGroup: "v1",
+      namespace: "kube-system",
+      resource: "pods",
+      name: undefined,
+    },
+  ],
+  [
+    "/apis/cluster.k8s.io/v1/namespaces/kube-system/pods",
+    {
+      apiBase: "/apis/cluster.k8s.io/v1/pods",
+      apiPrefix: "/apis",
+      apiGroup: "cluster.k8s.io",
+      apiVersion: "v1",
+      apiVersionWithGroup: "cluster.k8s.io/v1",
+      namespace: "kube-system",
+      resource: "pods",
+      name: undefined,
+    },
+  ],
 ];
 
-const invalidTests = [undefined, "", "ajklsmh"];
+const invalidTests = [
+  undefined,
+  "",
+  "some-invalid-path",
+  "//apiextensions.k8s.io/v1beta1/customresourcedefinitions/prometheuses.monitoring.coreos.com",
+  "/apis//v1beta1/customresourcedefinitions/prometheuses.monitoring.coreos.com",
+  "/apis/apiextensions.k8s.io//customresourcedefinitions/prometheuses.monitoring.coreos.com",
+  "/apis/apiextensions.k8s.io/v1beta1//prometheuses.monitoring.coreos.com",
+  "/apis/apiextensions.k8s.io/v1beta1/customresourcedefinitions/",
+  "//v1beta1/customresourcedefinitions/prometheuses.monitoring.coreos.com",
+  "/api//v1beta1/customresourcedefinitions/prometheuses.monitoring.coreos.com",
+  "/api//customresourcedefinitions/prometheuses.monitoring.coreos.com",
+  "/api/v1beta1//prometheuses.monitoring.coreos.com",
+  "/api/v1beta1/customresourcedefinitions/",
+];
 
 describe("parseApi unit tests", () => {
-  it.each(tests)("testing %j", (url, expected) => {
+  it.each(tests)(`given path %j, parses as expected`, (url, expected) => {
     expect(parseKubeApi(url)).toStrictEqual(expected);
   });
-
-  it.each(invalidTests)("testing %j should return undefined", (url) => {
+  it.each(invalidTests)(`given path %j, parses as undefined`, (url) => {
     expect(parseKubeApi(url as never)).toBe(undefined);
   });
 });
