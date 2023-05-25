@@ -18,7 +18,7 @@ import type { AddRemoveButtonsProps } from "../add-remove-buttons";
 import { AddRemoveButtons } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
-import type { ItemObject, TableCellProps } from "@k8slens/list-layout";
+import type { GeneralKubeObjectListLayoutColumn, ItemObject, TableCellProps } from "@k8slens/list-layout";
 import type { Filter, PageFiltersStore } from "./page-filters/store";
 import type { LensTheme } from "../../themes/lens-theme";
 import { MenuActions } from "../menu/menu-actions";
@@ -35,8 +35,8 @@ import type { ToggleTableColumnVisibility } from "../../../features/user-prefere
 import toggleTableColumnVisibilityInjectable from "../../../features/user-preferences/common/toggle-table-column-visibility.injectable";
 import type { IsTableColumnHidden } from "../../../features/user-preferences/common/is-table-column-hidden.injectable";
 import isTableColumnHiddenInjectable from "../../../features/user-preferences/common/is-table-column-hidden.injectable";
-import type { TableComponent, TableDataContextValue } from "@k8slens/table-tokens";
-import { TableDataContext, tableComponentInjectionToken } from "@k8slens/table-tokens";
+import type { TableComponent } from "@k8slens/table-tokens";
+import { tableComponentInjectionToken } from "@k8slens/table-tokens";
 
 export interface ItemListLayoutContentProps<Item extends ItemObject, PreLoadStores extends boolean> {
   getFilters: () => Filter[];
@@ -56,6 +56,7 @@ export interface ItemListLayoutContentProps<Item extends ItemObject, PreLoadStor
   customizeTableRowProps?: (item: Item) => Partial<TableRowProps<Item>>;
   addRemoveButtons?: Partial<AddRemoveButtonsProps>;
   virtual?: boolean;
+  columns?: GeneralKubeObjectListLayoutColumn[];
 
   // item details view
   hasDetailsView?: boolean;
@@ -89,9 +90,6 @@ class NonInjectedItemListLayoutContent<
   Item extends ItemObject,
   PreLoadStores extends boolean,
 > extends React.Component<ItemListLayoutContentProps<Item, PreLoadStores> & Dependencies> {
-  static contextType = TableDataContext;
-  declare context: TableDataContextValue;
-
   constructor(props: ItemListLayoutContentProps<Item, PreLoadStores> & Dependencies) {
     super(props);
     makeObservable(this);
@@ -316,7 +314,7 @@ class NonInjectedItemListLayoutContent<
       <div className="items box grow flex column">
         <table.Component
           tableId={tableId}
-          columns={this.context.columns}
+          columns={this.props.columns}
           virtual={virtual}
           selectable={hasDetailsView}
           sortable={sortingCallbacks}

@@ -31,7 +31,6 @@ import type { ClusterContext } from "../../cluster-frame-context/cluster-frame-c
 import type { GeneralKubeObjectListLayoutColumn, SpecificKubeListLayoutColumn } from "@k8slens/list-layout";
 import { kubeObjectListLayoutColumnInjectionToken } from "@k8slens/list-layout";
 import { sortBy } from "lodash";
-import { TableDataContext } from "@k8slens/table-tokens";
 
 export type KubeItemListStore<K extends KubeObject> = ItemListStore<K, false> & SubscribableStore & {
   getByPath: (path: string) => K | undefined;
@@ -43,7 +42,7 @@ export interface KubeObjectListLayoutProps<
   // eslint-disable-next-line unused-imports/no-unused-vars-ts, @typescript-eslint/no-unused-vars
   A extends KubeApi<K, D>,
   D extends KubeJsonApiDataFor<K>,
-> extends Omit<ItemListLayoutProps<K, false>, "getItems" | "dependentStores" | "preloadStores"> {
+> extends Omit<ItemListLayoutProps<K, false>, "getItems" | "dependentStores" | "preloadStores" | "columns"> {
   items?: K[];
   getItems?: () => K[];
   store: KubeItemListStore<K>;
@@ -187,13 +186,14 @@ class NonInjectedKubeObjectListLayout<
       ...targetColumns,
     ], (v) => -v.priority).map((col) => col.header);
 
-    const itemsListLayout = (
+    return (
       <ItemListLayout<K, false>
         className={cssNames("KubeObjectListLayout", className)}
         store={store}
         getItems={() => this.props.items || store.contextItems}
         preloadStores={false} // loading handled in kubeWatchApi.subscribeStores()
         detailsItem={this.selectedItem}
+        columns={targetColumns as GeneralKubeObjectListLayoutColumn[]}
         customizeHeader={[
           ({ filters, searchProps, info, ...headerPlaceHolders }) => ({
             filters: (
@@ -233,15 +233,6 @@ class NonInjectedKubeObjectListLayout<
         spinnerTestId="kube-object-list-layout-spinner"
         {...layoutProps}
       />
-    );
-
-    return (
-      <TableDataContext.Provider
-        value={{
-          columns: targetColumns as GeneralKubeObjectListLayoutColumn[],
-        }}>
-        {itemsListLayout}
-      </TableDataContext.Provider>
     );
   }
 }

@@ -31,6 +31,9 @@ import selectedFilterNamespacesInjectable from "../../../common/k8s-api/selected
 import pageFiltersStoreInjectable from "./page-filters/store.injectable";
 import type { StorageLayer } from "../../utils/storage-helper";
 import autoBindReact from "auto-bind/react";
+import type {
+  GeneralKubeObjectListLayoutColumn
+} from "@k8slens/list-layout";
 
 export type SearchFilter<I extends ItemObject> = (item: I) => SingleOrMany<string | number | undefined | null>;
 export type SearchFilters<I extends ItemObject> = Record<string, SearchFilter<I>>;
@@ -98,6 +101,7 @@ export type ItemListLayoutProps<Item extends ItemObject, PreLoadStores extends b
   headerClassName?: IClassName;
   renderHeaderTitle?: RenderHeaderTitle<Item, PreLoadStores>;
   customizeHeader?: HeaderCustomizer | HeaderCustomizer[];
+  columns?: GeneralKubeObjectListLayoutColumn[];
 
   // items list configuration
   isReady?: boolean; // show loading indicator while not ready
@@ -304,6 +308,7 @@ class NonInjectedItemListLayout<I extends ItemObject, PreLoadStores extends bool
         />
 
         <ItemListLayoutContent<I, PreLoadStores>
+          columns={this.props.columns}
           getItems={() => this.items}
           getFilters={() => this.filters}
           tableId={this.props.tableId}

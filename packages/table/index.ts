@@ -5,7 +5,6 @@ import type {
   GeneralKubeObjectListLayoutColumn,
   SpecificKubeListLayoutColumn,
 } from "@k8slens/list-layout";
-import React from "react";
 
 type Column = (
   | BaseKubeObjectListLayoutColumn<KubeObject>
@@ -19,14 +18,6 @@ export interface TableComponentProps {
   save?: (state: object) => void;
   load?: (tableId: string) => object;
 }
-
-export interface TableDataContextValue {
-  columns?: Column[];
-}
-
-export const TableDataContext = React.createContext<TableDataContextValue>({
-  columns: [],
-});
 
 export interface TableComponent {
   Component: React.ComponentType<TableComponentProps>;
