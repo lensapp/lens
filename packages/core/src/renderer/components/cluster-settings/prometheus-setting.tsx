@@ -16,6 +16,9 @@ import type { MetricProviderInfo, RequestMetricsProviders } from "../../../commo
 import { withInjectables } from "@ogre-tools/injectable-react";
 import requestMetricsProvidersInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-providers.injectable";
 import productNameInjectable from "../../../common/vars/product-name.injectable";
+import { Checkbox } from "../checkbox";
+import Gutter from "../gutter/gutter";
+
 
 export interface ClusterPrometheusSettingProps {
   cluster: Cluster;
@@ -123,6 +126,9 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
   };
 
   render() {
+    const providerType = this.props.cluster.preferences.prometheusProvider?.type;
+    const showQueryFilters = providerType === "operator" || !providerType;
+
     return (
       <>
         <section>
@@ -147,6 +153,28 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
               )
           }
         </section>
+        {
+          showQueryFilters && (
+            <>
+              <Gutter />
+              <section>
+                <SubTitle title="Prometheus queries" />
+                <Checkbox
+                  label="Filter empty containers on pod metrics"
+                  value={this.props.cluster.preferences.prometheusQueryOptions?.hideEmptyContainers ?? false}
+                  onChange={v => {
+                    this.props.cluster.preferences.prometheusQueryOptions = {
+                      hideEmptyContainers: v,
+                    };
+                  }}
+                />
+                <small className="hint">
+                  In certain metric setups, pod metrics may be observed as double values. This filter can be helpful in ensuring accurate metric are shown.
+                </small>
+              </section>
+            </>
+          )
+        }
         {this.canEditPrometheusPath && (
           <>
             <hr />

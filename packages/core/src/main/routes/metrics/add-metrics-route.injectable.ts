@@ -97,9 +97,13 @@ const addMetricsRouteInjectable = getRouteInjectable({
 
         if (isObject(payload)) {
           const data = payload as Record<string, Record<string, string>>;
+          const queryFilterPreferences: Record<string, string> = cluster.preferences.prometheusQueryOptions ?
+            Object.fromEntries(Object.entries(cluster.preferences.prometheusQueryOptions).map(([k, v]) => [k, String(v)]))
+            : {};
+
           const queries = object.entries(data)
             .map(([queryName, queryOpts]) => (
-              provider.getQuery(queryOpts, queryName)
+              provider.getQuery({ ...queryOpts, ...queryFilterPreferences }, queryName)
             ));
 
           const result = await loadMetrics(queries, cluster, prometheusPath, queryParams);
