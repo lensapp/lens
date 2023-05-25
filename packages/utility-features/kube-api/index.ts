@@ -1,4 +1,3 @@
-export * from "./src/kube-api-injection-token";
 export * from "./src/api-kube";
 export * from "./src/kube-api";
 export * from "./src/kube-api-parse";
