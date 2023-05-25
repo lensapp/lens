@@ -57,6 +57,12 @@ export class PodApi extends KubeApi<Pod> {
   async getLogs(params: ResourceDescriptor, query?: PodLogsQuery): Promise<string> {
     const path = `${this.getUrl(params)}/log`;
 
-    return this.request.get(path, { query });
+    const logs = await this.request.get(path, { query });
+
+    if (typeof logs !== "string") {
+      return "";
+    }
+
+    return logs;
   }
 }
