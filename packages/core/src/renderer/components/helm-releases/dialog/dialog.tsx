@@ -103,7 +103,7 @@ class NonInjectedReleaseRollbackDialog extends React.Component<ReleaseRollbackDi
       <Wizard
         header={(
           <h5>
-            Rollback
+            {"Rollback "}
             <b>{release.getName()}</b>
           </h5>
         )}
