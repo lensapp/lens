@@ -4,11 +4,13 @@ import asyncFn, { AsyncFnMock } from "@async-fn/jest";
 import { DoWebpackBuild, doWebpackBuildInjectable } from "./do-webpack-build";
 import { getPromiseStatus } from "@ogre-tools/test-utils";
 import { LogSuccess, logSuccessInjectable } from "./log-success.injectable";
+import { LogWarning, logWarningInjectable } from "./log-warning.injectable";
 
 describe("do-webpack-build", () => {
   let execMock: AsyncFnMock<Exec>;
   let doWebpackBuild: DoWebpackBuild;
   let logSuccessMock: AsyncFnMock<LogSuccess>;
+  let logWarningMock: AsyncFnMock<LogWarning>;
 
   beforeEach(() => {
     const di = getDi();
@@ -17,6 +19,8 @@ describe("do-webpack-build", () => {
     di.override(execInjectable, () => execMock);
     logSuccessMock = asyncFn();
     di.override(logSuccessInjectable, () => logSuccessMock);
+    logWarningMock = asyncFn();
+    di.override(logWarningInjectable, () => logWarningMock);
 
     doWebpackBuild = di.inject(doWebpackBuildInjectable);
   });
@@ -88,8 +92,8 @@ describe("do-webpack-build", () => {
           expect(logSuccessMock).not.toHaveBeenCalled();
         });
 
-        it("throws", () => {
-          return expect(actualPromise).rejects.toThrow("some-other-stderr");
+        it("logs a warning", () => {
+          expect(logWarningMock).toBeCalledWith("Warning while executing \"linkable-push\": some-other-stderr");
         });
       });
 
@@ -123,13 +127,13 @@ describe("do-webpack-build", () => {
         expect(logSuccessMock).not.toHaveBeenCalled();
       });
 
-      it("throws", () => {
-        return expect(actualPromise).rejects.toThrow("some-stderr");
+      it("logs a warning", () => {
+        expect(logWarningMock).toBeCalledWith("Warning while executing \"webpack\": some-stderr");
       });
     });
 
     describe("when webpack rejects", () => {
-      beforeEach(() => {
+      beforeEach(async () => {
         execMock.reject(new Error("some-error"));
       });
 
