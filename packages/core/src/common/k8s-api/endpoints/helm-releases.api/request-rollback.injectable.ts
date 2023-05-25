@@ -8,7 +8,7 @@ import apiBaseInjectable from "../../api-base.injectable";
 
 export type RequestHelmReleaseRollback = (name: string, namespace: string, revision: number) => Promise<void>;
 
-const requestRollbackEndpoint = urlBuilderFor("/v2/releases/:namespace/:name");
+const requestRollbackEndpoint = urlBuilderFor("/v2/releases/:namespace/:name/rollback");
 
 const requestHelmReleaseRollbackInjectable = getInjectable({
   id: "request-helm-release-rollback",
