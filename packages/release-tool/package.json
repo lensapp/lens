@@ -1,6 +1,6 @@
 {
   "name": "@k8slens/release-tool",
-  "version": "6.5.0-alpha.7",
+  "version": "6.5.0-alpha.10",
   "description": "Release tool for lens monorepo",
   "license": "MIT",
   "private": true,
@@ -11,11 +11,14 @@
   },
   "type": "module",
   "devDependencies": {
+    "@octokit/core": "^4.2.1",
     "@swc/cli": "^0.1.62",
     "@swc/core": "^1.3.53",
     "@types/inquirer": "^9.0.3",
     "@types/node": "^16.18.25",
     "@types/semver": "^7.3.13",
+    "install": "^0.13.0",
+    "npm": "^9.6.7",
     "rimraf": "^4.4.1"
   },
   "dependencies": {

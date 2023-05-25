@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/application",
   "private": false,
-  "version": "6.5.0-alpha.8",
+  "version": "6.5.0-alpha.9",
   "description": "Package for creating Lens applications",
   "type": "commonjs",
   "files": [
@@ -42,6 +42,6 @@
   "devDependencies": {
     "@async-fn/jest": "^1.6.4",
     "@k8slens/eslint-config": "^6.5.0-alpha.3",
-    "@k8slens/webpack": "^6.5.0-alpha.8"
+    "@k8slens/webpack": "^6.5.0-alpha.9"
   }
 }

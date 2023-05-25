@@ -5,12 +5,14 @@
  */
 import assert from "assert";
 import chalk from "chalk";
-import child_process, { ExecFileOptions, spawn as _spawn } from "child_process";
+import child_process, { spawn as _spawn } from "child_process";
 import { readFile } from "fs/promises";
 import inquirer from "inquirer";
 import { createInterface, ReadLine } from "readline";
 import semver from "semver";
 import { promisify } from "util";
+import { Octokit } from "@octokit/core";
+import type { components } from "@octokit/openapi-types";
 
 type SemVer = semver.SemVer;
 
@@ -24,11 +26,15 @@ const exec = ((cmd, ...args) => {
   return _exec(cmd, ...args as any[]);
 }) as typeof _exec;
 
-const execFile = (file: string, args: string[], opts?: ExecFileOptions) => {
-  console.log("EXEC", file, args);
+const execFile = ((file, ...rest) => {
+  if (Array.isArray(rest[0])) {
+    console.log("EXEC-FILE", file, rest[0]);
+  } else {
+    console.log("EXEC-FILE", file);
+  }
 
-  return _execFile(file, args, opts);
-};
+  return _execFile(file, ...rest as [any, any]);
+}) as typeof _execFile;
 
 const spawn = ((file, ...args) => {
   console.log("SPAWN", file);
@@ -49,26 +55,16 @@ async function pipeExecFile(file: string, args: string[], opts?: { stdin: string
   await p;
 }
 
+const octokit = new Octokit({
+  auth: process.env.GITHUB_TOKEN || (await execFile("gh", ["auth", "token"])).stdout.trim(),
+});
+
 interface GithubPrData {
-  author: {
-    login: string;
-  };
-  labels: {
-    id: string;
-    name: string;
-    description: string;
-    color: string;
-  }[];
-  mergeCommit: {
-    oid: string;
-  };
+  authorLogin: string | undefined;
+  labels: components["schemas"]["label"][];
+  mergeCommitSha: string;
   mergedAt: string;
-  milestone: {
-    number: number;
-    title: string;
-    description: string;
-    dueOn: null | string;
-  };
+  milestone: components["schemas"]["milestone"];
   number: number;
   title: string;
 }
@@ -168,6 +164,39 @@ function formatVersionForPickingPrs(version: SemVer): string {
   return `${version.major}.${version.minor}.${version.patch+1}`;
 }
 
+async function deleteAndClosePreviousReleaseBranch(prBase: string, prBranch: string) {
+  const pullRequests = await octokit.request("GET /repos/{owner}/{repo}/pulls", {
+    owner: "lensapp",
+    repo: "lens",
+    headers: {
+      'X-GitHub-Api-Version': '2022-11-28'
+    },
+  });
+
+  const previousReleasePR = pullRequests.data.find(pr => pr.base.ref === prBase && pr.head.ref === prBranch);
+
+  if (!previousReleasePR) {
+    return;
+  }
+
+  await octokit.request("PATCH /repos/{owner}/{repo}/pulls/{pull_number}", {
+    owner: "lensapp",
+    repo: "lens",
+    pull_number: previousReleasePR.number,
+    state: "closed",
+    headers: {
+      'X-GitHub-Api-Version': '2022-11-28'
+    },
+  });
+
+  await pipeExecFile("git", [
+    "push",
+    "origin",
+    "--delete",
+    prBranch,
+  ]);
+}
+
 async function createReleaseBranchAndCommit(prBase: string, version: SemVer, prBody: string): Promise<void> {
   const prBranch = `release/v${version.format()}`;
 
@@ -185,19 +214,54 @@ async function createReleaseBranchAndCommit(prBase: string, version: SemVer, prB
     throw error;
   }
 
+  await deleteAndClosePreviousReleaseBranch(prBase, prBranch);
+
   await pipeExecFile("git", ["push", "--set-upstream", "origin", prBranch]);
 
-  await pipeExecFile("gh", [
-    "pr",
-    "create",
-    "--base", prBase,
-    "--title", `Release ${version.format()}`,
-    "--label", "skip-changelog",
-    "--label", "release",
-    "--milestone", formatSemverForMilestone(version),
-    "--body-file", "-",
-  ], {
-    stdin: prBody,
+  const newReleasePR = await octokit.request("POST /repos/{owner}/{repo}/pulls", {
+    owner: "lensapp",
+    repo: "lens",
+    title: `Release ${version.format()}`,
+    head: prBranch,
+    base: prBase,
+    body: prBody,
+    draft: false,
+    maintainer_can_modify: true,
+    headers: {
+      'X-GitHub-Api-Version': '2022-11-28'
+    },
+  });
+  await octokit.request("POST /repos/{owner}/{repo}/issues/{issue_number}/labels", {
+    owner: "lensapp",
+    repo: "lens",
+    issue_number: newReleasePR.data.number,
+    labels: ["release", "skip-changelog"],
+    headers: {
+      'X-GitHub-Api-Version': '2022-11-28'
+    },
+  });
+  const milestones = await octokit.request("GET /repos/{owner}/{repo}/milestones", {
+    owner: "lensapp",
+    repo: "lens",
+    headers: {
+      'X-GitHub-Api-Version': '2022-11-28'
+    },
+  });
+  const milestoneTitle = formatSemverForMilestone(version);
+  const milestoneNumber = milestones.data.find(milestone => milestone.title === milestoneTitle)?.number;
+
+  if (!milestoneNumber) {
+    throw new Error(`Cannot find milestone for ${milestoneTitle}`);
+  }
+
+  await octokit.request("PATCH /repos/{owner}/{repo}/issues/{issue_number}", {
+    owner: "lensapp",
+    repo: "lens",
+    issue_number: newReleasePR.data.number,
+    milestone: milestoneNumber,
+    headers: {
+      'X-GitHub-Api-Version': '2022-11-28'
+    },
   });
 }
 
@@ -220,22 +284,26 @@ async function getRelevantPRs(previousReleasedVersion: string, baseBranch: strin
   console.log(`retrieving previous 200 PRs from ${baseBranch}...`);
 
   const milestone = formatVersionForPickingPrs(await getCurrentVersionOfSubPackage("core"));
-  const getMergedPrsArgs = [
-    "gh",
-    "pr",
-    "list",
-    "--limit=500", // Should be big enough, if not we need to release more often ;)
-    "--state=merged",
-    `--base=${baseBranch}`,
-    "--json mergeCommit,title,author,labels,number,milestone,mergedAt",
-  ];
+  const mergedPrsDataPromises = [1, 2, 3, 4, 5].map(page => octokit.request("GET /repos/{owner}/{repo}/pulls", {
+    owner: "lensapp",
+    repo: "lens",
+    headers: {
+      'X-GitHub-Api-Version': '2022-11-28'
+    },
+    state: "closed",
+    base: baseBranch,
+    per_page: 100,
+    page,
+  }));
+  const milestoneRelevantPrs = (await Promise.all(mergedPrsDataPromises))
+    .flatMap(response => response.data)
+    .filter(pr => pr.milestone?.title === milestone)
+    .filter(pr => (pr.merged_at !== null && pr.merge_commit_sha !== null));
 
-  const mergedPrs = JSON.parse((await exec(getMergedPrsArgs.join(" "), { encoding: "utf-8" })).stdout) as GithubPrData[];
-  const milestoneRelevantPrs = mergedPrs.filter(pr => pr.milestone?.title === milestone);
   const relevantPrsQuery = await Promise.all(
     milestoneRelevantPrs.map(async pr => ({
       pr,
-      stdout: (await exec(`git tag v${previousReleasedVersion} --no-contains ${pr.mergeCommit.oid}`)).stdout,
+      stdout: (await exec(`git tag v${previousReleasedVersion} --no-contains ${pr.merge_commit_sha}`)).stdout,
     })),
   );
 
@@ -243,16 +311,21 @@ async function getRelevantPRs(previousReleasedVersion: string, baseBranch: strin
     .filter(query => query.stdout)
     .map(query => query.pr)
     .filter(pr => pr.labels.every(label => label.name !== "skip-changelog"))
-    .map(pr => ({
-      ...pr,
-      mergedAt: new Date(pr.mergedAt),
+    .map((pr): ExtendedGithubPrData => ({
+      authorLogin: pr.user?.login,
+      labels: pr.labels,
+      mergeCommitSha: pr.merge_commit_sha as string,
+      number: pr.number,
+      title: pr.title,
+      milestone: pr.milestone as components["schemas"]["milestone"],
+      mergedAt: new Date(pr.merged_at as string),
       shouldAttemptCherryPick: baseBranch === "master",
     }))
     .sort(sortExtendedGithubPrData);
 }
 
 function formatPrEntry(pr: ExtendedGithubPrData) {
-  return `- ${pr.title} (**[#${pr.number}](https://github.com/lensapp/lens/pull/${pr.number})**) https://github.com/${pr.author.login}`;
+  return `- ${pr.title} (**[#${pr.number}](https://github.com/lensapp/lens/pull/${pr.number})**) https://github.com/${pr.authorLogin}`;
 }
 
 const isEnhancementPr = (pr: ExtendedGithubPrData) => pr.labels.some(label => label.name === "enhancement");
@@ -331,7 +404,7 @@ async function cherryPickCommits(prs: ExtendedGithubPrData[]): Promise<void> {
 
   for (const pr of prs) {
     if (pr.shouldAttemptCherryPick) {
-      await cherryPickCommit(pr.mergeCommit.oid);
+      await cherryPickCommit(pr.mergeCommitSha);
     } else {
       console.log(`Skipping cherry picking of #${pr.number} - ${pr.title}`);
     }
