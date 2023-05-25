@@ -21,7 +21,7 @@ import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import type { Disposer } from "@k8slens/utilities";
-import { disposer } from "@k8slens/utilities";
+import { array, disposer } from "@k8slens/utilities";
 import { renderFor } from "../test-utils/renderFor";
 import { NamespaceSelectFilter } from "./component";
 import type { NamespaceStore } from "../namespaces/store";
@@ -475,6 +475,59 @@ describe("<NamespaceSelectFilter />", () => {
               });
             });
           });
+        });
+      });
+    });
+  });
+
+  describe("once the subscribe resolves with thousands of namespaces", () => {
+    beforeEach(async () => {
+      await fetchMock.resolveSpecific([
+        "https://127.0.0.1:12345/api-kube/api/v1/namespaces",
+      ], createMockResponseFromString("https://127.0.0.1:12345/api-kube/api/v1/namespaces", JSON.stringify({
+        apiVersion: "v1",
+        kind: "NamespaceList",
+        metadata: {},
+        items: array.filled(20000, undefined).map((_, i) => createNamespace(`test-${i}`)),
+      })));
+    });
+
+    it("renders", () => {
+      expect(result.baseElement).toMatchSnapshot();
+    });
+
+    describe("when menu expand icon is clicked", () => {
+      beforeEach(() => {
+        result.getByTestId("namespace-select-filter-expand-icon").click();
+      });
+
+      it("renders", () => {
+        expect(result.baseElement).toMatchSnapshot();
+      });
+
+      it("menu is open", () => {
+        expect(result.getByTestId("namespace-select-filter-list-container")).toBeInTheDocument();
+      });
+
+      it("does not show all items in the DOM", () => {
+        expect(result.queryByTestId("namespace-select-filter-option-test-1500")).not.toBeInTheDocument();
+      });
+
+      it("does show some items in the DOM", () => {
+        expect(result.getByTestId("namespace-select-filter-option-test-10")).toBeInTheDocument();
+      });
+
+      describe("when menu expand icon is clicked again", () => {
+        beforeEach(() => {
+          result.getByTestId("namespace-select-filter-expand-icon").click();
+        });
+
+        it("renders", () => {
+          expect(result.baseElement).toMatchSnapshot();
+        });
+
+        it("menu is closed", () => {
+          expect(result.queryByTestId("namespace-select-filter-list-container")).not.toBeInTheDocument();
         });
       });
     });

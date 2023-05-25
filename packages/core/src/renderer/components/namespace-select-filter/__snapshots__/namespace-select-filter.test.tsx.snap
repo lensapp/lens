@@ -6144,3 +6144,856 @@ exports[`<NamespaceSelectFilter /> once the subscribe resolves when menu expand 
   </div>
 </body>
 `;
+
+exports[`<NamespaceSelectFilter /> once the subscribe resolves with thousands of namespaces renders 1`] = `
+<body>
+  <div>
+    <div
+      class="namespace-select-filter"
+      data-testid="namespace-select-filter"
+      id="namespace-select-filter"
+      tabindex="1"
+    >
+      <div
+        class="menu"
+      >
+        <div
+          class="non-icon"
+        >
+          <input
+            data-testid="namespace-select-filter-input"
+            id="namespace-select-filter-filter"
+            type="text"
+            value=""
+          />
+          <div
+            class="gradient left"
+          />
+          <label
+            for="namespace-select-filter-filter"
+          >
+            All namespaces
+          </label>
+          <div
+            class="gradient right"
+          />
+        </div>
+        <i
+          class="Icon expand-icon material interactive focusable"
+          data-testid="namespace-select-filter-expand-icon"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="expand_more"
+          >
+            expand_more
+          </span>
+        </i>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<NamespaceSelectFilter /> once the subscribe resolves with thousands of namespaces when menu expand icon is clicked renders 1`] = `
+<body>
+  <div>
+    <div
+      class="namespace-select-filter"
+      data-testid="namespace-select-filter"
+      id="namespace-select-filter"
+      tabindex="1"
+    >
+      <div
+        class="menu"
+      >
+        <div
+          class="non-icon"
+        >
+          <input
+            data-testid="namespace-select-filter-input"
+            id="namespace-select-filter-filter"
+            type="text"
+            value=""
+          />
+          <div
+            class="gradient left"
+          />
+          <label
+            for="namespace-select-filter-filter"
+          >
+            All namespaces
+          </label>
+          <div
+            class="gradient right"
+          />
+        </div>
+        <i
+          class="Icon expand-icon material interactive focusable"
+          data-testid="namespace-select-filter-expand-icon"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="expand_less"
+          >
+            expand_less
+          </span>
+        </i>
+      </div>
+      <div
+        class="list-container"
+        data-testid="namespace-select-filter-list-container"
+      >
+        <div
+          class="list"
+          style="position: relative; height: 300px; width: 300px; overflow: auto; will-change: transform; direction: ltr;"
+        >
+          <ul
+            style="height: 999714px; width: 100%;"
+          >
+            <li
+              class="option flex gaps align-center all-namespaces"
+              data-testid="namespace-select-filter-option-All Namespaces"
+              style="position: absolute; left: 0px; top: 0px; height: 29px; width: 100%;"
+            >
+              <span
+                class="data"
+              >
+                All Namespaces
+              </span>
+            </li>
+            <li
+              class="option flex gaps align-center single-namespace"
+              data-testid="namespace-select-filter-option-test-0"
+              style="position: absolute; left: 0px; top: 29px; height: 29px; width: 100%;"
+            >
+              <i
+                class="Icon material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-0-select-only"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="layers"
+                >
+                  layers
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-0-select-only"
+              >
+                Select only test-0
+              </div>
+              <span
+                class="data"
+              >
+                test-0
+              </span>
+              <i
+                class="Icon selected-icon box right material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-0-selected"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="check"
+                >
+                  check
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-0-selected"
+              >
+                Remove test-0 from selection
+              </div>
+            </li>
+            <li
+              class="option flex gaps align-center single-namespace"
+              data-testid="namespace-select-filter-option-test-1"
+              style="position: absolute; left: 0px; top: 58px; height: 29px; width: 100%;"
+            >
+              <i
+                class="Icon material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-1-select-only"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="layers"
+                >
+                  layers
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-1-select-only"
+              >
+                Select only test-1
+              </div>
+              <span
+                class="data"
+              >
+                test-1
+              </span>
+              <i
+                class="Icon selected-icon box right material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-1-selected"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="check"
+                >
+                  check
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-1-selected"
+              >
+                Remove test-1 from selection
+              </div>
+            </li>
+            <li
+              class="option flex gaps align-center single-namespace"
+              data-testid="namespace-select-filter-option-test-10"
+              style="position: absolute; left: 0px; top: 87px; height: 29px; width: 100%;"
+            >
+              <i
+                class="Icon material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-10-select-only"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="layers"
+                >
+                  layers
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-10-select-only"
+              >
+                Select only test-10
+              </div>
+              <span
+                class="data"
+              >
+                test-10
+              </span>
+              <i
+                class="Icon selected-icon box right material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-10-selected"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="check"
+                >
+                  check
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-10-selected"
+              >
+                Remove test-10 from selection
+              </div>
+            </li>
+            <li
+              class="option flex gaps align-center single-namespace"
+              data-testid="namespace-select-filter-option-test-100"
+              style="position: absolute; left: 0px; top: 116px; height: 29px; width: 100%;"
+            >
+              <i
+                class="Icon material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-100-select-only"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="layers"
+                >
+                  layers
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-100-select-only"
+              >
+                Select only test-100
+              </div>
+              <span
+                class="data"
+              >
+                test-100
+              </span>
+              <i
+                class="Icon selected-icon box right material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-100-selected"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="check"
+                >
+                  check
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-100-selected"
+              >
+                Remove test-100 from selection
+              </div>
+            </li>
+            <li
+              class="option flex gaps align-center single-namespace"
+              data-testid="namespace-select-filter-option-test-1000"
+              style="position: absolute; left: 0px; top: 145px; height: 29px; width: 100%;"
+            >
+              <i
+                class="Icon material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-1000-select-only"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="layers"
+                >
+                  layers
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-1000-select-only"
+              >
+                Select only test-1000
+              </div>
+              <span
+                class="data"
+              >
+                test-1000
+              </span>
+              <i
+                class="Icon selected-icon box right material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-1000-selected"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="check"
+                >
+                  check
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-1000-selected"
+              >
+                Remove test-1000 from selection
+              </div>
+            </li>
+            <li
+              class="option flex gaps align-center single-namespace"
+              data-testid="namespace-select-filter-option-test-10000"
+              style="position: absolute; left: 0px; top: 174px; height: 29px; width: 100%;"
+            >
+              <i
+                class="Icon material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-10000-select-only"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="layers"
+                >
+                  layers
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-10000-select-only"
+              >
+                Select only test-10000
+              </div>
+              <span
+                class="data"
+              >
+                test-10000
+              </span>
+              <i
+                class="Icon selected-icon box right material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-10000-selected"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="check"
+                >
+                  check
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-10000-selected"
+              >
+                Remove test-10000 from selection
+              </div>
+            </li>
+            <li
+              class="option flex gaps align-center single-namespace"
+              data-testid="namespace-select-filter-option-test-10001"
+              style="position: absolute; left: 0px; top: 203px; height: 29px; width: 100%;"
+            >
+              <i
+                class="Icon material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-10001-select-only"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="layers"
+                >
+                  layers
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-10001-select-only"
+              >
+                Select only test-10001
+              </div>
+              <span
+                class="data"
+              >
+                test-10001
+              </span>
+              <i
+                class="Icon selected-icon box right material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-10001-selected"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="check"
+                >
+                  check
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-10001-selected"
+              >
+                Remove test-10001 from selection
+              </div>
+            </li>
+            <li
+              class="option flex gaps align-center single-namespace"
+              data-testid="namespace-select-filter-option-test-10002"
+              style="position: absolute; left: 0px; top: 232px; height: 29px; width: 100%;"
+            >
+              <i
+                class="Icon material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-10002-select-only"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="layers"
+                >
+                  layers
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-10002-select-only"
+              >
+                Select only test-10002
+              </div>
+              <span
+                class="data"
+              >
+                test-10002
+              </span>
+              <i
+                class="Icon selected-icon box right material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-10002-selected"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="check"
+                >
+                  check
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-10002-selected"
+              >
+                Remove test-10002 from selection
+              </div>
+            </li>
+            <li
+              class="option flex gaps align-center single-namespace"
+              data-testid="namespace-select-filter-option-test-10003"
+              style="position: absolute; left: 0px; top: 261px; height: 29px; width: 100%;"
+            >
+              <i
+                class="Icon material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-10003-select-only"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="layers"
+                >
+                  layers
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-10003-select-only"
+              >
+                Select only test-10003
+              </div>
+              <span
+                class="data"
+              >
+                test-10003
+              </span>
+              <i
+                class="Icon selected-icon box right material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-10003-selected"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="check"
+                >
+                  check
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-10003-selected"
+              >
+                Remove test-10003 from selection
+              </div>
+            </li>
+            <li
+              class="option flex gaps align-center single-namespace"
+              data-testid="namespace-select-filter-option-test-10004"
+              style="position: absolute; left: 0px; top: 290px; height: 29px; width: 100%;"
+            >
+              <i
+                class="Icon material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-10004-select-only"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="layers"
+                >
+                  layers
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-10004-select-only"
+              >
+                Select only test-10004
+              </div>
+              <span
+                class="data"
+              >
+                test-10004
+              </span>
+              <i
+                class="Icon selected-icon box right material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-10004-selected"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="check"
+                >
+                  check
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-10004-selected"
+              >
+                Remove test-10004 from selection
+              </div>
+            </li>
+            <li
+              class="option flex gaps align-center single-namespace"
+              data-testid="namespace-select-filter-option-test-10005"
+              style="position: absolute; left: 0px; top: 319px; height: 29px; width: 100%;"
+            >
+              <i
+                class="Icon material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-10005-select-only"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="layers"
+                >
+                  layers
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-10005-select-only"
+              >
+                Select only test-10005
+              </div>
+              <span
+                class="data"
+              >
+                test-10005
+              </span>
+              <i
+                class="Icon selected-icon box right material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-10005-selected"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="check"
+                >
+                  check
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-10005-selected"
+              >
+                Remove test-10005 from selection
+              </div>
+            </li>
+            <li
+              class="option flex gaps align-center single-namespace"
+              data-testid="namespace-select-filter-option-test-10006"
+              style="position: absolute; left: 0px; top: 348px; height: 29px; width: 100%;"
+            >
+              <i
+                class="Icon material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-10006-select-only"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="layers"
+                >
+                  layers
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-10006-select-only"
+              >
+                Select only test-10006
+              </div>
+              <span
+                class="data"
+              >
+                test-10006
+              </span>
+              <i
+                class="Icon selected-icon box right material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-10006-selected"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="check"
+                >
+                  check
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-10006-selected"
+              >
+                Remove test-10006 from selection
+              </div>
+            </li>
+            <li
+              class="option flex gaps align-center single-namespace"
+              data-testid="namespace-select-filter-option-test-10007"
+              style="position: absolute; left: 0px; top: 377px; height: 29px; width: 100%;"
+            >
+              <i
+                class="Icon material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-10007-select-only"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="layers"
+                >
+                  layers
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-10007-select-only"
+              >
+                Select only test-10007
+              </div>
+              <span
+                class="data"
+              >
+                test-10007
+              </span>
+              <i
+                class="Icon selected-icon box right material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-10007-selected"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="check"
+                >
+                  check
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-10007-selected"
+              >
+                Remove test-10007 from selection
+              </div>
+            </li>
+            <li
+              class="option flex gaps align-center single-namespace"
+              data-testid="namespace-select-filter-option-test-10008"
+              style="position: absolute; left: 0px; top: 406px; height: 29px; width: 100%;"
+            >
+              <i
+                class="Icon material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-10008-select-only"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="layers"
+                >
+                  layers
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-10008-select-only"
+              >
+                Select only test-10008
+              </div>
+              <span
+                class="data"
+              >
+                test-10008
+              </span>
+              <i
+                class="Icon selected-icon box right material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-10008-selected"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="check"
+                >
+                  check
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-10008-selected"
+              >
+                Remove test-10008 from selection
+              </div>
+            </li>
+            <li
+              class="option flex gaps align-center single-namespace"
+              data-testid="namespace-select-filter-option-test-10009"
+              style="position: absolute; left: 0px; top: 435px; height: 29px; width: 100%;"
+            >
+              <i
+                class="Icon material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-10009-select-only"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="layers"
+                >
+                  layers
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-10009-select-only"
+              >
+                Select only test-10009
+              </div>
+              <span
+                class="data"
+              >
+                test-10009
+              </span>
+              <i
+                class="Icon selected-icon box right material interactive focusable small"
+                data-testid="namespace-select-filter-option-test-10009-selected"
+                tabindex="0"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="check"
+                >
+                  check
+                </span>
+              </i>
+              <div
+                data-testid="tooltip-content-for-namespace-select-filter-option-test-10009-selected"
+              >
+                Remove test-10009 from selection
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<NamespaceSelectFilter /> once the subscribe resolves with thousands of namespaces when menu expand icon is clicked when menu expand icon is clicked again renders 1`] = `
+<body>
+  <div>
+    <div
+      class="namespace-select-filter"
+      data-testid="namespace-select-filter"
+      id="namespace-select-filter"
+      tabindex="1"
+    >
+      <div
+        class="menu"
+      >
+        <div
+          class="non-icon"
+        >
+          <input
+            data-testid="namespace-select-filter-input"
+            id="namespace-select-filter-filter"
+            type="text"
+            value=""
+          />
+          <div
+            class="gradient left"
+          />
+          <label
+            for="namespace-select-filter-filter"
+          >
+            All namespaces
+          </label>
+          <div
+            class="gradient right"
+          />
+        </div>
+        <i
+          class="Icon expand-icon material interactive focusable"
+          data-testid="namespace-select-filter-expand-icon"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="expand_more"
+          >
+            expand_more
+          </span>
+        </i>
+      </div>
+    </div>
+  </div>
+</body>
+`;
