@@ -190,6 +190,7 @@
     "@k8slens/event-emitter": "^1.0.0",
     "@k8slens/feature-core": "^6.5.0",
     "@k8slens/keyboard-shortcuts": "^1.0.0",
+    "@k8slens/kube-api-specifics": "^1.0.0-alpha.1",
     "@k8slens/kube-object": "^1.0.0",
     "@k8slens/kubectl-versions": "^1.0.0",
     "@k8slens/legacy-extension-example": "^1.0.0",
