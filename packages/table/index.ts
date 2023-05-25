@@ -4,7 +4,7 @@ import type {
   BaseKubeObjectListLayoutColumn,
   GeneralKubeObjectListLayoutColumn,
   SpecificKubeListLayoutColumn,
-} from "@k8slens/list-layout/src/kube-list-layout-column";
+} from "@k8slens/list-layout";
 import React from "react";
 
 type Column = (
