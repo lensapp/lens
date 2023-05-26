@@ -72,6 +72,7 @@ import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
 import { getMessageBridgeFake } from "@k8slens/messaging-fake-bridge";
 import { historyInjectionToken } from "@k8slens/routing";
 import writeJsonSyncInjectable from "../../../common/fs/write-json-sync.injectable";
+import { tableFeature } from "../../library";
 
 type MainDiCallback = (container: { mainDi: DiContainer }) => void | Promise<void>;
 type WindowDiCallback = (container: { windowDi: DiContainer }) => void | Promise<void>;
@@ -256,6 +257,7 @@ export const getApplicationBuilder = () => {
       registerFeature(
         windowDi,
         applicationFeature,
+        tableFeature,
       );
 
       windowDi.register(rendererExtensionsStateInjectable);
