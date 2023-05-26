@@ -106,9 +106,7 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
 
       await navigateToPods(frame);
 
-      const namespacesSelector = await frame.waitForSelector(
-        ".NamespaceSelect",
-      );
+      const namespacesSelector = await frame.waitForSelector(".namespace-select-filter .menu .non-icon label");
 
       await namespacesSelector.click();
       await namespacesSelector.type(TEST_NAMESPACE);
