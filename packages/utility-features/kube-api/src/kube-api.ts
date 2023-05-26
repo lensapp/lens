@@ -265,7 +265,7 @@ export type ClusterScopedResourceDescriptor = SpecificResourceDescriptor<KubeObj
 
 export interface DeleteResourceDescriptor extends ResourceDescriptor {
   /**
-   * This determinines how child resources should be handled by kubernetes
+   * This determines how child resources should be handled by kubernetes
    *
    * @default "Background"
    */
