@@ -5,16 +5,15 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/kube-object-store-token";
-import resourceQuotaApiInjectable from "../../../common/k8s-api/endpoints/resource-quota.api.injectable";
+import { resourceQuotaApiInjectable, storesAndApisCanBeCreatedInjectionToken } from "@k8slens/kube-api-specifics";
 import { loggerInjectionToken } from "@k8slens/logger";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
-import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { ResourceQuotaStore } from "./store";
 
 const resourceQuotaStoreInjectable = getInjectable({
   id: "resource-quota-store",
   instantiate: (di) => {
-    assert(di.inject(storesAndApisCanBeCreatedInjectable), "resourceQuotaStore is only available in certain environments");
+    assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "resourceQuotaStore is only available in certain environments");
 
     const api = di.inject(resourceQuotaApiInjectable);
 

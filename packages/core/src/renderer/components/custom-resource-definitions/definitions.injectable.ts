@@ -5,15 +5,15 @@
 
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import customResourceDefinitionStoreInjectable from "./store.injectable";
+import { storesAndApisCanBeCreatedInjectionToken } from "@k8slens/kube-api-specifics";
 
 const customResourceDefinitionsInjectable = getInjectable({
   id: "custom-resource-definitions",
 
   instantiate: (di) => {
-    const createStoresAndApis = di.inject(storesAndApisCanBeCreatedInjectable);
+    const createStoresAndApis = di.inject(storesAndApisCanBeCreatedInjectionToken);
 
     if (!createStoresAndApis) {
       return computed(() => []);

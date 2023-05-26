@@ -4,8 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
-import { storesAndApisCanBeCreatedInjectionToken } from "../../../../common/k8s-api/stores-apis-can-be-created.token";
-import clusterRoleApiInjectable from "../../../../common/k8s-api/endpoints/cluster-role.api.injectable";
+import { storesAndApisCanBeCreatedInjectionToken, clusterRoleApiInjectable } from "@k8slens/kube-api-specifics";
 import { kubeObjectStoreInjectionToken } from "../../../../common/k8s-api/api-manager/kube-object-store-token";
 import { ClusterRoleStore } from "./store";
 import clusterFrameContextForClusterScopedResourcesInjectable from "../../../cluster-frame-context/for-cluster-scoped-resources.injectable";

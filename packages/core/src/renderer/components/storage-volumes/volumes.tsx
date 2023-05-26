@@ -18,9 +18,8 @@ import type { PersistentVolumeStore } from "./store";
 import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
-import persistentVolumeClaimApiInjectable from "../../../common/k8s-api/endpoints/persistent-volume-claim.api.injectable";
+import { persistentVolumeClaimApiInjectable, storageClassApiInjectable } from "@k8slens/kube-api-specifics";
 import persistentVolumeStoreInjectable from "./store.injectable";
-import storageClassApiInjectable from "../../../common/k8s-api/endpoints/storage-class.api.injectable";
 
 enum columnId {
   name = "name",

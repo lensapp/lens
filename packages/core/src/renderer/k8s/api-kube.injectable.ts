@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import { apiKubePrefix } from "../../common/vars";
 import { apiKubeInjectionToken } from "@k8slens/kube-api";
-import { storesAndApisCanBeCreatedInjectionToken } from "../../common/k8s-api/stores-apis-can-be-created.token";
+import { storesAndApisCanBeCreatedInjectionToken } from "@k8slens/kube-api-specifics";
 import createKubeJsonApiInjectable from "../../common/k8s-api/create-kube-json-api.injectable";
 import isDevelopmentInjectable from "../../common/vars/is-development.injectable";
 import showErrorNotificationInjectable from "../components/notifications/show-error-notification.injectable";

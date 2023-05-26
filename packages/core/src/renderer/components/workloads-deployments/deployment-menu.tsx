@@ -9,7 +9,7 @@ import { MenuItem } from "../menu";
 import { Icon } from "@k8slens/icon";
 import type { OpenDeploymentScaleDialog } from "./scale/open.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import deploymentApiInjectable from "../../../common/k8s-api/endpoints/deployment.api.injectable";
+import { deploymentApiInjectable } from "@k8slens/kube-api-specifics";
 import openDeploymentScaleDialogInjectable from "./scale/open.injectable";
 import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";

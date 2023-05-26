@@ -5,9 +5,8 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { NamespaceStore } from "./store";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/kube-object-store-token";
-import namespaceApiInjectable from "../../../common/k8s-api/endpoints/namespace.api.injectable";
+import { namespaceApiInjectable, storesAndApisCanBeCreatedInjectionToken } from "@k8slens/kube-api-specifics";
 import assert from "assert";
-import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import clusterFrameContextForClusterScopedResourcesInjectable from "../../cluster-frame-context/for-cluster-scoped-resources.injectable";
 import clusterConfiguredAccessibleNamespacesInjectable from "../../cluster/accessible-namespaces.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
@@ -17,7 +16,7 @@ const namespaceStoreInjectable = getInjectable({
   id: "namespace-store",
 
   instantiate: (di) => {
-    assert(di.inject(storesAndApisCanBeCreatedInjectable), "namespaceStore is only available in certain environments");
+    assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "namespaceStore is only available in certain environments");
 
     const api = di.inject(namespaceApiInjectable);
 
