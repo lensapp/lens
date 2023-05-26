@@ -23,9 +23,10 @@ describe("Viewing Custom Resources with extra columns", () => {
 
   beforeEach(async () => {
     builder = getApplicationBuilder();
-    builder.setEnvironmentToClusterFrame();
 
-    builder.afterWindowStart(({ windowDi }) => {
+    await builder.setEnvironmentToClusterFrame();
+
+    await builder.afterWindowStart(({ windowDi }) => {
       const apiManager = windowDi.inject(apiManagerInjectable);
 
       customResourceDefinitionStore = windowDi.inject(customResourceDefinitionStoreInjectable);

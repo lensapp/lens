@@ -47,7 +47,7 @@ describe("hotbar-welcome-page-migration", () => {
 
   let migration: MigrationDeclaration;
   let store: MigrationStore;
-  const storeModel = new Map();
+  const storeModel = new Map<string, unknown>();
 
   beforeEach(() => {
     migration = di.inject(v640HotbarStoreMigrationInjectable);
@@ -63,25 +63,29 @@ describe("hotbar-welcome-page-migration", () => {
     storeModel.set("hotbars", [emptyHotbar]);
     store = {
       path: "some-path",
-      get: (key: string) => storeModel.get(key),
-      set: (key: string, value: any) => storeModel.set(key, value),
-      delete: (key: string) => storeModel.delete(key),
-      has: (key: string) => storeModel.has(key),
+      get: (key) => storeModel.get(key),
+      set: (key, value) => storeModel.set(key, value),
+      delete: (key) => storeModel.delete(key),
+      has: (key) => storeModel.has(key),
       clear: () => storeModel.clear(),
-    };
+    } as MigrationStore;
   });
 
   it("given first hotbar is empty, adds welcome page to first place", () => {
     migration.run(store);
-    expect(storeModel.get("hotbars")[0].items[0]).toEqual(welcomeHotbarItem);
+
+    const hotbars = storeModel.get("hotbars") as HotbarData[];
+
+    expect(hotbars[0]?.items[0]).toEqual(welcomeHotbarItem);
   });
 
   it("given first hotbar has items but is not full, adds welcome page to first place", () => {
     setFirstHotbarItems(store, [someItem]);
 
     migration.run(store);
+    const hotbars = storeModel.get("hotbars") as HotbarData[];
 
-    expect(storeModel.get("hotbars")[0].items.slice(0, 2)).toEqual([welcomeHotbarItem, someItem]);
+    expect(hotbars[0]?.items.slice(0, 2)).toEqual([welcomeHotbarItem, someItem]);
   });
 
   it("given first hotbar is full, does not add welcome page", () => {
@@ -90,9 +94,10 @@ describe("hotbar-welcome-page-migration", () => {
     setFirstHotbarItems(store, fullHotbarItems);
 
     migration.run(store);
+    const hotbars = storeModel.get("hotbars") as HotbarData[];
 
-    expect(storeModel.get("hotbars")[0].items).toEqual(fullHotbarItems);
-    expect(storeModel.get("hotbars")[0].items).not.toContain(welcomeHotbarItem);
+    expect(hotbars[0]?.items).toEqual(fullHotbarItems);
+    expect(hotbars[0]?.items).not.toContain(welcomeHotbarItem);
   });
 
   it("given first hotbar has already welcome page, does not add welcome page", () => {
@@ -100,6 +105,9 @@ describe("hotbar-welcome-page-migration", () => {
 
     setFirstHotbarItems(store, hotBarItemsWithWelcomePage);
     migration.run(store);
-    expect(storeModel.get("hotbars")[0].items).toEqual(hotBarItemsWithWelcomePage);
+
+    const hotbars = storeModel.get("hotbars") as HotbarData[];
+
+    expect(hotbars[0]?.items).toEqual(hotBarItemsWithWelcomePage);
   });
 });

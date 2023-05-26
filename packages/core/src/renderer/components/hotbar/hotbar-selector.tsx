@@ -83,13 +83,13 @@ const NonInjectedHotbarSelector = observer(({
           className={styles.Badge}
           onMouseEnter={onMouseEvent}
           onMouseLeave={onMouseEvent}
-          data-testid={`hotbar-menu-badge-for-${hotbar?.name.get()}`}
+          data-testid={hotbar ? `hotbar-menu-badge-for-${hotbar.name.get()}` : undefined}
         />
         <Tooltip
           visible={tooltipVisible}
           targetId="hotbarIndex"
           preferredPositions={[TooltipPosition.TOP, TooltipPosition.TOP_LEFT]}
-          data-testid={`hotbar-menu-badge-tooltip-for-${hotbar?.name.get()}`}
+          data-testid={hotbar ? `hotbar-menu-badge-tooltip-for-${hotbar.name.get()}` : undefined}
         >
           {hotbar?.name.get()}
         </Tooltip>
