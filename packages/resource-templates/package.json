@@ -1,6 +1,6 @@
 {
   "name": "@k8slens/resource-templates",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0",
   "private": false,
   "publishConfig": {
     "access": "public",

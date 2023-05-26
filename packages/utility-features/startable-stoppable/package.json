@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/startable-stoppable",
   "private": false,
-  "version": "1.0.0-alpha.7",
+  "version": "1.0.0",
   "description": "TBD",
   "type": "commonjs",
   "publishConfig": {
@@ -28,7 +28,7 @@
     "lint:fix": "lens-lint --fix"
   },
   "devDependencies": {
-    "@k8slens/eslint-config": "^6.5.0-alpha.3",
-    "@k8slens/webpack": "^6.5.0-alpha.9"
+    "@k8slens/eslint-config": "^6.5.0",
+    "@k8slens/webpack": "^6.5.0"
   }
 }

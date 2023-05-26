@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/keyboard-shortcuts",
   "private": false,
-  "version": "1.0.0-alpha.8",
+  "version": "1.0.0",
   "description": "Keyboard shortcuts for Lens",
   "type": "commonjs",
   "files": [
@@ -42,8 +42,8 @@
   },
   "devDependencies": {
     "@async-fn/jest": "^1.6.4",
-    "@k8slens/eslint-config": "^6.5.0-alpha.3",
-    "@k8slens/react-testing-library-discovery": "^1.0.0-alpha.4",
-    "@k8slens/webpack": "^6.5.0-alpha.9"
+    "@k8slens/eslint-config": "^6.5.0",
+    "@k8slens/react-testing-library-discovery": "^1.0.0",
+    "@k8slens/webpack": "^6.5.0"
   }
 }

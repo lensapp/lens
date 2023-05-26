@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/react-testing-library-discovery",
   "private": false,
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0",
   "description": "A way to discover HTML-elements using react-testing-library",
   "type": "commonjs",
   "files": [

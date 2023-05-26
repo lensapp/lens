@@ -157,11 +157,7 @@ function formatSemverForMilestone(version: SemVer): string {
 }
 
 function formatVersionForPickingPrs(version: SemVer): string {
-  if (version.prerelease.length > 0) {
-    return `${version.major}.${version.minor}.${version.patch}`;
-  }
-
-  return `${version.major}.${version.minor}.${version.patch+1}`;
+  return `${version.major}.${version.minor}.${version.patch}`;
 }
 
 async function deleteAndClosePreviousReleaseBranch(prBase: string, prBranch: string) {
