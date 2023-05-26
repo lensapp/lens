@@ -35,13 +35,16 @@ export interface CreatePrometheusProviderOpts {
   getService(client: CoreV1Api): Promise<PrometheusServiceInfo>;
 }
 
-export const createPrometheusProvider = ({ getService, ...opts }: CreatePrometheusProviderOpts): PrometheusProvider => ({
+export const createPrometheusProvider = ({
+  getService,
+  ...opts
+}: CreatePrometheusProviderOpts): PrometheusProvider => ({
   ...opts,
   getPrometheusService: async (client) => {
     try {
       return {
         kind: opts.kind,
-        ...await getService(client),
+        ...(await getService(client)),
       };
     } catch (error) {
       throw new Error(`Failed to find Prometheus provider for "${opts.name}"`, { cause: error });
@@ -49,10 +52,17 @@ export const createPrometheusProvider = ({ getService, ...opts }: CreatePromethe
   },
 });
 
-export async function findFirstNamespacedService(client: CoreV1Api, ...selectors: string[]): Promise<PrometheusServiceInfo> {
+export async function findFirstNamespacedService(
+  client: CoreV1Api,
+  ...selectors: string[]
+): Promise<PrometheusServiceInfo> {
   try {
     for (const selector of selectors) {
-      const { body: { items: [service] }} = await client.listServiceForAllNamespaces(undefined, undefined, undefined, selector);
+      const {
+        body: {
+          items: [service],
+        },
+      } = await client.listServiceForAllNamespaces(undefined, undefined, undefined, selector);
 
       if (service?.metadata?.namespace && service.metadata.name && service.spec?.ports) {
         return {
@@ -63,13 +73,19 @@ export async function findFirstNamespacedService(client: CoreV1Api, ...selectors
       }
     }
   } catch (error) {
-    throw new Error(`Failed to list services in all namespaces: ${isRequestError(error) ? error.response?.body.message : error}`);
+    throw new Error(
+      `Failed to list services in all namespaces: ${isRequestError(error) ? error.response?.body.message : error}`,
+    );
   }
 
   throw new Error(`No service found from any namespace`);
 }
 
-export async function findNamespacedService(client: CoreV1Api, name: string, namespace: string): Promise<PrometheusServiceInfo> {
+export async function findNamespacedService(
+  client: CoreV1Api,
+  name: string,
+  namespace: string,
+): Promise<PrometheusServiceInfo> {
   try {
     const { body: service } = await client.readNamespacedService(name, namespace);
 
@@ -82,8 +98,12 @@ export async function findNamespacedService(client: CoreV1Api, name: string, nam
       service: service.metadata.name,
       port: service.spec.ports[0].port,
     };
-  } catch(error) {
-    throw new Error(`Failed to list services in namespace="${namespace}": ${isRequestError(error) ? error.response?.body.message : error}`);
+  } catch (error) {
+    throw new Error(
+      `Failed to list services in namespace="${namespace}": ${
+        isRequestError(error) ? error.response?.body.message : error
+      }`,
+    );
   }
 }
 

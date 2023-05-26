@@ -14,6 +14,7 @@ import { messagingFeatureForMain } from "@k8slens/messaging-for-main";
 import { loggerFeature } from "@k8slens/logger";
 import { randomFeature } from "@k8slens/random";
 import { kubeApiSpecificsFeature } from "@k8slens/kube-api-specifics";
+import { prometheusFeature } from "@k8slens/prometheus";
 
 const environment = "main";
 
@@ -26,12 +27,10 @@ registerMobX(di);
 runInAction(() => {
   registerLensCore(di, environment);
 
-  registerFeature(di,
-    loggerFeature,
-  );
-
   registerFeature(
     di,
+    loggerFeature,
+    prometheusFeature,
     applicationFeature,
     applicationFeatureForElectronMain,
     messagingFeatureForMain,
