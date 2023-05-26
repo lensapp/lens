@@ -21,7 +21,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import persistentVolumeClaimStoreInjectable from "./store.injectable";
 import podStoreInjectable from "../workloads-pods/store.injectable";
-import storageClassApiInjectable from "../../../common/k8s-api/endpoints/storage-class.api.injectable";
+import { storageClassApiInjectable } from "@k8slens/kube-api-specifics";
 import { NamespaceSelectBadge } from "../namespaces/namespace-select-badge";
 
 enum columnId {

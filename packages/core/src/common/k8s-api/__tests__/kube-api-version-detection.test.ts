@@ -20,9 +20,8 @@ import hostedClusterInjectable from "../../../renderer/cluster-frame-context/hos
 import directoryForKubeConfigsInjectable from "../../app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import apiManagerInjectable from "../api-manager/manager.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
-import ingressApiInjectable from "../endpoints/ingress.api.injectable";
-import { loggerInjectionToken } from "@k8slens/logger";
-import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
+import { ingressApiInjectable, maybeKubeApiInjectable } from "@k8slens/kube-api-specifics";
+import { logErrorInjectionToken, logInfoInjectionToken, logWarningInjectionToken } from "@k8slens/logger";
 import { Cluster } from "../../cluster/cluster";
 
 describe("KubeApi", () => {
@@ -710,7 +709,9 @@ describe("KubeApi", () => {
 
     beforeEach(async () => {
       horizontalPodAutoscalerApi = new HorizontalPodAutoscalerApi({
-        logger: di.inject(loggerInjectionToken),
+        logError: di.inject(logErrorInjectionToken),
+        logInfo: di.inject(logInfoInjectionToken),
+        logWarn: di.inject(logWarningInjectionToken),
         maybeKubeApi: di.inject(maybeKubeApiInjectable),
       }, {
         allowedUsableVersions: {

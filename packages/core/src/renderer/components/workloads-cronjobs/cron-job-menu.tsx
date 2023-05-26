@@ -12,7 +12,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
 import type { OpenCronJobTriggerDialog } from "./trigger-dialog/open.injectable";
 import openCronJobTriggerDialogInjectable from "./trigger-dialog/open.injectable";
-import cronJobApiInjectable from "../../../common/k8s-api/endpoints/cron-job.api.injectable";
+import { cronJobApiInjectable } from "@k8slens/kube-api-specifics";
 import type { ShowCheckedErrorNotification } from "../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../notifications/show-checked-error.injectable";
 import type { CronJobApi } from "@k8slens/kube-api";

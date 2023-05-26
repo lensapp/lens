@@ -7,12 +7,14 @@ import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manag
 import { MutatingWebhookConfigurationStore } from "./mutating-webhook-configuration-store";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
-import mutatingWebhookConfigurationApiInjectable
-  from "../../../common/k8s-api/endpoints/mutating-webhook-configuration-api.injectable";
+import { mutatingWebhookConfigurationApiInjectable, storesAndApisCanBeCreatedInjectionToken } from "@k8slens/kube-api-specifics";
+import assert from "assert";
 
 const mutatingWebhookConfigurationStoreInjectable = getInjectable({
   id: "mutating-webhook-configuration-store",
   instantiate: (di) => {
+    assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "mutatingWebhookConfigurationStore is only available in certain environments");
+
     const api = di.inject(mutatingWebhookConfigurationApiInjectable);
 
     return new MutatingWebhookConfigurationStore({

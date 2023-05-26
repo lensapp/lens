@@ -5,16 +5,15 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/kube-object-store-token";
-import podDisruptionBudgetApiInjectable from "../../../common/k8s-api/endpoints/pod-disruption-budget.api.injectable";
+import { podDisruptionBudgetApiInjectable, storesAndApisCanBeCreatedInjectionToken } from "@k8slens/kube-api-specifics";
 import { loggerInjectionToken } from "@k8slens/logger";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
-import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { PodDisruptionBudgetStore } from "./store";
 
 const podDisruptionBudgetStoreInjectable = getInjectable({
   id: "pod-disruption-budget-store",
   instantiate: (di) => {
-    assert(di.inject(storesAndApisCanBeCreatedInjectable), "podDisruptionBudgetStore is only available in certain environments");
+    assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "podDisruptionBudgetStore is only available in certain environments");
 
     const api = di.inject(podDisruptionBudgetApiInjectable);
 

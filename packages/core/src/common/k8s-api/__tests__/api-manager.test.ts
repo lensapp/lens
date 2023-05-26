@@ -11,13 +11,12 @@ import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
 import storesAndApisCanBeCreatedInjectable from "../../../renderer/stores-apis-can-be-created.injectable";
 import directoryForKubeConfigsInjectable from "../../app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import directoryForUserDataInjectable from "../../app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import { loggerInjectionToken } from "@k8slens/logger";
+import { logErrorInjectionToken, loggerInjectionToken, logInfoInjectionToken, logWarningInjectionToken } from "@k8slens/logger";
 import type { ApiManager } from "../api-manager";
 import apiManagerInjectable from "../api-manager/manager.injectable";
 import { KubeApi } from "@k8slens/kube-api";
 import { KubeObject } from "@k8slens/kube-object";
 import { KubeObjectStore } from "../kube-object.store";
-import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 
 // eslint-disable-next-line no-restricted-imports
 import { KubeApi as ExternalKubeApi } from "../../../extensions/common-api/k8s-api";
@@ -25,6 +24,7 @@ import { Cluster } from "../../cluster/cluster";
 import { runInAction } from "mobx";
 import { customResourceDefinitionApiInjectionToken } from "../api-manager/crd-api-token";
 import assert from "assert";
+import { maybeKubeApiInjectable } from "@k8slens/kube-api-specifics";
 
 class TestApi extends KubeApi<KubeObject> {
   protected checkPreferredVersion() {
@@ -61,7 +61,9 @@ describe("ApiManager", () => {
       const apiBase = "api/v1/foo";
       const fallbackApiBase = "/apis/extensions/v1beta1/foo";
       const kubeApi = new TestApi({
-        logger: di.inject(loggerInjectionToken),
+        logError: di.inject(logErrorInjectionToken),
+        logInfo: di.inject(logInfoInjectionToken),
+        logWarn: di.inject(logWarningInjectionToken),
         maybeKubeApi: di.inject(maybeKubeApiInjectable),
       }, {
         objectConstructor: KubeObject,
@@ -136,7 +138,9 @@ describe("ApiManager", () => {
 
             return Object.assign(
               new KubeApi({
-                logger: di.inject(loggerInjectionToken),
+                logError: di.inject(logErrorInjectionToken),
+                logInfo: di.inject(logInfoInjectionToken),
+                logWarn: di.inject(logWarningInjectionToken),
                 maybeKubeApi: di.inject(maybeKubeApiInjectable),
               }, { objectConstructor }),
               {

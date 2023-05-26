@@ -2,10 +2,10 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import { storesAndApisCanBeCreatedInjectionToken } from "@k8slens/kube-api-specifics";
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../renderer/cluster-frame-context/for-namespaced-resources.injectable";
-import { storesAndApisCanBeCreatedInjectionToken } from "./stores-apis-can-be-created.token";
 
 const selectedFilterNamespacesInjectable = getInjectable({
   id: "selected-filter-namespaces",

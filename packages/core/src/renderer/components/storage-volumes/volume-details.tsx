@@ -20,8 +20,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import { loggerInjectionToken } from "@k8slens/logger";
 import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
-import persistentVolumeClaimApiInjectable from "../../../common/k8s-api/endpoints/persistent-volume-claim.api.injectable";
-import storageClassApiInjectable from "../../../common/k8s-api/endpoints/storage-class.api.injectable";
+import { persistentVolumeClaimApiInjectable, storageClassApiInjectable } from "@k8slens/kube-api-specifics";
 
 export interface PersistentVolumeDetailsProps extends KubeObjectDetailsProps<PersistentVolume> {
 }
