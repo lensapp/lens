@@ -2,12 +2,12 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getRouteInjectable } from "../../router/router.injectable";
+import { getClusterRouteInjectable } from "../../router/router.injectable";
 import { apiPrefix } from "../../../common/vars";
 import { PortForward } from "./functionality/port-forward";
-import { clusterRoute } from "../../router/route";
+import { clusterRoute } from "../../router/cluster-route";
 
-const getCurrentPortForwardRouteInjectable = getRouteInjectable({
+const getCurrentPortForwardRouteInjectable = getClusterRouteInjectable({
   id: "get-current-port-forward-route",
 
   instantiate: () => clusterRoute({

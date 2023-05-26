@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import readFileBufferInjectable from "../../../common/fs/read-file-buffer.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import staticFilesDirectoryInjectable from "../../../common/vars/static-files-directory.injectable";
-import type { LensApiRequest } from "../../router/route";
+import type { LensApiRequest } from "@k8slens/route";
 import path from "path";
 import { contentTypes } from "../../router/router-content-types";
 import { prefixedLoggerInjectable } from "@k8slens/logger";

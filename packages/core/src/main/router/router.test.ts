@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import routerInjectable, { routeInjectionToken } from "./router.injectable";
+import routerInjectable from "./router.injectable";
+import { routeInjectionToken } from "@k8slens/route";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import type { Router } from "./router";
 import type { Cluster } from "../../common/cluster/cluster";
@@ -14,7 +15,7 @@ import asyncFn from "@async-fn/jest";
 import parseRequestInjectable from "./parse-request.injectable";
 import { contentTypes } from "./router-content-types";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import type { Route } from "./route";
+import type { Route } from "@k8slens/route";
 import type { SetRequired } from "type-fest";
 import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
 import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";

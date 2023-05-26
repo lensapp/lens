@@ -4,7 +4,7 @@
  */
 import { getRouteInjectable } from "../../../router/router.injectable";
 import { apiPrefix } from "../../../../common/vars";
-import { route } from "../../../router/route";
+import { route } from "@k8slens/route";
 import getHelmChartReadmeInjectable from "../../../helm/helm-service/get-helm-chart-readme.injectable";
 
 const getHelmChartReadmeRouteInjectable = getRouteInjectable({

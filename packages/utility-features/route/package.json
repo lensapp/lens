@@ -1,0 +1,38 @@
+{
+  "name": "@k8slens/route",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "description": "Route for Lens",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "private": false,
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": {
+    "name": "OpenLens Authors",
+    "email": "info@k8slens.dev"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/lensapp/lens",
+  "scripts": {
+    "clean": "rimraf dist/",
+    "build": "lens-webpack-build",
+    "test:unit": "jest --coverage --runInBand"
+  },
+  "peerDependencies": {
+    "@k8slens/test-utils": "^1.0.0-alpha.3",
+    "@k8slens/utilities": "^1.0.0-alpha.1",
+    "@ogre-tools/fp": "^16.1.0",
+    "@ogre-tools/injectable": "^16.1.0",
+    "http-proxy": "^1.18.1",
+    "joi": "^17.9.1"
+  },
+  "devDependencies": {
+    "@k8slens/webpack": "^6.5.0-alpha.9"
+  }
+}

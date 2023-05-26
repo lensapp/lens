@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { apiPrefix } from "../../../../common/vars";
-import { getRouteInjectable } from "../../../router/router.injectable";
-import { clusterRoute } from "../../../router/route";
+import { getClusterRouteInjectable } from "../../../router/router.injectable";
+import { clusterRoute } from "../../../router/cluster-route";
 import deleteClusterHelmReleaseInjectable from "../../../helm/helm-service/delete-helm-release.injectable";
 
-const deleteReleaseRouteInjectable = getRouteInjectable({
+const deleteReleaseRouteInjectable = getClusterRouteInjectable({
   id: "delete-release-route",
 
   instantiate: (di) => {

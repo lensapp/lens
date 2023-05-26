@@ -3,12 +3,18 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { Cluster } from "../../common/cluster/cluster";
 import type http from "http";
 import type httpProxy from "http-proxy";
-import type { LensApiResultContentType } from "./router-content-types";
 import type { URLSearchParams } from "url";
 import type Joi from "joi";
+
+export interface LensApiResultContentType {
+  resultMapper: (result: LensApiResult<unknown>) => ({
+    statusCode: number;
+    content: unknown;
+    headers: Record<string, string>;
+  });
+}
 
 export type InferParam<
   T extends string,
@@ -33,16 +39,11 @@ export interface LensApiRequest<Path extends string> {
   path: Path;
   payload: unknown;
   params: InferParamFromPath<Path>;
-  cluster: Cluster | undefined;
   query: URLSearchParams;
   raw: {
     req: http.IncomingMessage;
     res: http.ServerResponse;
   };
-}
-
-export interface ClusterLensApiRequest<Path extends string> extends LensApiRequest<Path> {
-  cluster: Cluster;
 }
 
 export interface LensApiResult<Response> {
@@ -79,6 +80,7 @@ export interface Route<TResponse, Path extends string> extends BaseRoutePaths<Pa
   handler: RouteHandler<TResponse, Path>;
 }
 
+
 export interface BindHandler<Path extends string> {
   <TResponse>(handler: RouteHandler<TResponse, Path>): Route<TResponse, Path>;
 }
@@ -87,61 +89,5 @@ export function route<Path extends string>(parts: BaseRoutePaths<Path>): BindHan
   return (handler) => ({
     ...parts,
     handler,
-  });
-}
-
-export interface ClusterRouteHandler<Response, Path extends string>{
-  (request: ClusterLensApiRequest<Path>): RouteResponse<Response> | Promise<RouteResponse<Response>>;
-}
-
-export interface BindClusterHandler<Path extends string> {
-  <TResponse>(handler: ClusterRouteHandler<TResponse, Path>): Route<TResponse, Path>;
-}
-
-export function clusterRoute<Path extends string>(parts: BaseRoutePaths<Path>): BindClusterHandler<Path> {
-  return (handler) => ({
-    ...parts,
-    handler: ({ cluster, ...rest }) => {
-      if (!cluster) {
-        return {
-          error: "Cluster missing",
-          statusCode: 400,
-        };
-      }
-
-      return handler({ cluster, ...rest });
-    },
-  });
-}
-
-export interface ValidatedClusterLensApiRequest<Path extends string, Payload> extends ClusterLensApiRequest<Path> {
-  payload: Payload;
-}
-
-export interface ValidatedClusterRouteHandler<Payload, Response, Path extends string> {
-  (request: ValidatedClusterLensApiRequest<Path, Payload>): RouteResponse<Response> | Promise<RouteResponse<Response>>;
-}
-
-export interface BindValidatedClusterHandler<Path extends string, Payload> {
-  <Response>(handler: ValidatedClusterRouteHandler<Payload, Response, Path>): Route<Response, Path>;
-}
-
-export function payloadValidatedClusterRoute<Path extends string, Payload>({ payloadValidator, ...parts }: ValidatorBaseRoutePaths<Path, Payload>): BindValidatedClusterHandler<Path, Payload> {
-  const boundClusterRoute = clusterRoute(parts);
-
-  return (handler) => boundClusterRoute(({ payload, ...rest }) => {
-    const validationResult = payloadValidator.validate(payload);
-
-    if (validationResult.error) {
-      return {
-        error: validationResult.error,
-        statusCode: 400,
-      };
-    }
-
-    return handler({
-      payload: validationResult.value,
-      ...rest,
-    });
   });
 }

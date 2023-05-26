@@ -2,13 +2,13 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getRouteInjectable } from "../../router/router.injectable";
+import { getClusterRouteInjectable } from "../../router/router.injectable";
 import { apiPrefix } from "../../../common/vars";
-import { payloadValidatedClusterRoute } from "../../router/route";
+import { payloadValidatedClusterRoute } from "../../router/cluster-route";
 import Joi from "joi";
 import resourceApplierInjectable from "../../resource-applier/create-resource-applier.injectable";
 
-const createResourceRouteInjectable = getRouteInjectable({
+const createResourceRouteInjectable = getClusterRouteInjectable({
   id: "create-resource-route",
 
   instantiate: (di) => payloadValidatedClusterRoute({

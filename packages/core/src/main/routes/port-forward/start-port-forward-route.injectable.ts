@@ -2,15 +2,15 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getRouteInjectable } from "../../router/router.injectable";
+import { getClusterRouteInjectable } from "../../router/router.injectable";
 import { apiPrefix } from "../../../common/vars";
 import { PortForward } from "./functionality/port-forward";
 import createPortForwardInjectable from "./functionality/create-port-forward.injectable";
-import { clusterRoute } from "../../router/route";
+import { clusterRoute } from "../../router/cluster-route";
 import { loggerInjectionToken } from "@k8slens/logger";
 import kubeconfigManagerInjectable from "../../kubeconfig-manager/kubeconfig-manager.injectable";
 
-const startPortForwardRouteInjectable = getRouteInjectable({
+const startPortForwardRouteInjectable = getClusterRouteInjectable({
   id: "start-current-port-forward-route",
 
   instantiate: (di) => {

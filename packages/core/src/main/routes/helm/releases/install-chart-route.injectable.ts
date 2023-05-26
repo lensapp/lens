@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { apiPrefix } from "../../../../common/vars";
-import { getRouteInjectable } from "../../../router/router.injectable";
+import { getClusterRouteInjectable } from "../../../router/router.injectable";
 import Joi from "joi";
-import { payloadValidatedClusterRoute } from "../../../router/route";
+import { payloadValidatedClusterRoute } from "../../../router/cluster-route";
 import type { InstallChartArgs } from "../../../helm/helm-service/install-helm-chart.injectable";
 import installClusterHelmChartInjectable from "../../../helm/helm-service/install-helm-chart.injectable";
 
@@ -27,7 +27,7 @@ const installChartArgsValidator = Joi.object<InstallChartArgs, true, InstallChar
     .required(),
 });
 
-const installChartRouteInjectable = getRouteInjectable({
+const installChartRouteInjectable = getClusterRouteInjectable({
   id: "install-chart-route",
 
   instantiate: (di) => {

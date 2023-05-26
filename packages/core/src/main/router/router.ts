@@ -6,10 +6,11 @@
 import Call from "@hapi/call";
 import type http from "http";
 import type { Cluster } from "../../common/cluster/cluster";
-import type { LensApiRequest, Route } from "./route";
+import type { LensApiRequest, Route } from "@k8slens/route";
 import type { ServerIncomingMessage } from "../lens-proxy/lens-proxy";
 import type { ParseRequest } from "./parse-request.injectable";
 import type { CreateHandlerForRoute, RouteHandler } from "./create-handler-for-route.injectable";
+import type { ClusterLensApiRequest } from "./cluster-route";
 
 export interface RouterRequestOpts {
   req: http.IncomingMessage;
@@ -51,7 +52,7 @@ export class Router {
     return true;
   }
 
-  protected async getRequest(opts: RouterRequestOpts): Promise<LensApiRequest<string>> {
+  protected async getRequest(opts: RouterRequestOpts): Promise<LensApiRequest<string> | ClusterLensApiRequest<string>> {
     const { req, res, url, cluster, params } = opts;
     const { payload } = await this.dependencies.parseRequest(req, null, {
       parse: true,
