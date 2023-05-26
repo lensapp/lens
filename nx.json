@@ -17,27 +17,27 @@
     },
     "build:app": {
       "dependsOn": [
-        "^build"
+        "build"
       ]
     },
     "test:integration": {
       "dependsOn": [
-        "^build"
+        "build:app"
       ]
     },
     "build:docs": {
       "dependsOn": [
-        "^build"
+        "build"
       ]
     },
     "lint": {
       "dependsOn": [
-        "^build"
+        "build"
       ]
     },
     "test:unit": {
       "dependsOn": [
-        "^build"
+        "build"
       ]
     }
   }
