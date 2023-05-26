@@ -1,7 +1,19 @@
 import type { DiContainer } from "@ogre-tools/injectable";
-import { getInjectable } from "@ogre-tools/injectable";
+import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
 import type { Feature } from "./feature";
 import { featureContextMapInjectable, featureContextMapInjectionToken } from "./feature-context-map-injectable";
+import { action, IComputedValue } from "mobx";
+import { computed, observable } from "mobx";
+
+export type FeatureAsd = {
+  id: string;
+  enabled: IComputedValue<boolean>;
+  toggle: () => void;
+};
+
+export const featureInjectionToken = getInjectionToken<FeatureAsd>({
+  id: "feature-injection-token",
+});
 
 const createFeatureContext = (feature: Feature, di: DiContainer) => {
   const featureContextInjectable = getInjectable({
@@ -25,6 +37,40 @@ const createFeatureContext = (feature: Feature, di: DiContainer) => {
   });
 
   di.register(featureContextInjectable);
+
+  const featureAsdInjectable = getInjectable({
+    id: `${feature.id}-feature`,
+
+    instantiate: (di) => {
+      const enabled = observable.box(true);
+
+      const featureContext = di.inject(featureContextInjectable);
+
+      return {
+        id: feature.id,
+
+        enabled: computed(() => {
+          return enabled.get();
+        }),
+
+        toggle: action(() => {
+          console.log("mikko", enabled.get());
+
+          if (enabled.get()) {
+            enabled.set(false);
+            featureContext.deregister();
+          } else {
+            enabled.set(true);
+            featureContext.register();
+          }
+        }),
+      };
+    },
+
+    injectionToken: featureInjectionToken,
+  });
+
+  di.register(featureAsdInjectable);
 
   const featureContextMap = di.inject(featureContextMapInjectable);
   const featureContext = di.inject(featureContextInjectable);

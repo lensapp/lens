@@ -1,16 +1,16 @@
 {
-  "name": "@k8slens/feature-core",
+  "name": "@k8slens/runtime-features",
   "private": false,
-  "version": "6.5.0-alpha.8",
-  "description": "Code that is common to all Features and those registering them.",
+  "version": "1.0.0",
+  "description": "TBD",
   "type": "commonjs",
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "files": [
-    "dist"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lensapp/lens.git"
@@ -24,18 +24,29 @@
   "license": "MIT",
   "homepage": "https://github.com/lensapp/lens",
   "scripts": {
-    "clean": "rimraf dist/",
     "build": "lens-webpack-build",
+    "clean": "rimraf dist/",
     "test:unit": "jest --coverage --runInBand",
     "lint": "lens-lint",
     "lint:fix": "lens-lint --fix"
   },
   "peerDependencies": {
+    "@k8slens/feature-core": "^6.5.0-alpha.0",
+    "@k8slens/react-application": "^1.0.0-alpha.0",
+    "@ogre-tools/fp": "^16.1.0",
     "@ogre-tools/injectable": "^16.1.0",
-    "mobx": "^6.9.0"
+    "@ogre-tools/injectable-extension-for-auto-registration": "^16.1.0",
+    "@ogre-tools/injectable-extension-for-mobx": "^16.1.0",
+    "@ogre-tools/injectable-react": "^16.1.0",
+    "lodash": "^4.17.21",
+    "react": "^17 || ^18",
+    "mobx": "^6.9.0",
+    "mobx-react": "^7.6.0"
   },
   "devDependencies": {
+    "@async-fn/jest": "^1.6.4",
     "@k8slens/eslint-config": "^6.5.0-alpha.3",
+    "@k8slens/react-testing-library-discovery": "^1.0.0-alpha.4",
     "@k8slens/webpack": "^6.5.0-alpha.9"
   }
 }
