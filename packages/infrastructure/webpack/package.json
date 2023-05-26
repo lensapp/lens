@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/webpack",
   "private": false,
-  "version": "6.5.0-alpha.9",
+  "version": "6.5.0",
   "description": "Webpack configurations and scripts for Lens packages.",
   "type": "commonjs",
   "publishConfig": {
@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@async-fn/jest": "^1.6.4",
-    "@k8slens/typescript": "^6.5.0-alpha.3",
+    "@k8slens/typescript": "^6.5.0",
     "@ogre-tools/injectable-extension-for-auto-registration": "^16.1.0",
     "@ogre-tools/test-utils": "^16.1.0",
     "ts-node": "^10.9.1",

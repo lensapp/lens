@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/legacy-global-di",
   "private": false,
-  "version": "1.0.0-alpha.5",
+  "version": "1.0.0",
   "description": "Injection tokens for implementing metrics for Lens",
   "type": "commonjs",
   "publishConfig": {
@@ -34,9 +34,9 @@
     "@ogre-tools/injectable": "^16.1.0"
   },
   "devDependencies": {
-    "@k8slens/eslint-config": "^6.5.0-alpha.3",
-    "@k8slens/jest": "^6.5.0-alpha.5",
-    "@k8slens/typescript": "^6.5.0-alpha.3",
-    "@k8slens/webpack": "^6.5.0-alpha.9"
+    "@k8slens/eslint-config": "^6.5.0",
+    "@k8slens/jest": "^6.5.0",
+    "@k8slens/typescript": "^6.5.0",
+    "@k8slens/webpack": "^6.5.0"
   }
 }

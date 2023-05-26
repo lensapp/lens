@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/json-api",
   "private": false,
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0",
   "description": "JSON api client",
   "type": "commonjs",
   "publishConfig": {
@@ -32,7 +32,7 @@
     "lint:fix": "lens-lint --fix"
   },
   "dependencies": {
-    "@k8slens/node-fetch": "^6.5.0-alpha.3"
+    "@k8slens/node-fetch": "^6.5.0"
   },
   "peerDependencies": {
     "@k8slens/event-emitter": "^1.0.0-alpha.1",
@@ -42,9 +42,9 @@
     "rfc6902": "^5.0.1"
   },
   "devDependencies": {
-    "@k8slens/eslint-config": "^6.5.0-alpha.3",
-    "@k8slens/jest": "^6.5.0-alpha.5",
-    "@k8slens/typescript": "^6.5.0-alpha.3",
+    "@k8slens/eslint-config": "^6.5.0",
+    "@k8slens/jest": "^6.5.0",
+    "@k8slens/typescript": "^6.5.0",
     "@types/node": "^16.18.25",
     "type-fest": "^2.14.0"
   }

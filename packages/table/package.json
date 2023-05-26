@@ -1,6 +1,6 @@
 {
   "name": "@k8slens/table-tokens",
-  "version": "6.5.0-alpha.7",
+  "version": "6.5.0",
   "description": "Injection token exporter for table components",
   "license": "MIT",
   "type": "commonjs",
@@ -19,7 +19,7 @@
     "build": "lens-webpack-build"
   },
   "devDependencies": {
-    "@k8slens/webpack": "^6.5.0-alpha.8",
+    "@k8slens/webpack": "^6.5.0",
     "rimraf": "^4.4.1"
   },
   "peerDependencies": {
