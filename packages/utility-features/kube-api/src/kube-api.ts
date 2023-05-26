@@ -86,7 +86,7 @@ export interface DerivedKubeApiOptions {
    * version becomes the `preferredVersion` on the server but still has `v2` then the `v2` version
    * will be used instead.
    *
-   * This can help to prevent crashes in the future if the shape of a kind sufficently changes.
+   * This can help to prevent crashes in the future if the shape of a kind sufficiently changes.
    *
    * The order is important. It should be sorted and the first entry should be the most preferable.
    *
