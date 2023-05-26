@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 1.0.0-alpha.8 (2023-05-26)
+
+
+
+# 6.5.0-alpha.16 (2023-05-25)
+
+
+### Bug Fixes
+
+* Remove incorrect KubeObject validations ([18b89d9](https://github.com/lensapp/lens/commit/18b89d9a858e3c0bad7110bb3609a7d307e3fe56))
+
+
+
+# 6.5.0-alpha.14 (2023-05-23)
+
+
+
+# 6.5.0-alpha.13 (2023-05-16)
+
+
+
+# 6.5.0-alpha.12 (2023-05-16)
+
+
+
+# 6.5.0-alpha.11 (2023-05-11)
+
+
+
+# 6.5.0-alpha.9 (2023-05-04)
+
+
+
+
+
 # 1.0.0-alpha.7 (2023-05-25)
 
 

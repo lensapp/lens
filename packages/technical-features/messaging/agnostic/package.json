@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/messaging",
   "private": false,
-  "version": "1.0.0-alpha.8",
+  "version": "1.0.0-alpha.9",
   "description": "An abstraction for messaging between Lens environments",
   "type": "commonjs",
   "publishConfig": {
@@ -42,6 +42,6 @@
   },
   "devDependencies": {
     "@k8slens/eslint-config": "^6.5.0-alpha.3",
-    "@k8slens/webpack": "^6.5.0-alpha.9"
+    "@k8slens/webpack": "^6.5.0-alpha.10"
   }
 }
