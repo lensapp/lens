@@ -1,0 +1,50 @@
+{
+  "name": "@k8slens/prometheus",
+  "private": false,
+  "version": "1.0.0",
+  "description": "Prometheus support for Lens",
+  "type": "commonjs",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lensapp/lens.git"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": {
+    "name": "OpenLens Authors",
+    "email": "info@k8slens.dev"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/lensapp/lens",
+  "scripts": {
+    "build": "lens-webpack-build",
+    "clean": "rimraf dist/",
+    "dev": "webpack --mode=development --watch",
+    "test": "jest --coverage --runInBand",
+    "lint": "lens-lint",
+    "lint:fix": "lens-lint --fix"
+  },
+  "peerDependencies": {
+    "@k8slens/application": "^6.5.0-alpha.2",
+    "@k8slens/feature-core": "^6.5.0-alpha.0",
+    "@k8slens/utilities": "^1.0.0-alpha.7",
+    "@kubernetes/client-node": "^0.18.1",
+    "@ogre-tools/fp": "^17.2.0",
+    "@ogre-tools/injectable": "^17.2.0",
+    "@ogre-tools/injectable-extension-for-auto-registration": "^17.2.0",
+    "@ogre-tools/injectable-extension-for-mobx": "^17.2.0"
+  },
+  "devDependencies": {
+    "@k8slens/eslint-config": "^6.5.0-alpha.3",
+    "@k8slens/jest": "^6.5.0-alpha.5",
+    "@k8slens/typescript": "^6.5.0-alpha.3",
+    "@k8slens/webpack": "^6.5.0-alpha.9"
+  }
+}

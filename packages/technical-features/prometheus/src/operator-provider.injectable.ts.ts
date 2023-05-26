@@ -4,16 +4,25 @@
  */
 
 import type { PrometheusProvider } from "./provider";
-import { bytesSent, createPrometheusProvider, findFirstNamespacedService, prometheusProviderInjectionToken  } from "./provider";
+import {
+  bytesSent,
+  createPrometheusProvider,
+  findFirstNamespacedService,
+  prometheusProviderInjectionToken,
+} from "./provider";
 import { getInjectable } from "@ogre-tools/injectable";
 
-export const getOperatorLikeQueryFor = ({ rateAccuracy }: { rateAccuracy: string }): PrometheusProvider["getQuery"] => (
+export const getOperatorLikeQueryFor =
+  ({ rateAccuracy }: { rateAccuracy: string }): PrometheusProvider["getQuery"] =>
   (opts, queryName) => {
-    switch(opts.category) {
+    switch (opts.category) {
       case "cluster":
         switch (queryName) {
           case "memoryUsage":
-            return `sum(node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes))`.replace(/_bytes/g, `_bytes * on (pod,namespace) group_left(node) kube_pod_info{node=~"${opts.nodes}"}`);
+            return `sum(node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes))`.replace(
+              /_bytes/g,
+              `_bytes * on (pod,namespace) group_left(node) kube_pod_info{node=~"${opts.nodes}"}`,
+            );
           case "workloadMemoryUsage":
             return `sum(container_memory_working_set_bytes{container!="", instance=~"${opts.nodes}"}) by (component)`;
           case "memoryRequests":
@@ -127,20 +136,19 @@ export const getOperatorLikeQueryFor = ({ rateAccuracy }: { rateAccuracy: string
     }
 
     throw new Error(`Unknown queryName="${queryName}" for category="${opts.category}"`);
-  }
-);
+  };
 
 const operatorPrometheusProviderInjectable = getInjectable({
   id: "operator-prometheus-provider",
-  instantiate: () => createPrometheusProvider({
-    kind: "operator",
-    name: "Prometheus Operator",
-    isConfigurable: true,
-    getService: (client) => findFirstNamespacedService(client, "operated-prometheus=true"),
-    getQuery: getOperatorLikeQueryFor({ rateAccuracy: "1m" }),
-  }),
+  instantiate: () =>
+    createPrometheusProvider({
+      kind: "operator",
+      name: "Prometheus Operator",
+      isConfigurable: true,
+      getService: (client) => findFirstNamespacedService(client, "operated-prometheus=true"),
+      getQuery: getOperatorLikeQueryFor({ rateAccuracy: "1m" }),
+    }),
   injectionToken: prometheusProviderInjectionToken,
 });
 
 export default operatorPrometheusProviderInjectable;
-
