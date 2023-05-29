@@ -322,7 +322,7 @@ class NonInjectedItemListLayoutContent<
         >
           {this.renderTableHeader()}
           {this.renderItems()}
-          </Table>
+        </Table>
 
         <Observer>
           {() => (
