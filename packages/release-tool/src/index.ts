@@ -156,8 +156,8 @@ function formatSemverForMilestone(version: SemVer): string {
   return `${version.major}.${version.minor}.${version.patch}`;
 }
 
-function formatVersionForPickingPrs(version: SemVer): string {
-  return `${version.major}.${version.minor}.${version.patch}`;
+function formatVersionForPickingPrs(version: SemVer, isMasterBranch: boolean): string {
+  return `${version.major}.${version.minor}.${version.patch + (isMasterBranch ? 0 : 1)}`;
 }
 
 async function deleteAndClosePreviousReleaseBranch(prBase: string, prBranch: string) {
@@ -276,10 +276,10 @@ function sortExtendedGithubPrData(left: ExtendedGithubPrData, right: ExtendedGit
   return -1;
 }
 
-async function getRelevantPRs(previousReleasedVersion: string, baseBranch: string): Promise<ExtendedGithubPrData[]> {
+async function getRelevantPRs(previousReleasedVersion: string, baseBranch: string, isMasterBranch: boolean): Promise<ExtendedGithubPrData[]> {
   console.log(`retrieving previous 200 PRs from ${baseBranch}...`);
 
-  const milestone = formatVersionForPickingPrs(await getCurrentVersionOfSubPackage("core"));
+  const milestone = formatVersionForPickingPrs(await getCurrentVersionOfSubPackage("core"), isMasterBranch);
   const mergedPrsDataPromises = [1, 2, 3, 4, 5].map(page => octokit.request("GET /repos/{owner}/{repo}/pulls", {
     owner: "lensapp",
     repo: "lens",
@@ -486,11 +486,10 @@ async function createRelease(): Promise<void> {
     await bumpPackageVersions();
   }
 
-  const relevantPrs = await getRelevantPRs(previousReleasedVersion, "master");
-
-  if (prBase !== "master") {
-    relevantPrs.push(...await getRelevantPRs(previousReleasedVersion, prBase));
-  }
+  const relevantPrs = [
+    ...await getRelevantPRs(previousReleasedVersion, "master", isMasterBranch),
+    ...(prBase !== "master" ? await getRelevantPRs(previousReleasedVersion, prBase, isMasterBranch) : []),
+  ];
 
   const selectedPrs = await pickRelevantPrs(relevantPrs, isMasterBranch);
 
