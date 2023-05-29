@@ -9,22 +9,21 @@ import type { URLSearchParams } from "url";
 import type Joi from "joi";
 
 export interface LensApiResultContentType {
-  resultMapper: (result: LensApiResult<unknown>) => ({
+  resultMapper: (result: LensApiResult<unknown>) => {
     statusCode: number;
     content: unknown;
     headers: Record<string, string>;
-  });
+  };
 }
 
 export type InferParam<
   T extends string,
-  PathParams extends Record<string, string>,
-> =
-  T extends `{${infer P}?}`
-    ? PathParams & Partial<Record<P, string>>
-    : T extends `{${infer P}}`
-      ? PathParams & Record<P, string>
-      : PathParams;
+  PathParams extends Record<string, string>
+> = T extends `{${infer P}?}`
+  ? PathParams & Partial<Record<P, string>>
+  : T extends `{${infer P}}`
+  ? PathParams & Record<P, string>
+  : PathParams;
 
 export type InferParamFromPath<P extends string> =
   P extends `${string}/{${infer B}*}${infer Tail}`
@@ -32,8 +31,8 @@ export type InferParamFromPath<P extends string> =
       ? Record<B, string>
       : never
     : P extends `${infer A}/${infer B}`
-      ? InferParam<A, InferParamFromPath<B>>
-      : InferParam<P, {}>;
+    ? InferParam<A, InferParamFromPath<B>>
+    : InferParam<P, {}>;
 
 export interface LensApiRequest<Path extends string> {
   path: Path;
@@ -55,12 +54,12 @@ export interface LensApiResult<Response> {
   proxy?: httpProxy;
 }
 
-export type RouteResponse<Response> =
-  | LensApiResult<Response>
-  | void;
+export type RouteResponse<Response> = LensApiResult<Response> | void;
 
-export interface RouteHandler<TResponse, Path extends string>{
-  (request: LensApiRequest<Path>): RouteResponse<TResponse> | Promise<RouteResponse<TResponse>>;
+export interface RouteHandler<TResponse, Path extends string> {
+  (request: LensApiRequest<Path>):
+    | RouteResponse<TResponse>
+    | Promise<RouteResponse<TResponse>>;
 }
 
 export interface BaseRoutePaths<Path extends string> {
@@ -72,20 +71,23 @@ export interface PayloadValidator<Payload> {
   validate(payload: unknown): Joi.ValidationResult<Payload>;
 }
 
-export interface ValidatorBaseRoutePaths<Path extends string, Payload> extends BaseRoutePaths<Path> {
+export interface ValidatorBaseRoutePaths<Path extends string, Payload>
+  extends BaseRoutePaths<Path> {
   payloadValidator: PayloadValidator<Payload>;
 }
 
-export interface Route<TResponse, Path extends string> extends BaseRoutePaths<Path> {
+export interface Route<TResponse, Path extends string>
+  extends BaseRoutePaths<Path> {
   handler: RouteHandler<TResponse, Path>;
 }
-
 
 export interface BindHandler<Path extends string> {
   <TResponse>(handler: RouteHandler<TResponse, Path>): Route<TResponse, Path>;
 }
 
-export function route<Path extends string>(parts: BaseRoutePaths<Path>): BindHandler<Path> {
+export function route<Path extends string>(
+  parts: BaseRoutePaths<Path>
+): BindHandler<Path> {
   return (handler) => ({
     ...parts,
     handler,
