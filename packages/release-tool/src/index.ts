@@ -14,30 +14,27 @@ import { promisify } from "util";
 import { Octokit } from "@octokit/core";
 import type { components } from "@octokit/openapi-types";
 
+const isDebug = process.env.DEBUG === "true";
+
+const debug = isDebug ? console.debug : () => {};
+
 type SemVer = semver.SemVer;
 
 const { SemVer } = semver;
-const _exec = promisify(child_process.exec);
 const _execFile = promisify(child_process.execFile);
-
-const exec = ((cmd, ...args) => {
-  console.log("EXEC", cmd);
-
-  return _exec(cmd, ...args as any[]);
-}) as typeof _exec;
 
 const execFile = ((file, ...rest) => {
   if (Array.isArray(rest[0])) {
-    console.log("EXEC-FILE", file, rest[0]);
+    debug("EXEC-FILE", file, rest[0]);
   } else {
-    console.log("EXEC-FILE", file);
+    debug("EXEC-FILE", file);
   }
 
   return _execFile(file, ...rest as [any, any]);
 }) as typeof _execFile;
 
 const spawn = ((file, ...args) => {
-  console.log("SPAWN", file);
+  debug("SPAWN", file);
 
   return _spawn(file, ...args as any[]);
 }) as typeof _spawn;
@@ -75,17 +72,17 @@ interface ExtendedGithubPrData extends Omit<GithubPrData, "mergedAt"> {
 }
 
 async function getCurrentBranch(): Promise<string> {
-  return (await exec("git branch --show-current")).stdout.trim();
+  return (await execFile("git", ["branch", "--show-current"])).stdout.trim();
 }
 
 async function getAbsolutePathToRepoRoot(): Promise<string> {
-  return (await exec("git rev-parse --show-toplevel")).stdout.trim();
+  return (await execFile("git", ["rev-parse", "--show-toplevel"])).stdout.trim();
 }
 
 async function fetchAllGitTags(): Promise<string[]> {
   await execFile("git", ["fetch", "--tags", "--force"]);
 
-  const { stdout } = await exec("git tag --list", { encoding: "utf-8" });
+  const { stdout } = await execFile("git", ["tag", "--list"], { encoding: "utf-8" });
 
   return stdout
     .split(/\r?\n/)
@@ -156,8 +153,12 @@ function formatSemverForMilestone(version: SemVer): string {
   return `${version.major}.${version.minor}.${version.patch}`;
 }
 
-function formatVersionForPickingPrs(version: SemVer): string {
-  return `${version.major}.${version.minor}.${version.patch}`;
+function formatVersionForPickingPrs(version: SemVer, isMasterBranch: boolean): string {
+  if (isMasterBranch) {
+    return `${version.major}.${version.minor}.${version.patch}`;
+  }
+
+  return `${version.major}.${version.minor}.${version.patch+1}`;
 }
 
 async function deleteAndClosePreviousReleaseBranch(prBase: string, prBranch: string) {
@@ -279,7 +280,7 @@ function sortExtendedGithubPrData(left: ExtendedGithubPrData, right: ExtendedGit
 async function getRelevantPRs(previousReleasedVersion: string, baseBranch: string): Promise<ExtendedGithubPrData[]> {
   console.log(`retrieving previous 200 PRs from ${baseBranch}...`);
 
-  const milestone = formatVersionForPickingPrs(await getCurrentVersionOfSubPackage("core"));
+  const milestone = formatVersionForPickingPrs(await getCurrentVersionOfSubPackage("core"), baseBranch === "master");
   const mergedPrsDataPromises = [1, 2, 3, 4, 5].map(page => octokit.request("GET /repos/{owner}/{repo}/pulls", {
     owner: "lensapp",
     repo: "lens",
@@ -299,7 +300,12 @@ async function getRelevantPRs(previousReleasedVersion: string, baseBranch: strin
   const relevantPrsQuery = await Promise.all(
     milestoneRelevantPrs.map(async pr => ({
       pr,
-      stdout: (await exec(`git tag v${previousReleasedVersion} --no-contains ${pr.merge_commit_sha}`)).stdout,
+      stdout: (await execFile("git", [
+        "tag",
+        `v${previousReleasedVersion}`,
+        "--no-contains",
+        pr.merge_commit_sha as string,
+      ])).stdout,
     })),
   );
 
@@ -450,10 +456,6 @@ async function cherryPickCommits(prs: ExtendedGithubPrData[]): Promise<void> {
 }
 
 async function pickRelevantPrs(prs: ExtendedGithubPrData[], isMasterBranch: boolean): Promise<ExtendedGithubPrData[]> {
-  if (prs.length === 0) {
-    throw new Error("Cannot pick relevant PRs for release if there are none. Are the milestones on github correct?");
-  }
-
   if (isMasterBranch || process.env.PICK_ALL_PRS === "true") {
     return prs;
   }
@@ -490,6 +492,15 @@ async function createRelease(): Promise<void> {
 
   if (prBase !== "master") {
     relevantPrs.push(...await getRelevantPRs(previousReleasedVersion, prBase));
+  }
+
+  if (relevantPrs.length === 0) {
+    console.error(chalk.bold("No PRs have been found relating to the previous release, stopping..."), {
+      previousReleasedVersion,
+      prBase,
+      currentK8slensCoreVersion,
+    });
+    process.exit(1);
   }
 
   const selectedPrs = await pickRelevantPrs(relevantPrs, isMasterBranch);
