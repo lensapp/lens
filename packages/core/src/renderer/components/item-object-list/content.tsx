@@ -11,14 +11,14 @@ import { computed, makeObservable } from "mobx";
 import { Observer, observer } from "mobx-react";
 import type { ConfirmDialogParams } from "../confirm-dialog";
 import type { TableProps, TableRowProps, TableSortCallbacks } from "../table";
-import { TableCell, TableHead, TableRow } from "../table";
+import { Table, TableCell, TableHead, TableRow } from "../table";
 import type { IClassName, StrictReactNode } from "@k8slens/utilities";
 import { cssNames, isDefined, isReactNode, noop, prevDefault, stopPropagation } from "@k8slens/utilities";
 import type { AddRemoveButtonsProps } from "../add-remove-buttons";
 import { AddRemoveButtons } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
-import type { GeneralKubeObjectListLayoutColumn, ItemObject, TableCellProps } from "@k8slens/list-layout";
+import type { ItemObject, TableCellProps } from "@k8slens/list-layout";
 import type { Filter, PageFiltersStore } from "./page-filters/store";
 import type { LensTheme } from "../../themes/lens-theme";
 import { MenuActions } from "../menu/menu-actions";
@@ -35,8 +35,6 @@ import type { ToggleTableColumnVisibility } from "../../../features/user-prefere
 import toggleTableColumnVisibilityInjectable from "../../../features/user-preferences/common/toggle-table-column-visibility.injectable";
 import type { IsTableColumnHidden } from "../../../features/user-preferences/common/is-table-column-hidden.injectable";
 import isTableColumnHiddenInjectable from "../../../features/user-preferences/common/is-table-column-hidden.injectable";
-import type { TableComponent } from "@k8slens/table-tokens";
-import { tableComponentInjectionToken } from "@k8slens/table-tokens";
 
 export interface ItemListLayoutContentProps<Item extends ItemObject, PreLoadStores extends boolean> {
   getFilters: () => Filter[];
@@ -56,7 +54,6 @@ export interface ItemListLayoutContentProps<Item extends ItemObject, PreLoadStor
   customizeTableRowProps?: (item: Item) => Partial<TableRowProps<Item>>;
   addRemoveButtons?: Partial<AddRemoveButtonsProps>;
   virtual?: boolean;
-  columns?: GeneralKubeObjectListLayoutColumn[];
 
   // item details view
   hasDetailsView?: boolean;
@@ -82,7 +79,6 @@ interface Dependencies {
   openConfirmDialog: OpenConfirmDialog;
   toggleTableColumnVisibility: ToggleTableColumnVisibility;
   isTableColumnHidden: IsTableColumnHidden;
-  table: TableComponent;
 }
 
 @observer
@@ -303,7 +299,6 @@ class NonInjectedItemListLayoutContent<
     const {
       store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks,
       detailsItem, className, tableProps = {}, tableId, getItems, activeTheme,
-      table,
     } = this.props;
     const selectedItemId = detailsItem && detailsItem.getId();
     const classNames = cssNames(className, "box", "grow", activeTheme.get().type);
@@ -312,9 +307,8 @@ class NonInjectedItemListLayoutContent<
 
     return (
       <div className="items box grow flex column">
-        <table.Component
+        <Table
           tableId={tableId}
-          columns={this.props.columns}
           virtual={virtual}
           selectable={hasDetailsView}
           sortable={sortingCallbacks}
@@ -328,7 +322,7 @@ class NonInjectedItemListLayoutContent<
         >
           {this.renderTableHeader()}
           {this.renderItems()}
-        </table.Component>
+          </Table>
 
         <Observer>
           {() => (
@@ -391,6 +385,5 @@ export const ItemListLayoutContent = withInjectables<Dependencies, ItemListLayou
     openConfirmDialog: di.inject(openConfirmDialogInjectable),
     toggleTableColumnVisibility: di.inject(toggleTableColumnVisibilityInjectable),
     isTableColumnHidden: di.inject(isTableColumnHiddenInjectable),
-    table: di.inject(tableComponentInjectionToken),
   }),
 }) as <Item extends ItemObject, PreLoadStores extends boolean>(props: ItemListLayoutContentProps<Item, PreLoadStores>) => React.ReactElement;

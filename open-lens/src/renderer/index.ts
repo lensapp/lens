@@ -10,7 +10,6 @@ import {
   commonExtensionApi as Common,
   registerLensCore,
   metricsFeature,
-  tableFeature,
 } from "@k8slens/core/renderer";
 import { autoRegister } from "@ogre-tools/injectable-extension-for-auto-registration";
 import { registerFeature } from "@k8slens/feature-core";
@@ -51,7 +50,6 @@ runInAction(() => {
     reactApplicationFeature,
     routingFeature,
     metricsFeature,
-    tableFeature,
   );
 
   autoRegister({
