@@ -18,9 +18,6 @@ import { Cluster } from "../../../../common/cluster/cluster";
 import hostedClusterInjectable from "../../../cluster-frame-context/hosted-cluster.injectable";
 import userPreferencesStateInjectable from "../../../../features/user-preferences/common/state.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
-import { registerFeature } from "@k8slens/feature-core";
-import { runInAction } from "mobx";
-import { tableFeature } from "../../../library";
 
 describe("<PodDisruptionBudgets />", () => {
   let di: DiContainer;
@@ -72,10 +69,6 @@ describe("<PodDisruptionBudgets />", () => {
         }),
       } as any,
     }));
-
-    runInAction(() => {
-      registerFeature(di, tableFeature);
-    });
   });
 
   describe("PDB with minAvailable 0", () => {
