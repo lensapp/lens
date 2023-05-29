@@ -23,9 +23,6 @@ import type { PodStore } from "../workloads-pods/store";
 import { Cluster } from "../../../common/cluster/cluster";
 import isTableColumnHiddenInjectable from "../../../features/user-preferences/common/is-table-column-hidden.injectable";
 import { podListLayoutColumnInjectionToken } from "@k8slens/list-layout";
-import { registerFeature } from "@k8slens/feature-core";
-import { runInAction } from "mobx";
-import { tableFeature } from "../../library";
 
 describe("kube-object-list-layout", () => {
   let di: DiContainer;
@@ -56,10 +53,6 @@ describe("kube-object-list-layout", () => {
     di.override(appPathsStateInjectable, () => ({
       get: () => ({}),
     }));
-
-    runInAction(() => {
-      registerFeature(di, tableFeature);
-    });
 
     podStore = di.inject(podStoreInjectable);
   });
