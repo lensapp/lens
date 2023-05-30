@@ -9,3 +9,6 @@ lerna-debug.log
 coverage
 dist
 node_modules
+.linkable.json
+yalc.lock
+.yalc
