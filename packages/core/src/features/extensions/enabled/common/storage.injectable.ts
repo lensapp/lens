@@ -7,7 +7,6 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { action, toJS } from "mobx";
 import createPersistentStorageInjectable from "../../../../common/persistent-storage/create.injectable";
 import persistentStorageMigrationsInjectable from "../../../../common/persistent-storage/migrations.injectable";
-import storageMigrationVersionInjectable from "../../../../common/persistent-storage/storage-migration-version.injectable";
 import { enabledExtensionsMigrationDeclarationInjectionToken } from "./migrations";
 import type { LensExtensionState } from "./state.injectable";
 import enabledExtensionsStateInjectable from "./state.injectable";
@@ -30,7 +29,7 @@ const enabledExtensionsPersistentStorageInjectable = getInjectable({
       toJSON: () => ({
         extensions: [...toJS(state)],
       }),
-      projectVersion: di.inject(storageMigrationVersionInjectable, enabledExtensionsMigrationDeclarationInjectionToken),
+      projectVersion: "6.5.0",  // temporary fix for #7784, otherwise calculated wrong on the renderer process
       migrations: di.inject(persistentStorageMigrationsInjectable, enabledExtensionsMigrationDeclarationInjectionToken),
     });
   },
