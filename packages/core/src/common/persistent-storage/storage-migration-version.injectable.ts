@@ -16,6 +16,10 @@ const storageMigrationVersionInjectable = getInjectable({
   instantiate: (di, token) => {
     const declarations = di.injectMany(token);
 
+    if (declarations.length === 0) {
+      return undefined;
+    }
+
     return declarations.reduce((version, decl) => {
       if (semver.gte(decl.version, version)) {
         return decl.version;
