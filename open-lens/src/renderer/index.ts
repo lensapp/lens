@@ -4,6 +4,7 @@ import "@k8slens/error-boundary/styles";
 import "@k8slens/tooltip/styles";
 import "@k8slens/resizing-anchor/styles";
 import "@k8slens/icon/styles";
+import "@k8slens/animate/styles";
 
 import { runInAction } from "mobx";
 import {
@@ -26,6 +27,7 @@ import { keyboardShortcutsFeature } from "@k8slens/keyboard-shortcuts";
 import { reactApplicationFeature } from "@k8slens/react-application";
 import { routingFeature } from "@k8slens/routing";
 import { loggerFeature } from "@k8slens/logger";
+import { animateFeature } from "@k8slens/animate";
 
 const environment = "renderer";
 
@@ -51,6 +53,7 @@ runInAction(() => {
     reactApplicationFeature,
     routingFeature,
     metricsFeature,
+    animateFeature,
   );
 
   autoRegister({

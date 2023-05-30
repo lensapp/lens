@@ -4,9 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 
-const defaultLeaveDurationForAnimatedInjectable = getInjectable({
+export const defaultLeaveDurationForAnimatedInjectable = getInjectable({
   id: "default-leave-duration-for-animated",
   instantiate: () => 100,
 });
-
-export default defaultLeaveDurationForAnimatedInjectable;

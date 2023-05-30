@@ -10,13 +10,12 @@ import React, { Fragment } from "react";
 import { createPortal } from "react-dom";
 import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames, noop } from "@k8slens/utilities";
-import { Animate } from "../animate";
+import { Animate, requestAnimationFrameInjectable } from "@k8slens/animate";
 import type { IconProps } from "@k8slens/icon";
 import { Icon } from "@k8slens/icon";
 import isEqual from "lodash/isEqual";
-import type { RequestAnimationFrame } from "../animate/request-animation-frame.injectable";
+import type { RequestAnimationFrame } from "@k8slens/animate";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import requestAnimationFrameInjectable from "../animate/request-animation-frame.injectable";
 import autoBindReact from "auto-bind/react";
 
 export const MenuContext = React.createContext<MenuContextValue | null>(null);
