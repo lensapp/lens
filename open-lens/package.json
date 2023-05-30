@@ -4,7 +4,7 @@
   "productName": "OpenLens",
   "description": "OpenLens - Open Source IDE for Kubernetes",
   "homepage": "https://github.com/lensapp/lens",
-  "version": "6.5.1",
+  "version": "6.5.2",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lensapp/lens.git"
@@ -184,7 +184,7 @@
     "@k8slens/application-for-electron-main": "^6.5.0",
     "@k8slens/button": "^1.0.0",
     "@k8slens/cluster-settings": "^6.5.0",
-    "@k8slens/core": "^6.5.1",
+    "@k8slens/core": "^6.5.2",
     "@k8slens/ensure-binaries": "^6.5.0",
     "@k8slens/error-boundary": "^1.0.0",
     "@k8slens/event-emitter": "^1.0.0",
@@ -192,7 +192,7 @@
     "@k8slens/keyboard-shortcuts": "^1.0.0",
     "@k8slens/kube-object": "^1.0.0",
     "@k8slens/kubectl-versions": "^1.0.0",
-    "@k8slens/legacy-extension-example": "^1.0.1",
+    "@k8slens/legacy-extension-example": "^1.0.2",
     "@k8slens/legacy-extensions": "^1.0.0",
     "@k8slens/legacy-global-di": "^1.0.0",
     "@k8slens/list-layout": "^1.0.0",
