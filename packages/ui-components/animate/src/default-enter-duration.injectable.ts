@@ -4,9 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 
-const defaultEnterDurationForAnimatedInjectable = getInjectable({
+export const defaultEnterDurationForAnimatedInjectable = getInjectable({
   id: "default-enter-duration-for-animated",
   instantiate: () => 100,
 });
-
-export default defaultEnterDurationForAnimatedInjectable;

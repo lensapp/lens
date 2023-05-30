@@ -9,9 +9,9 @@ import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames, noop } from "@k8slens/utilities";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { RequestAnimationFrame } from "./request-animation-frame.injectable";
-import requestAnimationFrameInjectable from "./request-animation-frame.injectable";
-import defaultEnterDurationForAnimatedInjectable from "./default-enter-duration.injectable";
-import defaultLeaveDurationForAnimatedInjectable from "./default-leave-duration.injectable";
+import { requestAnimationFrameInjectable } from "./request-animation-frame.injectable";
+import { defaultEnterDurationForAnimatedInjectable } from "./default-enter-duration.injectable";
+import { defaultLeaveDurationForAnimatedInjectable } from "./default-leave-duration.injectable";
 
 export type AnimateName = "opacity" | "slide-right" | "opacity-scale" | string;
 
@@ -32,12 +32,7 @@ interface Dependencies {
 }
 
 const NonInjectedAnimate = (propsAndDeps: AnimateProps & Dependencies) => {
-  const {
-    requestAnimationFrame,
-    defaultEnterDuration,
-    defaultLeaveDuration,
-    ...props
-  } = propsAndDeps;
+  const { requestAnimationFrame, defaultEnterDuration, defaultLeaveDuration, ...props } = propsAndDeps;
   const {
     children,
     enter = true,
@@ -52,6 +47,7 @@ const NonInjectedAnimate = (propsAndDeps: AnimateProps & Dependencies) => {
   const [showClassNameEnter, setShowClassNameEnter] = useState(false);
   const [showClassNameLeave, setShowClassNameLeave] = useState(false);
 
+  // eslint-disable-next-line xss/no-mixed-html
   const contentElem = React.Children.only(children) as React.ReactElement<React.HTMLAttributes<any>>;
   const classNames = cssNames("Animate", name, contentElem.props.className, {
     enter: showClassNameEnter,

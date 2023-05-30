@@ -12,7 +12,7 @@ import { JsonApiErrorParsed } from "@k8slens/json-api";
 import type { Disposer } from "@k8slens/utilities";
 import { cssNames, prevDefault } from "@k8slens/utilities";
 import type { CreateNotificationOptions, Notification, NotificationMessage, NotificationsStore } from "./notifications.store";
-import { Animate } from "../animate";
+import { Animate } from "@k8slens/animate";
 import { Icon } from "@k8slens/icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import notificationsStoreInjectable from "./notifications-store.injectable";
