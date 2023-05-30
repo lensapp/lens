@@ -206,6 +206,7 @@
   "peerDependencies": {
     "@hapi/call": "^9.0.1",
     "@hapi/subtext": "^7.1.0",
+    "@k8slens/animate": "^1.0.0-alpha.0",
     "@k8slens/application": "^6.5.0-alpha.0",
     "@k8slens/application-for-electron-main": "^6.5.0-alpha.0",
     "@k8slens/button": "^1.0.0-alpha.5",

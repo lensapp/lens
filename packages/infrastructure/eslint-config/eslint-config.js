@@ -160,7 +160,7 @@ module.exports = {
 
         // React specific rules
         "react-hooks/rules-of-hooks": "error",
-        "react-hooks/exhaustive-deps": "warn",
+        "react-hooks/exhaustive-deps": "off",
         "react/require-default-props": "off",
         "react/function-component-definition": "off",
         "react/prop-types": "off",

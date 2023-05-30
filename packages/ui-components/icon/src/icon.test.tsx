@@ -30,9 +30,7 @@ describe("<Icon> href technical tests", () => {
     setLegacyGlobalDiForExtensionApi(di, environment);
 
     runInAction(() => {
-      registerFeature(di,
-          loggerFeature,
-      );
+      registerFeature(di, loggerFeature);
     });
 
     logger = {
