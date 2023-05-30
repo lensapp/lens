@@ -21,6 +21,7 @@
     "postdev": "lerna watch -- lerna run build --stream --include-dependents --scope \\$LERNA_PACKAGE_NAME",
     "prestart-dev": "cd ./open-lens && npm run build:tray-icons && npm run download:binaries",
     "start-dev": "lerna run start",
+    "postinstall": "linkable",
     "lint": "lerna run lint --stream --no-bail",
     "lint:fix": "lerna run lint:fix --stream",
     "mkdocs:serve-local": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest",
