@@ -2,15 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { LensApiResult } from "./route";
-
-export interface LensApiResultContentType {
-  resultMapper: (result: LensApiResult<unknown>) => ({
-    statusCode: number;
-    content: unknown;
-    headers: Record<string, string>;
-  });
-}
+import type { LensApiResult, LensApiResultContentType } from "@k8slens/route";
 
 const resultMapperFor =
   (contentType: string): LensApiResultContentType["resultMapper"] =>

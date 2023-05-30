@@ -4,7 +4,7 @@
  */
 import { getRouteInjectable } from "../../router/router.injectable";
 import isDevelopmentInjectable from "../../../common/vars/is-development.injectable";
-import { route } from "../../router/route";
+import { route } from "@k8slens/route";
 import prodStaticFileRouteHandlerInjectable from "./production.injectable";
 import devStaticFileRouteHandlerInjectable from "./development.injectable";
 

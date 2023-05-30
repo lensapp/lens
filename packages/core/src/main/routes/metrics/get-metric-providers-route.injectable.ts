@@ -5,7 +5,7 @@
 
 import { apiPrefix } from "../../../common/vars";
 import { getRouteInjectable } from "../../router/router.injectable";
-import { route } from "../../router/route";
+import { route } from "@k8slens/route";
 import prometheusProvidersInjectable from "../../prometheus/providers.injectable";
 
 const getMetricProvidersRouteInjectable = getRouteInjectable({

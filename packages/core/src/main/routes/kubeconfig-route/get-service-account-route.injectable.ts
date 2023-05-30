@@ -4,14 +4,14 @@
  */
 
 import { apiPrefix } from "../../../common/vars";
-import { getRouteInjectable } from "../../router/router.injectable";
+import { getClusterRouteInjectable } from "../../router/router.injectable";
 import { CoreV1Api } from "@kubernetes/client-node";
-import { clusterRoute } from "../../router/route";
+import { clusterRoute } from "../../router/cluster-route";
 import * as yaml from "js-yaml";
 import loadProxyKubeconfigInjectable from "../../cluster/load-proxy-kubeconfig.injectable";
 import clusterApiUrlInjectable from "../../../features/cluster/connections/main/api-url.injectable";
 
-const getServiceAccountRouteInjectable = getRouteInjectable({
+const getServiceAccountRouteInjectable = getClusterRouteInjectable({
   id: "get-service-account-route",
 
   instantiate: (di) => clusterRoute({

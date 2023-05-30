@@ -3,13 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { apiPrefix } from "../../../../common/vars";
-import { getRouteInjectable } from "../../../router/router.injectable";
+import { getClusterRouteInjectable } from "../../../router/router.injectable";
 import { getBoolean } from "../../../utils/parse-query";
 import { contentTypes } from "../../../router/router-content-types";
-import { clusterRoute } from "../../../router/route";
+import { clusterRoute } from "../../../router/cluster-route";
 import getClusterHelmReleaseValuesInjectable from "../../../helm/helm-service/get-helm-release-values.injectable";
 
-const getReleaseRouteValuesInjectable = getRouteInjectable({
+const getReleaseRouteValuesInjectable = getClusterRouteInjectable({
   id: "get-release-values-route",
 
   instantiate: (di) => {

@@ -4,11 +4,11 @@
  */
 
 import { apiPrefix } from "../../../common/vars";
-import { getRouteInjectable } from "../../router/router.injectable";
+import { getClusterRouteInjectable } from "../../router/router.injectable";
 import type { ClusterPrometheusMetadata } from "../../../common/cluster-types";
 import { ClusterMetadataKey } from "../../../common/cluster-types";
 import type { Cluster } from "../../../common/cluster/cluster";
-import { clusterRoute } from "../../router/route";
+import { clusterRoute } from "../../router/cluster-route";
 import { isObject } from "lodash";
 import { isRequestError, object } from "@k8slens/utilities";
 import type { GetMetrics } from "../../get-metrics.injectable";
@@ -54,7 +54,7 @@ const loadMetricsFor = (getMetrics: GetMetrics) => async (promQueries: string[],
   return Promise.all(queries.map(loadMetric));
 };
 
-const addMetricsRouteInjectable = getRouteInjectable({
+const addMetricsRouteInjectable = getClusterRouteInjectable({
   id: "add-metrics-route",
 
   instantiate: (di) => {

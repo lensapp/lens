@@ -3,15 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { Injectable, InjectionToken } from "@ogre-tools/injectable";
-import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
+import { routeInjectionToken } from "@k8slens/route";
+import type { Route } from "@k8slens/route";
 import { Router } from "./router";
 import parseRequestInjectable from "./parse-request.injectable";
-import type { Route } from "./route";
 import createHandlerForRouteInjectable from "./create-handler-for-route.injectable";
+import type { ClusterRoute } from "./cluster-route";
 
-export const routeInjectionToken = getInjectionToken<Route<unknown, string>>({
-  id: "route-injection-token",
-});
 
 export function getRouteInjectable<T, Path extends string>(
   opts: Omit<Injectable<Route<T, Path>, Route<T, Path>, void>, "lifecycle" | "injectionToken">,
@@ -19,6 +18,15 @@ export function getRouteInjectable<T, Path extends string>(
   return getInjectable({
     ...opts,
     injectionToken: routeInjectionToken as unknown as InjectionToken<Route<T, Path>, void>,
+  });
+}
+
+export function getClusterRouteInjectable<T, Path extends string>(
+  opts: Omit<Injectable<ClusterRoute<T, Path>, ClusterRoute<T, Path>, void>, "lifecycle" | "injectionToken">,
+) {
+  return getInjectable({
+    ...opts,
+    injectionToken: routeInjectionToken as unknown as InjectionToken<ClusterRoute<T, Path>, void>,
   });
 }
 
