@@ -5,6 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { beforeFrameStartsSecondInjectionToken } from "../../../../renderer/before-frame-starts/tokens";
 import enabledExtensionsPersistentStorageInjectable from "../common/storage.injectable";
+import { enabledExtensionsPersistentStorageVersionInitializationInjectable } from "./storage-version.injectable";
 
 const loadEnabledExtensionsStorageInjectable = getInjectable({
   id: "load-enabled-extensions-storage",
@@ -14,6 +15,7 @@ const loadEnabledExtensionsStorageInjectable = getInjectable({
 
       storage.loadAndStartSyncing();
     },
+    runAfter: enabledExtensionsPersistentStorageVersionInitializationInjectable,
   }),
   injectionToken: beforeFrameStartsSecondInjectionToken,
 });
