@@ -26,12 +26,11 @@ export type ImplInitializableInjectionTokensArgs<T> = {
   token: Initializable<T>;
   init: (di: DiContainerForInjection) => T | Promise<T>;
 } & (
-  {
+  | {
     phase: InjectionToken<Runnable<void>, void>;
     runAfter?: Injectable<Runnable<void>, Runnable<void>, void>[];
   }
-  |
-  {
+  | {
     runAfter: Injectable<Runnable<void>, Runnable<void>, void>;
     phase?: undefined;
   }
