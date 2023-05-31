@@ -31,15 +31,27 @@ describe("do-webpack-build", () => {
     doWebpackBuild = di.inject(doWebpackBuildInjectable);
   });
 
-  describe("when called", () => {
+  it('given watching, when called, calls webpack with watch', () => {
+    doWebpackBuild({ watch: true});
+
+    expect(execMock).toHaveBeenCalledWith("webpack --watch");
+  });
+
+  it('given not watching, when called, calls webpack without watch', () => {
+    doWebpackBuild({ watch: false});
+
+    expect(execMock).toHaveBeenCalledWith("webpack");
+  });
+
+  describe("normally, when called", () => {
     let actualPromise: Promise<void>;
 
     beforeEach(() => {
-      actualPromise = doWebpackBuild();
+      actualPromise = doWebpackBuild({ watch: true});
     });
 
     it("calls webpack", () => {
-      expect(execMock).toHaveBeenCalledWith("webpack");
+      expect(execMock).toHaveBeenCalled();
     });
 
     it("data in stdout logs as success", () => {

@@ -1,4 +1,4 @@
 #!/usr/bin/env node
 const { doWebpackBuild } = require("../dist/index");
 
-doWebpackBuild();
+doWebpackBuild({ watch: process.argv.includes("--watch") });
