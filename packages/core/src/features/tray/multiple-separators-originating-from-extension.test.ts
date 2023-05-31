@@ -4,7 +4,7 @@
  */
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import getRandomIdInjectable from "../../common/utils/get-random-id.injectable";
+import { getRandomIdInjectable } from "@k8slens/random";
 
 describe("multiple separators originating from extension", () => {
   let builder: ApplicationBuilder;

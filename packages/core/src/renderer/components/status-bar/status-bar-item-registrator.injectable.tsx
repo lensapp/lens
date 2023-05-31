@@ -11,7 +11,7 @@ import type { StatusBarItem } from "./status-bar-item-injection-token";
 import { statusBarItemInjectionToken } from "./status-bar-item-injection-token";
 import type { StatusBarRegistration } from "./status-bar-registration";
 import React from "react";
-import getRandomIdInjectable from "../../../common/utils/get-random-id.injectable";
+import { getRandomIdInjectable } from "@k8slens/random";
 import { loggerInjectionToken } from "@k8slens/logger";
 import type { Logger } from "@k8slens/logger";
 

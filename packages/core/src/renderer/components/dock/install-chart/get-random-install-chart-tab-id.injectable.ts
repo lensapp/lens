@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import getRandomIdInjectable from "../../../../common/utils/get-random-id.injectable";
+import { getRandomIdInjectable } from "@k8slens/random";
 
 const getRandomInstallChartTabIdInjectable = getInjectable({
   id: "get-random-install-chart-tab-id",

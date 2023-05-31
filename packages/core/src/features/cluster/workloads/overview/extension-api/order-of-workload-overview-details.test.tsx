@@ -5,7 +5,7 @@
 import type { RenderResult } from "@testing-library/react";
 import { getApplicationBuilder } from "../../../../../renderer/components/test-utils/get-application-builder";
 import React from "react";
-import getRandomIdInjectable from "../../../../../common/utils/get-random-id.injectable";
+import { getRandomIdInjectable } from "@k8slens/random";
 import { workloadOverviewDetailInjectionToken } from "../../../../../renderer/components/workloads-overview/workload-overview-details/workload-overview-detail-injection-token";
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed, runInAction } from "mobx";
