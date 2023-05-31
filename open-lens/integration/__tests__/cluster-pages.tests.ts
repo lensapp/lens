@@ -110,8 +110,9 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
 
       await namespacesSelector.click();
       await namespacesSelector.type(TEST_NAMESPACE);
-      await namespacesSelector.press("Enter");
-      await namespacesSelector.click();
+      await frame.page().keyboard.press("Tab", { delay: 10 });
+      await frame.page().keyboard.press("Tab", { delay: 10 });
+      await frame.page().keyboard.press("Enter", { delay: 10 });
 
       await frame.click(".Icon.new-dock-tab");
 
