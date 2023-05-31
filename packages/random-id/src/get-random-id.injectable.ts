@@ -5,10 +5,8 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { v4 as getRandomId } from "uuid";
 
-const getRandomIdInjectable = getInjectable({
+export const getRandomIdInjectable = getInjectable({
   id: "get-random-id",
   instantiate: () => () => getRandomId(),
   causesSideEffects: true,
 });
-
-export default getRandomIdInjectable;
