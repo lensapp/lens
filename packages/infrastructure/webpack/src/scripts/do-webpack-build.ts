@@ -13,18 +13,15 @@ export const doWebpackBuildInjectable = getInjectable({
     const logSuccess = di.inject(logSuccessInjectable);
     const logWarning = di.inject(logWarningInjectable);
 
-    const execWithResultHandling = async (command: string) => {
-      const { stdout, stderr } = await exec(command);
-
-      if (stderr) {
-        logWarning(`Warning while executing "${command}": ${stderr}`);
-      } else if (stdout) {
-        logSuccess(stdout);
-      }
-    };
-
     return async () => {
-      await execWithResultHandling("webpack");
+      const execResult = exec("webpack");
+
+      execResult.stdout?.on("data", logSuccess);
+      execResult.stderr?.on("data", logWarning);
+
+      return new Promise<void>((resolve) => {
+        execResult.on("exit", resolve);
+      });
     };
   },
 });
