@@ -25,6 +25,7 @@ exports[`<NamespaceSelectFilter /> once the subscribe resolves renders 1`] = `
             class="gradient left"
           />
           <label
+            data-testid="namespace-select-filter-label"
             for="namespace-select-filter-filter"
           >
             All namespaces
@@ -76,6 +77,7 @@ exports[`<NamespaceSelectFilter /> once the subscribe resolves when clicked rend
             class="gradient left"
           />
           <label
+            data-testid="namespace-select-filter-label"
             for="namespace-select-filter-filter"
           >
             All namespaces
@@ -737,6 +739,7 @@ exports[`<NamespaceSelectFilter /> once the subscribe resolves when clicked when
             class="gradient left"
           />
           <label
+            data-testid="namespace-select-filter-label"
             for="namespace-select-filter-filter"
           >
             Namespace: test-2
@@ -788,6 +791,7 @@ exports[`<NamespaceSelectFilter /> once the subscribe resolves when clicked when
             class="gradient left"
           />
           <label
+            data-testid="namespace-select-filter-label"
             for="namespace-select-filter-filter"
           >
             Namespace: test-2
@@ -1449,6 +1453,7 @@ exports[`<NamespaceSelectFilter /> once the subscribe resolves when clicked when
             class="gradient left"
           />
           <label
+            data-testid="namespace-select-filter-label"
             for="namespace-select-filter-filter"
           >
             Namespace: test-1
@@ -1500,6 +1505,7 @@ exports[`<NamespaceSelectFilter /> once the subscribe resolves when clicked when
             class="gradient left"
           />
           <label
+            data-testid="namespace-select-filter-label"
             for="namespace-select-filter-filter"
           >
             Namespaces: test-1, test-3
@@ -2161,6 +2167,7 @@ exports[`<NamespaceSelectFilter /> once the subscribe resolves when clicked when
             class="gradient left"
           />
           <label
+            data-testid="namespace-select-filter-label"
             for="namespace-select-filter-filter"
           >
             All namespaces
@@ -2822,6 +2829,7 @@ exports[`<NamespaceSelectFilter /> once the subscribe resolves when clicked when
             class="gradient left"
           />
           <label
+            data-testid="namespace-select-filter-label"
             for="namespace-select-filter-filter"
           >
             Namespaces: test-1, test-10, test-11, test-12, test-13, test-3, test-4, test-5, test-6, test-7, test-8, test-9
@@ -3483,6 +3491,7 @@ exports[`<NamespaceSelectFilter /> once the subscribe resolves when clicked when
             class="gradient left"
           />
           <label
+            data-testid="namespace-select-filter-label"
             for="namespace-select-filter-filter"
           >
             Namespaces: test-1, test-10, test-11, test-12, test-13, test-4, test-5, test-6, test-7, test-8, test-9
@@ -4144,6 +4153,7 @@ exports[`<NamespaceSelectFilter /> once the subscribe resolves when clicked when
             class="gradient left"
           />
           <label
+            data-testid="namespace-select-filter-label"
             for="namespace-select-filter-filter"
           >
             Namespaces: test-1, test-10, test-11, test-12, test-13, test-2, test-4, test-5, test-6, test-7, test-8, test-9
@@ -4805,6 +4815,7 @@ exports[`<NamespaceSelectFilter /> once the subscribe resolves when clicked when
             class="gradient left"
           />
           <label
+            data-testid="namespace-select-filter-label"
             for="namespace-select-filter-filter"
           >
             Namespace: test-5
@@ -4856,6 +4867,7 @@ exports[`<NamespaceSelectFilter /> once the subscribe resolves when clicked when
             class="gradient left"
           />
           <label
+            data-testid="namespace-select-filter-label"
             for="namespace-select-filter-filter"
           >
             1*
@@ -5157,6 +5169,7 @@ exports[`<NamespaceSelectFilter /> once the subscribe resolves when clicked when
             class="gradient left"
           />
           <label
+            data-testid="namespace-select-filter-label"
             for="namespace-select-filter-filter"
           >
             1
@@ -5458,6 +5471,7 @@ exports[`<NamespaceSelectFilter /> once the subscribe resolves when menu expand 
             class="gradient left"
           />
           <label
+            data-testid="namespace-select-filter-label"
             for="namespace-select-filter-filter"
           >
             All namespaces
@@ -6119,6 +6133,7 @@ exports[`<NamespaceSelectFilter /> once the subscribe resolves when menu expand 
             class="gradient left"
           />
           <label
+            data-testid="namespace-select-filter-label"
             for="namespace-select-filter-filter"
           >
             All namespaces
@@ -6170,6 +6185,7 @@ exports[`<NamespaceSelectFilter /> once the subscribe resolves with thousands of
             class="gradient left"
           />
           <label
+            data-testid="namespace-select-filter-label"
             for="namespace-select-filter-filter"
           >
             All namespaces
@@ -6221,6 +6237,7 @@ exports[`<NamespaceSelectFilter /> once the subscribe resolves with thousands of
             class="gradient left"
           />
           <label
+            data-testid="namespace-select-filter-label"
             for="namespace-select-filter-filter"
           >
             All namespaces
@@ -6972,6 +6989,7 @@ exports[`<NamespaceSelectFilter /> once the subscribe resolves with thousands of
             class="gradient left"
           />
           <label
+            data-testid="namespace-select-filter-label"
             for="namespace-select-filter-filter"
           >
             All namespaces

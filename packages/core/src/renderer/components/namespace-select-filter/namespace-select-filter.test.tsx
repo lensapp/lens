@@ -351,6 +351,14 @@ describe("<NamespaceSelectFilter />", () => {
           expect(result.baseElement).toMatchSnapshot();
         });
 
+        it("does show something in the input", () => {
+          expect(result.getByTestId("namespace-select-filter-input")).toHaveValue("1");
+        });
+
+        it("doesn't show anything in the label", () => {
+          expect(result.getByTestId("namespace-select-filter-label")).toBeEmptyDOMElement();
+        });
+
         it("menu is still open", () => {
           expect(result.getByTestId("namespace-select-filter-list-container")).toBeInTheDocument();
         });

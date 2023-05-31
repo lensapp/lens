@@ -39,17 +39,20 @@ const NamespaceSelectFilterMenu = observer(({ id, model }: Dependencies & Namesp
       <div className="non-icon">
         <input
           type="text"
-          id={`${id}-filter`}
+          id={`${id}-input`}
           value={model.filterText.get()}
           onChange={(event) => model.filterText.set(event.target.value)}
           onClick={model.menu.open}
           data-testid="namespace-select-filter-input"
         />
         <Gradient type="left" />
-        <label htmlFor={`${id}-filter`}>
+        <label
+          htmlFor={`${id}-input`}
+          data-testid="namespace-select-filter-label"
+        >
           {(
             model.filterText.get() !== ""
-              ? model.filterText.get()
+              ? ""
               : (
                 model.menu.hasSelectedAll.get()
                   ? "All namespaces"
