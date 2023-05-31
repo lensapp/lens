@@ -206,6 +206,7 @@
     "@k8slens/messaging-for-renderer": "^1.0.0",
     "@k8slens/metrics": "^6.5.0",
     "@k8slens/node-fetch": "^6.5.0",
+    "@k8slens/random": "^1.0.0",
     "@k8slens/react-application": "^1.0.0",
     "@k8slens/resizing-anchor": "^1.0.0",
     "@k8slens/resource-templates": "^1.0.0",
