@@ -51,68 +51,10 @@ describe("do-webpack-build", () => {
         expect(logSuccessMock).toHaveBeenCalledWith("some-stdout");
       });
 
-      it("makes the built package available for local packages in development that link to it", () => {
-        expect(execMock).toHaveBeenCalledWith("linkable-push");
-      });
-
-      it("does not finish script yet", async () => {
+      it("script is done", async () => {
         const promiseStatus = await getPromiseStatus(actualPromise);
 
-        expect(promiseStatus.fulfilled).toBe(false);
-      });
-
-      describe("when linking resolves with stdout", () => {
-        beforeEach(async () => {
-          logSuccessMock.mockClear();
-
-          await execMock.resolve({ stdout: "some-other-stdout", stderr: "" });
-        });
-
-        it("logs the stdout", () => {
-          expect(logSuccessMock).toHaveBeenCalledWith("some-other-stdout");
-        });
-
-        it("script finishes", async () => {
-          const promiseStatus = await getPromiseStatus(actualPromise);
-
-          expect(promiseStatus.fulfilled).toBe(true);
-        });
-      });
-
-      describe("when linking resolves with stderr", () => {
-        beforeEach(() => {
-          logSuccessMock.mockClear();
-
-          execMock.resolve({ stdout: "", stderr: "some-other-stderr" });
-        });
-
-        it("does not log success", () => {
-          actualPromise.catch(() => {});
-
-          expect(logSuccessMock).not.toHaveBeenCalled();
-        });
-
-        it("logs a warning", () => {
-          expect(logWarningMock).toBeCalledWith("Warning while executing \"linkable-push\": some-other-stderr");
-        });
-      });
-
-      describe("when linking rejects", () => {
-        beforeEach(() => {
-          logSuccessMock.mockClear();
-
-          execMock.reject(new Error("some-other-error"));
-        });
-
-        it("does not log success", () => {
-          actualPromise.catch(() => {});
-
-          expect(logSuccessMock).not.toHaveBeenCalled();
-        });
-
-        it("throws", () => {
-          return expect(actualPromise).rejects.toThrow("some-other-error");
-        });
+        expect(promiseStatus.fulfilled).toBe(true);
       });
     });
 

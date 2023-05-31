@@ -25,8 +25,6 @@ export const doWebpackBuildInjectable = getInjectable({
 
     return async () => {
       await execWithResultHandling("webpack");
-
-      await execWithResultHandling("linkable-push");
     };
   },
 });
