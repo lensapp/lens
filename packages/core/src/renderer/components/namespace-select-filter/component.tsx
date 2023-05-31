@@ -11,7 +11,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { NamespaceSelectFilterModel, NamespaceSelectFilterOption } from "./model.injectable";
 import namespaceSelectFilterModelInjectable, { selectAllNamespaces } from "./model.injectable";
 import { VariableSizeList } from "react-window";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 import { cssNames, prevDefault } from "@k8slens/utilities";
 import { addWindowEventListener } from "../../window/event-listener.injectable";
 import { TooltipPosition } from "@k8slens/tooltip";
