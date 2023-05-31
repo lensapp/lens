@@ -24,7 +24,7 @@ import writeFileSyncInjectable from "../../../common/fs/write-file-sync.injectab
 import type { WriteBufferSync } from "../../../common/fs/write-buffer-sync.injectable";
 import writeBufferSyncInjectable from "../../../common/fs/write-buffer-sync.injectable";
 import clustersPersistentStorageInjectable from "./common/storage.injectable";
-import type { PersistentStorage } from "../../../common/persistent-storage/create.injectable";
+import type { PersistentStorage } from "../../persistent-storage/common/create.injectable";
 import type { AddCluster } from "./common/add.injectable";
 import addClusterInjectable from "./common/add.injectable";
 import type { GetClusterById } from "./common/get-by-id.injectable";

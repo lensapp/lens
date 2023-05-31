@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import welcomeCatalogEntityInjectable from "../../../../common/catalog-entities/general-catalog-entities/implementations/welcome-catalog-entity.injectable";
-import type { MigrationDeclaration, MigrationStore } from "../../../../common/persistent-storage/migrations.injectable";
+import type { MigrationDeclaration, MigrationStore } from "../../../persistent-storage/common/migrations.injectable";
 import { getDiForUnitTesting } from "../../../../main/getDiForUnitTesting";
 import type { HotbarData } from "../common/hotbar";
 import type { HotbarItem } from "../common/types";

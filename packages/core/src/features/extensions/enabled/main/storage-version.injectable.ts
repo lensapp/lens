@@ -2,8 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import storageMigrationVersionInjectable from "../../../../common/persistent-storage/storage-migration-version.injectable";
-import { enabledExtensionsMigrationDeclarationInjectionToken } from "../common/migrations";
+import storageMigrationVersionInjectable from "../../../persistent-storage/main/storage-migration-version.injectable";
+import { enabledExtensionsMigrationDeclarationInjectionToken } from "./migrations";
 import { enabledExtensionsPersistentStorageVersionInitializable } from "../common/storage-version";
 import { getInjectable } from "@ogre-tools/injectable";
 

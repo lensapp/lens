@@ -5,7 +5,7 @@
 import type { InjectionToken } from "@ogre-tools/injectable";
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import * as semver from "semver";
-import type { MigrationDeclaration } from "./migrations.injectable";
+import type { MigrationDeclaration } from "../common/migrations.injectable";
 
 /**
  * NOTE: not all stores can use this computed version, namely if any migration uses a range for
