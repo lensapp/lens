@@ -6,7 +6,7 @@ import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
 import { noop } from "@k8slens/utilities";
 import { getInjectable } from "@ogre-tools/injectable";
 import React from "react";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 
 const customResourcesSidebarItemInjectable = getInjectable({
   id: "sidebar-item-custom-resources",
