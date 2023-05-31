@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { createHash } from "crypto";
-import { mkdirp, remove } from "fs-extra";
+import { mkdirp, remove, writeJson } from "fs-extra";
 import * as os from "os";
 import * as path from "path";
 import * as uuid from "uuid";
@@ -56,12 +56,26 @@ async function getMainWindow(app: ElectronApplication, timeout = 50_000): Promis
   });
 }
 
+export const kubeConfigPath = process.env.LENS_INTEGRATION_TEST_KUBECONFIG || path.join(os.homedir(), ".kube", "config");
+export const clusterName = process.env.LENS_INTEGRATION_TEST_CLUSTER_NAME || "minikube";
+
 async function attemptStart() {
   const CICD = path.join(os.tmpdir(), "lens-integration-testing", uuid.v4());
 
   // Make sure that the directory is clear
   await remove(CICD).catch(noop);
   await mkdirp(CICD);
+
+  if (process.env.LENS_INTEGRATION_TEST_KUBECONFIG) {
+    await mkdirp(path.join(CICD, "OpenLens"));
+    await writeJson(path.join(CICD, "OpenLens", "lens-user-store.json"), {
+      preferences: {
+        syncKubeconfigEntries: [{
+          filePath: kubeConfigPath,
+        }]
+      }
+    });
+  }
 
   const app = await electron.launch({
     args: ["--integration-testing"], // this argument turns off the blocking of quit
@@ -109,22 +123,22 @@ export async function clickWelcomeButton(window: Page) {
   await window.click("[data-testid=welcome-menu-container] li a");
 }
 
-function minikubeEntityId() {
-  return createHash("md5").update(`${path.join(os.homedir(), ".kube", "config")}:minikube`).digest("hex");
+function entityId() {
+  return createHash("md5").update(`${kubeConfigPath}:${clusterName}`).digest("hex");
 }
 
 /**
  * From the catalog, click the minikube entity and wait for it to connect, returning its frame
  */
-export async function launchMinikubeClusterFromCatalog(window: Page): Promise<Frame> {
-  await window.click("div.TableCell >> text='minikube'");
+export async function launchClusterFromCatalog(window: Page): Promise<Frame> {
+  await window.click(`div.TableCell >> text='${clusterName}'`);
 
-  const minikubeFrame = await window.waitForSelector(`#cluster-frame-${minikubeEntityId()}`);
+  const minikubeFrame = await window.waitForSelector(`#cluster-frame-${entityId()}`);
 
   const frame = await minikubeFrame.contentFrame();
 
   if (!frame) {
-    throw new Error("No iframe for minikube found");
+    throw new Error(`No iframe for "${clusterName}" found`);
   }
 
   await frame.waitForSelector("[data-testid=cluster-sidebar]");
