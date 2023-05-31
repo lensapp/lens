@@ -9,8 +9,8 @@ import { clusterStoreMigrationInjectionToken } from "./migration-token";
 import type { ClusterId, ClusterModel } from "../../../../common/cluster-types";
 import { Cluster } from "../../../../common/cluster/cluster";
 import { loggerInjectionToken } from "@k8slens/logger";
-import createPersistentStorageInjectable from "../../../../common/persistent-storage/create.injectable";
-import persistentStorageMigrationsInjectable from "../../../../common/persistent-storage/migrations.injectable";
+import createPersistentStorageInjectable from "../../../persistent-storage/common/create.injectable";
+import persistentStorageMigrationsInjectable from "../../../persistent-storage/common/migrations.injectable";
 import storeMigrationVersionInjectable from "../../../../common/vars/store-migration-version.injectable";
 import clustersStateInjectable from "./state.injectable";
 

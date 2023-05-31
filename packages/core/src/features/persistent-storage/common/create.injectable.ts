@@ -8,10 +8,7 @@ import type { Options } from "conf/dist/source";
 import { isEqual, kebabCase } from "lodash";
 import type { IEqualsComparer } from "mobx";
 import { reaction } from "mobx";
-import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
-import getBasenameOfPathInjectable from "../path/get-basename.injectable";
 import { enlistMessageChannelListenerInjectionToken, sendMessageToChannelInjectionToken } from "@k8slens/messaging";
 import type { MessageChannel } from "@k8slens/messaging";
 import { persistentStorageIpcChannelPrefixesInjectionToken } from "./channel-prefix";
@@ -19,6 +16,9 @@ import { shouldPersistentStorageDisableSyncInIpcListenerInjectionToken } from ".
 import { persistStateToConfigInjectionToken } from "./save-to-file";
 import type { Migrations } from "./migrations.injectable";
 import { nextTick } from "process";
+import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import getConfigurationFileModelInjectable from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
+import getBasenameOfPathInjectable from "../../../common/path/get-basename.injectable";
 
 export interface PersistentStorage {
   /**

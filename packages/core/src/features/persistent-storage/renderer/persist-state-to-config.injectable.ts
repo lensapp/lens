@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { persistStateToConfigInjectionToken } from "../../common/persistent-storage/save-to-file";
 import { noop } from "@k8slens/utilities";
+import { persistStateToConfigInjectionToken } from "../common/save-to-file";
 
 const persistStateToConfigInjectable = getInjectable({
   id: "persist-state-to-config",

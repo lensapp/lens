@@ -4,7 +4,7 @@
  */
 import { isObject } from "@k8slens/utilities";
 import { getInjectable } from "@ogre-tools/injectable";
-import { enabledExtensionsMigrationDeclarationInjectionToken } from "../common/migrations";
+import { enabledExtensionsMigrationDeclarationInjectionToken } from "./migrations";
 
 const enabledExtensionsMigrationV650Injectable = getInjectable({
   id: "enabled-extensions-migration-v650",

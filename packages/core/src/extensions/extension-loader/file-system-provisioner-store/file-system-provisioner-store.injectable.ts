@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { registeredExtensionsInjectable } from "./registered-extensions.injectable";
-import createPersistentStorageInjectable from "../../../common/persistent-storage/create.injectable";
+import createPersistentStorageInjectable from "../../../features/persistent-storage/common/create.injectable";
 import { action } from "mobx";
 import { object } from "@k8slens/utilities";
 import storeMigrationVersionInjectable from "../../../common/vars/store-migration-version.injectable";

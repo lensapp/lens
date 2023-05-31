@@ -4,8 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { action, comparer, toJS } from "mobx";
-import createPersistentStorageInjectable from "../../../common/persistent-storage/create.injectable";
-import persistentStorageMigrationsInjectable from "../../../common/persistent-storage/migrations.injectable";
+import createPersistentStorageInjectable from "../../persistent-storage/common/create.injectable";
+import persistentStorageMigrationsInjectable from "../../persistent-storage/common/migrations.injectable";
 import storeMigrationVersionInjectable from "../../../common/vars/store-migration-version.injectable";
 import { weblinkStoreMigrationInjectionToken } from "./migration-token";
 import weblinksStateInjectable from "./state.injectable";
