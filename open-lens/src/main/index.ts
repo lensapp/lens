@@ -13,6 +13,7 @@ import { applicationFeatureForElectronMain } from '@k8slens/application-for-elec
 import { messagingFeatureForMain } from "@k8slens/messaging-for-main";
 import { loggerFeature } from "@k8slens/logger";
 import { randomFeature } from "@k8slens/random";
+import { kubeApiSpecificsFeature } from "@k8slens/kube-api-specifics";
 
 const environment = "main";
 
@@ -35,6 +36,7 @@ runInAction(() => {
     applicationFeatureForElectronMain,
     messagingFeatureForMain,
     randomFeature,
+    kubeApiSpecificsFeature,
   );
 
   try {
