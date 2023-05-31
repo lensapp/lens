@@ -19,7 +19,7 @@ import type { TooltipDecoratorProps } from "@k8slens/tooltip";
 import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
-import { getRandomIdInjectable } from "@k8slens/random";
+import { getRandomIdInjectionToken } from "@k8slens/random";
 import autoBindReact from "auto-bind/react";
 
 export interface MenuActionsProps extends Partial<MenuProps> {
@@ -186,7 +186,7 @@ class NonInjectedMenuActions extends React.Component<MenuActionsProps & Dependen
 
 export const MenuActions = withInjectables<Dependencies, MenuActionsProps>(NonInjectedMenuActions, {
   getProps: (di, props) => ({
-    id: di.inject(getRandomIdInjectable)(),
+    id: di.inject(getRandomIdInjectionToken)(),
     openConfirmDialog: di.inject(openConfirmDialogInjectable),
     ...props,
   }),
