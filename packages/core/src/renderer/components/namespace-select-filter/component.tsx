@@ -43,6 +43,7 @@ const NamespaceSelectFilterMenu = observer(({ id, model }: Dependencies & Namesp
           value={model.filterText.get()}
           onChange={(event) => model.filterText.set(event.target.value)}
           onClick={model.menu.open}
+          onKeyDown={model.input.onKeyDown}
           data-testid="namespace-select-filter-input"
         />
         <Gradient type="left" />

@@ -374,6 +374,24 @@ describe("<NamespaceSelectFilter />", () => {
         it("does not show 'test-2' option", () => {
           expect(result.queryByTestId("namespace-select-filter-option-test-2")).not.toBeInTheDocument();
         });
+
+        describe("when pressing the 'Enter' key", () => {
+          beforeEach(() => {
+            userEvent.keyboard("{enter}");
+          });
+
+          it("renders", () => {
+            expect(result.baseElement).toMatchSnapshot();
+          });
+
+          it("closes the menu", () => {
+            expect(result.queryByTestId("namespace-select-filter-list-container")).not.toBeInTheDocument();
+          });
+
+          it("has only 'test-1' as selected in the store", () => {
+            expect(namespaceStore.contextNamespaces).toEqual(["test-1"]);
+          });
+        });
       });
 
       describe("when typing a glob style filter into the filter input", () => {

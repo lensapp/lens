@@ -34,6 +34,9 @@ export interface NamespaceSelectFilterModel {
     onKeyDown: React.KeyboardEventHandler;
     onKeyUp: React.KeyboardEventHandler;
   };
+  readonly input: {
+    onKeyDown: React.KeyboardEventHandler;
+  };
   onClick: (options: NamespaceSelectFilterOption) => void;
   deselect: (namespace: string) => void;
   select: (namespace: string) => void;
@@ -154,6 +157,17 @@ const namespaceSelectFilterModelInjectable = getInjectable({
 
             if (didToggle) {
               model.menu.close();
+            }
+          }
+        },
+      },
+      input: {
+        onKeyDown: (event) => {
+          if (event.key === "Enter") {
+            const options = filteredOptions.get().slice(1);
+
+            if (options.length >= 1) {
+              model.onClick(options[0]);
             }
           }
         },
