@@ -378,7 +378,7 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="overview-namespace-select-filter-input-filter"
+                        id="overview-namespace-select-filter-input-input"
                         type="text"
                         value=""
                       />
@@ -386,7 +386,8 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                         class="gradient left"
                       />
                       <label
-                        for="overview-namespace-select-filter-input-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="overview-namespace-select-filter-input-input"
                       >
                         Namespaces: 
                       </label>
@@ -926,7 +927,7 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="overview-namespace-select-filter-input-filter"
+                        id="overview-namespace-select-filter-input-input"
                         type="text"
                         value=""
                       />
@@ -934,7 +935,8 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                         class="gradient left"
                       />
                       <label
-                        for="overview-namespace-select-filter-input-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="overview-namespace-select-filter-input-input"
                       >
                         Namespaces: 
                       </label>
@@ -1474,7 +1476,7 @@ exports[`disable kube object detail items when cluster is not relevant given not
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="overview-namespace-select-filter-input-filter"
+                        id="overview-namespace-select-filter-input-input"
                         type="text"
                         value=""
                       />
@@ -1482,7 +1484,8 @@ exports[`disable kube object detail items when cluster is not relevant given not
                         class="gradient left"
                       />
                       <label
-                        for="overview-namespace-select-filter-input-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="overview-namespace-select-filter-input-input"
                       >
                         Namespaces: 
                       </label>

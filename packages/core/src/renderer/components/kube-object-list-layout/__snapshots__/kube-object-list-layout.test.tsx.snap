@@ -34,7 +34,7 @@ exports[`kube-object-list-layout given pod store renders 1`] = `
               >
                 <input
                   data-testid="namespace-select-filter-input"
-                  id="kube-object-list-layout-namespace-select-input-filter"
+                  id="kube-object-list-layout-namespace-select-input-input"
                   type="text"
                   value=""
                 />
@@ -42,7 +42,8 @@ exports[`kube-object-list-layout given pod store renders 1`] = `
                   class="gradient left"
                 />
                 <label
-                  for="kube-object-list-layout-namespace-select-input-filter"
+                  data-testid="namespace-select-filter-label"
+                  for="kube-object-list-layout-namespace-select-input-input"
                 >
                   All namespaces
                 </label>

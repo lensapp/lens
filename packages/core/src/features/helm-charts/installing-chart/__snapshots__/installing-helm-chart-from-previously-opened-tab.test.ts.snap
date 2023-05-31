@@ -307,7 +307,7 @@ exports[`installing helm chart from previously opened tab given tab for installi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="overview-namespace-select-filter-input-filter"
+                        id="overview-namespace-select-filter-input-input"
                         type="text"
                         value=""
                       />
@@ -315,7 +315,8 @@ exports[`installing helm chart from previously opened tab given tab for installi
                         class="gradient left"
                       />
                       <label
-                        for="overview-namespace-select-filter-input-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="overview-namespace-select-filter-input-input"
                       >
                         Namespaces: default, some-other-namespace
                       </label>
@@ -799,7 +800,7 @@ exports[`installing helm chart from previously opened tab given tab for installi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="overview-namespace-select-filter-input-filter"
+                        id="overview-namespace-select-filter-input-input"
                         type="text"
                         value=""
                       />
@@ -807,7 +808,8 @@ exports[`installing helm chart from previously opened tab given tab for installi
                         class="gradient left"
                       />
                       <label
-                        for="overview-namespace-select-filter-input-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="overview-namespace-select-filter-input-input"
                       >
                         Namespaces: default, some-other-namespace
                       </label>

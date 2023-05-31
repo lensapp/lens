@@ -324,7 +324,7 @@ exports[`workloads / pods when navigating to workloads / pods view given a names
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="kube-object-list-layout-namespace-select-input-filter"
+                        id="kube-object-list-layout-namespace-select-input-input"
                         type="text"
                         value=""
                       />
@@ -332,7 +332,8 @@ exports[`workloads / pods when navigating to workloads / pods view given a names
                         class="gradient left"
                       />
                       <label
-                        for="kube-object-list-layout-namespace-select-input-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="kube-object-list-layout-namespace-select-input-input"
                       >
                         Namespace: default
                       </label>
@@ -1195,7 +1196,7 @@ exports[`workloads / pods when navigating to workloads / pods view given no pods
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="kube-object-list-layout-namespace-select-input-filter"
+                        id="kube-object-list-layout-namespace-select-input-input"
                         type="text"
                         value=""
                       />
@@ -1203,7 +1204,8 @@ exports[`workloads / pods when navigating to workloads / pods view given no pods
                         class="gradient left"
                       />
                       <label
-                        for="kube-object-list-layout-namespace-select-input-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="kube-object-list-layout-namespace-select-input-input"
                       >
                         Namespace: default
                       </label>
@@ -1960,7 +1962,7 @@ exports[`workloads / pods when navigating to workloads / pods view given pods ar
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="kube-object-list-layout-namespace-select-input-filter"
+                        id="kube-object-list-layout-namespace-select-input-input"
                         type="text"
                         value=""
                       />
@@ -1968,7 +1970,8 @@ exports[`workloads / pods when navigating to workloads / pods view given pods ar
                         class="gradient left"
                       />
                       <label
-                        for="kube-object-list-layout-namespace-select-input-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="kube-object-list-layout-namespace-select-input-input"
                       >
                         Namespace: default
                       </label>

@@ -324,7 +324,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -332,7 +332,8 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespace: my-second-namespace
                       </label>
@@ -956,7 +957,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -964,7 +965,8 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespace: my-second-namespace
                       </label>
@@ -1691,7 +1693,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -1699,7 +1701,8 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespace: my-second-namespace
                       </label>
@@ -2442,7 +2445,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -2450,7 +2453,8 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespace: my-second-namespace
                       </label>
@@ -3229,7 +3233,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -3237,7 +3241,8 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespace: my-second-namespace
                       </label>
@@ -4156,7 +4161,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -4164,7 +4169,8 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespace: my-second-namespace
                       </label>
@@ -5085,7 +5091,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -5093,7 +5099,8 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespace: my-second-namespace
                       </label>

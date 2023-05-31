@@ -373,7 +373,7 @@ exports[`reactively hide kube object detail item renders 1`] = `
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="overview-namespace-select-filter-input-filter"
+                        id="overview-namespace-select-filter-input-input"
                         type="text"
                         value=""
                       />
@@ -381,7 +381,8 @@ exports[`reactively hide kube object detail item renders 1`] = `
                         class="gradient left"
                       />
                       <label
-                        for="overview-namespace-select-filter-input-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="overview-namespace-select-filter-input-input"
                       >
                         Namespaces: 
                       </label>
@@ -926,7 +927,7 @@ exports[`reactively hide kube object detail item when the item is shown renders 
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="overview-namespace-select-filter-input-filter"
+                        id="overview-namespace-select-filter-input-input"
                         type="text"
                         value=""
                       />
@@ -934,7 +935,8 @@ exports[`reactively hide kube object detail item when the item is shown renders 
                         class="gradient left"
                       />
                       <label
-                        for="overview-namespace-select-filter-input-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="overview-namespace-select-filter-input-input"
                       >
                         Namespaces: 
                       </label>

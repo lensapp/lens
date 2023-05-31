@@ -332,7 +332,7 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="overview-namespace-select-filter-input-filter"
+                        id="overview-namespace-select-filter-input-input"
                         type="text"
                         value=""
                       />
@@ -340,7 +340,8 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
                         class="gradient left"
                       />
                       <label
-                        for="overview-namespace-select-filter-input-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="overview-namespace-select-filter-input-input"
                       >
                         Namespaces: 
                       </label>
@@ -849,7 +850,7 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="overview-namespace-select-filter-input-filter"
+                        id="overview-namespace-select-filter-input-input"
                         type="text"
                         value=""
                       />
@@ -857,7 +858,8 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
                         class="gradient left"
                       />
                       <label
-                        for="overview-namespace-select-filter-input-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="overview-namespace-select-filter-input-input"
                       >
                         Namespaces: 
                       </label>

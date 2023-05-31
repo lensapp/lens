@@ -320,7 +320,7 @@ exports[`workload overview when navigating to workload overview renders 1`] = `
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="overview-namespace-select-filter-input-filter"
+                        id="overview-namespace-select-filter-input-input"
                         type="text"
                         value=""
                       />
@@ -328,7 +328,8 @@ exports[`workload overview when navigating to workload overview renders 1`] = `
                         class="gradient left"
                       />
                       <label
-                        for="overview-namespace-select-filter-input-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="overview-namespace-select-filter-input-input"
                       >
                         Namespaces: 
                       </label>

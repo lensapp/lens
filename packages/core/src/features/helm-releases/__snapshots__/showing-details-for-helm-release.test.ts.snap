@@ -324,7 +324,7 @@ exports[`showing details for helm release given application is started when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -332,7 +332,8 @@ exports[`showing details for helm release given application is started when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespaces: some-namespace, some-other-namespace
                       </label>
@@ -1037,7 +1038,7 @@ exports[`showing details for helm release given application is started when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -1045,7 +1046,8 @@ exports[`showing details for helm release given application is started when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespaces: some-namespace, some-other-namespace
                       </label>
@@ -1755,7 +1757,7 @@ exports[`showing details for helm release given application is started when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -1763,7 +1765,8 @@ exports[`showing details for helm release given application is started when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespaces: some-namespace, some-other-namespace
                       </label>
@@ -2663,7 +2666,7 @@ exports[`showing details for helm release given application is started when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -2671,7 +2674,8 @@ exports[`showing details for helm release given application is started when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespaces: some-namespace, some-other-namespace
                       </label>
@@ -3632,7 +3636,7 @@ exports[`showing details for helm release given application is started when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -3640,7 +3644,8 @@ exports[`showing details for helm release given application is started when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespaces: some-namespace, some-other-namespace
                       </label>
@@ -4601,7 +4606,7 @@ exports[`showing details for helm release given application is started when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -4609,7 +4614,8 @@ exports[`showing details for helm release given application is started when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespaces: some-namespace, some-other-namespace
                       </label>
@@ -5815,7 +5821,7 @@ exports[`showing details for helm release given application is started when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -5823,7 +5829,8 @@ exports[`showing details for helm release given application is started when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespaces: some-namespace, some-other-namespace
                       </label>
@@ -7029,7 +7036,7 @@ exports[`showing details for helm release given application is started when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -7037,7 +7044,8 @@ exports[`showing details for helm release given application is started when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespaces: some-namespace, some-other-namespace
                       </label>
@@ -8243,7 +8251,7 @@ exports[`showing details for helm release given application is started when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -8251,7 +8259,8 @@ exports[`showing details for helm release given application is started when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespaces: some-namespace, some-other-namespace
                       </label>
@@ -9262,7 +9271,7 @@ exports[`showing details for helm release given application is started when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -9270,7 +9279,8 @@ exports[`showing details for helm release given application is started when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespaces: some-namespace, some-other-namespace
                       </label>
@@ -10283,7 +10293,7 @@ exports[`showing details for helm release given application is started when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -10291,7 +10301,8 @@ exports[`showing details for helm release given application is started when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespaces: some-namespace, some-other-namespace
                       </label>
@@ -11497,7 +11508,7 @@ exports[`showing details for helm release given application is started when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -11505,7 +11516,8 @@ exports[`showing details for helm release given application is started when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespaces: some-namespace, some-other-namespace
                       </label>
@@ -12466,7 +12478,7 @@ exports[`showing details for helm release given application is started when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -12474,7 +12486,8 @@ exports[`showing details for helm release given application is started when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespaces: some-namespace, some-other-namespace
                       </label>
@@ -13438,7 +13451,7 @@ exports[`showing details for helm release given application is started when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -13446,7 +13459,8 @@ exports[`showing details for helm release given application is started when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespaces: some-namespace, some-other-namespace
                       </label>
@@ -14346,7 +14360,7 @@ exports[`showing details for helm release given application is started when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -14354,7 +14368,8 @@ exports[`showing details for helm release given application is started when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespaces: some-namespace, some-other-namespace
                       </label>
@@ -15315,7 +15330,7 @@ exports[`showing details for helm release given application is started when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -15323,7 +15338,8 @@ exports[`showing details for helm release given application is started when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespaces: some-namespace, some-other-namespace
                       </label>
@@ -16284,7 +16300,7 @@ exports[`showing details for helm release given application is started when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -16292,7 +16308,8 @@ exports[`showing details for helm release given application is started when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespaces: some-namespace, some-other-namespace
                       </label>
@@ -17253,7 +17270,7 @@ exports[`showing details for helm release given application is started when navi
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="namespace-select-filter-filter"
+                        id="namespace-select-filter-input"
                         type="text"
                         value=""
                       />
@@ -17261,7 +17278,8 @@ exports[`showing details for helm release given application is started when navi
                         class="gradient left"
                       />
                       <label
-                        for="namespace-select-filter-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="namespace-select-filter-input"
                       >
                         Namespaces: some-namespace, some-other-namespace
                       </label>

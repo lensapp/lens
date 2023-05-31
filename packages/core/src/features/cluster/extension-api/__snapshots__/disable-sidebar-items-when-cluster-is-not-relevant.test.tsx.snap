@@ -325,7 +325,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="overview-namespace-select-filter-input-filter"
+                        id="overview-namespace-select-filter-input-input"
                         type="text"
                         value=""
                       />
@@ -333,7 +333,8 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
                         class="gradient left"
                       />
                       <label
-                        for="overview-namespace-select-filter-input-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="overview-namespace-select-filter-input-input"
                       >
                         Namespaces: 
                       </label>
@@ -807,7 +808,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="overview-namespace-select-filter-input-filter"
+                        id="overview-namespace-select-filter-input-input"
                         type="text"
                         value=""
                       />
@@ -815,7 +816,8 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
                         class="gradient left"
                       />
                       <label
-                        for="overview-namespace-select-filter-input-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="overview-namespace-select-filter-input-input"
                       >
                         Namespaces: 
                       </label>
@@ -1289,7 +1291,7 @@ exports[`disable sidebar items when cluster is not relevant given not yet known 
                     >
                       <input
                         data-testid="namespace-select-filter-input"
-                        id="overview-namespace-select-filter-input-filter"
+                        id="overview-namespace-select-filter-input-input"
                         type="text"
                         value=""
                       />
@@ -1297,7 +1299,8 @@ exports[`disable sidebar items when cluster is not relevant given not yet known 
                         class="gradient left"
                       />
                       <label
-                        for="overview-namespace-select-filter-input-filter"
+                        data-testid="namespace-select-filter-label"
+                        for="overview-namespace-select-filter-input-input"
                       >
                         Namespaces: 
                       </label>
