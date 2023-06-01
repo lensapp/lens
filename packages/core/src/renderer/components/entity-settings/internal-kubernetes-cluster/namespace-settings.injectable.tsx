@@ -10,6 +10,7 @@ import getClusterByIdInjectable from "../../../../features/cluster/storage/commo
 import { ClusterAccessibleNamespaces } from "../../cluster-settings/accessible-namespaces";
 import type { EntitySettingViewProps } from "../extension-registrator.injectable";
 import { entitySettingInjectionToken } from "../token";
+import { computed } from "mobx";
 
 interface Dependencies {
   getClusterById: GetClusterById;
@@ -48,6 +49,7 @@ const namespaceKubernetesClusterEntitySettingsInjectable = getInjectable({
     components: {
       View: NamespaceKubernetesClusterSettings,
     },
+    isShown: computed(() => true),
   }),
   injectionToken: entitySettingInjectionToken,
 });

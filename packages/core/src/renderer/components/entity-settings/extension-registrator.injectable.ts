@@ -7,6 +7,8 @@ import { extensionRegistratorInjectionToken } from "../../../extensions/extensio
 import type { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
 import type { CatalogEntity } from "../../api/catalog-entity";
 import { entitySettingInjectionToken } from "./token";
+import type { IComputedValue } from "mobx";
+import { computed } from "mobx";
 
 export interface EntitySettingViewProps {
   entity: CatalogEntity;
@@ -25,6 +27,7 @@ export interface EntitySettingRegistration {
   id?: string;
   priority?: number;
   group?: string;
+  visible?: IComputedValue<boolean>;
 }
 
 export interface RegisteredEntitySetting {
@@ -36,6 +39,7 @@ export interface RegisteredEntitySetting {
   components: EntitySettingComponents;
   source?: string;
   group: string;
+  isShown: IComputedValue<boolean>;
 }
 
 const entitySettingExtensionRegistratorInjectable = getInjectable({
@@ -59,6 +63,7 @@ const getInjectableForEntitySettingRegistrationFor = (extension: LensRendererExt
   id = btoa(title),
   priority,
   source,
+  visible,
 }: EntitySettingRegistration) => getInjectable({
   id: `${extension.manifest.name}:${group}/${kind}:${id}`,
   instantiate: () => ({
@@ -70,6 +75,7 @@ const getInjectableForEntitySettingRegistrationFor = (extension: LensRendererExt
     title,
     group,
     source,
+    isShown: computed(() => visible?.get() ?? true),
   }),
   injectionToken: entitySettingInjectionToken,
 });

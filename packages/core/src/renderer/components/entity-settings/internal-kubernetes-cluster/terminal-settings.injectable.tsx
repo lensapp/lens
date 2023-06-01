@@ -10,6 +10,7 @@ import getClusterByIdInjectable from "../../../../features/cluster/storage/commo
 import { ClusterLocalTerminalSetting } from "../../cluster-settings/local-terminal-settings";
 import type { EntitySettingViewProps } from "../extension-registrator.injectable";
 import { entitySettingInjectionToken } from "../token";
+import { computed } from "mobx";
 
 interface Dependencies {
   getClusterById: GetClusterById;
@@ -48,6 +49,7 @@ const terminalKubernetesClusterEntitySettingsInjectable = getInjectable({
     components: {
       View: TerminalKubernetesClusterSettings,
     },
+    isShown: computed(() => true),
   }),
   injectionToken: entitySettingInjectionToken,
 });

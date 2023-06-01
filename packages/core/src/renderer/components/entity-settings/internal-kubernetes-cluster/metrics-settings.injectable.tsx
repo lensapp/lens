@@ -12,6 +12,7 @@ import { ClusterPrometheusSetting } from "../../cluster-settings/prometheus-sett
 import { ShowMetricsSetting } from "../../cluster-settings/show-metrics";
 import type { EntitySettingViewProps } from "../extension-registrator.injectable";
 import { entitySettingInjectionToken } from "../token";
+import { computed } from "mobx";
 
 interface Dependencies {
   getClusterById: GetClusterById;
@@ -57,6 +58,7 @@ const metricsKubernetesClusterEntitySettingsInjectable = getInjectable({
     components: {
       View: MetricsKubernetesClusterSettings,
     },
+    isShown: computed(() => true),
   }),
   injectionToken: entitySettingInjectionToken,
 });
