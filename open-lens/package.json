@@ -25,7 +25,6 @@
     "prebuild:app": "run-script-os",
     "prebuild:app:default": "exit 0",
     "prebuild:app:win32": "rimraf node_modules/win-ca/pem",
-    "start": "concurrently -i -k \"npm run dev-run -C\" npm:dev:*",
     "dev-run": "nodemon --watch ./static/build/main.js --exec \"electron --remote-debugging-port=9223 --inspect .\"",
     "dev:main": "cross-env NODE_ENV=development webpack --config webpack/main.ts --progress --watch",
     "dev:renderer": "cross-env NODE_ENV=development ts-node ./webpack/dev-server.ts",
