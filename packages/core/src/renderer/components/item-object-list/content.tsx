@@ -33,8 +33,8 @@ import type { ToggleTableColumnVisibility } from "../../../features/user-prefere
 import toggleTableColumnVisibilityInjectable from "../../../features/user-preferences/common/toggle-table-column-visibility.injectable";
 import type { IsTableColumnHidden } from "../../../features/user-preferences/common/is-table-column-hidden.injectable";
 import isTableColumnHiddenInjectable from "../../../features/user-preferences/common/is-table-column-hidden.injectable";
-import { AddOrRemoveButtons, AddRemoveButtonsProps, TableComponent, addOrRemoveButtonsInjectionToken } from "@k8slens/table";
-import { tableComponentInjectionToken } from "@k8slens/table";
+import type { AddOrRemoveButtons, AddRemoveButtonsProps, TableComponent } from "@k8slens/table";
+import { addOrRemoveButtonsInjectionToken, tableComponentInjectionToken } from "@k8slens/table";
 
 export interface ItemListLayoutContentProps<Item extends ItemObject, PreLoadStores extends boolean> {
   getFilters: () => Filter[];
@@ -302,7 +302,7 @@ class NonInjectedItemListLayoutContent<
     const {
       store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks,
       detailsItem, className, tableProps = {}, tableId, getItems, activeTheme,
-      table, addOrRemoveButtons
+      table, addOrRemoveButtons,
     } = this.props;
     const selectedItemId = detailsItem && detailsItem.getId();
     const classNames = cssNames(className, "box", "grow", activeTheme.get().type);
@@ -326,7 +326,7 @@ class NonInjectedItemListLayoutContent<
         >
           {this.renderTableHeader()}
           {this.renderItems()}
-          </table.Component>
+        </table.Component>
 
         <Observer>
           {() => (
