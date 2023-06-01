@@ -34,8 +34,8 @@
     "@k8slens/application": "^6.5.0-alpha.0",
     "@k8slens/feature-core": "^6.5.0-alpha.0",
     "@k8slens/run-many": "^1.0.0-alpha.1",
-    "@ogre-tools/injectable": "^17.1.0",
-    "@ogre-tools/injectable-extension-for-auto-registration": "^17.1.0",
+    "@ogre-tools/injectable": "^17.2.0",
+    "@ogre-tools/injectable-extension-for-auto-registration": "^17.2.0",
     "electron": "^22.3.3",
     "lodash": "^4.17.21"
   },
@@ -43,6 +43,6 @@
     "@async-fn/jest": "^1.6.4",
     "@k8slens/eslint-config": "^6.5.0",
     "@k8slens/webpack": "^6.5.0",
-    "@ogre-tools/test-utils": "^17.1.0"
+    "@ogre-tools/test-utils": "^17.2.0"
   }
 }
