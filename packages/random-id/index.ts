@@ -4,4 +4,4 @@
  */
 
 export { randomFeature } from "./src/feature";
-export { getRandomIdInjectionToken, getRandomIdInjectable } from "./src/get-random-id.injectable";
+export { getRandomIdInjectionToken } from "./src/get-random-id.injectable";
