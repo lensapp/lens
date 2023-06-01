@@ -4,6 +4,9 @@ exports[`showing details for helm release given application is started when navi
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -41,9 +44,6 @@ exports[`showing details for helm release given application is started when navi
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -752,6 +752,9 @@ exports[`showing details for helm release given application is started when navi
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -789,9 +792,6 @@ exports[`showing details for helm release given application is started when navi
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -1505,6 +1505,9 @@ exports[`showing details for helm release given application is started when navi
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -1542,9 +1545,6 @@ exports[`showing details for helm release given application is started when navi
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -2448,6 +2448,9 @@ exports[`showing details for helm release given application is started when navi
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -2485,9 +2488,6 @@ exports[`showing details for helm release given application is started when navi
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -3452,6 +3452,9 @@ exports[`showing details for helm release given application is started when navi
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -3489,9 +3492,6 @@ exports[`showing details for helm release given application is started when navi
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -4456,6 +4456,9 @@ exports[`showing details for helm release given application is started when navi
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -4493,9 +4496,6 @@ exports[`showing details for helm release given application is started when navi
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -5705,6 +5705,9 @@ exports[`showing details for helm release given application is started when navi
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -5742,9 +5745,6 @@ exports[`showing details for helm release given application is started when navi
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -6954,6 +6954,9 @@ exports[`showing details for helm release given application is started when navi
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -6991,9 +6994,6 @@ exports[`showing details for helm release given application is started when navi
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -8203,6 +8203,9 @@ exports[`showing details for helm release given application is started when navi
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -8240,9 +8243,6 @@ exports[`showing details for helm release given application is started when navi
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -9257,6 +9257,9 @@ exports[`showing details for helm release given application is started when navi
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -9294,9 +9297,6 @@ exports[`showing details for helm release given application is started when navi
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -10313,6 +10313,9 @@ exports[`showing details for helm release given application is started when navi
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -10350,9 +10353,6 @@ exports[`showing details for helm release given application is started when navi
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -11562,6 +11562,9 @@ exports[`showing details for helm release given application is started when navi
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -11599,9 +11602,6 @@ exports[`showing details for helm release given application is started when navi
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -12566,6 +12566,9 @@ exports[`showing details for helm release given application is started when navi
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -12603,9 +12606,6 @@ exports[`showing details for helm release given application is started when navi
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -13573,6 +13573,9 @@ exports[`showing details for helm release given application is started when navi
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -13610,9 +13613,6 @@ exports[`showing details for helm release given application is started when navi
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -14516,6 +14516,9 @@ exports[`showing details for helm release given application is started when navi
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -14553,9 +14556,6 @@ exports[`showing details for helm release given application is started when navi
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -15520,6 +15520,9 @@ exports[`showing details for helm release given application is started when navi
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -15557,9 +15560,6 @@ exports[`showing details for helm release given application is started when navi
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -16524,6 +16524,9 @@ exports[`showing details for helm release given application is started when navi
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -16561,9 +16564,6 @@ exports[`showing details for helm release given application is started when navi
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -17528,6 +17528,9 @@ exports[`showing details for helm release given application is started when navi
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -17565,9 +17568,6 @@ exports[`showing details for helm release given application is started when navi
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"

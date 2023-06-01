@@ -4,6 +4,9 @@ exports[`Deleting a cluster when an internal kubeconfig cluster is used when the
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -579,9 +582,6 @@ exports[`Deleting a cluster when an internal kubeconfig cluster is used when the
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <div
     class="Animate opacity-scale Dialog flex center dialog modal enter"
@@ -646,6 +646,9 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -1221,9 +1224,6 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <div
     class="Animate opacity-scale Dialog flex center dialog modal enter"
@@ -1321,6 +1321,9 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -1896,9 +1899,6 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <div
     class="Animate opacity-scale Dialog flex center dialog modal enter"
@@ -2074,6 +2074,9 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
 exports[`Deleting a cluster when the kubeconfig has multiple clusters when the dialog is opened for the current cluster renders 1`] = `
 <body>
   <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
     <div
       class="ClusterManager"
     >
@@ -2650,9 +2653,6 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <div
     class="Animate opacity-scale Dialog flex center dialog modal enter"
@@ -2828,6 +2828,9 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
 exports[`Deleting a cluster when the kubeconfig has only one cluster when the dialog is opened renders 1`] = `
 <body>
   <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
     <div
       class="ClusterManager"
     >
@@ -3404,9 +3407,6 @@ exports[`Deleting a cluster when the kubeconfig has only one cluster when the di
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <div
     class="Animate opacity-scale Dialog flex center dialog modal enter"

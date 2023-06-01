@@ -4,6 +4,9 @@ exports[`Command Pallet: keyboard shortcut tests when on linux renders 1`] = `
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -431,9 +434,6 @@ exports[`Command Pallet: keyboard shortcut tests when on linux renders 1`] = `
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -442,6 +442,9 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing ESC
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -869,9 +872,6 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing ESC
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -880,6 +880,9 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -1307,9 +1310,6 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <div
     class="Dialog flex center"
@@ -1330,6 +1330,9 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -1757,9 +1760,6 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -1768,6 +1768,9 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS renders 1`] = `
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -2104,9 +2107,6 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS renders 1`] = `
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -2115,6 +2115,9 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing ESC
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -2451,9 +2454,6 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing ESC
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -2462,6 +2462,9 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -2798,9 +2801,6 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <div
     class="Dialog flex center"
@@ -2821,6 +2821,9 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -3157,9 +3160,6 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;

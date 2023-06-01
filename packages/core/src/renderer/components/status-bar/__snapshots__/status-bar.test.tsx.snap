@@ -4,6 +4,9 @@ exports[`<StatusBar /> when StatusBar's status is set to "error" renders 1`] = `
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -340,9 +343,6 @@ exports[`<StatusBar /> when StatusBar's status is set to "error" renders 1`] = `
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -350,6 +350,9 @@ exports[`<StatusBar /> when StatusBar's status is set to "error" renders 1`] = `
 exports[`<StatusBar /> when StatusBar's status is set to "warning" renders 1`] = `
 <body>
   <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
     <div
       class="ClusterManager"
     >
@@ -687,9 +690,6 @@ exports[`<StatusBar /> when StatusBar's status is set to "warning" renders 1`] =
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -697,6 +697,9 @@ exports[`<StatusBar /> when StatusBar's status is set to "warning" renders 1`] =
 exports[`<StatusBar /> when an extension is enabled specifying the side the elements should be on renders 1`] = `
 <body>
   <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
     <div
       class="ClusterManager"
     >
@@ -1076,9 +1079,6 @@ exports[`<StatusBar /> when an extension is enabled specifying the side the elem
         </div>
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -1087,6 +1087,9 @@ exports[`<StatusBar /> when an extension is enabled with an invalid data type, (
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -1423,9 +1426,6 @@ exports[`<StatusBar /> when an extension is enabled with an invalid data type, (
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -1434,6 +1434,9 @@ exports[`<StatusBar /> when an extension is enabled with an invalid data type, (
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -1770,9 +1773,6 @@ exports[`<StatusBar /> when an extension is enabled with an invalid data type, (
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -1781,6 +1781,9 @@ exports[`<StatusBar /> when an extension is enabled with an invalid data type, (
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -2117,9 +2120,6 @@ exports[`<StatusBar /> when an extension is enabled with an invalid data type, (
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -2128,6 +2128,9 @@ exports[`<StatusBar /> when an extension is enabled with an invalid data type, (
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -2464,9 +2467,6 @@ exports[`<StatusBar /> when an extension is enabled with an invalid data type, (
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -2475,6 +2475,9 @@ exports[`<StatusBar /> when an extension is enabled with an invalid data type, (
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -2811,9 +2814,6 @@ exports[`<StatusBar /> when an extension is enabled with an invalid data type, (
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -2822,6 +2822,9 @@ exports[`<StatusBar /> when an extension is enabled with an invalid data type, (
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -3158,9 +3161,6 @@ exports[`<StatusBar /> when an extension is enabled with an invalid data type, (
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -3169,6 +3169,9 @@ exports[`<StatusBar /> when an extension is enabled with an invalid data type, (
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -3505,9 +3508,6 @@ exports[`<StatusBar /> when an extension is enabled with an invalid data type, (
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -3516,6 +3516,9 @@ exports[`<StatusBar /> when an extension is enabled with no status items renders
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -3852,9 +3855,6 @@ exports[`<StatusBar /> when an extension is enabled with no status items renders
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;

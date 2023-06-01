@@ -4,6 +4,9 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -41,9 +44,6 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -539,6 +539,9 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -576,9 +579,6 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -1056,6 +1056,9 @@ exports[`disable sidebar items when cluster is not relevant given not yet known 
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -1093,9 +1096,6 @@ exports[`disable sidebar items when cluster is not relevant given not yet known 
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"

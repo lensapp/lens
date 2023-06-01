@@ -3,6 +3,9 @@
 exports[`extensions - navigation using application menu renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -339,14 +342,14 @@ exports[`extensions - navigation using application menu renders 1`] = `
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;
 
 exports[`extensions - navigation using application menu when navigating to extensions using application menu renders 1`] = `
 <div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
   <div
     class="ClusterManager"
   >
@@ -669,8 +672,5 @@ exports[`extensions - navigation using application menu when navigating to exten
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;
