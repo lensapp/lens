@@ -20,6 +20,25 @@ export interface Logger {
   silly: LogFunction;
 }
 
+const screamingKebabCase = (str: string) => pipeline(str, kebabCase, toUpper);
+
+const getLogFunctionFor = (
+  scenario: keyof Logger,
+  namespace: string | undefined
+) => {
+  const prefix = namespace
+    ? `[${screamingKebabCase(namespace.replace(/-feature$/, ""))}]: `
+    : "";
+
+  return (di: DiContainerForInjection): LogFunction => {
+    const winstonLogger = di.inject(winstonLoggerInjectable);
+
+    return (message, ...data) => {
+      winstonLogger[scenario](`${prefix}${message}`, ...data);
+    };
+  };
+};
+
 /** @deprecated Use specific injectionToken, eg. logErrorInjectionToken */
 export const loggerInjectionToken = getInjectionToken<Logger>({
   id: "logger-injection-token",
@@ -60,25 +79,6 @@ export const logErrorInjectionToken = getInjectionToken<LogFunction>({
 export const logSillyInjectionToken = getInjectionToken<LogFunction>({
   id: "log-silly-injection-token",
 });
-
-const screamingKebabCase = (str: string) => pipeline(str, kebabCase, toUpper);
-
-const getLogFunctionFor = (
-  scenario: keyof Logger,
-  namespace: string | undefined
-) => {
-  const prefix = namespace
-    ? `[${screamingKebabCase(namespace.replace(/-feature$/, ""))}]: `
-    : "";
-
-  return (di: DiContainerForInjection): LogFunction => {
-    const winstonLogger = di.inject(winstonLoggerInjectable);
-
-    return (message, ...data) => {
-      winstonLogger[scenario](`${prefix}${message}`, ...data);
-    };
-  };
-};
 
 export const logDebugInjectable = getInjectable({
   id: "log-debug",

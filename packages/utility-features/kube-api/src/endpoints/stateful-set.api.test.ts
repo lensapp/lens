@@ -26,7 +26,9 @@ describe("StatefulSetApi", () => {
         info: jest.fn(),
         debug: jest.fn(),
         error: jest.fn(),
-      } as any,
+        silly: jest.fn(),
+        warn: jest.fn(),
+      },
       maybeKubeApi: kubeJsonApi,
     });
   });
@@ -60,7 +62,9 @@ describe("StatefulSetApi", () => {
       const req = statefulSetApi.getReplicas({ namespace: "default", name: "statefulset-1" });
 
       await flushPromises();
-      expect(kubeJsonApi.get).toHaveBeenCalledWith("/apis/apps/v1/namespaces/default/statefulsets/statefulset-1/scale");
+      expect(kubeJsonApiGetMock).toHaveBeenCalledWith(
+        "/apis/apps/v1/namespaces/default/statefulsets/statefulset-1/scale",
+      );
       await kubeJsonApiGetMock.resolve({ status: { replicas: 10 } });
 
       expect(await req).toBe(10);

@@ -57,10 +57,6 @@ class NonInjectedReplicationControllerDetails extends React.Component<KubeObject
   render() {
     const { object: resource } = this.props;
 
-    if (!resource) {
-      return null;
-    }
-
     if (!(resource instanceof ReplicationController)) {
       return null;
     }

@@ -28,7 +28,9 @@ describe("KubeApi", () => {
       info: jest.fn(),
       debug: jest.fn(),
       error: jest.fn(),
-    } as any;
+      silly: jest.fn(),
+      warn: jest.fn(),
+    };
 
     kubeJsonApi = new KubeJsonApi(
       {

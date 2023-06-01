@@ -18,9 +18,9 @@ describe("cluster - custom resources in sidebar", () => {
 
   beforeEach(async () => {
     builder = getApplicationBuilder();
-    builder.setEnvironmentToClusterFrame();
 
-    builder.afterWindowStart(({ windowDi }) => {
+    await builder.setEnvironmentToClusterFrame();
+    await builder.afterWindowStart(({ windowDi }) => {
       customResourceDefinitionStore = windowDi.inject(customResourceDefinitionStoreInjectable);
       customResourceDefinition = new CustomResourceDefinition({
         apiVersion: "apiextensions.k8s.io/v1",

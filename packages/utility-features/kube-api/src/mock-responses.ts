@@ -20,7 +20,7 @@ export const createMockResponseFromString = (url: string, data: string, statusCo
     body: new PassThrough(),
     bodyUsed: false,
     headers: new NodeFetchHeaders(),
-    json: jest.fn(async () => JSON.parse(await res.text())),
+    json: jest.fn(async () => JSON.parse(await res.text()) as unknown),
     ok: 200 <= statusCode && statusCode < 300,
     redirected: 300 <= statusCode && statusCode < 400,
     size: data.length,
@@ -52,7 +52,7 @@ export const createMockResponseFromStream = (url: string, stream: NodeJS.Readabl
     body: stream,
     bodyUsed: false,
     headers: new NodeFetchHeaders(),
-    json: jest.fn(async () => JSON.parse(await res.text())),
+    json: jest.fn(async () => JSON.parse(await res.text()) as unknown),
     ok: 200 <= statusCode && statusCode < 300,
     redirected: 300 <= statusCode && statusCode < 400,
     size: 10,
@@ -62,7 +62,7 @@ export const createMockResponseFromStream = (url: string, stream: NodeJS.Readabl
       const chunks: Buffer[] = [];
 
       return new Promise((resolve, reject) => {
-        stream.on("data", (chunk) => chunks.push(Buffer.from(chunk)));
+        stream.on("data", (chunk) => chunks.push(Buffer.from(chunk as [])));
         stream.on("error", (err) => reject(err));
         stream.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
       });

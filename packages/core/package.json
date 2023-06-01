@@ -20,12 +20,24 @@
   "exports": {
     "./package.json": "./package.json",
     "./main": {
-      "types": "./static/build/main/src/library.d.ts",
-      "default": "./static/build/library/main.js"
+      "import": {
+        "types": "./static/build/library/src/main/library.d.ts",
+        "default": "./static/build/library/main.js"
+      },
+      "require": {
+        "types": "./static/build/library/src/main/library.d.ts",
+        "default": "./static/build/library/main.js"
+      }
     },
     "./renderer": {
-      "types": "./static/build/library/src/renderer/library.d.ts",
-      "default": "./static/build/library/renderer.js"
+      "import": {
+        "types": "./static/build/library/src/renderer/library.d.ts",
+        "default": "./static/build/library/renderer.js"
+      },
+      "require": {
+        "types": "./static/build/library/src/renderer/library.d.ts",
+        "default": "./static/build/library/renderer.js"
+      }
     },
     "./styles": "./static/build/library/renderer.css",
     "./template.html": "./src/renderer/template.html",

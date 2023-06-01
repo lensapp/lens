@@ -7,7 +7,7 @@ import { KubeJsonApi, DeploymentApi } from "@k8slens/kube-api";
 
 describe("DeploymentApi", () => {
   let deploymentApi: DeploymentApi;
-  let kubeJsonApi: jest.Mocked<KubeJsonApi>;
+  let kubeJsonApi: KubeJsonApi;
 
   beforeEach(() => {
     kubeJsonApi = {
@@ -17,14 +17,16 @@ describe("DeploymentApi", () => {
       put: jest.fn(),
       patch: jest.fn(),
       del: jest.fn(),
-    } as never;
+    } as Partial<KubeJsonApi> as KubeJsonApi;
 
     deploymentApi = new DeploymentApi({
       logger: {
         info: jest.fn(),
         debug: jest.fn(),
         error: jest.fn(),
-      } as any,
+        silly: jest.fn(),
+        warn: jest.fn(),
+      },
       maybeKubeApi: kubeJsonApi,
     });
   });
@@ -33,6 +35,7 @@ describe("DeploymentApi", () => {
     it("requests Kubernetes API with PATCH verb and correct amount of replicas", async () => {
       await deploymentApi.scale({ namespace: "default", name: "deployment-1" }, 5);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(kubeJsonApi.patch).toHaveBeenCalledWith(
         "/apis/apps/v1/namespaces/default/deployments/deployment-1/scale",
         {
