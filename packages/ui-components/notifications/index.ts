@@ -6,11 +6,11 @@
 export type {
   NotificationId,
   NotificationMessage,
-  NotificationStatus,
   CreateNotificationOptions,
   Notification,
   NotificationsStore,
 } from "./src/notifications.store";
+export { NotificationStatus } from "./src/notifications.store";
 export type { ShowNotification } from "./src/notifications";
 export { Notifications } from "./src/notifications";
 export { notificationsClusterFrameChildComponentInjectable } from "./src/notifications-cluster-frame-child-component.injectable";
