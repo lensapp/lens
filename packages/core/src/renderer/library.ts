@@ -23,3 +23,4 @@ export * as rendererExtensionApi from "../extensions/renderer-api";
 export * as commonExtensionApi from "../extensions/common-api";
 export { metricsFeature } from "../features/metrics/metrics-feature";
 export * from "./components/table";
+export * from "./components/add-remove-buttons";
