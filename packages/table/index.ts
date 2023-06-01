@@ -51,6 +51,6 @@ export const tableComponentInjectionToken = getInjectionToken<TableComponent>({
   id: "table-component-injection-token",
 });
 
-export const addOrRemoveButtonsInjectionToken = getInjectionToken<TableComponent>({
+export const addOrRemoveButtonsInjectionToken = getInjectionToken<AddOrRemoveButtons>({
   id: "add-or-remove-buttons-injection-token",
 });
