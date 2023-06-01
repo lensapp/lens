@@ -13,6 +13,7 @@ import { ClusterKubeconfig } from "../../cluster-settings/kubeconfig";
 import { ClusterNameSetting } from "../../cluster-settings/name-setting";
 import type { EntitySettingViewProps } from "../extension-registrator.injectable";
 import { entitySettingInjectionToken } from "../token";
+import { computed } from "mobx";
 
 interface Dependencies {
   getClusterById: GetClusterById;
@@ -64,6 +65,7 @@ const generalKubernetesClusterEntitySettingsInjectable = getInjectable({
     components: {
       View: GeneralKubernetesClusterSettings,
     },
+    isShown: computed(() => true),
   }),
   injectionToken: entitySettingInjectionToken,
 });

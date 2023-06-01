@@ -10,6 +10,7 @@ import getClusterByIdInjectable from "../../../../features/cluster/storage/commo
 import { ClusterNodeShellSetting } from "../../cluster-settings/node-shell-setting";
 import type { EntitySettingViewProps } from "../extension-registrator.injectable";
 import { entitySettingInjectionToken } from "../token";
+import { computed } from "mobx";
 
 interface Dependencies {
   getClusterById: GetClusterById;
@@ -48,6 +49,7 @@ const nodeShellKubernetesClusterEntitySettingsInjectable = getInjectable({
     components: {
       View: NodeShellKubernetesClusterSettings,
     },
+    isShown: computed(() => true),
   }),
   injectionToken: entitySettingInjectionToken,
 });
