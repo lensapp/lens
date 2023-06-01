@@ -27,7 +27,7 @@ import type { PageParam } from "../../navigation/page-param";
 import type { ToggleKubeDetailsPane } from "../kube-detail-params/toggle-details.injectable";
 import kubeSelectedUrlParamInjectable from "../kube-detail-params/kube-selected-url.injectable";
 import toggleKubeDetailsPaneInjectable from "../kube-detail-params/toggle-details.injectable";
-import type { ClusterContext } from "../../cluster-frame-context/cluster-frame-context";
+import type { ClusterContext } from "@k8slens/cluster-frame-context";
 import type { GeneralKubeObjectListLayoutColumn, SpecificKubeListLayoutColumn } from "@k8slens/list-layout";
 import { kubeObjectListLayoutColumnInjectionToken } from "@k8slens/list-layout";
 import { sortBy } from "lodash";

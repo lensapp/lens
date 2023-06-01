@@ -8,7 +8,7 @@ import { disposer, getOrInsert, noop, WrappedAbortController } from "@k8slens/ut
 import { once } from "lodash";
 import type { Logger } from "@k8slens/logger";
 import type { KubeObjectStoreLoadAllParams, KubeObjectStoreSubscribeParams } from "../../common/k8s-api/kube-object.store";
-import type { ClusterContext } from "../cluster-frame-context/cluster-frame-context";
+import type { ClusterContext } from "@k8slens/cluster-frame-context";
 
 // Kubernetes watch-api client
 // API: https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams

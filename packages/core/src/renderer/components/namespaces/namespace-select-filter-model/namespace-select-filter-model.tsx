@@ -11,7 +11,7 @@ import { Icon } from "@k8slens/icon";
 import type { SelectOption } from "../../select";
 import { observableCrate } from "@k8slens/utilities";
 import type { IsMultiSelectionKey } from "./is-selection-key.injectable";
-import type { ClusterContext } from "../../../cluster-frame-context/cluster-frame-context";
+import type { ClusterContext } from "@k8slens/cluster-frame-context";
 
 interface Dependencies {
   context: ClusterContext;

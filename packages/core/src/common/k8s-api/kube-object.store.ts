@@ -16,7 +16,7 @@ import type { Patch } from "rfc6902";
 import type { Logger } from "@k8slens/logger";
 import assert from "assert";
 import type { PartialDeep } from "type-fest";
-import type { ClusterContext } from "../../renderer/cluster-frame-context/cluster-frame-context";
+import type { ClusterContext } from "@k8slens/cluster-frame-context";
 import autoBind from "auto-bind";
 
 export type OnLoadFailure = (error: unknown) => void;

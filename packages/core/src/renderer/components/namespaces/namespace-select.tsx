@@ -14,7 +14,7 @@ import { cssNames } from "@k8slens/utilities";
 import { Icon } from "@k8slens/icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
-import type { ClusterContext } from "../../cluster-frame-context/cluster-frame-context";
+import type { ClusterContext } from "@k8slens/cluster-frame-context";
 
 export type NamespaceSelectSort = (left: string, right: string) => number;
 

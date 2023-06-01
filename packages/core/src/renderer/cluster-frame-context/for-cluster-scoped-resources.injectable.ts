@@ -2,8 +2,9 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import { clusterFrameContextForClusterScopedResourcesInjectionToken } from "@k8slens/cluster-frame-context";
 import { getInjectable } from "@ogre-tools/injectable";
-import type { ClusterContext } from "./cluster-frame-context";
+import type { ClusterContext } from "@k8slens/cluster-frame-context";
 
 const clusterFrameContextForClusterScopedResourcesInjectable = getInjectable({
   id: "cluster-frame-context-for-cluster-scoped-resources",
@@ -16,6 +17,7 @@ const clusterFrameContextForClusterScopedResourcesInjectable = getInjectable({
     contextNamespaces: [],
     hasSelectedAll: true,
   }),
+  injectionToken: clusterFrameContextForClusterScopedResourcesInjectionToken,
 });
 
 export default clusterFrameContextForClusterScopedResourcesInjectable;

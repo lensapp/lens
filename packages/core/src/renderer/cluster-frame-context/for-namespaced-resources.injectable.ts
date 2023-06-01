@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { ClusterContext } from "./cluster-frame-context";
+import type { ClusterContext } from "@k8slens/cluster-frame-context";
 import namespaceStoreInjectable from "../components/namespaces/store.injectable";
 import hostedClusterInjectable from "./hosted-cluster.injectable";
 import assert from "assert";

@@ -19,7 +19,7 @@ import { KubeObjectStore as InternalKubeObjectStore } from "../../common/k8s-api
 import type { KubeJsonApiDataFor, KubeObject } from "@k8slens/kube-object";
 import type { DerivedKubeApiOptions, KubeApiDependencies, KubeApiOptions, KubeJsonApi as InternalKubeJsonApi } from "@k8slens/kube-api";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../renderer/cluster-frame-context/for-namespaced-resources.injectable";
-import type { ClusterContext } from "../../renderer/cluster-frame-context/cluster-frame-context";
+import type { ClusterContext } from "@k8slens/cluster-frame-context";
 import { logErrorInjectionToken, loggerInjectionToken, logInfoInjectionToken, logWarningInjectionToken } from "@k8slens/logger";
 import { maybeKubeApiInjectable, storesAndApisCanBeCreatedInjectionToken } from "@k8slens/kube-api-specifics";
 import { DeploymentApi as InternalDeploymentApi, IngressApi as InternalIngressApi, NodeApi, PersistentVolumeClaimApi, PodApi, KubeApi as InternalKubeApi } from "@k8slens/kube-api";

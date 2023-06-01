@@ -34,7 +34,7 @@ import jobStoreInjectable from "../workloads-jobs/store.injectable";
 import statefulSetStoreInjectable from "../workloads-statefulsets/store.injectable";
 import type { EventStore } from "../events/store";
 import eventStoreInjectable from "../events/store.injectable";
-import type { ClusterContext } from "../../cluster-frame-context/cluster-frame-context";
+import type { ClusterContext } from "@k8slens/cluster-frame-context";
 
 interface Dependencies {
   detailComponents: IComputedValue<React.ElementType<{}>[]>;
