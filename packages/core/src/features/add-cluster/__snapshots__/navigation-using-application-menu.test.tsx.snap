@@ -3,6 +3,9 @@
 exports[`add-cluster - navigation using application menu renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -339,14 +342,14 @@ exports[`add-cluster - navigation using application menu renders 1`] = `
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;
 
 exports[`add-cluster - navigation using application menu when navigating to add cluster using application menu renders 1`] = `
 <div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
   <div
     class="ClusterManager"
   >
@@ -644,8 +647,5 @@ exports[`add-cluster - navigation using application menu when navigating to add 
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;

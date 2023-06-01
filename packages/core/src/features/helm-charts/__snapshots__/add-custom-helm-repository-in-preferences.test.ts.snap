@@ -4,6 +4,9 @@ exports[`add custom helm repository in preferences when navigating to preference
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -713,9 +716,6 @@ exports[`add custom helm repository in preferences when navigating to preference
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -724,6 +724,9 @@ exports[`add custom helm repository in preferences when navigating to preference
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -1472,9 +1475,6 @@ exports[`add custom helm repository in preferences when navigating to preference
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -1483,6 +1483,9 @@ exports[`add custom helm repository in preferences when navigating to preference
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -2231,9 +2234,6 @@ exports[`add custom helm repository in preferences when navigating to preference
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <div
     class="Animate opacity-scale Dialog flex center AddHelmRepoDialog modal enter"
@@ -2353,6 +2353,9 @@ exports[`add custom helm repository in preferences when navigating to preference
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -3101,9 +3104,6 @@ exports[`add custom helm repository in preferences when navigating to preference
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <div
     class="Animate opacity-scale Dialog flex center AddHelmRepoDialog modal enter leave"
@@ -3120,6 +3120,9 @@ exports[`add custom helm repository in preferences when navigating to preference
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -3868,9 +3871,6 @@ exports[`add custom helm repository in preferences when navigating to preference
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <div
     class="Animate opacity-scale Dialog flex center AddHelmRepoDialog modal enter"
@@ -3990,6 +3990,9 @@ exports[`add custom helm repository in preferences when navigating to preference
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -4738,9 +4741,6 @@ exports[`add custom helm repository in preferences when navigating to preference
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <div
     class="Animate opacity-scale Dialog flex center AddHelmRepoDialog modal enter"
@@ -5042,6 +5042,9 @@ exports[`add custom helm repository in preferences when navigating to preference
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -5790,9 +5793,6 @@ exports[`add custom helm repository in preferences when navigating to preference
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <div
     class="Animate opacity-scale Dialog flex center AddHelmRepoDialog modal enter"
@@ -5912,6 +5912,9 @@ exports[`add custom helm repository in preferences when navigating to preference
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -6660,9 +6663,6 @@ exports[`add custom helm repository in preferences when navigating to preference
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <div
     class="Animate opacity-scale Dialog flex center AddHelmRepoDialog modal enter"
@@ -6964,6 +6964,9 @@ exports[`add custom helm repository in preferences when navigating to preference
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -7712,9 +7715,6 @@ exports[`add custom helm repository in preferences when navigating to preference
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <div
     class="Animate opacity-scale Dialog flex center AddHelmRepoDialog modal enter"
@@ -7835,6 +7835,9 @@ exports[`add custom helm repository in preferences when navigating to preference
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -8583,9 +8586,6 @@ exports[`add custom helm repository in preferences when navigating to preference
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <div
     class="Animate opacity-scale Dialog flex center AddHelmRepoDialog modal enter"
@@ -8602,6 +8602,9 @@ exports[`add custom helm repository in preferences when navigating to preference
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -9339,9 +9342,6 @@ exports[`add custom helm repository in preferences when navigating to preference
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <div
     class="Animate opacity-scale Dialog flex center AddHelmRepoDialog modal enter"
@@ -9358,6 +9358,9 @@ exports[`add custom helm repository in preferences when navigating to preference
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -10095,9 +10098,6 @@ exports[`add custom helm repository in preferences when navigating to preference
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <div
     class="Animate opacity-scale Dialog flex center AddHelmRepoDialog modal enter leave"

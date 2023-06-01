@@ -4,6 +4,9 @@ exports[`installing update using tray when started renders 1`] = `
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -340,9 +343,6 @@ exports[`installing update using tray when started renders 1`] = `
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -351,6 +351,9 @@ exports[`installing update using tray when started when user checks for updates 
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -687,9 +690,6 @@ exports[`installing update using tray when started when user checks for updates 
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -698,6 +698,9 @@ exports[`installing update using tray when started when user checks for updates 
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -1034,9 +1037,6 @@ exports[`installing update using tray when started when user checks for updates 
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -1045,6 +1045,9 @@ exports[`installing update using tray when started when user checks for updates 
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -1381,9 +1384,6 @@ exports[`installing update using tray when started when user checks for updates 
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -1391,6 +1391,9 @@ exports[`installing update using tray when started when user checks for updates 
 exports[`installing update using tray when started when user checks for updates using tray when new update is discovered when download succeeds renders 1`] = `
 <body>
   <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
     <div
       class="ClusterManager"
     >
@@ -1753,9 +1756,6 @@ exports[`installing update using tray when started when user checks for updates 
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -1763,6 +1763,9 @@ exports[`installing update using tray when started when user checks for updates 
 exports[`installing update using tray when started when user checks for updates using tray when no new update is discovered renders 1`] = `
 <body>
   <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
     <div
       class="ClusterManager"
     >
@@ -2100,9 +2103,6 @@ exports[`installing update using tray when started when user checks for updates 
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;

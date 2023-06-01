@@ -3,6 +3,9 @@
 exports[`preferences - hiding-of-empty-branches, given in preferences page given tab group and empty tabs renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -672,14 +675,14 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;
 
 exports[`preferences - hiding-of-empty-branches, given in preferences page given tab group and empty tabs when an item appears for one of the tabs renders 1`] = `
 <div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
   <div
     class="ClusterManager"
   >
@@ -1378,14 +1381,14 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;
 
 exports[`preferences - hiding-of-empty-branches, given in preferences page given tab group and empty tabs when an item appears for one of the tabs when an item appears for the remaining tab renders 1`] = `
 <div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
   <div
     class="ClusterManager"
   >
@@ -2096,8 +2099,5 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;

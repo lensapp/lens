@@ -4,6 +4,9 @@ exports[`opening catalog entity details panel renders 1`] = `
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -340,9 +343,6 @@ exports[`opening catalog entity details panel renders 1`] = `
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -350,6 +350,9 @@ exports[`opening catalog entity details panel renders 1`] = `
 exports[`opening catalog entity details panel when navigated to the catalog renders 1`] = `
 <body>
   <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
     <div
       class="ClusterManager"
     >
@@ -1181,9 +1184,6 @@ exports[`opening catalog entity details panel when navigated to the catalog rend
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -1191,6 +1191,9 @@ exports[`opening catalog entity details panel when navigated to the catalog rend
 exports[`opening catalog entity details panel when navigated to the catalog when opening the menu 'some-kubernetes-cluster' renders 1`] = `
 <body>
   <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
     <div
       class="ClusterManager"
     >
@@ -2022,9 +2025,6 @@ exports[`opening catalog entity details panel when navigated to the catalog when
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <ul
     class="Animate opacity Menu MenuActions flex bottom right portal enter"
@@ -2065,6 +2065,9 @@ exports[`opening catalog entity details panel when navigated to the catalog when
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -2895,9 +2898,6 @@ exports[`opening catalog entity details panel when navigated to the catalog when
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <ul
     class="Animate opacity Menu MenuActions flex bottom right portal enter"
@@ -2938,6 +2938,9 @@ exports[`opening catalog entity details panel when navigated to the catalog when
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -3768,9 +3771,6 @@ exports[`opening catalog entity details panel when navigated to the catalog when
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <ul
     class="Animate opacity Menu MenuActions flex bottom right portal enter leave"
@@ -4062,6 +4062,9 @@ exports[`opening catalog entity details panel when navigated to the catalog when
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -4892,9 +4895,6 @@ exports[`opening catalog entity details panel when navigated to the catalog when
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <ul
     class="Animate opacity Menu MenuActions flex right bottom portal enter"
@@ -4923,6 +4923,9 @@ exports[`opening catalog entity details panel when navigated to the catalog when
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -5753,9 +5756,6 @@ exports[`opening catalog entity details panel when navigated to the catalog when
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <ul
     class="Animate opacity Menu MenuActions flex right bottom portal enter"
@@ -5784,6 +5784,9 @@ exports[`opening catalog entity details panel when navigated to the catalog when
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -6614,9 +6617,6 @@ exports[`opening catalog entity details panel when navigated to the catalog when
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <ul
     class="Animate opacity Menu MenuActions flex bottom right portal enter leave"
@@ -6815,6 +6815,9 @@ exports[`opening catalog entity details panel when navigated to the catalog when
 exports[`opening catalog entity details panel when not navigated to the catalog and showEntityDetails is called from someplace renders 1`] = `
 <body>
   <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
     <div
       class="ClusterManager"
     >
@@ -7152,9 +7155,6 @@ exports[`opening catalog entity details panel when not navigated to the catalog 
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <div
     class="Animate slide-right Drawer entityDetails right enter"

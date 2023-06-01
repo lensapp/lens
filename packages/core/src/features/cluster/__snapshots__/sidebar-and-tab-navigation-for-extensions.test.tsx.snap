@@ -3,6 +3,9 @@
 exports[`cluster - sidebar and tab navigation for extensions given extension with cluster pages and cluster page menus given empty state for expanded sidebar items already exists, when rendered renders without errors 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -40,9 +43,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       class="ResizingAnchor horizontal leading"
     />
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
   <div
     class="mainLayout"
     style="--sidebar-width: 200px;"
@@ -547,6 +547,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
 exports[`cluster - sidebar and tab navigation for extensions given extension with cluster pages and cluster page menus given no initially persisted state for sidebar items, when rendered renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -584,9 +587,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       class="ResizingAnchor horizontal leading"
     />
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
   <div
     class="mainLayout"
     style="--sidebar-width: 200px;"
@@ -1091,6 +1091,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
 exports[`cluster - sidebar and tab navigation for extensions given extension with cluster pages and cluster page menus given no initially persisted state for sidebar items, when rendered when a parent sidebar item is expanded renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -1128,9 +1131,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       class="ResizingAnchor horizontal leading"
     />
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
   <div
     class="mainLayout"
     style="--sidebar-width: 200px;"
@@ -1671,6 +1671,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
 exports[`cluster - sidebar and tab navigation for extensions given extension with cluster pages and cluster page menus given no initially persisted state for sidebar items, when rendered when a parent sidebar item is expanded when a child of the parent is selected renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -1708,9 +1711,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       class="ResizingAnchor horizontal leading"
     />
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
   <div
     class="mainLayout"
     style="--sidebar-width: 200px;"
@@ -2170,6 +2170,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
 exports[`cluster - sidebar and tab navigation for extensions given extension with cluster pages and cluster page menus given no initially persisted state for sidebar items, when rendered when a parent sidebar item is expanded when a child of the parent is selected when selecting sibling tab renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -2207,9 +2210,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       class="ResizingAnchor horizontal leading"
     />
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
   <div
     class="mainLayout"
     style="--sidebar-width: 200px;"
@@ -2669,6 +2669,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
 exports[`cluster - sidebar and tab navigation for extensions given extension with cluster pages and cluster page menus given no state for expanded sidebar items exists, and navigated to child sidebar item, when rendered renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -2706,9 +2709,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       class="ResizingAnchor horizontal leading"
     />
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
   <div
     class="mainLayout"
     style="--sidebar-width: 200px;"
@@ -3131,6 +3131,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
 exports[`cluster - sidebar and tab navigation for extensions given extension with cluster pages and cluster page menus given state for expanded sidebar items already exists, when rendered renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -3168,9 +3171,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       class="ResizingAnchor horizontal leading"
     />
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
   <div
     class="mainLayout"
     style="--sidebar-width: 200px;"
@@ -3711,6 +3711,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
 exports[`cluster - sidebar and tab navigation for extensions given extension with cluster pages and cluster page menus given state for expanded unknown sidebar items already exists, when rendered renders without errors 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -3748,9 +3751,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       class="ResizingAnchor horizontal leading"
     />
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
   <div
     class="mainLayout"
     style="--sidebar-width: 200px;"
@@ -4255,6 +4255,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
 exports[`cluster - sidebar and tab navigation for extensions given extension with cluster pages and cluster page menus with explicit 'orderNumber' given no state for expanded sidebar items exists, and navigated to child sidebar item, when rendered renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -4292,9 +4295,6 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
       class="ResizingAnchor horizontal leading"
     />
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
   <div
     class="mainLayout"
     style="--sidebar-width: 200px;"

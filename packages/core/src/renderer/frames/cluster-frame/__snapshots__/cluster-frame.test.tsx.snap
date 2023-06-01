@@ -3,6 +3,9 @@
 exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissions given no matching component given current url is starting url renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="Animate slide-right Drawer KubeObjectDetails flex column right enter"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -44,9 +47,6 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
       class="ResizingAnchor horizontal leading"
     />
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
   <div
     class="mainLayout"
     style="--sidebar-width: 200px;"
@@ -500,6 +500,9 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
 exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissions renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="Animate slide-right Drawer KubeObjectDetails flex column right enter"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -541,9 +544,6 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
       class="ResizingAnchor horizontal leading"
     />
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
   <div
     class="mainLayout"
     style="--sidebar-width: 200px;"
@@ -1004,6 +1004,9 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
 exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces permissions renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="Animate slide-right Drawer KubeObjectDetails flex column right enter"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -1045,9 +1048,6 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
       class="ResizingAnchor horizontal leading"
     />
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
   <div
     class="mainLayout"
     style="--sidebar-width: 200px;"

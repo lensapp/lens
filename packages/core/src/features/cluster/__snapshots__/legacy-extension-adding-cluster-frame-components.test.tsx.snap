@@ -3,6 +3,9 @@
 exports[`legacy extension adding cluster frame components given custom components for cluster view available renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -40,9 +43,6 @@ exports[`legacy extension adding cluster frame components given custom component
       class="ResizingAnchor horizontal leading"
     />
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
   <div
     class="mainLayout"
     style="--sidebar-width: 200px;"

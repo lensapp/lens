@@ -3,6 +3,9 @@
 exports[`navigating between routes given route with optional path parameters when navigating to route with path parameters renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -218,14 +221,14 @@ exports[`navigating between routes given route with optional path parameters whe
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;
 
 exports[`navigating between routes given route without path parameters when navigating to route renders 1`] = `
 <div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
   <div
     class="ClusterManager"
   >
@@ -439,8 +442,5 @@ exports[`navigating between routes given route without path parameters when navi
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;

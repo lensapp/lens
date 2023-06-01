@@ -4,6 +4,9 @@ exports[`Showing correct entity settings renders 1`] = `
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -340,9 +343,6 @@ exports[`Showing correct entity settings renders 1`] = `
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -350,6 +350,9 @@ exports[`Showing correct entity settings renders 1`] = `
 exports[`Showing correct entity settings when navigating to local cluster entity settings renders 1`] = `
 <body>
   <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
     <div
       class="ClusterManager"
     >
@@ -719,9 +722,6 @@ exports[`Showing correct entity settings when navigating to local cluster entity
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -729,6 +729,9 @@ exports[`Showing correct entity settings when navigating to local cluster entity
 exports[`Showing correct entity settings when navigating to non-local cluster entity settings renders 1`] = `
 <body>
   <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
     <div
       class="ClusterManager"
     >
@@ -1119,9 +1122,6 @@ exports[`Showing correct entity settings when navigating to non-local cluster en
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -1129,6 +1129,9 @@ exports[`Showing correct entity settings when navigating to non-local cluster en
 exports[`Showing correct entity settings when navigating to weblink entity settings renders 1`] = `
 <body>
   <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
     <div
       class="ClusterManager"
     >
@@ -1421,9 +1424,6 @@ exports[`Showing correct entity settings when navigating to weblink entity setti
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
