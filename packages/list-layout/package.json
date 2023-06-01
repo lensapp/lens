@@ -34,7 +34,7 @@
   "peerDependencies": {
     "@k8slens/kube-object": "^1.0.0-alpha.5",
     "@k8slens/utilities": "^1.0.0-alpha.3",
-    "@ogre-tools/injectable": "^17.1.1",
+    "@ogre-tools/injectable": "^17.2.0",
     "react": "^17.0.2"
   },
   "devDependencies": {

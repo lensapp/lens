@@ -23,6 +23,6 @@
     "rimraf": "^4.4.1"
   },
   "peerDependencies": {
-    "@ogre-tools/injectable": "^17.1.1"
+    "@ogre-tools/injectable": "^17.2.0"
   }
 }
