@@ -35,9 +35,9 @@
   "peerDependencies": {
     "@k8slens/feature-core": "^6.5.0-alpha.0",
     "@k8slens/utilities": "^1.0.0-alpha.1",
-    "@ogre-tools/injectable-react": "^17.1.1",
-    "@ogre-tools/injectable": "^17.1.1",
-    "@ogre-tools/injectable-extension-for-auto-registration": "^17.1.1",
+    "@ogre-tools/injectable-react": "^17.2.0",
+    "@ogre-tools/injectable": "^17.2.0",
+    "@ogre-tools/injectable-extension-for-auto-registration": "^17.2.0",
     "react": "^17.0.2"
   },
   "devDependencies": {
