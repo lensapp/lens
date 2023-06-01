@@ -16,18 +16,18 @@ interface PrometheusDetailsProps  {
 }
 export const PrometheusDetails = ({ providerName, path }: PrometheusDetailsProps) => (
   <section>
-    <SubTitle title="Auto detected prometheus details" />
-    <div className="flex gaps align-center">
+    <SubTitle title="Auto detected Prometheus details" />
+    <div className="flex gaps">
       <div>
-        Prometheus provider name
+        Provider:
       </div>
       <div>
         {providerName}
       </div>
     </div>
-    <div className="flex gaps align-center">
+    <div className="flex gaps">
       <div>
-        Prometheus path
+        Path:
       </div>
       <div>
         {path}

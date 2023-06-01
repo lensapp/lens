@@ -21,6 +21,7 @@ import type { PrometheusDetailsData } from "../../../common/k8s-api/endpoints/me
 import { loggerInjectionToken } from "@k8slens/logger";
 import type { Logger } from "@k8slens/logger";
 import { PrometheusDetails } from "./prometheus-details";
+import { NoPrometheusProviderDetected } from "./no-prometheus-provider-detectec";
 
 export interface ClusterPrometheusSettingProps {
   cluster: Cluster;
@@ -156,7 +157,7 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
   };
 
   render() {
-
+    const showPrometheusDetailsResult = this.selectedOption === autoDetectPrometheus;
 
     return (
       <>
@@ -188,18 +189,21 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
               )
           }
         </section>
-        {this.prometheusDetails?.details && this.prometheusDetails?.type === "success" /*&& this.selectedOption === autoDetectPrometheus */ && (
+        {showPrometheusDetailsResult && (
           <>
             <hr />
-            <PrometheusDetails
-              providerName={this.prometheusDetails.details.provider.name}
-              path={this.prometheusDetails.details.prometheusPath}
-            />
+            {this.prometheusDetails?.type === "success" && this.prometheusDetails.details && (
+              <PrometheusDetails
+                providerName={this.prometheusDetails.details.provider.name}
+                path={this.prometheusDetails.details.prometheusPath}
+              />
+            )}
+            {this.prometheusDetails?.type === "error" && (
+              <NoPrometheusProviderDetected />
+            )}
           </>
         )}
-        {this.prometheusDetails?.type === "error" && (
-          <div>auto detection did not find a prometheus provider</div>
-        )}
+
         {this.canEditPrometheusPath && (
           <>
             <hr />
