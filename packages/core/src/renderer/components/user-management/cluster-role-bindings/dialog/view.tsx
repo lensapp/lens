@@ -37,8 +37,8 @@ import type { ShowDetails } from "../../../kube-detail-params/show-details.injec
 import type { ClusterRoleBindingStore } from "../store";
 import clusterRoleBindingStoreInjectable from "../store.injectable";
 import showDetailsInjectable from "../../../kube-detail-params/show-details.injectable";
-import type { ShowCheckedErrorNotification } from "../../../notifications/show-checked-error.injectable";
-import showCheckedErrorNotificationInjectable from "../../../notifications/show-checked-error.injectable";
+import type { ShowCheckedErrorNotification } from "@k8slens/notifications";
+import { showCheckedErrorNotificationInjectable } from "@k8slens/notifications";
 
 export interface ClusterRoleBindingDialogProps extends Partial<DialogProps> {
 }

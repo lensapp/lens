@@ -8,9 +8,8 @@ import type { ListNamespaceForbiddenArgs } from "../../common/ipc/cluster";
 import { Button } from "@k8slens/button";
 import type { IpcRendererEvent } from "electron";
 import React from "react";
-import notificationsStoreInjectable from "../components/notifications/notifications-store.injectable";
+import { notificationsStoreInjectable, showSuccessNotificationInjectable } from "@k8slens/notifications";
 import { getMillisecondsFromUnixEpoch } from "../../common/utils/date/get-current-date-time";
-import showSuccessNotificationInjectable from "../components/notifications/show-success-notification.injectable";
 import getClusterByIdInjectable from "../../features/cluster/storage/common/get-by-id.injectable";
 
 const intervalBetweenNotifications = 1000 * 60; // 60s

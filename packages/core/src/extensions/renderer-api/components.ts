@@ -16,15 +16,18 @@ import { ConfirmDialog as _ConfirmDialog } from "../../renderer/components/confi
 import type { ConfirmDialogBooleanParams, ConfirmDialogParams, ConfirmDialogProps } from "../../renderer/components/confirm-dialog";
 import openConfirmDialogInjectable from "../../renderer/components/confirm-dialog/open.injectable";
 import confirmInjectable from "../../renderer/components/confirm-dialog/confirm.injectable";
-import notificationsStoreInjectable from "../../renderer/components/notifications/notifications-store.injectable";
+import {
+  notificationsStoreInjectable,
+  showCheckedErrorNotificationInjectable,
+  showErrorNotificationInjectable,
+  showInfoNotificationInjectable,
+  showShortInfoNotificationInjectable,
+  showSuccessNotificationInjectable,
+} from "@k8slens/notifications";
 import podStoreInjectable from "../../renderer/components/workloads-pods/store.injectable";
 import getDetailsUrlInjectable from "../../renderer/components/kube-detail-params/get-details-url.injectable";
 import showDetailsInjectable from "../../renderer/components/kube-detail-params/show-details.injectable";
-import showCheckedErrorNotificationInjectable from "../../renderer/components/notifications/show-checked-error.injectable";
-import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
-import showInfoNotificationInjectable from "../../renderer/components/notifications/show-info-notification.injectable";
-import showShortInfoNotificationInjectable from "../../renderer/components/notifications/show-short-info.injectable";
-import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
+
 
 // layouts
 export * from "../../renderer/components/layout/main-layout";
@@ -72,14 +75,14 @@ export * from "../../renderer/components/line-progress";
 export * from "../../renderer/components/menu";
 
 export {
-  NotificationStatus,
+  type NotificationStatus,
   type CreateNotificationOptions,
   type Notification,
   type NotificationId,
   type NotificationMessage,
   type ShowNotification,
   type NotificationsStore,
-} from "../../renderer/components/notifications";
+} from"@k8slens/notifications";
 
 export const Notifications = {
   ok: asLegacyGlobalFunctionForExtensionApi(showSuccessNotificationInjectable),

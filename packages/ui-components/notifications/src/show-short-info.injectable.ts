@@ -5,9 +5,9 @@
 
 import { getInjectable } from "@ogre-tools/injectable";
 import type { ShowNotification } from "./notifications";
-import showInfoNotificationInjectable from "./show-info-notification.injectable";
+import { showInfoNotificationInjectable } from "./show-info-notification.injectable";
 
-const showShortInfoNotificationInjectable = getInjectable({
+export const showShortInfoNotificationInjectable = getInjectable({
   id: "show-short-info-notification",
   instantiate: (di): ShowNotification => {
     const showInfoNotification = di.inject(showInfoNotificationInjectable);
@@ -20,5 +20,3 @@ const showShortInfoNotificationInjectable = getInjectable({
     };
   },
 });
-
-export default showShortInfoNotificationInjectable;

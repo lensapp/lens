@@ -11,7 +11,7 @@ import {
   EXTENSION_PUBLISHER_MATCH,
   LensProtocolRouter,
 } from "../../../common/protocol-handler";
-import type { ShowNotification } from "../../components/notifications";
+import type { ShowNotification } from "@k8slens/notifications";
 import type { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import type { NavigateToEntitySettings } from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 import type { NavigateToClusterView } from "../../../common/front-end-routing/routes/cluster-view/navigate-to-cluster-view.injectable";

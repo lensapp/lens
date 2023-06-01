@@ -9,7 +9,7 @@ import React from "react";
 import { autorun, makeObservable, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerTitle } from "../drawer";
-import type { ShowNotification } from "../notifications";
+import type { ShowNotification } from "@k8slens/notifications";
 import { Button } from "@k8slens/button";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { ConfigMap } from "@k8slens/kube-object";
@@ -17,8 +17,7 @@ import type { Logger } from "@k8slens/logger";
 import type { ConfigMapStore } from "./store";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import configMapStoreInjectable from "./store.injectable";
-import showSuccessNotificationInjectable from "../notifications/show-success-notification.injectable";
-import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
+import { showSuccessNotificationInjectable, showErrorNotificationInjectable } from "@k8slens/notifications";
 import { loggerInjectionToken } from "@k8slens/logger";
 import { MonacoEditor } from "../monaco-editor";
 

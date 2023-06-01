@@ -1,0 +1,66 @@
+{
+  "name": "@k8slens/notifications",
+  "private": false,
+  "version": "1.0.0",
+  "description": "Highly extendable notifications in the Lens.",
+  "type": "commonjs",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lensapp/lens.git"
+  },
+  "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./styles": "./dist/index.css"
+  },
+  "types": "dist/index.d.ts",
+  "author": {
+    "name": "OpenLens Authors",
+    "email": "info@k8slens.dev"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/lensapp/lens",
+  "scripts": {
+    "build": "lens-webpack-build",
+    "lint": "lens-lint",
+    "lint:fix": "lens-lint --fix"
+  },
+  "peerDependencies": {
+    "@k8slens/react-application": "^1.0.0-alpha.5",
+    "@k8slens/animate": "^1.0.0-alpha.0",
+    "@k8slens/application": "^6.5.0",
+    "@k8slens/event-emitter": "^1.0.0",
+    "@k8slens/feature-core": "^6.5.0-alpha.0",
+    "@k8slens/json-api": "^1.0.0-alpha.3",
+    "@k8slens/icon": "^1.0.0-alpha.7",
+    "@k8slens/run-many": "^1.0.0",
+    "@k8slens/logger": "^1.0.0",
+    "@k8slens/tooltip": "^1.0.0",
+    "@k8slens/utilities": "^1.0.0-alpha.1",
+    "@ogre-tools/injectable-react": "^17.2.0",
+    "@ogre-tools/injectable": "^17.2.0",
+    "@ogre-tools/fp": "^17.2.0",
+    "@ogre-tools/injectable-extension-for-auto-registration": "^17.2.0",
+    "@ogre-tools/injectable-extension-for-mobx": "^17.2.0",
+    "auto-bind": "^4.0.0",
+    "lodash": "^4.17.21",
+    "mobx": "^6.8.0",
+    "mobx-react": "^7.6.0",
+    "react-router-dom": "^5.3.4",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "winston": "^3.8.2",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@k8slens/eslint-config": "^6.5.0",
+    "@k8slens/webpack": "^6.5.0"
+  }
+}

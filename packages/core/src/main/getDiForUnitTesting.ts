@@ -31,6 +31,7 @@ import { messagingFeature, testUtils as messagingTestUtils } from "@k8slens/mess
 import { loggerFeature } from "@k8slens/logger";
 import { randomFeature } from "@k8slens/random";
 import { kubeApiSpecificsFeature } from "@k8slens/kube-api-specifics";
+import { notificationsFeature } from "@k8slens/notifications";
 
 export function getDiForUnitTesting() {
   const environment = "main";
@@ -48,6 +49,7 @@ export function getDiForUnitTesting() {
       loggerFeature,
       randomFeature,
       kubeApiSpecificsFeature,
+      notificationsFeature,
     );
   });
 

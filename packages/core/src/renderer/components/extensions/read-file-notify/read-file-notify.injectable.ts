@@ -4,7 +4,7 @@
  */
 import { getMessageFromError } from "../get-message-from-error/get-message-from-error";
 import { getInjectable } from "@ogre-tools/injectable";
-import showErrorNotificationInjectable from "../../notifications/show-error-notification.injectable";
+import { showErrorNotificationInjectable } from "@k8slens/notifications";
 import { loggerInjectionToken } from "@k8slens/logger";
 import readFileBufferInjectable from "../../../../common/fs/read-file-buffer.injectable";
 

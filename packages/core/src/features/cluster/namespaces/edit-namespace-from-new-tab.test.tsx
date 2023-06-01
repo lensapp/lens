@@ -14,8 +14,7 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import dockStoreInjectable from "../../../renderer/components/dock/dock/store.injectable";
 import { Namespace } from "@k8slens/kube-object";
-import showSuccessNotificationInjectable from "../../../renderer/components/notifications/show-success-notification.injectable";
-import showErrorNotificationInjectable from "../../../renderer/components/notifications/show-error-notification.injectable";
+import { showSuccessNotificationInjectable, showErrorNotificationInjectable } from "@k8slens/notifications";
 import readJsonFileInjectable from "../../../common/fs/read-json-file.injectable";
 import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
@@ -25,7 +24,7 @@ import apiKubePatchInjectable from "../../../renderer/k8s/api-kube-patch.injecta
 import apiKubeGetInjectable from "../../../renderer/k8s/api-kube-get.injectable";
 import type { BaseKubeJsonApiObjectMetadata, KubeObjectScope, KubeJsonApiData } from "@k8slens/kube-object";
 import { JsonApiErrorParsed } from "@k8slens/json-api";
-import type { ShowNotification } from "../../../renderer/components/notifications";
+import type { ShowNotification } from "@k8slens/notifications";
 import React from "react";
 
 describe("cluster/namespaces - edit namespace from new tab", () => {

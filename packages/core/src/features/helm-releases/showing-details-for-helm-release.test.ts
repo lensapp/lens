@@ -15,8 +15,7 @@ import type { RequestHelmReleaseUpdate } from "../../common/k8s-api/endpoints/he
 import requestHelmReleaseUpdateInjectable from "../../common/k8s-api/endpoints/helm-releases.api/request-update.injectable";
 import type { RequestDetailedHelmRelease } from "../../renderer/components/helm-releases/release-details/release-details-model/request-detailed-helm-release.injectable";
 import requestDetailedHelmReleaseInjectable from "../../renderer/components/helm-releases/release-details/release-details-model/request-detailed-helm-release.injectable";
-import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
-import showCheckedErrorInjectable from "../../renderer/components/notifications/show-checked-error.injectable";
+import { showSuccessNotificationInjectable, showCheckedErrorNotificationInjectable } from "@k8slens/notifications";
 import getRandomUpgradeChartTabIdInjectable from "../../renderer/components/dock/upgrade-chart/get-random-upgrade-chart-tab-id.injectable";
 import type { RequestHelmCharts } from "../../common/k8s-api/endpoints/helm-charts.api/request-charts.injectable";
 import type { RequestHelmChartVersions } from "../../common/k8s-api/endpoints/helm-charts.api/request-versions.injectable";
@@ -67,7 +66,7 @@ describe("showing details for helm release", () => {
     builder.beforeWindowStart(({ windowDi }) => {
       windowDi.override(getRandomUpgradeChartTabIdInjectable, () => () => "some-tab-id");
       windowDi.override(showSuccessNotificationInjectable, () => showSuccessNotificationMock);
-      windowDi.override(showCheckedErrorInjectable, () => showCheckedErrorNotificationMock);
+      windowDi.override(showCheckedErrorNotificationInjectable, () => showCheckedErrorNotificationMock);
       windowDi.override(requestDetailedHelmReleaseInjectable, () => requestDetailedHelmReleaseMock);
       windowDi.override(requestHelmReleaseConfigurationInjectable, () => requestHelmReleaseConfigurationMock);
       windowDi.override(requestHelmReleaseUpdateInjectable, () => requestHelmReleaseUpdateMock);
