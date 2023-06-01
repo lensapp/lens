@@ -1,13 +1,14 @@
-import { getNodeConfig, Paths } from "./get-node-config";
+import { getNodeConfig, GetNodeConfigParams } from "./get-node-config";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import type { Configuration } from "webpack";
 
 export const getReactConfigFor =
   ({ miniCssExtractPluginLoader = MiniCssExtractPlugin.loader } = {}) =>
-  ({ entrypointFilePath, outputDirectory }: Paths): Configuration => {
+  ({ entrypointFilePath, outputDirectory, environment }: GetNodeConfigParams): Configuration => {
     const nodeConfig = getNodeConfig({
       entrypointFilePath,
       outputDirectory,
+      environment
     });
 
     return {

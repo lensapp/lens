@@ -64,6 +64,11 @@ describe("get-multi-export-config", () => {
         getReactConfig: getReactConfigFor({
           miniCssExtractPluginLoader: "miniCssExtractPluginLoader",
         }),
+
+        environment: {
+          mode: "production",
+          devtool: false
+        }
       });
     });
 

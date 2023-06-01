@@ -14,11 +14,13 @@ import { pipeline } from "@ogre-tools/fp";
 import path from "path";
 import { getReactConfigFor } from "./get-react-config-for";
 import { getNodeConfig } from "./get-node-config";
+import { Environment, environment } from "./runtime-values/environment";
 
 type Dependencies = {
   resolvePath: typeof path.resolve;
   workingDirectory: string;
   getReactConfig: ReturnType<typeof getReactConfigFor>;
+  environment: Environment;
 };
 
 export const getMultiExportConfig = (
@@ -29,6 +31,7 @@ export const getMultiExportConfig = (
     resolvePath: path.resolve,
     workingDirectory: process.cwd(),
     getReactConfig: getReactConfigFor(),
+    environment,
     ..._dependencies,
   };
 
@@ -140,9 +143,11 @@ const toExportSpecificWebpackConfigFor =
       ? getNodeConfig({
           entrypointFilePath: entrypoint,
           outputDirectory,
+          environment: dependencies.environment,
         })
       : dependencies.getReactConfig!({
           entrypointFilePath: entrypoint,
           outputDirectory,
+          environment: dependencies.environment,
         });
   };

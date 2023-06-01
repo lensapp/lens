@@ -3,20 +3,24 @@ import type { Configuration } from "webpack";
 import { MakePeerDependenciesExternalPlugin } from "./plugins/make-peer-dependencies-external";
 import { ProtectFromImportingNonDependencies } from "./plugins/protect-from-importing-non-dependencies";
 import { LinkablePushPlugin } from "./plugins/linkable-push-plugin";
+import type { Environment } from "./runtime-values/environment";
 
-export type Paths = {
+export type GetNodeConfigParams = {
   entrypointFilePath: string;
   outputDirectory: string;
+  environment: Environment;
 };
 
 export const getNodeConfig = ({
   entrypointFilePath,
   outputDirectory,
-}: Paths): Configuration => ({
+  environment,
+}: GetNodeConfigParams): Configuration => ({
   name: entrypointFilePath,
   entry: { index: entrypointFilePath },
   target: "node",
-  mode: "production",
+  mode: environment.mode,
+  devtool: environment.devtool,
 
   performance: {
     maxEntrypointSize: 100000,

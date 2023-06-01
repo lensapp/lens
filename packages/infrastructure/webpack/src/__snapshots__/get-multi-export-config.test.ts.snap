@@ -7,6 +7,7 @@ exports[`get-multi-export-config given maximal package.json, when creating confi
     entry: { index: './index.ts' },
     target: 'node',
     mode: 'production',
+    devtool: false,
     performance: { maxEntrypointSize: 100000, hints: 'error' },
     resolve: { extensions: [ '.ts', '.tsx', '.js' ] },
     plugins: [
@@ -42,6 +43,7 @@ exports[`get-multi-export-config given maximal package.json, when creating confi
     entry: { index: './some-entrypoint/index.ts' },
     target: 'node',
     mode: 'production',
+    devtool: false,
     performance: { maxEntrypointSize: 100000, hints: 'error' },
     resolve: { extensions: [ '.ts', '.tsx', '.js' ] },
     plugins: [
@@ -77,6 +79,7 @@ exports[`get-multi-export-config given maximal package.json, when creating confi
     entry: { index: './some-other-entrypoint/index.ts' },
     target: 'node',
     mode: 'production',
+    devtool: false,
     performance: { maxEntrypointSize: 100000, hints: 'error' },
     resolve: { extensions: [ '.ts', '.tsx', '.js' ] },
     plugins: [

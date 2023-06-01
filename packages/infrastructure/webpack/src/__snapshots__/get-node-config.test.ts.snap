@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`get-node-config given an environment, works 1`] = `
+{
+  "devtool": "some-devtool",
+  "entry": {
+    "index": "some-entrypoint-file-path",
+  },
+  "externalsPresets": {
+    "node": true,
+  },
+  "mode": "development",
+  "module": {
+    "rules": [
+      {
+        "loader": "ts-loader",
+        "test": /\\\\\\.ts\\(x\\)\\?\\$/,
+      },
+    ],
+  },
+  "name": "some-entrypoint-file-path",
+  "node": {
+    "__dirname": true,
+    "__filename": true,
+  },
+  "output": {
+    "filename": [Function],
+    "library": {
+      "type": "commonjs2",
+    },
+    "path": "some-output-directory",
+  },
+  "performance": {
+    "hints": "error",
+    "maxEntrypointSize": 100000,
+  },
+  "plugins": [
+    MakePeerDependenciesExternalPlugin {},
+    ProtectFromImportingNonDependencies {},
+    ForkTsCheckerWebpackPlugin {
+      "options": {
+        "typescript": {
+          "configOverwrite": {
+            "compilerOptions": {
+              "declaration": true,
+              "declarationDir": "some-output-directory",
+            },
+            "include": [
+              "some-entrypoint-file-path",
+            ],
+          },
+          "mode": "write-dts",
+        },
+      },
+    },
+    LinkablePushPlugin {},
+  ],
+  "resolve": {
+    "extensions": [
+      ".ts",
+      ".tsx",
+      ".js",
+    ],
+  },
+  "target": "node",
+}
+`;
