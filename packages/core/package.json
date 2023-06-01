@@ -51,7 +51,6 @@
   "author": "OpenLens Authors <info@k8slens.dev>",
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --config webpack/library-bundle.ts --progress && linkable-push",
-    "dev": "cross-env NODE_ENV=development webpack --config webpack/library-bundle.ts --progress --watch",
     "clean": "rimraf dist static/build",
     "test:unit": "jest --testPathIgnorePatterns integration",
     "test:watch": "func() { jest ${1} --watch --testPathIgnorePatterns integration; }; func",
