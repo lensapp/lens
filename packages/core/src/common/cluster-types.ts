@@ -112,6 +112,10 @@ export interface ClusterPreferences extends ClusterPrometheusPreferences {
   defaultNamespace?: string;
 }
 
+interface QueryFilterOptions {
+  hideEmptyContainers: boolean;
+}
+
 /**
  * A cluster's prometheus settings (a subset of cluster settings)
  */
@@ -125,6 +129,7 @@ export interface ClusterPrometheusPreferences {
   prometheusProvider?: {
     type: string;
   };
+  prometheusQueryOptions?: QueryFilterOptions;
 }
 
 /**
