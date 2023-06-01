@@ -231,6 +231,7 @@
     "@k8slens/prometheus": "^1.0.0",
     "@k8slens/react-application": "^1.0.0-alpha.5",
     "@k8slens/random": "^1.0.0",
+    "@k8slens/item-store": "^1.0.0",
     "@k8slens/resizing-anchor": "^1.0.0-alpha.5",
     "@k8slens/resource-templates": "^1.0.0-alpha.1",
     "@k8slens/routing": "^1.0.0-alpha.5",

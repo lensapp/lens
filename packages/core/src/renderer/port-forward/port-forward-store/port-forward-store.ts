@@ -4,7 +4,7 @@
  */
 
 import { action, makeObservable, observable, reaction } from "mobx";
-import { ItemStore } from "../../../common/item.store";
+import { ItemStore } from "@k8slens/item-store";
 import type { StorageLayer } from "../../utils/storage-helper";
 import { disposer } from "@k8slens/utilities";
 import type { ForwardedPort } from "../port-forward-item";
@@ -66,7 +66,7 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
   }
 
   loadAll() {
-    return this.loadItems(() => {
+    return this.rawLoadItems(async () => {
       const portForwards = this.getPortForwards();
 
       this.dependencies.storage.set(portForwards);
