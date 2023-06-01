@@ -4,7 +4,7 @@
  */
 import type { Cluster } from "../../../../common/cluster/cluster";
 import type { CatalogEntityRegistry } from "../../../api/catalog/entity/registry";
-import type { ShowNotification } from "../../../components/notifications";
+import type { ShowNotification } from "@k8slens/notifications";
 import { when } from "mobx";
 import { requestSetClusterFrameId } from "../../../ipc";
 import type { EmitAppEvent } from "../../../../common/app-event-bus/emit-event.injectable";

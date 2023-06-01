@@ -3,12 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { rootFrameChildComponentInjectionToken } from "@k8slens/react-application";
 import { computed } from "mobx";
 import { Notifications } from "./notifications";
+import { clusterFrameChildComponentInjectionToken } from "@k8slens/react-application";
 
-const notificationsRootFrameChildComponentInjectable = getInjectable({
-  id: "notifications-root-frame-child-component",
+export const notificationsClusterFrameChildComponentInjectable = getInjectable({
+  id: "notifications-cluster-frame-child-component",
 
   instantiate: () => ({
     id: "notifications",
@@ -16,7 +16,5 @@ const notificationsRootFrameChildComponentInjectable = getInjectable({
     Component: Notifications,
   }),
 
-  injectionToken: rootFrameChildComponentInjectionToken,
+  injectionToken: clusterFrameChildComponentInjectionToken,
 });
-
-export default notificationsRootFrameChildComponentInjectable;

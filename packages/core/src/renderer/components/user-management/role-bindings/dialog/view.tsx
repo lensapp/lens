@@ -36,8 +36,8 @@ import clusterRoleStoreInjectable from "../../cluster-roles/store.injectable";
 import roleStoreInjectable from "../../roles/store.injectable";
 import serviceAccountStoreInjectable from "../../service-accounts/store.injectable";
 import { roleApiInjectable } from "@k8slens/kube-api-specifics";
-import type { ShowCheckedErrorNotification } from "../../../notifications/show-checked-error.injectable";
-import showCheckedErrorNotificationInjectable from "../../../notifications/show-checked-error.injectable";
+import type { ShowCheckedErrorNotification } from "@k8slens/notifications";
+import { showCheckedErrorNotificationInjectable } from "@k8slens/notifications";
 import type { RoleApi } from "@k8slens/kube-api";
 
 export interface RoleBindingDialogProps extends Partial<DialogProps> {

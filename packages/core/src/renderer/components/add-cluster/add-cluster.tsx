@@ -16,7 +16,7 @@ import { loadConfigFromString, splitConfig } from "../../../common/kube-helpers"
 import { docsUrl } from "../../../common/vars";
 import { isDefined, iter } from "@k8slens/utilities";
 import { Button } from "@k8slens/button";
-import type { ShowNotification } from "../notifications";
+import type { ShowNotification } from "@k8slens/notifications";
 import { SettingLayout } from "../layout/setting-layout";
 import { MonacoEditor } from "../monaco-editor";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -27,8 +27,7 @@ import type { EmitAppEvent } from "../../../common/app-event-bus/emit-event.inje
 import emitAppEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
 import type { GetDirnameOfPath } from "../../../common/path/get-dirname.injectable";
 import getDirnameOfPathInjectable from "../../../common/path/get-dirname.injectable";
-import showSuccessNotificationInjectable from "../notifications/show-success-notification.injectable";
-import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
+import { showSuccessNotificationInjectable, showErrorNotificationInjectable } from "@k8slens/notifications";
 
 interface Option {
   config: KubeConfig;

@@ -25,7 +25,7 @@ import reloadLogsInjectable from "../../renderer/components/dock/logs/reload-log
 import setLogTabDataInjectable from "../../renderer/components/dock/logs/set-log-tab-data.injectable";
 import stopLoadingLogsInjectable from "../../renderer/components/dock/logs/stop-loading-logs.injectable";
 import { dockerPod } from "../../renderer/components/dock/logs/__test__/pod.mock";
-import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
+import { showErrorNotificationInjectable } from "@k8slens/notifications";
 import type { DiContainer } from "@ogre-tools/injectable";
 import type { Container } from "@k8slens/kube-object";
 

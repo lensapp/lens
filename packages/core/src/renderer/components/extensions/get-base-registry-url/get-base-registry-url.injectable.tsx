@@ -9,7 +9,7 @@ import execFileInjectable from "../../../../common/fs/exec-file.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
 import { defaultExtensionRegistryUrl } from "../../../../features/user-preferences/common/preferences-helpers";
 import userPreferencesStateInjectable from "../../../../features/user-preferences/common/state.injectable";
-import showErrorNotificationInjectable from "../../notifications/show-error-notification.injectable";
+import { showErrorNotificationInjectable } from "@k8slens/notifications";
 
 const getBaseRegistryUrlInjectable = getInjectable({
   id: "get-base-registry-url",

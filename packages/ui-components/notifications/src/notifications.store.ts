@@ -44,13 +44,15 @@ export class NotificationsStore {
   }
 
   getById(id: NotificationId) {
-    return this.notifications.find(item => item.id === id);
+    return this.notifications.find((item) => item.id === id);
   }
 
   addAutoHideTimer(id: NotificationId) {
     const notification = this.getById(id);
 
-    if (!notification) return;
+    if (!notification) {
+      return;
+    }
     this.removeAutoHideTimer(id);
 
     if (notification?.timeout) {
@@ -74,7 +76,7 @@ export class NotificationsStore {
       ...rawNotification,
     };
     const id = notification.id;
-    const index = this.notifications.findIndex(item => item.id === id);
+    const index = this.notifications.findIndex((item) => item.id === id);
 
     if (index > -1) {
       this.notifications.splice(index, 1, notification); // update existing with same id

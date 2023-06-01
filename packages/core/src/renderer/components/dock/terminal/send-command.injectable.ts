@@ -7,7 +7,7 @@ import { when } from "mobx";
 import { loggerInjectionToken } from "@k8slens/logger";
 import { TerminalChannels } from "../../../../common/terminal/channels";
 import { waitUntilDefined, noop } from "@k8slens/utilities";
-import showSuccessNotificationInjectable from "../../notifications/show-success-notification.injectable";
+import { showSuccessNotificationInjectable } from "@k8slens/notifications";
 import selectDockTabInjectable from "../dock/select-dock-tab.injectable";
 import type { TabId } from "../dock/store";
 import createTerminalTabInjectable from "./create-terminal-tab.injectable";

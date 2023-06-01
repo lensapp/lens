@@ -15,6 +15,7 @@ import { loggerFeature } from "@k8slens/logger";
 import { randomFeature } from "@k8slens/random";
 import { kubeApiSpecificsFeature } from "@k8slens/kube-api-specifics";
 import { prometheusFeature } from "@k8slens/prometheus";
+import { notificationsFeature } from "@k8slens/notifications";
 
 const environment = "main";
 
@@ -36,6 +37,7 @@ runInAction(() => {
     messagingFeatureForMain,
     randomFeature,
     kubeApiSpecificsFeature,
+    notificationsFeature,
   );
 
   try {

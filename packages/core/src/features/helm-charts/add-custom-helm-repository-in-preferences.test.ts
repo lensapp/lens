@@ -15,8 +15,7 @@ import getActiveHelmRepositoriesInjectable from "../../main/helm/repositories/ge
 import type { HelmRepo } from "../../common/helm/helm-repo";
 import requestPublicHelmRepositoriesInjectable from "./child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/request-public-helm-repositories.injectable";
 import isPathInjectable from "../../renderer/components/input/validators/is-path.injectable";
-import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
-import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
+import { showSuccessNotificationInjectable, showErrorNotificationInjectable } from "@k8slens/notifications";
 import type { AsyncResult } from "@k8slens/utilities";
 import { testUsingFakeTime } from "../../test-utils/use-fake-time";
 

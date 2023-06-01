@@ -16,10 +16,10 @@ import { Button } from "@k8slens/button";
 import type { DialogProps } from "../dialog";
 import { Dialog } from "../dialog";
 import { Icon } from "@k8slens/icon";
-import type { ShowNotification } from "../notifications";
+import type { ShowNotification } from "@k8slens/notifications";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import confirmDialogStateInjectable from "./state.injectable";
-import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
+import { showErrorNotificationInjectable } from "@k8slens/notifications";
 
 export interface ConfirmDialogProps extends Partial<DialogProps> {
 }

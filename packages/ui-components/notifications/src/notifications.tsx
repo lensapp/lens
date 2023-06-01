@@ -11,11 +11,16 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { JsonApiErrorParsed } from "@k8slens/json-api";
 import type { Disposer } from "@k8slens/utilities";
 import { cssNames, prevDefault } from "@k8slens/utilities";
-import type { CreateNotificationOptions, Notification, NotificationMessage, NotificationsStore } from "./notifications.store";
+import type {
+  CreateNotificationOptions,
+  Notification,
+  NotificationMessage,
+  NotificationsStore,
+} from "./notifications.store";
 import { Animate } from "@k8slens/animate";
 import { Icon } from "@k8slens/icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import notificationsStoreInjectable from "./notifications-store.injectable";
+import { notificationsStoreInjectable } from "./notifications-store.injectable";
 
 export type ShowNotification = (message: NotificationMessage, opts?: CreateNotificationOptions) => Disposer;
 
@@ -29,9 +34,13 @@ class NonInjectedNotifications extends React.Component<Dependencies> {
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => this.props.store.notifications.length, () => {
-        this.scrollToLastNotification();
-      }, { delay: 250 }),
+      reaction(
+        () => this.props.store.notifications.length,
+        () => {
+          this.scrollToLastNotification();
+        },
+        { delay: 250 },
+      ),
     ]);
   }
 
@@ -59,8 +68,8 @@ class NonInjectedNotifications extends React.Component<Dependencies> {
     const { notifications, remove, addAutoHideTimer, removeAutoHideTimer } = this.props.store;
 
     return (
-      <div className="Notifications flex column align-flex-end" ref={e => this.elem = e}>
-        {notifications.map(notification => {
+      <div className="Notifications flex column align-flex-end" ref={(e) => (this.elem = e)}>
+        {notifications.map((notification) => {
           const { id, status, onClose } = notification;
           const msgText = this.getMessage(notification);
 
