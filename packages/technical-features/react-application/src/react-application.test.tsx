@@ -16,6 +16,9 @@ import {
   reactApplicationHigherOrderComponentInjectionToken,
 } from "./react-application/react-application-higher-order-component-injection-token";
 
+import { clusterFrameChildComponentInjectionToken } from "./cluster-frame/cluster-frame-child-component-injection-token";
+import { rootFrameChildComponentInjectionToken } from "./root-frame/root-frame-child-component-injection-token";
+
 const SomeContent = () => <div data-some-content-test>Some children</div>;
 
 describe("react-application", () => {
@@ -43,6 +46,9 @@ describe("react-application", () => {
     await startApplication();
 
     discover = discoverFor(() => rendered);
+
+    expect(clusterFrameChildComponentInjectionToken.id).toBe("cluster-frame-child-component");
+    expect(rootFrameChildComponentInjectionToken.id).toBe("root-frame-child-component");
   });
 
   it("renders", () => {
