@@ -16,6 +16,11 @@ import type { MetricProviderInfo, RequestMetricsProviders } from "../../../commo
 import { withInjectables } from "@ogre-tools/injectable-react";
 import requestMetricsProvidersInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-providers.injectable";
 import productNameInjectable from "../../../common/vars/product-name.injectable";
+import getPrometheusDetailsRouteInjectable from "./get-prometheus-details.injectable";
+import type { PrometheusDetailsData } from "../../../common/k8s-api/endpoints/metrics.api/prometheus-details.channel";
+import { loggerInjectionToken } from "@k8slens/logger";
+import type { Logger } from "@k8slens/logger";
+import { PrometheusDetails } from "./prometheus-details";
 
 export interface ClusterPrometheusSettingProps {
   cluster: Cluster;
@@ -28,6 +33,13 @@ type ProviderValue = typeof autoDetectPrometheus | string;
 interface Dependencies {
   productName: string;
   requestMetricsProviders: RequestMetricsProviders;
+  requestPrometheusDetails: (clusterId: string) => Promise<PrometheusDetailsData>;
+  logger: Logger;
+}
+
+interface PrometheusDetailsDataResult {
+  type: "success" | "error";
+  details?: PrometheusDetailsData;
 }
 
 @observer
@@ -35,6 +47,7 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
   @observable path = "";
   @observable selectedOption: ProviderValue = autoDetectPrometheus;
   @observable loading = true;
+  @observable prometheusDetails: PrometheusDetailsDataResult | null = null;
   readonly loadedOptions = observable.map<string, MetricProviderInfo>();
 
   @computed get options(): SelectOption<ProviderValue>[] {
@@ -91,6 +104,8 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
         this.loading = false;
         this.loadedOptions.replace(values.map(provider => [provider.id, provider]));
       });
+
+    this.loadPrometheusDetails();
   }
 
   parsePrometheusPath = () => {
@@ -118,11 +133,31 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
       : undefined;
   };
 
+  loadPrometheusDetails = async () => {
+    try {
+      const details = await this.props.requestPrometheusDetails(this.props.cluster.id);
+
+      this.prometheusDetails = {
+        type: "success",
+        details,
+      };
+      this.props.logger.info(`[CLUSTER-SETTINGS]: Prometheus details loaded: ${JSON.stringify(this.prometheusDetails)}`);
+    } catch (error) {
+      this.props.logger.error(`[CLUSTER-SETTINGS]: Failed to load prometheus details: ${error}`);
+      this.prometheusDetails = {
+        type: "error",
+        details: undefined,
+      };
+    }
+  };
+
   onSavePath = () => {
     this.props.cluster.preferences.prometheus = this.parsePrometheusPath();
   };
 
   render() {
+
+
     return (
       <>
         <section>
@@ -138,6 +173,12 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
                     onChange={option => {
                       this.selectedOption = option?.value ?? autoDetectPrometheus;
                       this.onSaveProvider();
+
+                      // takes a while for the prometheus details to be available
+                      // after saving the provider
+                      setTimeout(() => {
+                        void this.loadPrometheusDetails();
+                      }, 100);
                     }}
                     options={this.options}
                     themeName="lens"
@@ -147,6 +188,18 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
               )
           }
         </section>
+        {this.prometheusDetails?.details && this.prometheusDetails?.type === "success" /*&& this.selectedOption === autoDetectPrometheus */ && (
+          <>
+            <hr />
+            <PrometheusDetails
+              providerName={this.prometheusDetails.details.provider.name}
+              path={this.prometheusDetails.details.prometheusPath}
+            />
+          </>
+        )}
+        {this.prometheusDetails?.type === "error" && (
+          <div>auto detection did not find a prometheus provider</div>
+        )}
         {this.canEditPrometheusPath && (
           <>
             <hr />
@@ -175,5 +228,7 @@ export const ClusterPrometheusSetting = withInjectables<Dependencies, ClusterPro
     ...props,
     productName: di.inject(productNameInjectable),
     requestMetricsProviders: di.inject(requestMetricsProvidersInjectable),
+    requestPrometheusDetails: di.inject(getPrometheusDetailsRouteInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });
