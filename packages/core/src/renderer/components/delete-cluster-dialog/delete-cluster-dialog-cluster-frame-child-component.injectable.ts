@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import { DeleteClusterDialog } from "./view";
-import { clusterFrameChildComponentInjectionToken } from "../../frames/cluster-frame/cluster-frame-child-component-injection-token";
+import { clusterFrameChildComponentInjectionToken } from "@k8slens/react-application";
 
 const deleteClusterDialogClusterFrameChildComponentInjectable = getInjectable({
   id: "delete-cluster-dialog-cluster-frame-child-component",
