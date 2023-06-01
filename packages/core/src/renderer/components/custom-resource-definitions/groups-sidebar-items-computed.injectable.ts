@@ -29,7 +29,7 @@ const customResourceDefinitionGroupsSidebarItemsComputedInjectable = getInjectab
     const customResourceDefinitions = di.inject(customResourceDefinitionsInjectable);
     const navigateToCustomResources = di.inject(navigateToCustomResourcesInjectable);
     const customResourcesRoute = di.inject(customResourcesRouteInjectable);
-    const pathParameters = di.inject(routePathParametersInjectable, customResourcesRoute);
+    const pathParameters = di.inject(routePathParametersInjectable)(customResourcesRoute);
 
     const toCustomResourceGroupToSidebarItems = ([group, definitions]: [string, CustomResourceDefinition[]], index: number) => {
       const customResourceGroupSidebarItem = getInjectable({
@@ -78,7 +78,7 @@ const customResourceDefinitionGroupsSidebarItemsComputedInjectable = getInjectab
       const customResourceDefinitionGroups = (
         iter.chain(customResourceDefinitions.get().values())
           .map((crd) => [crd.getGroup(), crd] as const)
-          .toMap()
+          .groupIntoMap()
       );
 
       return Array.from(customResourceDefinitionGroups.entries(), toCustomResourceGroupToSidebarItems)

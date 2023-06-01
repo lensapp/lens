@@ -16,7 +16,7 @@ describe("status-bar-items-originating-from-extensions", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    await applicationBuilder.beforeWindowStart(({ windowDi }) => {
+    await builder.beforeWindowStart(({ windowDi }) => {
       windowDi.unoverride(getRandomIdInjectionToken);
       windowDi.permitSideEffects(getRandomIdInjectionToken);
     });

@@ -25,12 +25,9 @@ registerMobX(di);
 runInAction(() => {
   registerLensCore(di, environment);
 
-  registerFeature(di,
-    loggerFeature,
-  );
-
   registerFeature(
     di,
+    loggerFeature,
     applicationFeature,
     applicationFeatureForElectronMain,
     messagingFeatureForMain,

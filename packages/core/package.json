@@ -20,12 +20,12 @@
   "exports": {
     "./package.json": "./package.json",
     "./main": {
-      "default": "./static/build/library/main.js",
-      "types": "./static/build/main/src/library.d.ts"
+      "types": "./static/build/main/src/library.d.ts",
+      "default": "./static/build/library/main.js"
     },
     "./renderer": {
-      "default": "./static/build/library/renderer.js",
-      "types": "./static/build/library/src/renderer/library.d.ts"
+      "types": "./static/build/library/src/renderer/library.d.ts",
+      "default": "./static/build/library/renderer.js"
     },
     "./styles": "./static/build/library/renderer.css",
     "./template.html": "./src/renderer/template.html",

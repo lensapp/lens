@@ -45,10 +45,6 @@ runInAction(() => {
   registerFeature(
     di,
     loggerFeature,
-  );
-
-  registerFeature(
-    di,
     applicationFeature,
     messagingFeatureForRenderer,
     keyboardShortcutsFeature,

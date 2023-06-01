@@ -9,7 +9,7 @@ import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
 import { routeSpecificComponentInjectionToken } from "../../renderer/routes/route-specific-component-injection-token";
 import { sidebarItemInjectionToken } from "@k8slens/cluster-sidebar";
-import { computed, runInAction } from "mobx";
+import { runInAction } from "mobx";
 import { noop } from "lodash/fp";
 import routeIsActiveInjectable from "../../renderer/routes/route-is-active.injectable";
 import { getFrontEndRouteInjectable } from "../../common/front-end-routing/front-end-route-injection-token";
