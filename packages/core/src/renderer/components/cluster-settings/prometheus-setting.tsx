@@ -32,7 +32,7 @@ type ProviderValue = typeof autoDetectPrometheus | string;
 interface Dependencies {
   productName: string;
   requestMetricsProviders: RequestMetricsProviders;
-  requestPrometheusDetails: (cluster: Cluster) => Promise<PrometheusDetailsData>;
+  requestPrometheusDetails: (clusterId: string) => Promise<PrometheusDetailsData>;
 }
 
 interface PrometheusDetailsDataResult {
@@ -133,7 +133,7 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
 
   loadPrometheusDetails = async () => {
     try {
-      const details = await this.props.requestPrometheusDetails(this.props.cluster);
+      const details = await this.props.requestPrometheusDetails(this.props.cluster.id);
 
       this.prometheusDetails = {
         type: "success",
