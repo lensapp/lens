@@ -60,7 +60,7 @@ describe("<PodDisruptionBudgets />", () => {
       get: () => ({}),
     }) as any);
     di.override(loggerInjectionToken, () => null);
-    di.override(maybeKubeApiInjectable, () => null);
+    di.override(maybeKubeApiInjectable, () => ({}));
     di.override(siblingTabsInjectable, () => ({ get: () => [] } as any));
     di.override(userPreferencesStateInjectable, () => ({
       hiddenTableColumns: {
