@@ -18,8 +18,6 @@ import requestMetricsProvidersInjectable from "../../../common/k8s-api/endpoints
 import productNameInjectable from "../../../common/vars/product-name.injectable";
 import getPrometheusDetailsRouteInjectable from "./get-prometheus-details.injectable";
 import type { PrometheusDetailsData } from "../../../common/k8s-api/endpoints/metrics.api/prometheus-details.channel";
-import { loggerInjectionToken } from "@k8slens/logger";
-import type { Logger } from "@k8slens/logger";
 import { PrometheusDetails } from "./prometheus-details";
 import { NoPrometheusProviderDetected } from "./no-prometheus-provider-detectec";
 
@@ -34,8 +32,7 @@ type ProviderValue = typeof autoDetectPrometheus | string;
 interface Dependencies {
   productName: string;
   requestMetricsProviders: RequestMetricsProviders;
-  requestPrometheusDetails: (clusterId: string) => Promise<PrometheusDetailsData>;
-  logger: Logger;
+  requestPrometheusDetails: (cluster: Cluster) => Promise<PrometheusDetailsData>;
 }
 
 interface PrometheusDetailsDataResult {
@@ -136,15 +133,13 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
 
   loadPrometheusDetails = async () => {
     try {
-      const details = await this.props.requestPrometheusDetails(this.props.cluster.id);
+      const details = await this.props.requestPrometheusDetails(this.props.cluster);
 
       this.prometheusDetails = {
         type: "success",
         details,
       };
-      this.props.logger.info(`[CLUSTER-SETTINGS]: Prometheus details loaded: ${JSON.stringify(this.prometheusDetails)}`);
     } catch (error) {
-      this.props.logger.error(`[CLUSTER-SETTINGS]: Failed to load prometheus details: ${error}`);
       this.prometheusDetails = {
         type: "error",
         details: undefined,
@@ -233,6 +228,5 @@ export const ClusterPrometheusSetting = withInjectables<Dependencies, ClusterPro
     productName: di.inject(productNameInjectable),
     requestMetricsProviders: di.inject(requestMetricsProvidersInjectable),
     requestPrometheusDetails: di.inject(getPrometheusDetailsRouteInjectable),
-    logger: di.inject(loggerInjectionToken),
   }),
 });
