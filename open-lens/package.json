@@ -73,6 +73,16 @@
           "{workspaceRoot}/dist/"
         ]
       },
+      "build:tray-icons": {
+        "outputs": [
+          "{workspaceRoot}/static/build/tray/"
+        ]
+      },
+      "download:binaries": {
+        "outputs": [
+          "{workspaceRoot}/binaries/"
+        ]
+      },
       "test:integration": {
         "dependsOn": [
           "build:app"
@@ -80,12 +90,14 @@
       },
       "dev:main": {
         "dependsOn": [
-          "^build"
+          "^build",
+          "download:binaries"
         ]
       },
       "dev:renderer": {
         "dependsOn": [
-          "^build"
+          "^build",
+          "build:tray-icons"
         ]
       },
       "dev-run": {

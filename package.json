@@ -18,7 +18,6 @@
     "clean": "lerna run clean --stream",
     "clean:node_modules": "lerna clean -y && rimraf node_modules",
     "dev": "cross-env NODE_ENV=development lerna watch -- lerna run build --stream --scope \\$LERNA_PACKAGE_NAME",
-    "prestart-dev": "cd ./open-lens && npm run build:tray-icons && npm run download:binaries",
     "start-dev": "lerna run dev:main,dev:renderer,dev-run --stream --scope open-lens",
     "postinstall": "linkable",
     "lint": "lerna run lint --stream --no-bail",
