@@ -77,6 +77,21 @@
         "dependsOn": [
           "build:app"
         ]
+      },
+      "dev:main": {
+        "dependsOn": [
+          "^build"
+        ]
+      },
+      "dev:renderer": {
+        "dependsOn": [
+          "^build"
+        ]
+      },
+      "dev-run": {
+        "dependsOn": [
+          "^build"
+        ]
       }
     }
   },
