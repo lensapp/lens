@@ -75,7 +75,7 @@ export * from "../../renderer/components/line-progress";
 export * from "../../renderer/components/menu";
 
 export {
-  type NotificationStatus,
+  NotificationStatus,
   type CreateNotificationOptions,
   type Notification,
   type NotificationId,
