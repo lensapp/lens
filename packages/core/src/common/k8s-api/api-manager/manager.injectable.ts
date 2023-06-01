@@ -3,11 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
 import { ApiManager } from "./api-manager";
 import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
 import { kubeObjectStoreInjectionToken } from "./kube-object-store-token";
-import { kubeApiInjectionToken } from "@k8slens/kube-api-specifics";
+import { kubeApiInjectionToken, storesAndApisCanBeCreatedInjectionToken } from "@k8slens/kube-api-specifics";
 import { computed } from "mobx";
 import { customResourceDefinitionApiInjectionToken } from "./crd-api-token";
 import createCustomResourceStoreInjectable from "./create-custom-resource-store.injectable";

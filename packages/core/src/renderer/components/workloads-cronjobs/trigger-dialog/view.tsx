@@ -19,7 +19,7 @@ import { Input } from "../../input";
 import { systemName, maxLength } from "../../input/input_validators";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import closeCronJobTriggerDialogInjectable from "./close.injectable";
-import jobApiInjectable from "../../../../common/k8s-api/endpoints/job.api.injectable";
+import { jobApiInjectable } from "@k8slens/kube-api-specifics";
 import cronJobTriggerDialogStateInjectable from "./state.injectable";
 import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";

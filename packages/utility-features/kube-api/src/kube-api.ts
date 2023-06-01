@@ -33,7 +33,7 @@ import type { RequestInit, Response } from "@k8slens/node-fetch";
 import type { Patch } from "rfc6902";
 import assert from "assert";
 import type { PartialDeep } from "type-fest";
-import type { Logger } from "@k8slens/logger";
+import type { LogFunction } from "@k8slens/logger";
 import { matches } from "lodash/fp";
 import { makeObservable, observable } from "mobx";
 import type { ScaleCreateOptions } from "@k8slens/kube-object/src/types/scale";
@@ -86,7 +86,7 @@ export interface DerivedKubeApiOptions {
    * version becomes the `preferredVersion` on the server but still has `v2` then the `v2` version
    * will be used instead.
    *
-   * This can help to prevent crashes in the future if the shape of a kind sufficently changes.
+   * This can help to prevent crashes in the future if the shape of a kind sufficiently changes.
    *
    * The order is important. It should be sorted and the first entry should be the most preferable.
    *
@@ -265,7 +265,7 @@ export type ClusterScopedResourceDescriptor = SpecificResourceDescriptor<KubeObj
 
 export interface DeleteResourceDescriptor extends ResourceDescriptor {
   /**
-   * This determinines how child resources should be handled by kubernetes
+   * This determines how child resources should be handled by kubernetes
    *
    * @default "Background"
    */
@@ -273,7 +273,9 @@ export interface DeleteResourceDescriptor extends ResourceDescriptor {
 }
 
 export interface KubeApiDependencies {
-  readonly logger: Logger;
+  logInfo: LogFunction;
+  logWarn: LogFunction;
+  logError: LogFunction;
   readonly maybeKubeApi: KubeJsonApi | undefined;
 }
 
@@ -756,7 +758,7 @@ export class KubeApi<
     const watchUrl = this.getWatchUrl(namespace);
 
     abortController.signal.addEventListener("abort", () => {
-      this.dependencies.logger.info(`[KUBE-API] watch (${watchId}) aborted ${watchUrl}`);
+      this.dependencies.logInfo(`watch (${watchId}) aborted ${watchUrl}`);
       clearTimeout(timedRetry);
     });
 
@@ -765,9 +767,7 @@ export class KubeApi<
       signal: abortController.signal,
     });
 
-    this.dependencies.logger.info(
-      `[KUBE-API] watch (${watchId}) ${retry === true ? "retried" : "started"} ${watchUrl}`,
-    );
+    this.dependencies.logInfo(`watch (${watchId}) ${retry === true ? "retried" : "started"} ${watchUrl}`);
 
     responsePromise
       .then((response) => {
@@ -775,7 +775,7 @@ export class KubeApi<
         let requestRetried = false;
 
         if (!response.ok) {
-          this.dependencies.logger.warn(`[KUBE-API] watch (${watchId}) error response ${watchUrl}`, {
+          this.dependencies.logWarn(`watch (${watchId}) error response ${watchUrl}`, {
             status: response.status,
           });
 
@@ -794,7 +794,7 @@ export class KubeApi<
             // Close current request
             abortController.abort();
 
-            this.dependencies.logger.info(`[KUBE-API] Watch timeout set, but not retried, retrying now`);
+            this.dependencies.logInfo(`Watch timeout set, but not retried, retrying now`);
 
             requestRetried = true;
 
@@ -807,7 +807,7 @@ export class KubeApi<
 
         if (!response.body || !response.body.readable) {
           if (!response.body) {
-            this.dependencies.logger.warn(`[KUBE-API]: watch (${watchId}) did not return a body`);
+            this.dependencies.logWarn(`watch (${watchId}) did not return a body`);
           }
           requestRetried = true;
 
@@ -829,7 +829,7 @@ export class KubeApi<
               return;
             }
 
-            this.dependencies.logger.info(`[KUBE-API] watch (${watchId}) ${eventName} ${watchUrl}`);
+            this.dependencies.logInfo(`watch (${watchId}) ${eventName} ${watchUrl}`);
 
             requestRetried = true;
 
@@ -860,7 +860,7 @@ export class KubeApi<
       })
       .catch((error: unknown) => {
         if (!abortController.signal.aborted) {
-          this.dependencies.logger.error(`[KUBE-API] watch (${watchId}) threw ${watchUrl}`, error);
+          this.dependencies.logError(`watch (${watchId}) threw ${watchUrl}`, error);
         }
         callback(null, error as Record<string, unknown>);
       });

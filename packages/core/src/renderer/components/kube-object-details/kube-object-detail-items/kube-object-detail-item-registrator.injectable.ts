@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import getRandomIdInjectable from "../../../../common/utils/get-random-id.injectable";
+import { getRandomIdInjectionToken } from "@k8slens/random";
 import type { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
 import extensionShouldBeEnabledForClusterFrameInjectable from "../../../extension-loader/extension-should-be-enabled-for-cluster-frame.injectable";
 import { kubeObjectDetailItemInjectionToken } from "./kube-object-detail-item-injection-token";
@@ -16,7 +16,7 @@ const kubeObjectDetailItemRegistratorInjectable = getInjectable({
   id: "kube-object-detail-item-registrator",
 
   instantiate: (di) => {
-    const getRandomId = di.inject(getRandomIdInjectable);
+    const getRandomId = di.inject(getRandomIdInjectionToken);
 
     const getExtensionShouldBeEnabledForClusterFrame = (
       extension: LensRendererExtension,

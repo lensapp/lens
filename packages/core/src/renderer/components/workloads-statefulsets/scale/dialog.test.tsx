@@ -10,7 +10,7 @@ import { waitFor, fireEvent } from "@testing-library/react";
 import React from "react";
 import type { OpenStatefulSetScaleDialog } from "./open-dialog.injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
-import statefulSetApiInjectable from "../../../../common/k8s-api/endpoints/stateful-set.api.injectable";
+import { statefulSetApiInjectable } from "@k8slens/kube-api-specifics";
 import storesAndApisCanBeCreatedInjectable from "../../../stores-apis-can-be-created.injectable";
 import openStatefulSetScaleDialogInjectable from "./open-dialog.injectable";
 import { type DiRender, renderFor } from "../../test-utils/renderFor";

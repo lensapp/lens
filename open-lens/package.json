@@ -193,7 +193,7 @@
     "@k8slens/json-api": "^1.0.0-alpha.3",
     "@k8slens/keyboard-shortcuts": "^1.0.0",
     "@k8slens/kube-api": "^1.0.0-alpha.1",
-    "@k8slens/kube-api-specifics": "^1.0.0-alpha.1",
+    "@k8slens/kube-api-specifics": "^1.0.0",
     "@k8slens/kube-object": "^1.0.0",
     "@k8slens/kubectl-versions": "^1.0.0",
     "@k8slens/legacy-extension-example": "^1.0.0",
@@ -206,6 +206,7 @@
     "@k8slens/messaging-for-renderer": "^1.0.0",
     "@k8slens/metrics": "^6.5.0",
     "@k8slens/node-fetch": "^6.5.0",
+    "@k8slens/random": "^1.0.0",
     "@k8slens/react-application": "^1.0.0",
     "@k8slens/resizing-anchor": "^1.0.0",
     "@k8slens/resource-templates": "^1.0.0",
@@ -297,6 +298,7 @@
     "xterm-link-provider": "^1.3.1"
   },
   "devDependencies": {
+    "@electron/notarize": "^1.2.3",
     "@electron/rebuild": "^3.2.10",
     "@k8slens/generate-tray-icons": "^6.5.0",
     "@k8slens/test-utils": "^1.0.0",
@@ -330,7 +332,6 @@
     "css-loader": "^6.7.2",
     "electron": "^22.3.10",
     "electron-builder": "^23.6.0",
-    "electron-notarize": "^0.3.0",
     "esbuild-loader": "^2.20.0",
     "fork-ts-checker-webpack-plugin": "^7.3.0",
     "html-webpack-plugin": "^5.5.1",

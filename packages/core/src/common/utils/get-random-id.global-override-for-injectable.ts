@@ -4,6 +4,6 @@
  */
 
 import { getGlobalOverride } from "@k8slens/test-utils";
-import getRandomIdInjectable from "./get-random-id.injectable";
+import { getRandomIdInjectionToken } from "@k8slens/random";
 
-export default getGlobalOverride(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
+export default getGlobalOverride(getRandomIdInjectionToken, () => () => "some-irrelevant-random-id");

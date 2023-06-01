@@ -1,0 +1,44 @@
+{
+  "name": "@k8slens/random",
+  "private": false,
+  "version": "1.0.0",
+  "description": "Highly extendable random in the Lens.",
+  "type": "commonjs",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lensapp/lens.git"
+  },
+  "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "types": "dist/index.d.ts",
+  "author": {
+    "name": "OpenLens Authors",
+    "email": "info@k8slens.dev"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/lensapp/lens",
+  "scripts": {
+    "build": "lens-webpack-build",
+    "lint": "lens-lint",
+    "lint:fix": "lens-lint --fix"
+  },
+  "peerDependencies": {
+    "@k8slens/feature-core": "^6.5.0-alpha.0",
+    "@ogre-tools/injectable": "^17.1.0",
+    "@ogre-tools/injectable-extension-for-auto-registration": "^17.1.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@k8slens/eslint-config": "^6.5.0",
+    "@k8slens/webpack": "^6.5.0"
+  }
+}

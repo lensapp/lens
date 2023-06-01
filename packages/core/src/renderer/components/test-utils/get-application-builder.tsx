@@ -52,7 +52,7 @@ import { applicationWindowInjectionToken } from "../../../main/start-main-applic
 import type { LensWindow } from "../../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
 import type { FakeExtensionOptions } from "./get-extension-fake";
 import { getExtensionFakeForMain, getExtensionFakeForRenderer } from "./get-extension-fake";
-import namespaceApiInjectable from "../../../common/k8s-api/endpoints/namespace.api.injectable";
+import { namespaceApiInjectable } from "@k8slens/kube-api-specifics";
 import { Namespace } from "@k8slens/kube-object";
 import { getOverrideFsWithFakes } from "../../../test-utils/override-fs-with-fakes";
 import applicationMenuItemCompositeInjectable from "../../../features/application-menu/main/application-menu-item-composite.injectable";

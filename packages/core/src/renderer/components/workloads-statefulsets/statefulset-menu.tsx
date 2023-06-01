@@ -8,7 +8,7 @@ import type { StatefulSet } from "@k8slens/kube-object";
 import { MenuItem } from "../menu";
 import { Icon } from "@k8slens/icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import statefulSetApiInjectable from "../../../common/k8s-api/endpoints/stateful-set.api.injectable";
+import { statefulSetApiInjectable } from "@k8slens/kube-api-specifics";
 import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
 import type { ShowCheckedErrorNotification } from "../notifications/show-checked-error.injectable";

@@ -5,9 +5,8 @@
 import assert from "assert";
 import { getInjectable } from "@ogre-tools/injectable";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/kube-object-store-token";
-import ingressClassApiInjectable from "../../../common/k8s-api/endpoints/ingress-class.api.injectable";
+import { ingressClassApiInjectable, storesAndApisCanBeCreatedInjectionToken } from "@k8slens/kube-api-specifics";
 import { IngressClassStore } from "./ingress-class-store";
-import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import clusterFrameContextForClusterScopedResourcesInjectable from "../../cluster-frame-context/for-cluster-scoped-resources.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
 
@@ -15,7 +14,7 @@ const ingressClassStoreInjectable = getInjectable({
   id: "ingress-class-store",
 
   instantiate: (di) => {
-    assert(di.inject(storesAndApisCanBeCreatedInjectable), "ingressClassStore is only available in certain environments");
+    assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "ingressClassStore is only available in certain environments");
 
     const api = di.inject(ingressClassApiInjectable);
 

@@ -14,7 +14,7 @@ import type { TrayMenuRegistration } from "../tray-menu-registration";
 import { withErrorSuppression } from "../../../common/utils/with-error-suppression/with-error-suppression";
 import type { WithErrorLoggingFor } from "../../../common/utils/with-error-logging/with-error-logging.injectable";
 import withErrorLoggingInjectable from "../../../common/utils/with-error-logging/with-error-logging.injectable";
-import getRandomIdInjectable from "../../../common/utils/get-random-id.injectable";
+import { getRandomIdInjectionToken } from "@k8slens/random";
 import { isBoolean, isString } from "@k8slens/utilities";
 
 const trayMenuItemRegistratorInjectable = getInjectable({
@@ -23,7 +23,7 @@ const trayMenuItemRegistratorInjectable = getInjectable({
   instantiate: (di) => (extension) => {
     const mainExtension = extension as LensMainExtension;
     const withErrorLoggingFor = di.inject(withErrorLoggingInjectable);
-    const getRandomId = di.inject(getRandomIdInjectable);
+    const getRandomId = di.inject(getRandomIdInjectionToken);
 
     return computed(() => {
       const trayMenus = Array.isArray(mainExtension.trayMenus) ? mainExtension.trayMenus : mainExtension.trayMenus.get();
