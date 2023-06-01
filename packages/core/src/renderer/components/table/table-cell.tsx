@@ -14,6 +14,8 @@ import type { TableCellProps } from "@k8slens/list-layout";
 
 export type TableCellElem = React.ReactElement<TableCellProps>;
 
+export type { TableCellProps };
+
 export class TableCell extends React.Component<TableCellProps> {
   constructor(props: TableCellProps) {
     super(props);
