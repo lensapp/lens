@@ -6,5 +6,5 @@ export const doWebpackBuild = ({ watch }: { watch: boolean }) => {
 
   const doWebpackBuild = di.inject(doWebpackBuildInjectable);
 
-  doWebpackBuild({ watch });
+  return doWebpackBuild({ watch });
 };

@@ -1,4 +1,8 @@
 #!/usr/bin/env node
 const { doWebpackBuild } = require("../dist/index");
 
-doWebpackBuild({ watch: process.argv.includes("--watch") });
+doWebpackBuild({
+  watch: process.argv.includes("--watch"),
+}).then(({ statusCode }) => {
+  process.exit(statusCode);
+});

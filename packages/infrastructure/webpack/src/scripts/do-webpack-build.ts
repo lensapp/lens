@@ -3,7 +3,13 @@ import { execInjectable } from "./exec.injectable";
 import { logSuccessInjectable } from "./log-success.injectable";
 import { logWarningInjectable } from "./log-warning.injectable";
 
-export type DoWebpackBuild = ({ watch }: { watch: boolean }) => Promise<void>;
+export type DoWebpackBuildResult = { statusCode: number };
+
+export type DoWebpackBuild = ({
+  watch,
+}: {
+  watch: boolean;
+}) => Promise<DoWebpackBuildResult>;
 
 export const doWebpackBuildInjectable = getInjectable({
   id: "do-webpack-build",
@@ -19,8 +25,10 @@ export const doWebpackBuildInjectable = getInjectable({
       execResult.stdout?.on("data", logSuccess);
       execResult.stderr?.on("data", logWarning);
 
-      return new Promise<void>((resolve) => {
-        execResult.on("exit", resolve);
+      return new Promise<DoWebpackBuildResult>((resolve) => {
+        execResult.on("exit", (statusCode: number) => {
+          resolve({ statusCode });
+        });
       });
     };
   },

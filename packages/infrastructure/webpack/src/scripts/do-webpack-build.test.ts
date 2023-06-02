@@ -1,7 +1,11 @@
 import { getDi } from "./get-di";
 import { execInjectable } from "./exec.injectable";
 import asyncFn, { AsyncFnMock } from "@async-fn/jest";
-import { DoWebpackBuild, doWebpackBuildInjectable } from "./do-webpack-build";
+import {
+  DoWebpackBuild,
+  doWebpackBuildInjectable,
+  DoWebpackBuildResult,
+} from "./do-webpack-build";
 import { getPromiseStatus } from "@ogre-tools/test-utils";
 import { LogSuccess, logSuccessInjectable } from "./log-success.injectable";
 import { LogWarning, logWarningInjectable } from "./log-warning.injectable";
@@ -31,23 +35,23 @@ describe("do-webpack-build", () => {
     doWebpackBuild = di.inject(doWebpackBuildInjectable);
   });
 
-  it('given watching, when called, calls webpack with watch', () => {
-    doWebpackBuild({ watch: true});
+  it("given watching, when called, calls webpack with watch", () => {
+    doWebpackBuild({ watch: true });
 
     expect(execMock).toHaveBeenCalledWith("webpack --watch");
   });
 
-  it('given not watching, when called, calls webpack without watch', () => {
-    doWebpackBuild({ watch: false});
+  it("given not watching, when called, calls webpack without watch", () => {
+    doWebpackBuild({ watch: false });
 
     expect(execMock).toHaveBeenCalledWith("webpack");
   });
 
   describe("normally, when called", () => {
-    let actualPromise: Promise<void>;
+    let actualPromise: Promise<DoWebpackBuildResult>;
 
     beforeEach(() => {
-      actualPromise = doWebpackBuild({ watch: true});
+      actualPromise = doWebpackBuild({ watch: true });
     });
 
     it("calls webpack", () => {
@@ -72,14 +76,13 @@ describe("do-webpack-build", () => {
       expect(promiseStatus.fulfilled).toBe(false);
     });
 
-    it("when execution of webpack exits, script is done", async () => {
+    it("when execution of webpack exits with a status-code, script resolves with the status-code", async () => {
       const [[eventName, finishWebpack]] = execResultStub.on.mock.calls;
 
-      eventName === "exit" && finishWebpack();
+      const withoutError = 42;
+      eventName === "exit" && finishWebpack(withoutError);
 
-      const promiseStatus = await getPromiseStatus(actualPromise);
-
-      expect(promiseStatus.fulfilled).toBe(true);
+      expect(await actualPromise).toEqual({ statusCode: 42 });
     });
   });
 });
