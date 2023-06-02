@@ -9,10 +9,22 @@
       }
     }
   },
+  "namedInputs": {
+    "productionFiles": [
+      "default",
+      "!{projectRoot}/**/*.test.ts",
+      "!{projectRoot}/**/*.test.tsx",
+      "!{projectRoot}/**/*.md"
+    ]
+  },
   "targetDefaults": {
     "build": {
       "dependsOn": [
         "^build"
+      ],
+
+      "inputs": [
+        "productionFiles"
       ]
     },
     "build:app": {
