@@ -3,17 +3,26 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { bytesSent, prometheusProviderInjectionToken, findNamespacedService, createPrometheusProvider } from "./provider";
-import type {  PrometheusProvider } from "./provider";
+import type { PrometheusProvider } from "./provider";
+import {
+  createPrometheusProvider,
+  bytesSent,
+  findFirstNamespacedService,
+  prometheusProviderInjectionToken,
+} from "./provider";
 import { getInjectable } from "@ogre-tools/injectable";
 
-export const getLensLikeQueryFor = ({ rateAccuracy }: { rateAccuracy: string }): PrometheusProvider["getQuery"] => (
+export const getHelmLikeQueryFor =
+  ({ rateAccuracy }: { rateAccuracy: string }): PrometheusProvider["getQuery"] =>
   (opts, queryName) => {
-    switch(opts.category) {
+    switch (opts.category) {
       case "cluster":
         switch (queryName) {
           case "memoryUsage":
-            return `sum(node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) by (kubernetes_name)`.replace(/_bytes/g, `_bytes{kubernetes_node=~"${opts.nodes}"}`);
+            return `sum(node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) by (component)`.replace(
+              /_bytes/g,
+              `_bytes{node=~"${opts.nodes}"}`,
+            );
           case "workloadMemoryUsage":
             return `sum(container_memory_working_set_bytes{container!="POD",container!="",instance=~"${opts.nodes}"}) by (component)`;
           case "memoryRequests":
@@ -25,7 +34,7 @@ export const getLensLikeQueryFor = ({ rateAccuracy }: { rateAccuracy: string }):
           case "memoryAllocatableCapacity":
             return `sum(kube_node_status_allocatable{node=~"${opts.nodes}", resource="memory"}) by (component)`;
           case "cpuUsage":
-            return `sum(rate(node_cpu_seconds_total{kubernetes_node=~"${opts.nodes}", mode=~"user|system"}[${rateAccuracy}]))`;
+            return `sum(rate(node_cpu_seconds_total{node=~"${opts.nodes}", mode=~"user|system"}[${rateAccuracy}]))`;
           case "cpuRequests":
             return `sum(kube_pod_container_resource_requests{node=~"${opts.nodes}", resource="cpu"}) by (component)`;
           case "cpuLimits":
@@ -41,15 +50,15 @@ export const getLensLikeQueryFor = ({ rateAccuracy }: { rateAccuracy: string }):
           case "podAllocatableCapacity":
             return `sum(kube_node_status_allocatable{node=~"${opts.nodes}", resource="pods"}) by (component)`;
           case "fsSize":
-            return `sum(node_filesystem_size_bytes{kubernetes_node=~"${opts.nodes}", mountpoint="/"}) by (kubernetes_node)`;
+            return `sum(node_filesystem_size_bytes{node=~"${opts.nodes}", mountpoint="/"}) by (node)`;
           case "fsUsage":
-            return `sum(node_filesystem_size_bytes{kubernetes_node=~"${opts.nodes}", mountpoint="/"} - node_filesystem_avail_bytes{kubernetes_node=~"${opts.nodes}", mountpoint="/"}) by (kubernetes_node)`;
+            return `sum(node_filesystem_size_bytes{node=~"${opts.nodes}", mountpoint="/"} - node_filesystem_avail_bytes{node=~"${opts.nodes}", mountpoint="/"}) by (node)`;
         }
         break;
       case "nodes":
         switch (queryName) {
           case "memoryUsage":
-            return `sum (node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) by (kubernetes_node)`;
+            return `sum(node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) by (node)`;
           case "workloadMemoryUsage":
             return `sum(container_memory_working_set_bytes{container!="POD",container!=""}) by (instance)`;
           case "memoryCapacity":
@@ -57,15 +66,15 @@ export const getLensLikeQueryFor = ({ rateAccuracy }: { rateAccuracy: string }):
           case "memoryAllocatableCapacity":
             return `sum(kube_node_status_allocatable{resource="memory"}) by (node)`;
           case "cpuUsage":
-            return `sum(rate(node_cpu_seconds_total{mode=~"user|system"}[${rateAccuracy}])) by(kubernetes_node)`;
+            return `sum(rate(node_cpu_seconds_total{mode=~"user|system"}[${rateAccuracy}])) by(node)`;
           case "cpuCapacity":
             return `sum(kube_node_status_allocatable{resource="cpu"}) by (node)`;
           case "cpuAllocatableCapacity":
             return `sum(kube_node_status_allocatable{resource="cpu"}) by (node)`;
           case "fsSize":
-            return `sum(node_filesystem_size_bytes{mountpoint="/"}) by (kubernetes_node)`;
+            return `sum(node_filesystem_size_bytes{mountpoint="/"}) by (node)`;
           case "fsUsage":
-            return `sum(node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_avail_bytes{mountpoint="/"}) by (kubernetes_node)`;
+            return `sum(node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_avail_bytes{mountpoint="/"}) by (node)`;
         }
         break;
       case "pods":
@@ -127,20 +136,19 @@ export const getLensLikeQueryFor = ({ rateAccuracy }: { rateAccuracy: string }):
     }
 
     throw new Error(`Unknown queryName="${queryName}" for category="${opts.category}"`);
-  }
-);
+  };
 
-const lensPrometheusProviderInjectable = getInjectable({
-  id: "lens-prometheus-provider",
-  instantiate: () => createPrometheusProvider({
-    kind: "lens",
-    name: "Lens",
-    isConfigurable: false,
-    getQuery: getLensLikeQueryFor({ rateAccuracy: "1m" }),
-    getService: (client) => findNamespacedService(client, "prometheus", "lens-metrics"),
-  }),
+const helmPrometheusProviderInjectable = getInjectable({
+  id: "helm-prometheus-provider",
+  instantiate: () =>
+    createPrometheusProvider({
+      kind: "helm",
+      name: "Helm",
+      isConfigurable: true,
+      getQuery: getHelmLikeQueryFor({ rateAccuracy: "5m" }),
+      getService: (client) => findFirstNamespacedService(client, "app=prometheus,component=server,heritage=Helm"),
+    }),
   injectionToken: prometheusProviderInjectionToken,
 });
 
-export default lensPrometheusProviderInjectable;
-
+export default helmPrometheusProviderInjectable;

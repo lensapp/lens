@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import { rootFrameChildComponentInjectionToken } from "../../../../../../renderer/frames/root-frame/root-frame-child-component-injection-token";
+import { rootFrameChildComponentInjectionToken } from "@k8slens/react-application";
 import { ForceUpdateModal } from "./force-update-modal";
 import timeSinceUpdateWasDownloadedInjectable from "./time-since-update-was-downloaded.injectable";
 import updateDownloadedDateTimeInjectable from "../../../../common/update-downloaded-date-time.injectable";

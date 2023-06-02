@@ -4,6 +4,9 @@ exports[`hiding Update Channel preference with updating is not enabled renders 1
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -673,9 +676,6 @@ exports[`hiding Update Channel preference with updating is not enabled renders 1
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -683,6 +683,9 @@ exports[`hiding Update Channel preference with updating is not enabled renders 1
 exports[`showing Update Channel preference with updating is enabled renders 1`] = `
 <body>
   <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
     <div
       class="ClusterManager"
     >
@@ -1442,9 +1445,6 @@ exports[`showing Update Channel preference with updating is enabled renders 1`] 
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;

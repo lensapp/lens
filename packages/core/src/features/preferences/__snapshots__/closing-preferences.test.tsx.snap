@@ -3,6 +3,9 @@
 exports[`preferences - closing-preferences given accessing preferences directly renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -684,15 +687,15 @@ exports[`preferences - closing-preferences given accessing preferences directly 
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;
 
 exports[`preferences - closing-preferences given accessing preferences directly when navigating to a tab in preferences renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -1049,15 +1052,15 @@ exports[`preferences - closing-preferences given accessing preferences directly 
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;
 
 exports[`preferences - closing-preferences given accessing preferences directly when navigating to a tab in preferences when preferences are closed renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -1272,15 +1275,15 @@ exports[`preferences - closing-preferences given accessing preferences directly 
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;
 
 exports[`preferences - closing-preferences given accessing preferences directly when preferences are closed renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -1495,14 +1498,14 @@ exports[`preferences - closing-preferences given accessing preferences directly 
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;
 
 exports[`preferences - closing-preferences given already in a page and then navigated to preferences renders 1`] = `
 <div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
   <div
     class="ClusterManager"
   >
@@ -2185,14 +2188,14 @@ exports[`preferences - closing-preferences given already in a page and then navi
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;
 
 exports[`preferences - closing-preferences given already in a page and then navigated to preferences when navigating to a tab in preferences renders 1`] = `
 <div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
   <div
     class="ClusterManager"
   >
@@ -2550,15 +2553,15 @@ exports[`preferences - closing-preferences given already in a page and then navi
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;
 
 exports[`preferences - closing-preferences given already in a page and then navigated to preferences when navigating to a tab in preferences when preferences are closed renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -2773,15 +2776,15 @@ exports[`preferences - closing-preferences given already in a page and then navi
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;
 
 exports[`preferences - closing-preferences given already in a page and then navigated to preferences when preferences are closed renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -2996,8 +2999,5 @@ exports[`preferences - closing-preferences given already in a page and then navi
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;

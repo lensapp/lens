@@ -9,7 +9,7 @@ import { apiKubeInjectionToken } from "@k8slens/kube-api";
 import { storesAndApisCanBeCreatedInjectionToken } from "@k8slens/kube-api-specifics";
 import createKubeJsonApiInjectable from "../../common/k8s-api/create-kube-json-api.injectable";
 import isDevelopmentInjectable from "../../common/vars/is-development.injectable";
-import showErrorNotificationInjectable from "../components/notifications/show-error-notification.injectable";
+import { showErrorNotificationInjectable } from "@k8slens/notifications";
 import windowLocationInjectable from "../../common/k8s-api/window-location.injectable";
 import { apiBaseServerAddressInjectionToken } from "../../common/k8s-api/api-base-configs";
 

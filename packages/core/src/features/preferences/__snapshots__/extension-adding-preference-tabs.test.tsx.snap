@@ -4,6 +4,9 @@ exports[`preferences: extension adding preference tabs given in preferences, whe
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -697,9 +700,6 @@ exports[`preferences: extension adding preference tabs given in preferences, whe
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;

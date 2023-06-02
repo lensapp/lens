@@ -11,7 +11,7 @@ import assert from "assert";
 import emitAppEventInjectable from "../../../../common/app-event-bus/emit-event.injectable";
 import loadExtensionsInjectable from "../../load-extensions.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
-import showErrorNotificationInjectable from "../../../components/notifications/show-error-notification.injectable";
+import { showErrorNotificationInjectable } from "@k8slens/notifications";
 
 const initClusterFrameInjectable = getInjectable({
   id: "init-cluster-frame",

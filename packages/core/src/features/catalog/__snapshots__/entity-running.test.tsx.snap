@@ -4,6 +4,9 @@ exports[`entity running technical tests when navigated to catalog renders 1`] = 
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -704,9 +707,6 @@ exports[`entity running technical tests when navigated to catalog renders 1`] = 
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -715,6 +715,9 @@ exports[`entity running technical tests when navigated to catalog when details p
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -1415,9 +1418,6 @@ exports[`entity running technical tests when navigated to catalog when details p
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <ul
     class="Animate opacity Menu MenuActions flex bottom right portal enter leave"

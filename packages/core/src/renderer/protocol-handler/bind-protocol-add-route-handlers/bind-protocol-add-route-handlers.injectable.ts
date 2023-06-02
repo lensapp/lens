@@ -13,7 +13,7 @@ import navigateToEntitySettingsInjectable from "../../../common/front-end-routin
 import navigateToClusterViewInjectable from "../../../common/front-end-routing/routes/cluster-view/navigate-to-cluster-view.injectable";
 import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
 import navigateToPreferencesInjectable from "../../../features/preferences/common/navigate-to-preferences.injectable";
-import showShortInfoNotificationInjectable from "../../components/notifications/show-short-info.injectable";
+import { showShortInfoNotificationInjectable } from "@k8slens/notifications";
 import getClusterByIdInjectable from "../../../features/cluster/storage/common/get-by-id.injectable";
 
 const bindProtocolAddRouteHandlersInjectable = getInjectable({

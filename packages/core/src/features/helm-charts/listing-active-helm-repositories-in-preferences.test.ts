@@ -15,7 +15,7 @@ import helmBinaryPathInjectable from "../../main/helm/helm-binary-path.injectabl
 import { loggerInjectionToken } from "@k8slens/logger";
 import type { Logger } from "@k8slens/logger";
 import requestPublicHelmRepositoriesInjectable from "./child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/request-public-helm-repositories.injectable";
-import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
+import { showErrorNotificationInjectable } from "@k8slens/notifications";
 import { noop } from "@k8slens/utilities";
 
 describe("listing active helm repositories in preferences", () => {

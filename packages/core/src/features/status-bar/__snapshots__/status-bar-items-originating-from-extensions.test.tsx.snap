@@ -4,6 +4,9 @@ exports[`status-bar-items-originating-from-extensions when application starts wh
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -392,9 +395,6 @@ exports[`status-bar-items-originating-from-extensions when application starts wh
         </div>
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;

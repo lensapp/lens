@@ -7,11 +7,15 @@ import { JsonApiErrorParsed } from "@k8slens/json-api";
 import { loggerInjectionToken } from "@k8slens/logger";
 import type { Disposer } from "@k8slens/utilities";
 import type { CreateNotificationOptions } from "./notifications.store";
-import showErrorNotificationInjectable from "./show-error-notification.injectable";
+import { showErrorNotificationInjectable } from "./show-error-notification.injectable";
 
-export type ShowCheckedErrorNotification = (message: unknown, fallback: string, opts?: CreateNotificationOptions) => Disposer;
+export type ShowCheckedErrorNotification = (
+  message: unknown,
+  fallback: string,
+  opts?: CreateNotificationOptions,
+) => Disposer;
 
-const showCheckedErrorNotificationInjectable = getInjectable({
+export const showCheckedErrorNotificationInjectable = getInjectable({
   id: "show-checked-error-notififcation",
   instantiate: (di): ShowCheckedErrorNotification => {
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
@@ -28,5 +32,3 @@ const showCheckedErrorNotificationInjectable = getInjectable({
     };
   },
 });
-
-export default showCheckedErrorNotificationInjectable;

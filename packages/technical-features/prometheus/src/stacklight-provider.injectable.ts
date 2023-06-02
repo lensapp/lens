@@ -4,16 +4,25 @@
  */
 
 import type { PrometheusProvider } from "./provider";
-import { createPrometheusProvider, bytesSent, findFirstNamespacedService, prometheusProviderInjectionToken } from "./provider";
+import {
+  bytesSent,
+  createPrometheusProvider,
+  findFirstNamespacedService,
+  prometheusProviderInjectionToken,
+} from "./provider";
 import { getInjectable } from "@ogre-tools/injectable";
 
-export const getHelmLikeQueryFor = ({ rateAccuracy }: { rateAccuracy: string }): PrometheusProvider["getQuery"] => (
+export const getStacklightLikeQueryFor =
+  ({ rateAccuracy }: { rateAccuracy: string }): PrometheusProvider["getQuery"] =>
   (opts, queryName) => {
-    switch(opts.category) {
+    switch (opts.category) {
       case "cluster":
         switch (queryName) {
           case "memoryUsage":
-            return `sum(node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) by (component)`.replace(/_bytes/g, `_bytes{node=~"${opts.nodes}"}`);
+            return `sum(node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) by (kubernetes_name)`.replace(
+              /_bytes/g,
+              `_bytes{node=~"${opts.nodes}"}`,
+            );
           case "workloadMemoryUsage":
             return `sum(container_memory_working_set_bytes{container!="POD",container!="",instance=~"${opts.nodes}"}) by (component)`;
           case "memoryRequests":
@@ -49,7 +58,7 @@ export const getHelmLikeQueryFor = ({ rateAccuracy }: { rateAccuracy: string }):
       case "nodes":
         switch (queryName) {
           case "memoryUsage":
-            return `sum(node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) by (node)`;
+            return `sum (node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) by (node)`;
           case "workloadMemoryUsage":
             return `sum(container_memory_working_set_bytes{container!="POD",container!=""}) by (instance)`;
           case "memoryCapacity":
@@ -127,20 +136,19 @@ export const getHelmLikeQueryFor = ({ rateAccuracy }: { rateAccuracy: string }):
     }
 
     throw new Error(`Unknown queryName="${queryName}" for category="${opts.category}"`);
-  }
-);
+  };
 
-const helmPrometheusProviderInjectable = getInjectable({
-  id: "helm-prometheus-provider",
-  instantiate: () => createPrometheusProvider({
-    kind: "helm",
-    name: "Helm",
-    isConfigurable: true,
-    getQuery: getHelmLikeQueryFor({ rateAccuracy: "5m" }),
-    getService: (client) => findFirstNamespacedService(client, "app=prometheus,component=server,heritage=Helm"),
-  }),
+const stacklightPrometheusProviderInjectable = getInjectable({
+  id: "stacklight-prometheus-provider",
+  instantiate: () =>
+    createPrometheusProvider({
+      kind: "stacklight",
+      name: "Stacklight",
+      isConfigurable: true,
+      getService: (client) => findFirstNamespacedService(client, "prometheus-server", "stacklight"),
+      getQuery: getStacklightLikeQueryFor({ rateAccuracy: "1m" }),
+    }),
   injectionToken: prometheusProviderInjectionToken,
 });
 
-export default helmPrometheusProviderInjectable;
-
+export default stacklightPrometheusProviderInjectable;

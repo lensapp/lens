@@ -3,6 +3,9 @@
 exports[`navigate to extension page renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -339,14 +342,14 @@ exports[`navigate to extension page renders 1`] = `
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;
 
 exports[`navigate to extension page when extension navigates to child route renders 1`] = `
 <div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
   <div
     class="ClusterManager"
   >
@@ -560,14 +563,14 @@ exports[`navigate to extension page when extension navigates to child route rend
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;
 
 exports[`navigate to extension page when extension navigates to route with parameters renders 1`] = `
 <div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
   <div
     class="ClusterManager"
   >
@@ -797,14 +800,14 @@ exports[`navigate to extension page when extension navigates to route with param
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;
 
 exports[`navigate to extension page when extension navigates to route without parameters renders 1`] = `
 <div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
   <div
     class="ClusterManager"
   >
@@ -1034,14 +1037,14 @@ exports[`navigate to extension page when extension navigates to route without pa
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;
 
 exports[`navigate to extension page when extension navigates to route without parameters when changing page parameters renders 1`] = `
 <div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
   <div
     class="ClusterManager"
   >
@@ -1271,8 +1274,5 @@ exports[`navigate to extension page when extension navigates to route without pa
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;

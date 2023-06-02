@@ -4,6 +4,9 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -41,9 +44,6 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -864,6 +864,9 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -901,9 +904,6 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"

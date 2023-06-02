@@ -8,7 +8,7 @@ import { map } from "lodash/fp";
 import { extensionRegistratorInjectionToken } from "../../../extensions/extension-loader/extension-registrator-injection-token";
 import type { ExtensionRegistrator } from "../../../extensions/extension-loader/extension-registrator-injection-token";
 import type { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
-import { clusterFrameChildComponentInjectionToken } from "./cluster-frame-child-component-injection-token";
+import { clusterFrameChildComponentInjectionToken } from "@k8slens/react-application";
 
 const clusterFrameComponentRegistratorInjectable = getInjectable({
   id: "cluster-frame-component-registrator",

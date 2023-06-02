@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
 import { getActiveHelmRepositoriesChannel } from "../../../../../common/helm/get-active-helm-repositories-channel";
 import { requestFromChannelInjectionToken } from "@k8slens/messaging";
-import showErrorNotificationInjectable from "../../../../../renderer/components/notifications/show-error-notification.injectable";
+import { showErrorNotificationInjectable } from "@k8slens/notifications";
 import helmRepositoriesErrorStateInjectable from "./helm-repositories-error-state.injectable";
 import { runInAction } from "mobx";
 

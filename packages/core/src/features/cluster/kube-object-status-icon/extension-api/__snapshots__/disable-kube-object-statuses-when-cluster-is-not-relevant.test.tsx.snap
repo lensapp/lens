@@ -4,6 +4,9 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -41,9 +44,6 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -433,6 +433,9 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -470,9 +473,6 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -822,6 +822,9 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -859,9 +862,6 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"

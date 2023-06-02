@@ -7,4 +7,10 @@ export type { ReactApplicationChildren } from "./src/react-application/react-app
 export { reactApplicationHigherOrderComponentInjectionToken } from "./src/react-application/react-application-higher-order-component-injection-token";
 export type { ReactApplicationHigherOrderComponent } from "./src/react-application/react-application-higher-order-component-injection-token";
 
+export { clusterFrameChildComponentInjectionToken } from "./src/cluster-frame/cluster-frame-child-component-injection-token";
+export type { ClusterFrameChildComponent } from "./src/cluster-frame/cluster-frame-child-component-injection-token";
+
+export { rootFrameChildComponentInjectionToken } from "./src/root-frame/root-frame-child-component-injection-token";
+export type { RootFrameChildComponent } from "./src/root-frame/root-frame-child-component-injection-token";
+
 export { reactApplicationFeature } from "./src/feature";

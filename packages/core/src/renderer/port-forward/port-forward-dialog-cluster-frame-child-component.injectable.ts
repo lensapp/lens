@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import { PortForwardDialog } from "./port-forward-dialog";
-import { clusterFrameChildComponentInjectionToken } from "../frames/cluster-frame/cluster-frame-child-component-injection-token";
+import { clusterFrameChildComponentInjectionToken } from "@k8slens/react-application";
 
 const portForwardDialogClusterFrameChildComponentInjectable = getInjectable({
   id: "port-forward-dialog-cluster-frame-child-component",

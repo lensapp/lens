@@ -13,8 +13,8 @@ import { deploymentApiInjectable } from "@k8slens/kube-api-specifics";
 import openDeploymentScaleDialogInjectable from "./scale/open.injectable";
 import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
-import type { ShowCheckedErrorNotification } from "../notifications/show-checked-error.injectable";
-import showCheckedErrorNotificationInjectable from "../notifications/show-checked-error.injectable";
+import type { ShowCheckedErrorNotification } from "@k8slens/notifications";
+import { showCheckedErrorNotificationInjectable } from "@k8slens/notifications";
 import type { DeploymentApi } from "@k8slens/kube-api";
 
 export interface DeploymentMenuProps extends KubeObjectMenuProps<Deployment> {}

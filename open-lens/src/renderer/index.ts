@@ -5,6 +5,7 @@ import "@k8slens/tooltip/styles";
 import "@k8slens/resizing-anchor/styles";
 import "@k8slens/icon/styles";
 import "@k8slens/animate/styles";
+import "@k8slens/notifications/styles";
 
 import { runInAction } from "mobx";
 import {
@@ -31,6 +32,7 @@ import { animateFeature } from "@k8slens/animate";
 import { clusterSidebarFeature } from "@k8slens/cluster-sidebar";
 import { randomFeature } from "@k8slens/random";
 import { kubeApiSpecificsFeature } from "@k8slens/kube-api-specifics";
+import { notificationsFeature } from "@k8slens/notifications";
 
 const environment = "renderer";
 
@@ -60,6 +62,7 @@ runInAction(() => {
     clusterSidebarFeature,
     randomFeature,
     kubeApiSpecificsFeature,
+    notificationsFeature,
   );
 
   autoRegister({

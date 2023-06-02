@@ -23,8 +23,8 @@ import closeCreateServiceAccountDialogInjectable from "./close.injectable";
 import serviceAccountStoreInjectable from "../store.injectable";
 import showDetailsInjectable from "../../../kube-detail-params/show-details.injectable";
 import createServiceAccountDialogStateInjectable from "./state.injectable";
-import type { ShowCheckedErrorNotification } from "../../../notifications/show-checked-error.injectable";
-import showCheckedErrorNotificationInjectable from "../../../notifications/show-checked-error.injectable";
+import type { ShowCheckedErrorNotification } from "@k8slens/notifications";
+import { showCheckedErrorNotificationInjectable } from "@k8slens/notifications";
 
 export interface CreateServiceAccountDialogProps extends Partial<DialogProps> {
 }
