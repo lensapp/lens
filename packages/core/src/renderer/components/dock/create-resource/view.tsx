@@ -20,7 +20,7 @@ import { isObject, prevDefault } from "@k8slens/utilities";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import createResourceTabStoreInjectable from "./store.injectable";
 import createResourceTemplatesInjectable from "./create-resource-templates.injectable";
-import { Spinner } from "../../spinner";
+import { Spinner } from "@k8slens/spinner";
 import type { GroupBase } from "react-select";
 import type { Navigate } from "../../../navigation/navigate.injectable";
 import type { GetDetailsUrl } from "../../kube-detail-params/get-details-url.injectable";

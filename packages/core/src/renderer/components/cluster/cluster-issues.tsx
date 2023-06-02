@@ -13,7 +13,7 @@ import { Icon } from "@k8slens/icon";
 import { SubHeader } from "../layout/sub-header";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { cssNames, prevDefault } from "@k8slens/utilities";
-import { Spinner } from "../spinner";
+import { Spinner } from "@k8slens/spinner";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { KubeObjectAge } from "../kube-object/age";
 import { withInjectables } from "@ogre-tools/injectable-react";

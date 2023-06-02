@@ -11,7 +11,7 @@ import type { PersistentVolume } from "@k8slens/kube-object";
 import { TableRow } from "../table/table-row";
 import { cssNames, prevDefault } from "@k8slens/utilities";
 import { TableCell } from "../table/table-cell";
-import { Spinner } from "../spinner/spinner";
+import { Spinner } from "@k8slens/spinner";
 import { DrawerTitle } from "../drawer/drawer-title";
 import { Table } from "../table/table";
 import { TableHead } from "../table/table-head";

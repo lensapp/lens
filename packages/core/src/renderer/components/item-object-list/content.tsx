@@ -17,7 +17,7 @@ import { cssNames, isDefined, isReactNode, noop, prevDefault, stopPropagation } 
 import type { AddRemoveButtonsProps } from "../add-remove-buttons";
 import { AddRemoveButtons } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
-import { Spinner } from "../spinner";
+import { Spinner } from "@k8slens/spinner";
 import type { ItemObject, TableCellProps } from "@k8slens/list-layout";
 import type { Filter, PageFiltersStore } from "./page-filters/store";
 import type { LensTheme } from "../../themes/lens-theme";

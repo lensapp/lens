@@ -20,7 +20,7 @@ import type { VirtualListRef } from "../../virtual-list";
 import { VirtualList } from "../../virtual-list";
 import { ToBottom } from "./to-bottom";
 import type { LogTabViewModel } from "../logs/logs-view-model";
-import { Spinner } from "../../spinner";
+import { Spinner } from "@k8slens/spinner";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import autoBindReact from "auto-bind/react";
 import type { UserPreferencesState } from "../../../../features/user-preferences/common/state.injectable";

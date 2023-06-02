@@ -14,7 +14,7 @@ import type { Secret, ServiceAccount } from "@k8slens/kube-object";
 import { DrawerItem, DrawerTitle } from "../../drawer";
 import { Icon } from "@k8slens/icon";
 import type { KubeObjectDetailsProps } from "../../kube-object-details";
-import { Spinner } from "../../spinner";
+import { Spinner } from "@k8slens/spinner";
 import { ServiceAccountsSecret } from "./secret";
 import type { SecretStore } from "../../config-secrets/store";
 import type { GetDetailsUrl } from "../../kube-detail-params/get-details-url.injectable";

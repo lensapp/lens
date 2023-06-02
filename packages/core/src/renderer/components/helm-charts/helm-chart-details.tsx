@@ -11,7 +11,7 @@ import { observer } from "mobx-react";
 import { Drawer, DrawerItem } from "../drawer";
 import { stopPropagation } from "@k8slens/utilities";
 import { MarkdownViewer } from "../markdown-viewer";
-import { Spinner } from "../spinner";
+import { Spinner } from "@k8slens/spinner";
 import { Button } from "@k8slens/button";
 import { Select } from "../select";
 import { Badge } from "../badge";

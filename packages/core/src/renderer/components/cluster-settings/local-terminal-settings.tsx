@@ -22,7 +22,7 @@ import type { OpenPathPickingDialog } from "../../../features/path-picking-dialo
 import openPathPickingDialogInjectable from "../../../features/path-picking-dialog/renderer/pick-paths.injectable";
 import type { LocalTerminalSettingPresenter } from "./local-terminal-setting-presenter.injectable";
 import localTerminalSettingPresenterInjectable from "./local-terminal-setting-presenter.injectable";
-import { Spinner } from "../spinner";
+import { Spinner } from "@k8slens/spinner";
 import { action, runInAction } from "mobx";
 
 export interface ClusterLocalTerminalSettingProps {

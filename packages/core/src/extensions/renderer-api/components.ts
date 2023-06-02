@@ -92,7 +92,7 @@ export const Notifications = {
   shortInfo: asLegacyGlobalFunctionForExtensionApi(showShortInfoNotificationInjectable),
 };
 
-export * from "../../renderer/components/spinner";
+export * from "@k8slens/spinner";
 export * from "../../renderer/components/stepper";
 export * from "../../renderer/components/wizard";
 export * from "../../renderer/components/workloads-pods/pod-details-list";

@@ -3,4 +3,5 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-export * from "./spinner";
+export type { SpinnerProps } from "./src/spinner";
+export { Spinner } from "./src/spinner";

@@ -10,7 +10,7 @@ import { observer } from "mobx-react";
 import type { IComputedValue } from "mobx";
 import { Drawer } from "../drawer";
 import type { KubeObject } from "@k8slens/kube-object";
-import { Spinner } from "../spinner";
+import { Spinner } from "@k8slens/spinner";
 import { KubeObjectMenu } from "../kube-object-menu";
 import type { HideDetails } from "../kube-detail-params/hide-details.injectable";
 import type { IAsyncComputed } from "@ogre-tools/injectable-react";
