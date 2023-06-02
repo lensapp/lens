@@ -59,10 +59,12 @@
         "dependsOn": [
           "^build"
         ],
+        "inputs": [
+          "productionFiles"
+        ],
         "outputs": [
-          "{workspaceRoot}/binaries/",
-          "{workspaceRoot}/build/webpack/",
-          "{workspaceRoot}/static/build/"
+          "{projectRoot}/dist/",
+          "{projectRoot}/static/build/"
         ]
       },
       "build:app": {
@@ -90,19 +92,19 @@
       },
       "dev:main": {
         "dependsOn": [
-          "^build",
+          "build",
           "download:binaries"
         ]
       },
       "dev:renderer": {
         "dependsOn": [
-          "^build",
+          "build",
           "build:tray-icons"
         ]
       },
       "dev-run": {
         "dependsOn": [
-          "^build"
+          "build"
         ]
       }
     }
