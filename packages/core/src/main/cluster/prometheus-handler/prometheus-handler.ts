@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { PrometheusProvider, PrometheusService } from "../../prometheus/provider";
+import type { PrometheusProvider, PrometheusService } from "@k8slens/prometheus";
 import type { ClusterPrometheusPreferences } from "../../../common/cluster-types";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { CoreV1Api } from "@kubernetes/client-node";

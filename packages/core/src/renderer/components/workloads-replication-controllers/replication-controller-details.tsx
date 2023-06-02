@@ -12,9 +12,9 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import type { ReplicationController } from "@k8slens/kube-object";
-import replicationControllerApiInjectable from "../../../common/k8s-api/endpoints/replication-controller.api.injectable";
-import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
-import type { ShowNotification } from "../notifications";
+import { replicationControllerApiInjectable } from "@k8slens/kube-api-specifics";
+import { showErrorNotificationInjectable } from "@k8slens/notifications";
+import type { ShowNotification } from "@k8slens/notifications";
 import { Slider } from "../slider";
 import type { ReplicationControllerApi } from "@k8slens/kube-api";
 

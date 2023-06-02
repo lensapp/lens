@@ -17,7 +17,7 @@ import { withTimeout } from "../../../common/fetch/timeout-controller";
 import downloadBinaryInjectable from "../../../common/fetch/download-binary.injectable";
 import downloadJsonInjectable from "../../../common/fetch/download-json/normal.injectable";
 import type { PackageJson } from "type-fest";
-import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
+import { showErrorNotificationInjectable } from "@k8slens/notifications";
 import { loggerInjectionToken } from "@k8slens/logger";
 
 export interface ExtensionInfo {

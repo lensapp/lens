@@ -4,6 +4,9 @@ exports[`custom category columns for catalog renders 1`] = `
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -579,9 +582,6 @@ exports[`custom category columns for catalog renders 1`] = `
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -589,6 +589,9 @@ exports[`custom category columns for catalog renders 1`] = `
 exports[`custom category columns for catalog when category is added using default colemns renders 1`] = `
 <body>
   <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
     <div
       class="ClusterManager"
     >
@@ -1196,9 +1199,6 @@ exports[`custom category columns for catalog when category is added using defaul
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -1206,6 +1206,9 @@ exports[`custom category columns for catalog when category is added using defaul
 exports[`custom category columns for catalog when category is added using default colemns when an extension is registered with additional custom columns when the Test category tab is clicked renders 1`] = `
 <body>
   <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
     <div
       class="ClusterManager"
     >
@@ -1803,9 +1806,6 @@ exports[`custom category columns for catalog when category is added using defaul
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -1813,6 +1813,9 @@ exports[`custom category columns for catalog when category is added using defaul
 exports[`custom category columns for catalog when category is added using default colemns when the Test category tab is clicked renders 1`] = `
 <body>
   <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
     <div
       class="ClusterManager"
     >
@@ -2399,9 +2402,6 @@ exports[`custom category columns for catalog when category is added using defaul
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -2409,6 +2409,9 @@ exports[`custom category columns for catalog when category is added using defaul
 exports[`custom category columns for catalog when category is added with custom columns renders 1`] = `
 <body>
   <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
     <div
       class="ClusterManager"
     >
@@ -3016,9 +3019,6 @@ exports[`custom category columns for catalog when category is added with custom 
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -3026,6 +3026,9 @@ exports[`custom category columns for catalog when category is added with custom 
 exports[`custom category columns for catalog when category is added with custom columns when the Test category tab is clicked renders 1`] = `
 <body>
   <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
     <div
       class="ClusterManager"
     >
@@ -3570,9 +3573,6 @@ exports[`custom category columns for catalog when category is added with custom 
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -3580,6 +3580,9 @@ exports[`custom category columns for catalog when category is added with custom 
 exports[`custom category columns for catalog when category is added without default columns renders 1`] = `
 <body>
   <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
     <div
       class="ClusterManager"
     >
@@ -4187,9 +4190,6 @@ exports[`custom category columns for catalog when category is added without defa
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -4197,6 +4197,9 @@ exports[`custom category columns for catalog when category is added without defa
 exports[`custom category columns for catalog when category is added without default columns when the Test category tab is clicked renders 1`] = `
 <body>
   <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
     <div
       class="ClusterManager"
     >
@@ -4730,9 +4733,6 @@ exports[`custom category columns for catalog when category is added without defa
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;

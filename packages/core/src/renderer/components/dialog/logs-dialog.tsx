@@ -9,13 +9,13 @@ import React from "react";
 import type { DialogProps } from "../dialog";
 import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
-import type { ShowNotification } from "../notifications";
+import type { ShowNotification } from "@k8slens/notifications";
 import { Button } from "@k8slens/button";
 import { Icon } from "@k8slens/icon";
 import { clipboard } from "electron";
 import { kebabCase } from "lodash/fp";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import showSuccessNotificationInjectable from "../notifications/show-success-notification.injectable";
+import { showSuccessNotificationInjectable } from "@k8slens/notifications";
 
 export interface LogsDialogProps extends DialogProps {
   title: string;

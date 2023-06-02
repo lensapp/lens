@@ -17,8 +17,7 @@ import React from "react";
 import type { InstallRequestValidated } from "./create-temp-files-and-validate.injectable";
 import extractTarInjectable from "../../../../common/fs/extract-tar.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
-import showInfoNotificationInjectable from "../../notifications/show-info-notification.injectable";
-import showErrorNotificationInjectable from "../../notifications/show-error-notification.injectable";
+import { showInfoNotificationInjectable, showErrorNotificationInjectable } from "@k8slens/notifications";
 
 export type UnpackExtension = (request: InstallRequestValidated, disposeDownloading?: Disposer) => Promise<void>;
 

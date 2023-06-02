@@ -4,6 +4,9 @@ exports[`force user to update when too long since update was downloaded when app
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -365,9 +368,6 @@ exports[`force user to update when too long since update was downloaded when app
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -376,6 +376,9 @@ exports[`force user to update when too long since update was downloaded when app
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -737,9 +740,6 @@ exports[`force user to update when too long since update was downloaded when app
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <div
     class="Animate opacity-scale Dialog flex center modal pinned enter"
@@ -795,6 +795,9 @@ exports[`force user to update when too long since update was downloaded when app
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -1156,9 +1159,6 @@ exports[`force user to update when too long since update was downloaded when app
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;

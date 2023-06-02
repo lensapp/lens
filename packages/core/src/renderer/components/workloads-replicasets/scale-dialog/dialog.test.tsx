@@ -8,7 +8,7 @@ import React from "react";
 import type { ReplicaSetApi } from "@k8slens/kube-api";
 import { ReplicaSet } from "@k8slens/kube-object";
 import type { OpenReplicaSetScaleDialog } from "./open.injectable";
-import replicaSetApiInjectable from "../../../../common/k8s-api/endpoints/replica-set.api.injectable";
+import { replicaSetApiInjectable } from "@k8slens/kube-api-specifics";
 import storesAndApisCanBeCreatedInjectable from "../../../stores-apis-can-be-created.injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import { type DiRender, renderFor } from "../../test-utils/renderFor";

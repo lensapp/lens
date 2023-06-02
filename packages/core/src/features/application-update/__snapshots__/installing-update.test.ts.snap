@@ -4,6 +4,9 @@ exports[`installing update when started renders 1`] = `
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -340,9 +343,6 @@ exports[`installing update when started renders 1`] = `
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -351,6 +351,9 @@ exports[`installing update when started when user checks for updates renders 1`]
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -687,9 +690,6 @@ exports[`installing update when started when user checks for updates renders 1`]
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -698,6 +698,9 @@ exports[`installing update when started when user checks for updates when new up
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -1034,9 +1037,6 @@ exports[`installing update when started when user checks for updates when new up
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -1045,6 +1045,9 @@ exports[`installing update when started when user checks for updates when new up
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -1381,9 +1384,6 @@ exports[`installing update when started when user checks for updates when new up
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -1392,6 +1392,9 @@ exports[`installing update when started when user checks for updates when new up
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -1728,9 +1731,6 @@ exports[`installing update when started when user checks for updates when new up
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -1739,6 +1739,9 @@ exports[`installing update when started when user checks for updates when new up
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -2100,9 +2103,6 @@ exports[`installing update when started when user checks for updates when new up
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -2111,6 +2111,9 @@ exports[`installing update when started when user checks for updates when new up
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -2472,9 +2475,6 @@ exports[`installing update when started when user checks for updates when new up
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -2483,6 +2483,9 @@ exports[`installing update when started when user checks for updates when new up
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -2844,9 +2847,6 @@ exports[`installing update when started when user checks for updates when new up
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -2854,6 +2854,9 @@ exports[`installing update when started when user checks for updates when new up
 exports[`installing update when started when user checks for updates when no new update is discovered renders 1`] = `
 <body>
   <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
     <div
       class="ClusterManager"
     >
@@ -3191,9 +3194,6 @@ exports[`installing update when started when user checks for updates when no new
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;

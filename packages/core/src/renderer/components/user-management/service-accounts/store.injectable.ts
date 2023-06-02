@@ -4,8 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
-import serviceAccountApiInjectable from "../../../../common/k8s-api/endpoints/service-account.api.injectable";
-import storesAndApisCanBeCreatedInjectable from "../../../stores-apis-can-be-created.injectable";
+import { serviceAccountApiInjectable, storesAndApisCanBeCreatedInjectionToken } from "@k8slens/kube-api-specifics";
 import { kubeObjectStoreInjectionToken } from "../../../../common/k8s-api/api-manager/kube-object-store-token";
 import { ServiceAccountStore } from "./store";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../../cluster-frame-context/for-namespaced-resources.injectable";
@@ -14,7 +13,7 @@ import { loggerInjectionToken } from "@k8slens/logger";
 const serviceAccountStoreInjectable = getInjectable({
   id: "service-account-store",
   instantiate: (di) => {
-    assert(di.inject(storesAndApisCanBeCreatedInjectable), "serviceAccountStore is only available in certain environments");
+    assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "serviceAccountStore is only available in certain environments");
 
     const api = di.inject(serviceAccountApiInjectable);
 

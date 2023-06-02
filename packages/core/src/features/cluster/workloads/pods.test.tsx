@@ -10,7 +10,7 @@ import podStoreInjectable from "../../../renderer/components/workloads-pods/stor
 import type { PodMetrics, PodStatus } from "@k8slens/kube-object";
 import { Pod } from "@k8slens/kube-object";
 import type { PodMetricsApi } from "@k8slens/kube-api";
-import podMetricsApiInjectable from "../../../common/k8s-api/endpoints/pod-metrics.api.injectable";
+import { podMetricsApiInjectable } from "@k8slens/kube-api-specifics";
 import type { RequestMetrics } from "../../../common/k8s-api/endpoints/metrics.api/request-metrics.injectable";
 import requestMetricsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-metrics.injectable";
 

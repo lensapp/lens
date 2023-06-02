@@ -8,7 +8,7 @@ import type { ApplicationBuilder } from "../test-utils/get-application-builder";
 import { getApplicationBuilder } from "../test-utils/get-application-builder";
 import setStatusBarStatusInjectable from "./set-status-bar-status.injectable";
 import type { RenderResult } from "@testing-library/react";
-import getRandomIdInjectable from "../../../common/utils/get-random-id.injectable";
+import { getRandomIdInjectionToken } from "@k8slens/random";
 
 describe("<StatusBar />", () => {
   let builder: ApplicationBuilder;
@@ -18,8 +18,8 @@ describe("<StatusBar />", () => {
     builder = getApplicationBuilder();
 
     builder.beforeWindowStart(({ windowDi }) => {
-      windowDi.permitSideEffects(getRandomIdInjectable);
-      windowDi.unoverride(getRandomIdInjectable);
+      windowDi.permitSideEffects(getRandomIdInjectionToken);
+      windowDi.unoverride(getRandomIdInjectionToken);
     });
 
     result = await builder.render();

@@ -8,11 +8,11 @@ import type { DaemonSet } from "@k8slens/kube-object";
 import { MenuItem } from "../menu";
 import { Icon } from "@k8slens/icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import daemonSetApiInjectable from "../../../common/k8s-api/endpoints/daemon-set.api.injectable";
+import { daemonSetApiInjectable } from "@k8slens/kube-api-specifics";
 import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
-import type { ShowCheckedErrorNotification } from "../notifications/show-checked-error.injectable";
-import showCheckedErrorNotificationInjectable from "../notifications/show-checked-error.injectable";
+import type { ShowCheckedErrorNotification } from "@k8slens/notifications";
+import { showCheckedErrorNotificationInjectable } from "@k8slens/notifications";
 import type { DaemonSetApi } from "@k8slens/kube-api";
 
 export interface DaemonSetMenuProps extends KubeObjectMenuProps<DaemonSet> {}

@@ -25,11 +25,11 @@ import upperFirst from "lodash/upperFirst";
 import type { ShowDetails } from "../../kube-detail-params/show-details.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import closeAddSecretDialogInjectable from "./close.injectable";
-import secretApiInjectable from "../../../../common/k8s-api/endpoints/secret.api.injectable";
+import { secretApiInjectable } from "@k8slens/kube-api-specifics";
 import showDetailsInjectable from "../../kube-detail-params/show-details.injectable";
 import isAddSecretDialogOpenInjectable from "./is-open.injectable";
-import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
-import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
+import type { ShowCheckedErrorNotification } from "@k8slens/notifications";
+import { showCheckedErrorNotificationInjectable } from "@k8slens/notifications";
 
 export interface AddSecretDialogProps extends Partial<DialogProps> {
 }

@@ -3,6 +3,9 @@
 exports[`extension special characters in page registrations renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -339,14 +342,14 @@ exports[`extension special characters in page registrations renders 1`] = `
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;
 
 exports[`extension special characters in page registrations when navigating to route with ID having special characters renders 1`] = `
 <div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
   <div
     class="ClusterManager"
   >
@@ -560,8 +563,5 @@ exports[`extension special characters in page registrations when navigating to r
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;

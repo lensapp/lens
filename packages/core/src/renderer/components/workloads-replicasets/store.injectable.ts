@@ -5,8 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import getPodsByOwnerIdInjectable from "../workloads-pods/get-pods-by-owner-id.injectable";
-import replicaSetApiInjectable from "../../../common/k8s-api/endpoints/replica-set.api.injectable";
-import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
+import { replicaSetApiInjectable, storesAndApisCanBeCreatedInjectionToken } from "@k8slens/kube-api-specifics";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/kube-object-store-token";
 import { ReplicaSetStore } from "./store";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
@@ -15,7 +14,7 @@ import { loggerInjectionToken } from "@k8slens/logger";
 const replicaSetStoreInjectable = getInjectable({
   id: "replica-set-store",
   instantiate: (di) => {
-    assert(di.inject(storesAndApisCanBeCreatedInjectable), "replicaSetStore is only available in certain environments");
+    assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "replicaSetStore is only available in certain environments");
 
     const api = di.inject(replicaSetApiInjectable);
 

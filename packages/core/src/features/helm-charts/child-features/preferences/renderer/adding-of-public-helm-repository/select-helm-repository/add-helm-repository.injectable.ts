@@ -6,8 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { HelmRepo } from "../../../../../../../common/helm/helm-repo";
 import { requestFromChannelInjectionToken } from "@k8slens/messaging";
 import activeHelmRepositoriesInjectable from "../../active-helm-repositories.injectable";
-import showErrorNotificationInjectable from "../../../../../../../renderer/components/notifications/show-error-notification.injectable";
-import showSuccessNotificationInjectable from "../../../../../../../renderer/components/notifications/show-success-notification.injectable";
+import { showErrorNotificationInjectable, showSuccessNotificationInjectable } from "@k8slens/notifications";
 import { addHelmRepositoryChannel } from "../../../../../../../common/helm/add-helm-repository-channel";
 
 const addHelmRepositoryInjectable = getInjectable({

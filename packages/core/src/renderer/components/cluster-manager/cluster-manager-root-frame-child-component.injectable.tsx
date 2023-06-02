@@ -4,7 +4,7 @@
  */
 import React from "react";
 import { getInjectable } from "@ogre-tools/injectable";
-import { rootFrameChildComponentInjectionToken } from "../../frames/root-frame/root-frame-child-component-injection-token";
+import { rootFrameChildComponentInjectionToken } from "@k8slens/react-application";
 import { ClusterManager } from "./cluster-manager";
 import { computed } from "mobx";
 import { ErrorBoundary } from "@k8slens/error-boundary";

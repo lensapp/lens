@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { defaultHotbarCells } from "../../features/hotbar/storage/common/types";
 import { clusterListNamespaceForbiddenChannel } from "../../common/ipc/cluster";
 import { hotbarTooManyItemsChannel } from "../../common/ipc/hotbar";
-import showErrorNotificationInjectable from "../components/notifications/show-error-notification.injectable";
+import { showErrorNotificationInjectable } from "@k8slens/notifications";
 import ipcRendererInjectable from "../utils/channel/ipc-renderer.injectable";
 import listNamespacesForbiddenHandlerInjectable from "./list-namespaces-forbidden-handler.injectable";
 

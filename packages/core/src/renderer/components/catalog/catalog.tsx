@@ -14,7 +14,7 @@ import type { CatalogEntityContextMenu } from "../../api/catalog-entity";
 import { ItemListLayout } from "../item-object-list";
 import { MainLayout } from "../layout/main-layout";
 import { MenuActions, MenuItem } from "../menu";
-import type { ShowNotification } from "../notifications";
+import type { ShowNotification } from "@k8slens/notifications";
 import { RenderDelay } from "../render-delay/render-delay";
 import { CatalogAddButton } from "./catalog-add-button";
 import type { CatalogEntityStore } from "./catalog-entity-store.injectable";
@@ -35,7 +35,7 @@ import normalizeCatalogEntityContextMenuInjectable from "../../catalog/normalize
 import type { Navigate } from "../../navigation/navigate.injectable";
 import navigateInjectable from "../../navigation/navigate.injectable";
 import type { StorageLayer } from "../../utils/storage-helper";
-import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
+import { showErrorNotificationInjectable } from "@k8slens/notifications";
 import { browseCatalogTab } from "./catalog-browse-tab";
 import catalogEntityStoreInjectable from "./catalog-entity-store.injectable";
 import catalogPreviousActiveTabStorageInjectable from "./catalog-previous-active-tab-storage/catalog-previous-active-tab-storage.injectable";

@@ -22,6 +22,9 @@ import { messagingFeature, testUtils as messagingTestUtils } from "@k8slens/mess
 import { routingFeature } from "@k8slens/routing";
 import { loggerFeature } from "@k8slens/logger";
 import { clusterSidebarFeature } from "@k8slens/cluster-sidebar";
+import { randomFeature } from "@k8slens/random";
+import { kubeApiSpecificsFeature } from "@k8slens/kube-api-specifics";
+import { notificationsFeature } from "@k8slens/notifications";
 
 export const getDiForUnitTesting = () => {
   const environment = "renderer";
@@ -41,6 +44,9 @@ export const getDiForUnitTesting = () => {
       loggerFeature,
       animateFeature,
       clusterSidebarFeature,
+      randomFeature,
+      kubeApiSpecificsFeature,
+      notificationsFeature,
     );
   });
 

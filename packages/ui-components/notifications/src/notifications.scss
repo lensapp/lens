@@ -1,0 +1,64 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+$color-white: rgb(255,255,255);
+
+@mixin hidden-scrollbar {
+  overflow: auto;
+  // Chrome, Safari
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background: transparent;
+  }
+}
+
+.Notifications {
+  @include hidden-scrollbar;
+
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 8px * 2;
+  max-height: 100vh;
+  z-index: 100000;
+  height: min-content!important;
+
+  &:empty {
+    display: none;
+  }
+
+  .notification {
+    flex: 0 0;
+    padding: 8px * 1.5;
+    border-radius: 3px;
+    min-width: 350px;
+    max-width: 35vw;
+    word-break: break-word;
+
+    &:not(:last-child) {
+      margin-bottom: 8px * 2;
+    }
+
+    > .message {
+      white-space: pre-line;
+      padding-left: 8px;
+      padding-right: 8px * 2;
+      align-self: center;
+
+      a {
+        color: inherit;
+      }
+    }
+
+    @each $status, $color in (ok: var(--colorOk), error: var(--colorError), info: var(--colorInfo)) {
+      &.#{$status} {
+        background: $color;
+        color: $color-white;
+        box-shadow: 0 0 20px var(--boxShadow);
+      }
+    }
+  }
+}

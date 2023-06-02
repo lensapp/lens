@@ -11,7 +11,7 @@ import React from "react";
 import type { CatalogEntity } from "../../../api/catalog-entity";
 import type { CatalogEntityRegistry } from "../../../api/catalog/entity/registry";
 import catalogEntityRegistryInjectable from "../../../api/catalog/entity/registry.injectable";
-import { rootFrameChildComponentInjectionToken } from "../../../frames/root-frame/root-frame-child-component-injection-token";
+import { rootFrameChildComponentInjectionToken } from "@k8slens/react-application";
 import type { HideEntityDetails } from "./hide.injectable";
 import hideEntityDetailsInjectable from "./hide.injectable";
 import selectedCatalogEntityInjectable from "./selected-entity.injectable";

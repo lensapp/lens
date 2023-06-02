@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import React from "react";
 import navigateToKubernetesPreferencesInjectable from "../../features/preferences/common/navigate-to-kubernetes-preferences.injectable";
 import { runInAction } from "mobx";
-import showSuccessNotificationInjectable from "../components/notifications/show-success-notification.injectable";
+import { showSuccessNotificationInjectable } from "@k8slens/notifications";
 import userPreferencesStateInjectable from "../../features/user-preferences/common/state.injectable";
 
 const addSyncEntriesInjectable = getInjectable({

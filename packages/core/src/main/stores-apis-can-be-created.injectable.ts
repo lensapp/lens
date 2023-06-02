@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { storesAndApisCanBeCreatedInjectionToken } from "../common/k8s-api/stores-apis-can-be-created.token";
+import { storesAndApisCanBeCreatedInjectionToken } from "@k8slens/kube-api-specifics";
 
 const storesAndApisCanBeCreatedInjectable = getInjectable({
   id: "create-stores-and-apis",

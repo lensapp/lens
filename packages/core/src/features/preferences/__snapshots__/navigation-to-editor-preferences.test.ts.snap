@@ -3,6 +3,9 @@
 exports[`preferences - navigation to editor preferences given in preferences, when rendered renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -672,14 +675,14 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;
 
 exports[`preferences - navigation to editor preferences given in preferences, when rendered when navigating to editor preferences using navigation renders 1`] = `
 <div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
   <div
     class="ClusterManager"
   >
@@ -1328,8 +1331,5 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;

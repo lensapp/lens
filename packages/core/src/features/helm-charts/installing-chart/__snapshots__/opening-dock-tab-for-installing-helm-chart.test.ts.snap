@@ -4,6 +4,9 @@ exports[`opening dock tab for installing helm chart given application is started
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -41,9 +44,6 @@ exports[`opening dock tab for installing helm chart given application is started
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -508,6 +508,9 @@ exports[`opening dock tab for installing helm chart given application is started
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -545,9 +548,6 @@ exports[`opening dock tab for installing helm chart given application is started
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -1116,6 +1116,9 @@ exports[`opening dock tab for installing helm chart given application is started
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -1153,9 +1156,6 @@ exports[`opening dock tab for installing helm chart given application is started
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -1781,6 +1781,9 @@ exports[`opening dock tab for installing helm chart given application is started
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -1818,9 +1821,6 @@ exports[`opening dock tab for installing helm chart given application is started
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -2594,6 +2594,9 @@ exports[`opening dock tab for installing helm chart given application is started
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -2631,9 +2634,6 @@ exports[`opening dock tab for installing helm chart given application is started
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -3417,6 +3417,9 @@ exports[`opening dock tab for installing helm chart given application is started
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -3454,9 +3457,6 @@ exports[`opening dock tab for installing helm chart given application is started
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -4230,6 +4230,9 @@ exports[`opening dock tab for installing helm chart given application is started
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -4267,9 +4270,6 @@ exports[`opening dock tab for installing helm chart given application is started
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -5047,6 +5047,9 @@ exports[`opening dock tab for installing helm chart given application is started
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -5084,9 +5087,6 @@ exports[`opening dock tab for installing helm chart given application is started
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -5870,6 +5870,9 @@ exports[`opening dock tab for installing helm chart given application is started
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -5907,9 +5910,6 @@ exports[`opening dock tab for installing helm chart given application is started
         class="ResizingAnchor horizontal leading"
       />
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"

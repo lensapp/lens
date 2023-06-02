@@ -20,8 +20,8 @@ import namespaceStoreInjectable from "../store.injectable";
 import addNamespaceDialogStateInjectable
   from "./state.injectable";
 import type { NamespaceStore } from "../store";
-import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
-import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
+import type { ShowCheckedErrorNotification } from "@k8slens/notifications";
+import { showCheckedErrorNotificationInjectable } from "@k8slens/notifications";
 import autoBindReact from "auto-bind/react";
 
 export interface AddNamespaceDialogProps extends DialogProps {

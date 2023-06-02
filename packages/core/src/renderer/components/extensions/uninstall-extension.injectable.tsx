@@ -12,8 +12,7 @@ import { extensionDisplayName } from "../../../extensions/lens-extension";
 import React from "react";
 import { when } from "mobx";
 import { getMessageFromError } from "./get-message-from-error/get-message-from-error";
-import showSuccessNotificationInjectable from "../notifications/show-success-notification.injectable";
-import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
+import { showSuccessNotificationInjectable, showErrorNotificationInjectable } from "@k8slens/notifications";
 
 const uninstallExtensionInjectable = getInjectable({
   id: "uninstall-extension",

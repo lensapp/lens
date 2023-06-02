@@ -22,7 +22,7 @@ import hostedClusterInjectable from "../../../renderer/cluster-frame-context/hos
 import directoryForKubeConfigsInjectable from "../../app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import apiKubeInjectable from "../../../renderer/k8s/api-kube.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
-import podApiInjectable from "../endpoints/pod.api.injectable";
+import { podApiInjectable } from "@k8slens/kube-api-specifics";
 
 // NOTE: this is fine because we are testing something that only exported
 // eslint-disable-next-line no-restricted-imports

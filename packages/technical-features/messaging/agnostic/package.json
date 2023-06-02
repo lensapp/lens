@@ -34,9 +34,9 @@
     "@k8slens/application": "^6.5.0-alpha.0",
     "@k8slens/feature-core": "^6.5.0-alpha.0",
     "@k8slens/startable-stoppable": "^1.0.0-alpha.1",
-    "@ogre-tools/injectable": "^17.1.0",
-    "@ogre-tools/injectable-extension-for-auto-registration": "^17.1.0",
-    "@ogre-tools/injectable-extension-for-mobx": "^17.1.0",
+    "@ogre-tools/injectable": "^17.2.0",
+    "@ogre-tools/injectable-extension-for-auto-registration": "^17.2.0",
+    "@ogre-tools/injectable-extension-for-mobx": "^17.2.0",
     "lodash": "^4.17.21",
     "mobx": "^6.7.0"
   },

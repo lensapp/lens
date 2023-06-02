@@ -11,13 +11,13 @@ import { PodDisruptionBudgets } from "../pod-disruption-budgets";
 import storesAndApisCanBeCreatedInjectable from "../../../stores-apis-can-be-created.injectable";
 import selectedNamespacesStorageInjectable from "../../../../features/namespace-filtering/renderer/storage.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
-import maybeKubeApiInjectable from "../../../../common/k8s-api/maybe-kube-api.injectable";
 import podDisruptionBudgetStoreInjectable from "../store.injectable";
 import siblingTabsInjectable from "../../../routes/sibling-tabs.injectable";
 import { Cluster } from "../../../../common/cluster/cluster";
 import hostedClusterInjectable from "../../../cluster-frame-context/hosted-cluster.injectable";
 import userPreferencesStateInjectable from "../../../../features/user-preferences/common/state.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
+import { maybeKubeApiInjectable } from "@k8slens/kube-api-specifics";
 
 describe("<PodDisruptionBudgets />", () => {
   let di: DiContainer;
@@ -60,7 +60,7 @@ describe("<PodDisruptionBudgets />", () => {
       get: () => ({}),
     }) as any);
     di.override(loggerInjectionToken, () => null);
-    di.override(maybeKubeApiInjectable, () => (() => null) as any);
+    di.override(maybeKubeApiInjectable, () => ({}));
     di.override(siblingTabsInjectable, () => ({ get: () => [] } as any));
     di.override(userPreferencesStateInjectable, () => ({
       hiddenTableColumns: {

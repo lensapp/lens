@@ -10,7 +10,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import type { ContainerPort, Pod } from "@k8slens/kube-object";
 import { action, makeObservable, observable, reaction } from "mobx";
 import { cssNames } from "@k8slens/utilities";
-import type { ShowNotification } from "../notifications";
+import type { ShowNotification } from "@k8slens/notifications";
 import { Button } from "@k8slens/button";
 import type { ForwardedPort, PortForwardStore } from "../../port-forward";
 import { predictProtocol } from "../../port-forward";
@@ -24,7 +24,7 @@ import notifyErrorPortForwardingInjectable from "../../port-forward/notify-error
 import type { OpenPortForward } from "../../port-forward/open-port-forward.injectable";
 import openPortForwardInjectable from "../../port-forward/open-port-forward.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
-import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
+import { showErrorNotificationInjectable } from "@k8slens/notifications";
 
 export interface PodContainerPortProps {
   pod: Pod;

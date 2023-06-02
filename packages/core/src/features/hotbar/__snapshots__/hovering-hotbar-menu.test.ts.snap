@@ -4,6 +4,9 @@ exports[`hovering hotbar menu tests renders 1`] = `
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -340,9 +343,6 @@ exports[`hovering hotbar menu tests renders 1`] = `
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
@@ -351,6 +351,9 @@ exports[`hovering hotbar menu tests when hovering over the hotbar menu renders 1
 <body>
   <div>
     <div
+      class="Notifications flex column align-flex-end"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -687,9 +690,6 @@ exports[`hovering hotbar menu tests when hovering over the hotbar menu renders 1
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
   <div
     class="Tooltip right visible"

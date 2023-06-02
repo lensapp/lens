@@ -3,6 +3,9 @@
 exports[`welcome - navigation using application menu renders 1`] = `
 <div>
   <div
+    class="Notifications flex column align-flex-end"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -339,15 +342,15 @@ exports[`welcome - navigation using application menu renders 1`] = `
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;
 
 exports[`welcome - navigation using application menu when navigated somewhere else renders 1`] = `
 <body>
   <div>
+    <div
+      class="Notifications flex column align-flex-end"
+    />
     <div
       class="ClusterManager"
     >
@@ -1018,15 +1021,15 @@ exports[`welcome - navigation using application menu when navigated somewhere el
         />
       </div>
     </div>
-    <div
-      class="Notifications flex column align-flex-end"
-    />
   </div>
 </body>
 `;
 
 exports[`welcome - navigation using application menu when navigated somewhere else when navigated to welcome using application menu renders 1`] = `
 <div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
   <div
     class="ClusterManager"
   >
@@ -1364,8 +1367,5 @@ exports[`welcome - navigation using application menu when navigated somewhere el
       />
     </div>
   </div>
-  <div
-    class="Notifications flex column align-flex-end"
-  />
 </div>
 `;
