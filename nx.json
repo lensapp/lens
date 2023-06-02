@@ -29,6 +29,10 @@
         {
           "env": "NODE_ENV"
         }
+      ],
+
+      "outputs": [
+        "dist"
       ]
     },
     "build:app": {
