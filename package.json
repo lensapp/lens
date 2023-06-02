@@ -20,7 +20,7 @@
     "clean:build-cache": "nx reset",
     "rebuild:dev": "npm run clean:build-cache && npm run build:dev",
     "build:dev": "cross-env NODE_ENV=development lerna run build --stream",
-    "build:dev:watch": "cross-env NODE_ENV=development lerna watch -- lerna run build --stream --scope \\$LERNA_PACKAGE_NAME",
+    "build:dev:watch": "lerna watch -- npm run build:dev -- --scope \\$LERNA_PACKAGE_NAME",
     "start-dev-application": "cross-env NODE_ENV=development lerna run dev:main,dev:renderer,dev-run --stream --scope open-lens",
     "dev": "npm run build:dev; npm run build:dev:watch",
     "start-dev": "npm run start-dev-application",
