@@ -7,7 +7,7 @@ import styles from "./cluster-pie-charts.module.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Spinner } from "../spinner";
+import { Spinner } from "@k8slens/spinner";
 import { Icon } from "@k8slens/icon";
 import type { PieChartData } from "../chart";
 import { PieChart } from "../chart";

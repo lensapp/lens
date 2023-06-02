@@ -10,7 +10,7 @@ import { Notice } from "../../../../../../renderer/components/extensions/notice"
 import { iter, tuple } from "@k8slens/utilities";
 import { SubTitle } from "../../../../../../renderer/components/layout/sub-title";
 import { PathPicker } from "../../../../../../renderer/components/path-picker/path-picker";
-import { Spinner } from "../../../../../../renderer/components/spinner";
+import { Spinner } from "@k8slens/spinner";
 import { RemovableItem } from "../../../removable-item/removable-item";
 import isWindowsInjectable from "../../../../../../common/vars/is-windows.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";

@@ -6,6 +6,7 @@ import "@k8slens/resizing-anchor/styles";
 import "@k8slens/icon/styles";
 import "@k8slens/animate/styles";
 import "@k8slens/notifications/styles";
+import "@k8slens/spinner/styles";
 
 import { runInAction } from "mobx";
 import {
