@@ -12,7 +12,8 @@ import { Checkbox } from "../checkbox";
 import type { TableCellProps } from "@k8slens/list-layout";
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import type { TableDataContextValue } from "./table-data-context";
-import { CreateTableState, createTableStateInjectionToken } from "@k8slens/table";
+import type { CreateTableState } from "@k8slens/table";
+import { createTableStateInjectionToken } from "@k8slens/table";
 
 type TableDataColumn<DataItem = any> = object;
 
@@ -59,7 +60,7 @@ export function createLensTableState<K extends KubeObject>({
       sortValue(row: any, col: any) {
         return sortingCallbacks?.[col.id]?.(row.data) as string;
       },
-    })
+    }),
   );
 
   const checkboxColumn: TableDataColumn<K> = {

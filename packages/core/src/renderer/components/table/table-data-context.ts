@@ -13,7 +13,7 @@ import type {
 import type { ItemListLayoutContentProps } from "../item-object-list/content";
 
 export type TableContextRequiredDataFromComponentsLayerAbove<
-  K extends KubeObject
+  K extends KubeObject,
 > = Pick<
   ItemListLayoutContentProps<K, any>,
   | "tableId"

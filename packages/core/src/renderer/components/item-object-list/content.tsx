@@ -304,7 +304,7 @@ class NonInjectedItemListLayoutContent<
     const {
       store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks,
       detailsItem, className, tableProps = {}, tableId, getItems, activeTheme,
-      table, addOrRemoveButtons, tableState
+      table, addOrRemoveButtons, tableState,
     } = this.props;
     const selectedItemId = detailsItem && detailsItem.getId();
     const classNames = cssNames(className, "box", "grow", activeTheme.get().type);
