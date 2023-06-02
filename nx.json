@@ -24,7 +24,11 @@
       ],
 
       "inputs": [
-        "productionFiles"
+        "productionFiles",
+
+        {
+          "env": "NODE_ENV"
+        }
       ]
     },
     "build:app": {
