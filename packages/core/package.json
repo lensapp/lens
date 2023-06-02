@@ -55,7 +55,8 @@
     "test:unit": "jest --testPathIgnorePatterns integration",
     "test:watch": "func() { jest ${1} --watch --testPathIgnorePatterns integration; }; func",
     "lint": "PROD=true eslint --ext js,ts,tsx --max-warnings=0 .",
-    "lint:fix": "npm run lint -- --fix"
+    "lint:fix": "npm run lint -- --fix",
+    "postinstall": "linkable"
   },
   "config": {
     "k8sProxyVersion": "0.3.0",
@@ -101,6 +102,7 @@
     "runtime": "@side/jest-runtime"
   },
   "devDependencies": {
+    "lens-table": "1.0.0",
     "@async-fn/jest": "1.6.4",
     "@k8slens/messaging-fake-bridge": "^1.0.0",
     "@k8slens/react-testing-library-discovery": "^1.0.0",
