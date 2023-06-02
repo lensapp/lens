@@ -13,7 +13,7 @@ import { cssNames } from "@k8slens/utilities";
 import { Namespace } from "@k8slens/kube-object";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Link } from "react-router-dom";
-import { Spinner } from "../spinner";
+import { Spinner } from "@k8slens/spinner";
 import { withInjectables } from "@ogre-tools/injectable-react";
 
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";

@@ -11,7 +11,7 @@ import { observer } from "mobx-react";
 import activeHelmRepositoriesInjectable from "./active-helm-repositories.injectable";
 import type { IAsyncComputed } from "@ogre-tools/injectable-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { Spinner } from "../../../../../renderer/components/spinner";
+import { Spinner } from "@k8slens/spinner";
 import type { HelmRepo } from "../../../../../common/helm/helm-repo";
 import { RemovableItem } from "../../../../preferences/renderer/removable-item/removable-item";
 import removeHelmRepositoryInjectable from "./remove-helm-repository.injectable";

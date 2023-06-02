@@ -8,7 +8,7 @@ import React from "react";
 import { Icon } from "@k8slens/icon";
 import { List } from "../list/list";
 import { MenuActions, MenuItem } from "../menu";
-import { Spinner } from "../spinner";
+import { Spinner } from "@k8slens/spinner";
 import { cssNames } from "@k8slens/utilities";
 import { observer } from "mobx-react";
 import type { Row } from "react-table";

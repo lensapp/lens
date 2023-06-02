@@ -14,7 +14,7 @@ import type { ShowNotification } from "@k8slens/notifications";
 import { Button } from "@k8slens/button";
 import type { ForwardedPort, PortForwardStore } from "../../port-forward";
 import { predictProtocol } from "../../port-forward";
-import { Spinner } from "../spinner";
+import { Spinner } from "@k8slens/spinner";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
 import portForwardDialogModelInjectable from "../../port-forward/port-forward-dialog-model/port-forward-dialog-model.injectable";

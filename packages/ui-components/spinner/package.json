@@ -1,0 +1,43 @@
+{
+  "name": "@k8slens/spinner",
+  "private": false,
+  "version": "1.0.0",
+  "description": "Highly extendable spinner in the Lens.",
+  "type": "commonjs",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lensapp/lens.git"
+  },
+  "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./styles": "./dist/index.css"
+  },
+  "types": "dist/index.d.ts",
+  "author": {
+    "name": "OpenLens Authors",
+    "email": "info@k8slens.dev"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/lensapp/lens",
+  "scripts": {
+    "build": "lens-webpack-build",
+    "lint": "lens-lint",
+    "lint:fix": "lens-lint --fix"
+  },
+  "peerDependencies": {
+    "@k8slens/utilities": "^1.0.0-alpha.1",
+    "react": "^17.0.2"
+  },
+  "devDependencies": {
+    "@k8slens/eslint-config": "^6.5.0",
+    "@k8slens/webpack": "^6.5.0"
+  }
+}

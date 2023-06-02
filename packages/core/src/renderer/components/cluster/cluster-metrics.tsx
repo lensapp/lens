@@ -10,7 +10,7 @@ import { observer } from "mobx-react";
 import type { ChartOptions, ChartPoint } from "chart.js";
 import { BarChart } from "../chart";
 import { bytesToUnits, cssNames } from "@k8slens/utilities";
-import { Spinner } from "../spinner";
+import { Spinner } from "@k8slens/spinner";
 import { ZebraStripesPlugin } from "../chart/zebra-stripes.plugin";
 import { ClusterNoMetrics } from "./cluster-no-metrics";
 import { ClusterMetricSwitchers } from "./cluster-metric-switchers";
