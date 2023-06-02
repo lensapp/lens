@@ -35,6 +35,7 @@ import type { IsTableColumnHidden } from "../../../features/user-preferences/com
 import isTableColumnHiddenInjectable from "../../../features/user-preferences/common/is-table-column-hidden.injectable";
 import type { AddOrRemoveButtons, AddRemoveButtonsProps, TableComponent } from "@k8slens/table";
 import { addOrRemoveButtonsInjectionToken, tableComponentInjectionToken } from "@k8slens/table";
+import { tableStateInjectable } from "../table/table-state.injectable";
 
 export interface ItemListLayoutContentProps<Item extends ItemObject, PreLoadStores extends boolean> {
   getFilters: () => Filter[];
@@ -82,6 +83,7 @@ interface Dependencies {
   isTableColumnHidden: IsTableColumnHidden;
   table: TableComponent;
   addOrRemoveButtons: AddOrRemoveButtons;
+  tableState: object;
 }
 
 @observer
@@ -302,7 +304,7 @@ class NonInjectedItemListLayoutContent<
     const {
       store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks,
       detailsItem, className, tableProps = {}, tableId, getItems, activeTheme,
-      table, addOrRemoveButtons,
+      table, addOrRemoveButtons, tableState
     } = this.props;
     const selectedItemId = detailsItem && detailsItem.getId();
     const classNames = cssNames(className, "box", "grow", activeTheme.get().type);
@@ -322,6 +324,7 @@ class NonInjectedItemListLayoutContent<
           selectedItemId={selectedItemId}
           noItems={this.renderNoItems()}
           className={classNames}
+          state={tableState}
           {...tableProps}
         >
           {this.renderTableHeader()}
@@ -391,5 +394,6 @@ export const ItemListLayoutContent = withInjectables<Dependencies, ItemListLayou
     isTableColumnHidden: di.inject(isTableColumnHiddenInjectable),
     table: di.inject(tableComponentInjectionToken),
     addOrRemoveButtons: di.inject(addOrRemoveButtonsInjectionToken),
+    tableState: di.inject(tableStateInjectable, props),
   }),
 }) as <Item extends ItemObject, PreLoadStores extends boolean>(props: ItemListLayoutContentProps<Item, PreLoadStores>) => React.ReactElement;
