@@ -8,7 +8,7 @@ import React from "react";
 import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames, prevDefault } from "@k8slens/utilities";
 import { Button } from "@k8slens/button";
-import { Stepper } from "../stepper";
+import { Stepper } from "@k8slens/stepper";
 import { SubTitle } from "../layout/sub-title";
 import { Spinner } from "@k8slens/spinner";
 import { debounce } from "lodash";

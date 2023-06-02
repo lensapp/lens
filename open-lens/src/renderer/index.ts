@@ -7,6 +7,7 @@ import "@k8slens/icon/styles";
 import "@k8slens/animate/styles";
 import "@k8slens/notifications/styles";
 import "@k8slens/spinner/styles";
+import "@k8slens/stepper/styles";
 
 import { runInAction } from "mobx";
 import {
