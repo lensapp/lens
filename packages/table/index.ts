@@ -23,17 +23,10 @@ export interface TableComponentProps {
   columns?: Column[];
   save?: (state: object) => void;
   load?: (tableId: string) => object;
-  initialState?: {
-    dataItems: IComputedValue<any[]>;
-    headingColumns: object[];
-    customizeRows?: (row: object) => object;
-    getRowId?: (dataItem: any) => string | number | symbol;
-    searchBox?: IComputedValue<string> | IObservableValue<string>;
-  }
 }
 
 export interface TableComponent {
-  Component: React.ComponentType<TableComponentProps>;
+  Component: React.ComponentType<TableComponentProps & { state: any }>;
 }
 
 export interface AddRemoveButtonsProps extends React.HTMLAttributes<any> {
@@ -47,6 +40,14 @@ export interface AddOrRemoveButtons {
   Component: React.ComponentType<AddRemoveButtonsProps>;
 }
 
+export type CreateTableState = (params: {
+  dataItems: IComputedValue<any[]>;
+  headingColumns: object[];
+  customizeRows?: (row: object) => object;
+  getRowId?: (dataItem: any) => string | number | symbol;
+  searchBox?: IComputedValue<string> | IObservableValue<string>;
+}) => any;
+
 export const tableComponentInjectionToken = getInjectionToken<TableComponent>({
   id: "table-component-injection-token",
 });
@@ -54,3 +55,7 @@ export const tableComponentInjectionToken = getInjectionToken<TableComponent>({
 export const addOrRemoveButtonsInjectionToken = getInjectionToken<AddOrRemoveButtons>({
   id: "add-or-remove-buttons-injection-token",
 });
+
+export const createTableStateInjectionToken = getInjectionToken<CreateTableState>({
+  id: "create-table-state-injection-token",
+})
