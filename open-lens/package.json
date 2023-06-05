@@ -63,26 +63,30 @@
           "productionFiles"
         ],
         "outputs": [
-          "{projectRoot}/dist/",
           "{projectRoot}/static/build/"
         ]
       },
       "build:app": {
         "dependsOn": [
-          "build"
+          "build",
+          "build:tray-icons",
+          "download:binaries"
+        ],
+        "inputs": [
+          "{projectRoot}/static/build/"
         ],
         "outputs": [
-          "{workspaceRoot}/dist/"
+          "{projectRoot}/dist/"
         ]
       },
       "build:tray-icons": {
         "outputs": [
-          "{workspaceRoot}/static/build/tray/"
+          "{projectRoot}/static/build/tray/"
         ]
       },
       "download:binaries": {
         "outputs": [
-          "{workspaceRoot}/binaries/"
+          "{projectRoot}/binaries/"
         ]
       },
       "test:integration": {
