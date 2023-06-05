@@ -20,7 +20,7 @@ import { EditorPanel } from "../editor-panel";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { InstallChartModel } from "./install-chart-model.injectable";
 import installChartModelInjectable from "./install-chart-model.injectable";
-import { Spinner } from "../../spinner";
+import { Spinner } from "@k8slens/spinner";
 
 export interface InstallChartProps {
   tabId: string;

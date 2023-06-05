@@ -12,7 +12,7 @@ import type { StrictReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { Button } from "@k8slens/button";
 import { Icon } from "@k8slens/icon";
-import { Spinner } from "../spinner";
+import { Spinner } from "@k8slens/spinner";
 import type { DockStore, TabId } from "./dock/store";
 import type { ShowNotification, ShowCheckedErrorNotification } from "@k8slens/notifications";
 import { withInjectables } from "@ogre-tools/injectable-react";

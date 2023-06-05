@@ -11,7 +11,7 @@ import type { SelectOption } from "../select";
 import { Select } from "../select";
 import { Input } from "../input";
 import { observable, computed, autorun, makeObservable } from "mobx";
-import { Spinner } from "../spinner";
+import { Spinner } from "@k8slens/spinner";
 import type { MetricProviderInfo, RequestMetricsProviders } from "../../../common/k8s-api/endpoints/metrics.api/request-providers.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import requestMetricsProvidersInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-providers.injectable";

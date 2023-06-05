@@ -12,7 +12,7 @@ import type { NodeStore } from "../nodes/store";
 import type { PodStore } from "../workloads-pods/store";
 import { byOrderNumber } from "@k8slens/utilities";
 import { TabLayout } from "../layout/tab-layout";
-import { Spinner } from "../spinner";
+import { Spinner } from "@k8slens/spinner";
 import { ClusterIssues } from "./cluster-issues";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import type { EventStore } from "../events/store";

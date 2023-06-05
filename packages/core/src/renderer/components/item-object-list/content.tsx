@@ -15,7 +15,7 @@ import { TableCell, TableHead, TableRow } from "../table";
 import type { IClassName, StrictReactNode } from "@k8slens/utilities";
 import { cssNames, isDefined, isReactNode, noop, prevDefault, stopPropagation } from "@k8slens/utilities";
 import { NoItems } from "../no-items";
-import { Spinner } from "../spinner";
+import { Spinner } from "@k8slens/spinner";
 import type { GeneralKubeObjectListLayoutColumn, ItemObject, TableCellProps } from "@k8slens/list-layout";
 import type { Filter, PageFiltersStore } from "./page-filters/store";
 import type { LensTheme } from "../../themes/lens-theme";

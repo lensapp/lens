@@ -21,7 +21,7 @@ import { SubTitle } from "../../layout/sub-title";
 import { Table, TableCell, TableHead, TableRow } from "../../table";
 import { Checkbox } from "../../checkbox";
 import { MonacoEditor } from "../../monaco-editor";
-import { Spinner } from "../../spinner";
+import { Spinner } from "@k8slens/spinner";
 import type { TargetHelmRelease } from "./target-helm-release.injectable";
 
 interface ReleaseDetailsContentProps {

@@ -14,7 +14,7 @@ import type { IClassName } from "@k8slens/utilities";
 import { hasTypedProperty, isObject, isString, cssNames } from "@k8slens/utilities";
 import { Button } from "@k8slens/button";
 import { Icon } from "@k8slens/icon";
-import { Spinner } from "../spinner";
+import { Spinner } from "@k8slens/spinner";
 import type { KubeAuthUpdate } from "../../../common/cluster-types";
 import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
 import type { NavigateToEntitySettings } from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";

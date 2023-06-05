@@ -9,11 +9,11 @@ $ npm install @k8slens/animate
 ```
 
 ```typescript
-export type { AnimateName, AnimateProps } from "@k8slens/button";
-export type { Animate } from "@k8slens/button";
-export { defaultEnterDurationForAnimatedInjectable } from "@k8slens/button";
-export { defaultLeaveDurationForAnimatedInjectable } from "@k8slens/button";
-export { requestAnimationFrameInjectable } from "@k8slens/button";
+import { animateFeature } from "@k8slens/animate";
+import { animateFeature, requestAnimationFrameInjectable } from "@k8slens/animate";
+import { Animate } from "@k8slens/animate";
+import type { AnimateName } from "@k8slens/animate";
+import type { RequestAnimationFrame } from "@k8slens/animate";
 ```
 
 ## Extendability
