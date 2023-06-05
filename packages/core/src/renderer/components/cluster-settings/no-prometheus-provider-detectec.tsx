@@ -4,7 +4,7 @@
  */
 import React from "react";
 import { SubTitle } from "../layout/sub-title";
-import { Icon } from "../icon";
+import { Icon } from "@k8slens/icon";
 
 
 export const NoPrometheusProviderDetected = () => (

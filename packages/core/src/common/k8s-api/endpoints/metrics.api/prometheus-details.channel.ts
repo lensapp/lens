@@ -6,7 +6,7 @@
 import { getRequestChannel } from "@k8slens/messaging";
 import type { PrometheusDetails } from "../../../../main/cluster/prometheus-handler/prometheus-handler";
 import type { ClusterId } from "../../../cluster-types";
-import type { PrometheusProvider } from "../../../../main/prometheus/provider";
+import type { PrometheusProvider } from "@k8slens/prometheus";
 
 type PrometheusProviderData = Pick<PrometheusProvider, "kind" | "name" | "isConfigurable">;
 
