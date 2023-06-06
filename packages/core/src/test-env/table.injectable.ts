@@ -4,7 +4,7 @@
  */
 import { tableComponentInjectionToken } from "@k8slens/table";
 import { getInjectable } from "@ogre-tools/injectable";
-import { Table } from "@k8slens/core/renderer";
+import { Table } from "../renderer/components/table";
 
 const tableComponentInjectable = getInjectable({
   id: "table-component",
