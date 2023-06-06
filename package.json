@@ -15,7 +15,7 @@
     "build": "lerna run --stream build",
     "build:app": "lerna run --stream build:app",
     "build:docs": "lerna run --stream build:docs",
-    "clean": "lerna run clean --stream",
+    "clean": "lerna run clean --stream && npm run clean:build-cache",
     "clean:node_modules": "lerna clean -y && rimraf node_modules",
     "clean:build-cache": "nx reset",
     "rebuild:dev": "npm run clean:build-cache && npm run build:dev",
