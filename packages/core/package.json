@@ -102,7 +102,6 @@
     "runtime": "@side/jest-runtime"
   },
   "devDependencies": {
-    "lens-table": "1.0.0",
     "@async-fn/jest": "1.6.4",
     "@k8slens/messaging-fake-bridge": "^1.0.0",
     "@k8slens/react-testing-library-discovery": "^1.0.0",
