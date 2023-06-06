@@ -8,11 +8,11 @@ import { Icon } from "@k8slens/icon";
 
 
 export const NoPrometheusProviderDetected = () => (
-  <section>
+  <section data-testid="no-auto-detected-prometheus-provider">
     <SubTitle title="Auto detected prometheus details" />
     <div className="flex gaps align-center">
       <Icon material="error_outline" />
-      <div>Could not detect any Prometheus provider.</div>
+      <div data-testid="no-auto-detected-prometheus-info">Could not detect any Prometheus provider.</div>
     </div>
   </section>
 );

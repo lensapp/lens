@@ -15,9 +15,9 @@ interface PrometheusDetailsProps  {
   path: string;
 }
 export const PrometheusDetails = ({ providerName, path }: PrometheusDetailsProps) => (
-  <section>
+  <section data-testid="auto-detected-prometheus-details">
     <SubTitle title="Auto detected Prometheus details" />
-    <div className="flex gaps">
+    <div className="flex gaps" data-testid="auto-detected-prometheus-details-provider">
       <div>
         Provider:
       </div>
@@ -25,7 +25,7 @@ export const PrometheusDetails = ({ providerName, path }: PrometheusDetailsProps
         {providerName}
       </div>
     </div>
-    <div className="flex gaps">
+    <div className="flex gaps" data-testid="auto-detected-prometheus-details-path">
       <div>
         Path:
       </div>

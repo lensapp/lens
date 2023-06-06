@@ -162,7 +162,7 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
     return (
       <>
         <section>
-          <SubTitle title="Prometheus" />
+          <SubTitle testId="prometheus-title" title="Prometheus" />
           {
             this.loading
               ? <Spinner />
@@ -189,6 +189,7 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
               )
           }
         </section>
+
         {showPrometheusDetailsResult && (
           <>
             <hr />
@@ -207,7 +208,7 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
         {this.canEditPrometheusPath && (
           <>
             <hr />
-            <section>
+            <section data-testid="edit-prometheus-path-section">
               <SubTitle title="Prometheus service address" />
               <Input
                 theme="round-black"
