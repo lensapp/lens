@@ -25,6 +25,7 @@
   "homepage": "https://github.com/lensapp/lens",
   "scripts": {
     "build": "lens-webpack-build",
+    "linkable-push": "linkable-push",
     "test:unit": "jest --coverage --runInBand",
     "lint": "lens-lint",
     "lint:fix": "lens-lint --fix"

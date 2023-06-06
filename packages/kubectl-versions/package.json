@@ -23,6 +23,7 @@
     "compute-versions": "node ./build/compute-versions.mjs",
     "prebuild": "npm run compute-versions",
     "build": "lens-webpack-build",
+    "linkable-push": "linkable-push",
     "dev": "webpack --mode=development --watch",
     "test": "jest --coverage --runInBand"
   },

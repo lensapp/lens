@@ -26,6 +26,7 @@
   "scripts": {
     "clean": "rimraf dist/",
     "build": "lens-webpack-build",
+    "linkable-push": "linkable-push",
     "test:unit": "jest --coverage --runInBand",
     "lint:fix": "lens-lint --fix",
     "lint": "lens-lint"
