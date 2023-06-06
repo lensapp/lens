@@ -40,6 +40,13 @@
         "^build"
       ]
     },
+    "linkable-push": {
+      "dependsOn": [
+        "build"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
     "test:integration": {
       "dependsOn": [
         "^build"
