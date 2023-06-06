@@ -5,11 +5,6 @@
 import React from "react";
 import { SubTitle } from "../layout/sub-title";
 
-/**
- * Copyright (c) OpenLens Authors. All rights reserved.
- * Licensed under MIT License. See LICENSE in root directory for more information.
- */
-
 interface PrometheusDetailsProps  {
   providerName: string;
   path: string;

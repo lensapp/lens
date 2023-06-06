@@ -142,7 +142,6 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
         type: "success",
         details,
       };
-      this.props.logger.info(`[CLUSTER-SETTINGS]: Prometheus details loaded: ${JSON.stringify(this.prometheusDetails)}`);
     } catch (error) {
       this.props.logger.error(`[CLUSTER-SETTINGS]: Failed to load prometheus details: ${error}`);
       this.prometheusDetails = {

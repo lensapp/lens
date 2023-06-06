@@ -22,8 +22,6 @@ const prometheusDetailsChannelListener =
         const prometheusHandler = di.inject(prometheusHandlerInjectable, cluster);
         const details = await prometheusHandler.getPrometheusDetails();
 
-        console.log(details);
-
         return {
           prometheusPath: details.prometheusPath,
           provider: {
