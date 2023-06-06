@@ -15,7 +15,27 @@ import type { TableDataContextValue } from "./table-data-context";
 import type { CreateTableState } from "@k8slens/table";
 import { createTableStateInjectionToken } from "@k8slens/table";
 
-type TableDataColumn<DataItem = any> = object;
+interface TableDataRow<DataItem = any> {
+  id: string;
+  data: DataItem;
+  index?: number;
+  className?: string;
+}
+
+interface TableDataColumn<DataItem = any> {
+  id: string;
+  title: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+  size?: string;
+  minSize?: number;
+  resizable?: boolean;
+  draggable?: boolean;
+  sortable?: boolean;
+  renderValue?: (row: TableDataRow<DataItem>) => React.ReactNode;
+  sortValue?: (row: TableDataRow<DataItem>, col: TableDataColumn<DataItem>) => string | number;
+  searchValue?: (row: TableDataRow<DataItem>) => string;
+}
 
 export function createLensTableState<K extends KubeObject>({
   tableId,
@@ -33,8 +53,7 @@ export function createLensTableState<K extends KubeObject>({
 }: TableDataContextValue<K>, createState: CreateTableState) {
   const headers = renderTableHeader as Required<TableCellProps>[];
 
-
-  let headingColumns: TableDataColumn<K>[] = headers.map(
+  let headingColumns: TableDataColumn[] = headers.map(
     ({ id: columnId, className, title }, index) => ({
       id: columnId ?? className,
       className,
@@ -42,7 +61,7 @@ export function createLensTableState<K extends KubeObject>({
       sortable: !!columnId,
       draggable: !!columnId, // e.g. warning-icon column in pods
       title,
-      renderValue(row: any, col: any) {
+      renderValue(row: TableDataRow) {
         const content =
           renderTableContents?.(row.data)[index] ??
           contextColumns
@@ -57,13 +76,13 @@ export function createLensTableState<K extends KubeObject>({
           return <div className={className}>{title}</div>;
         }
       },
-      sortValue(row: any, col: any) {
+      sortValue(row: TableDataRow, col: any) {
         return sortingCallbacks?.[col.id]?.(row.data) as string;
       },
     }),
   );
 
-  const checkboxColumn: TableDataColumn<K> = {
+  const checkboxColumn: TableDataColumn = {
     id: "checkbox",
     className: "checkbox",
     draggable: false,
@@ -84,7 +103,7 @@ export function createLensTableState<K extends KubeObject>({
         <div onClick={stopPropagation}>
           <Checkbox
             value={tableState.selectedRowsId.has(rowId)}
-            onChange={action((val, evt) => {
+            onChange={action(() => {
               if (tableState.selectedRowsId.has(rowId)) {
                 tableState.selectedRowsId.delete(rowId);
               } else {
@@ -97,7 +116,7 @@ export function createLensTableState<K extends KubeObject>({
     },
   };
 
-  const menuColumn: TableDataColumn<K> = {
+  const menuColumn: TableDataColumn = {
     id: "menu",
     className: "menu",
     resizable: false,
@@ -118,7 +137,7 @@ export function createLensTableState<K extends KubeObject>({
                 <Checkbox
                   label={title ?? className}
                   value={!tableState.hiddenColumns.has(columnId)}
-                  onChange={action((value, evt) => {
+                  onChange={action(() => {
                     if (tableState.hiddenColumns.has(columnId)) {
                       tableState.hiddenColumns.delete(columnId);
                     } else {
@@ -131,7 +150,7 @@ export function createLensTableState<K extends KubeObject>({
         </MenuActions>
       );
     },
-    renderValue(row: any, col: any) {
+    renderValue(row: any) {
       return (
         <div onClick={stopPropagation}>{renderItemMenu?.(row.data, store)}</div>
       );
