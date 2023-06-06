@@ -15,8 +15,8 @@
     "./prettier": "./prettier-config.json"
   },
   "files": [
-    "./eslint-config.js",
-    "./prettier-config.json"
+    "eslint-config.js",
+    "prettier-config.json"
   ],
   "repository": {
     "type": "git",
