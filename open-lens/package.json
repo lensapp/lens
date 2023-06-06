@@ -96,19 +96,19 @@
       },
       "dev:main": {
         "dependsOn": [
-          "build",
+          "^build",
           "download:binaries"
         ]
       },
       "dev:renderer": {
         "dependsOn": [
-          "build",
+          "^build",
           "build:tray-icons"
         ]
       },
       "dev-run": {
         "dependsOn": [
-          "build"
+          "^build"
         ]
       }
     }
