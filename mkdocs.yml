@@ -90,4 +90,4 @@ extra:
     provider: mike
   analytics:
     provider: google
-    property: UA-159377374-2
+    property: G-384760607
