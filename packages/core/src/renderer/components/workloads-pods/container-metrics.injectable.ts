@@ -15,7 +15,7 @@ interface PodContainerParams {
 
 const podContainerMetricsInjectable = getInjectable({
   id: "pod-container-metrics",
-  instantiate: (di, pod) => {
+  instantiate: (di, { pod, container }) => {
     const requestPodMetrics = di.inject(requestPodMetricsInjectable);
 
     return asyncComputed({
