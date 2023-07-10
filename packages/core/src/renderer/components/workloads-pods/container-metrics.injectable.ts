@@ -5,8 +5,13 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
 import { now } from "mobx-utils";
-import type { Pod } from "@k8slens/kube-object";
+import type { Pod, Container } from "@k8slens/kube-object";
 import requestPodMetricsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics.injectable";
+
+interface PodContainerParams {
+  pod: Pod;
+  container: Container;
+}
 
 const podContainerMetricsInjectable = getInjectable({
   id: "pod-container-metrics",
@@ -17,12 +22,14 @@ const podContainerMetricsInjectable = getInjectable({
       getValueFromObservedPromise: () => {
         now(60 * 1000);
 
-        return requestPodMetrics([pod], pod.getNs(), "container, namespace");
+        return requestPodMetrics([pod], pod.getNs(), container, "pod, container, namespace");
       },
     });
   },
   lifecycle: lifecycleEnum.keyedSingleton({
-    getInstanceKey: (di, pod: Pod) => pod.getId(),
+    getInstanceKey: (di, { pod, container }: PodContainerParams) => {
+      return `${pod.getId()}-${container.name}`;
+    },
   }),
 });
 

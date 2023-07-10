@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { MetricData } from "../metrics.api";
-import type { Pod } from "@k8slens/kube-object";
+import type { Pod, Container } from "@k8slens/kube-object";
 import requestMetricsInjectable from "./request-metrics.injectable";
 
 export interface PodMetricData {
@@ -21,16 +21,16 @@ export interface PodMetricData {
   memoryLimits: MetricData;
 }
 
-export type RequestPodMetrics = (pods: Pod[], namespace: string, selector?: string) => Promise<PodMetricData>;
+export type RequestPodMetrics = (pods: Pod[], namespace: string, container?: Container, selector?: string) => Promise<PodMetricData>;
 
 const requestPodMetricsInjectable = getInjectable({
   id: "request-pod-metrics",
   instantiate: (di): RequestPodMetrics => {
     const requestMetrics = di.inject(requestMetricsInjectable);
 
-    return (pods, namespace, selector = "pod, namespace") => {
+    return (pods, namespace, container, selector = "pod, namespace") => {
       const podSelector = pods.map(pod => pod.getName()).join("|");
-      const opts = { category: "pods", pods: podSelector, namespace, selector };
+      const opts = { category: "pods", pods: podSelector, container: container?.name, namespace, selector };
 
       return requestMetrics({
         cpuUsage: opts,
