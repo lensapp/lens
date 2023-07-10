@@ -48,6 +48,6 @@ const NonInjectedPodDetailsContainerMetrics = observer(({ pod, container, podCon
 export const PodDetailsContainerMetrics = withInjectables<Dependencies, ContainerMetricsProps>(NonInjectedPodDetailsContainerMetrics, {
   getProps: (di, props) => ({
     ...props,
-    podContainerMetrics: di.inject(podContainerMetricsInjectable, props.pod),
+    podContainerMetrics: di.inject(podContainerMetricsInjectable, { pod: props.pod, container: props.container }),
   }),
 });
