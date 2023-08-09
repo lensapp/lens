@@ -14,9 +14,9 @@ import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
 import type { VerticalPodAutoscalerStore } from "./store";
-import type { FilterByNamespace } from "../namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import type { FilterByNamespace } from "../namespaces/filter-by-namespace.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import filterByNamespaceInjectable from "../namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import filterByNamespaceInjectable from "../namespaces/filter-by-namespace.injectable";
 import verticalPodAutoscalerStoreInjectable from "./store.injectable";
 
 enum columnId {

@@ -106,14 +106,13 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
 
       await navigateToPods(frame);
 
-      const namespacesSelector = await frame.waitForSelector(
-        ".NamespaceSelect",
-      );
+      const namespacesSelector = await frame.waitForSelector(".namespace-select-filter .menu .non-icon label");
 
       await namespacesSelector.click();
       await namespacesSelector.type(TEST_NAMESPACE);
-      await namespacesSelector.press("Enter");
-      await namespacesSelector.click();
+      await frame.page().keyboard.press("Tab", { delay: 10 });
+      await frame.page().keyboard.press("Tab", { delay: 10 });
+      await frame.page().keyboard.press("Enter", { delay: 10 });
 
       await frame.click(".Icon.new-dock-tab");
 

@@ -8,11 +8,8 @@ import React from "react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { BadgeProps } from "../badge";
 import { Badge } from "../badge";
-import type {
-  FilterByNamespace,
-} from "./namespace-select-filter-model/filter-by-namespace.injectable";
-import filterByNamespaceInjectable
-  from "./namespace-select-filter-model/filter-by-namespace.injectable";
+import type { FilterByNamespace } from "./filter-by-namespace.injectable";
+import filterByNamespaceInjectable from "./filter-by-namespace.injectable";
 import { prevDefault, cssNames } from "@k8slens/utilities";
 
 export interface NamespaceSelectBadgeProps extends BadgeProps {
@@ -49,10 +46,8 @@ export function NamespaceSelectBadgeNonInjected(
 }
 
 export const NamespaceSelectBadge = withInjectables<Dependencies, NamespaceSelectBadgeProps>(NamespaceSelectBadgeNonInjected, {
-  getProps(di, props) {
-    return {
-      ...props,
-      filterByNamespace: di.inject(filterByNamespaceInjectable),
-    };
-  },
+  getProps: (di, props) => ({
+    ...props,
+    filterByNamespace: di.inject(filterByNamespaceInjectable),
+  }),
 });
