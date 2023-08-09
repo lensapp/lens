@@ -237,6 +237,7 @@
     "@k8slens/routing": "^1.0.0-alpha.5",
     "@k8slens/run-many": "^1.0.0-alpha.1",
     "@k8slens/spinner": "^1.0.0",
+    "@k8slens/stepper": "^1.0.0",
     "@k8slens/startable-stoppable": "^1.0.0-alpha.1",
     "@k8slens/tooltip": "^1.0.0-alpha.5",
     "@k8slens/utilities": "^1.0.0-alpha.1",

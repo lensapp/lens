@@ -3,6 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+$unit: 8px;
+$font-size-small: var(--font-size-small);
 
 .Stepper {
   --stepper-color: var(--contentColor);
