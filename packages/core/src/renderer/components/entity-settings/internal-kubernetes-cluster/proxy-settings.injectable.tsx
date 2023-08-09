@@ -10,6 +10,7 @@ import getClusterByIdInjectable from "../../../../features/cluster/storage/commo
 import { ClusterProxySetting } from "../../cluster-settings/proxy-setting";
 import type { EntitySettingViewProps } from "../extension-registrator.injectable";
 import { entitySettingInjectionToken } from "../token";
+import { computed } from "mobx";
 
 interface Dependencies {
   getClusterById: GetClusterById;
@@ -48,6 +49,7 @@ const proxyKubernetesClusterEntitySettingsInjectable = getInjectable({
     components: {
       View: ProxyKubernetesClusterSettings,
     },
+    isShown: computed(() => true),
   }),
   injectionToken: entitySettingInjectionToken,
 });
