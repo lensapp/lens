@@ -18,12 +18,13 @@ const getServiceAccountRouteInjectable = getRouteInjectable({
     method: "get",
     path: `${apiPrefix}/kubeconfig/service-account/{namespace}/{account}`,
   })(async ({ params, cluster }) => {
+    const { namespace, account } = params;
     const loadProxyKubeconfig = di.inject(loadProxyKubeconfigInjectable, cluster);
     const proxyKubeconfig = await loadProxyKubeconfig();
     const client = proxyKubeconfig.makeApiClient(CoreV1Api);
-    const secretList = await client.listNamespacedSecret(params.namespace);
+    const { items } = await client.listNamespacedSecret({ namespace });
 
-    const secret = secretList.body.items.find(secret => {
+    const secret = items.find(secret => {
       const { annotations = {}} = secret.metadata ?? {};
 
       return annotations["kubernetes.io/service-account.name"] === params.account;
@@ -63,7 +64,7 @@ const getServiceAccountRouteInjectable = getRouteInjectable({
         ],
         contexts: [
           {
-            name: `${contextName}-${params.account}`,
+            name: `${contextName}-${account}`,
             context: {
               user: params.account,
               cluster: contextName,

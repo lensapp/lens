@@ -240,7 +240,7 @@
     "@k8slens/startable-stoppable": "^1.0.0-alpha.1",
     "@k8slens/tooltip": "^1.0.0-alpha.5",
     "@k8slens/utilities": "^1.0.0-alpha.1",
-    "@kubernetes/client-node": "^0.18.1",
+    "@kubernetes/client-node": "^1.0.0-rc2",
     "@material-ui/core": "^4.12.3",
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@ogre-tools/fp": "^17.2.0",

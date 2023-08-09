@@ -45,7 +45,10 @@ export class NodeShellSession extends ShellSession {
 
     const cleanup = once(() => {
       coreApi
-        .deleteNamespacedPod(this.podName, "kube-system")
+        .deleteNamespacedPod({
+          name: this.podName,
+          namespace: "kube-system",
+        })
         .catch(error => this.dependencies.logger.warn(`[NODE-SHELL]: failed to remove pod shell`, error));
     });
 
@@ -111,32 +114,35 @@ export class NodeShellSession extends ShellSession {
       : undefined;
 
     return coreApi
-      .createNamespacedPod("kube-system", {
-        metadata: {
-          name: this.podName,
-          namespace: "kube-system",
-        },
-        spec: {
-          nodeName: this.nodeName,
-          restartPolicy: "Never",
-          terminationGracePeriodSeconds: 0,
-          hostPID: true,
-          hostIPC: true,
-          hostNetwork: true,
-          tolerations: [{
-            operator: "Exists",
-          }],
-          priorityClassName: "system-node-critical",
-          containers: [{
-            name: "shell",
-            image: nodeShellImage || initialNodeShellImage,
-            securityContext: {
-              privileged: true,
-            },
-            command: ["nsenter"],
-            args: ["-t", "1", "-m", "-u", "-i", "-n", "sleep", "14000"],
-          }],
-          imagePullSecrets,
+      .createNamespacedPod({
+        namespace: "kube-system",
+        body: {
+          metadata: {
+            name: this.podName,
+            namespace: "kube-system",
+          },
+          spec: {
+            nodeName: this.nodeName,
+            restartPolicy: "Never",
+            terminationGracePeriodSeconds: 0,
+            hostPID: true,
+            hostIPC: true,
+            hostNetwork: true,
+            tolerations: [{
+              operator: "Exists",
+            }],
+            priorityClassName: "system-node-critical",
+            containers: [{
+              name: "shell",
+              image: nodeShellImage || initialNodeShellImage,
+              securityContext: {
+                privileged: true,
+              },
+              command: ["nsenter"],
+              args: ["-t", "1", "-m", "-u", "-i", "-n", "sleep", "14000"],
+            }],
+            imagePullSecrets,
+          },
         },
       });
   }

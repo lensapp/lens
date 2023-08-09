@@ -7,7 +7,6 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { AuthorizationV1Api, V1SubjectRulesReviewStatus } from "@kubernetes/client-node";
 import type { DiContainer } from "@ogre-tools/injectable";
-import type { IncomingMessage } from "http";
 import { anyObject } from "jest-mock-extended";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import { cast } from "../../test-utils/cast";
@@ -46,11 +45,13 @@ describe("requestNamespaceListPermissions", () => {
     });
 
     it("should request the creation of a SelfSubjectRulesReview", () => {
-      expect(createSelfSubjectRulesReviewMock).toBeCalledWith(anyObject({
-        spec: {
-          namespace: "irrelevant-namespace",
-        },
-      }));
+      expect(createSelfSubjectRulesReviewMock).toBeCalledWith({
+        body: anyObject({
+          spec: {
+            namespace: "irrelevant-namespace",
+          },
+        }),
+      });
     });
 
     ([
@@ -189,11 +190,8 @@ describe("requestNamespaceListPermissions", () => {
       describe(`when api returns ${description}`, () => {
         beforeEach(async () => {
           await createSelfSubjectRulesReviewMock.resolve({
-            body: {
-              status,
-              spec: {},
-            },
-            response: null as unknown as IncomingMessage,
+            status,
+            spec: {},
           });
         });
 
