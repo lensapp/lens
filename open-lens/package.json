@@ -214,6 +214,7 @@
     "@k8slens/routing": "^1.0.0",
     "@k8slens/run-many": "^1.0.0",
     "@k8slens/startable-stoppable": "^1.0.0",
+    "@k8slens/table": "6.5.0",
     "@k8slens/tooltip": "^1.0.0",
     "@k8slens/utilities": "^1.0.0",
     "@kubernetes/client-node": "^0.18.1",

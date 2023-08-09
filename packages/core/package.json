@@ -55,7 +55,8 @@
     "test:unit": "jest --testPathIgnorePatterns integration",
     "test:watch": "func() { jest ${1} --watch --testPathIgnorePatterns integration; }; func",
     "lint": "PROD=true eslint --ext js,ts,tsx --max-warnings=0 .",
-    "lint:fix": "npm run lint -- --fix"
+    "lint:fix": "npm run lint -- --fix",
+    "postinstall": "linkable"
   },
   "config": {
     "k8sProxyVersion": "0.3.0",
@@ -238,6 +239,7 @@
     "@k8slens/run-many": "^1.0.0-alpha.1",
     "@k8slens/spinner": "^1.0.0",
     "@k8slens/startable-stoppable": "^1.0.0-alpha.1",
+    "@k8slens/table": "6.5.0",
     "@k8slens/tooltip": "^1.0.0-alpha.5",
     "@k8slens/utilities": "^1.0.0-alpha.1",
     "@kubernetes/client-node": "^0.18.1",

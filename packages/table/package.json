@@ -1,0 +1,28 @@
+{
+  "name": "@k8slens/table",
+  "version": "6.5.0",
+  "description": "Injection tokens for table and related components",
+  "license": "MIT",
+  "type": "commonjs",
+  "private": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rimraf dist/",
+    "build": "lens-webpack-build"
+  },
+  "devDependencies": {
+    "@k8slens/webpack": "^6.5.0-alpha.8",
+    "rimraf": "^4.4.1"
+  },
+  "peerDependencies": {
+    "@ogre-tools/injectable": "^17.1.0"
+  }
+}

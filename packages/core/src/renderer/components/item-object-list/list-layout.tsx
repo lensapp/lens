@@ -13,7 +13,7 @@ import type { TableProps, TableRowProps, TableSortCallbacks } from "../table";
 import type { IClassName, StrictReactNode, SingleOrMany } from "@k8slens/utilities";
 import { cssNames, noop } from "@k8slens/utilities";
 import type { AddRemoveButtonsProps } from "../add-remove-buttons";
-import type { ItemObject, TableCellProps } from "@k8slens/list-layout";
+import type { ItemObject, TableCellProps, GeneralKubeObjectListLayoutColumn } from "@k8slens/list-layout";
 import type { SearchInputUrlProps } from "../input";
 import type { PageFiltersStore } from "./page-filters/store";
 import { FilterType } from "./page-filters/store";
@@ -98,6 +98,7 @@ export type ItemListLayoutProps<Item extends ItemObject, PreLoadStores extends b
   headerClassName?: IClassName;
   renderHeaderTitle?: RenderHeaderTitle<Item, PreLoadStores>;
   customizeHeader?: HeaderCustomizer | HeaderCustomizer[];
+  columns?: GeneralKubeObjectListLayoutColumn[];
 
   // items list configuration
   isReady?: boolean; // show loading indicator while not ready
