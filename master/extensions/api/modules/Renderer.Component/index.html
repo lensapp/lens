@@ -17,7 +17,7 @@
       
       
       <link rel="icon" href="../../../../img/favicon.ico">
-      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.15">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.21">
     
     
       
@@ -25,7 +25,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.26e3688c.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.eebd395e.min.css">
       
         
         <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ecc896b0.min.css">
@@ -1678,14 +1678,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>percent</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>percent</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 </tbody>
 </table>
@@ -1703,99 +1703,99 @@
 - Or a function that produces a react node</p>
 <hr />
 <h3 id="inputprops">InputProps<a class="headerlink" href="#inputprops" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>InputProps</strong>: <code>Omit</code>&lt;<code>InputElementProps</code>, <code>"onChange"</code> | <code>"onSubmit"</code>> &amp; { <code>autoSelectOnFocus?</code>: <code>boolean</code> ; <code>blurOnEnter?</code>: <code>boolean</code> ; <code>className?</code>: <code>string</code> ; <code>contentRight?</code>: <code>string</code> | <code>StrictReactNode</code> ; <code>defaultValue?</code>: <code>string</code> ; <code>dirty?</code>: <code>boolean</code> ; <code>iconLeft?</code>: <a href="./#icondata"><code>IconData</code></a> ; <code>iconRight?</code>: <a href="./#icondata"><code>IconData</code></a> ; <code>maxRows?</code>: <code>number</code> ; <code>multiLine?</code>: <code>boolean</code> ; <code>showErrorsAsTooltip?</code>: <code>boolean</code> | <code>Omit</code>&lt;<a href="../../interfaces/Renderer.Component.TooltipProps/"><code>TooltipProps</code></a>, <code>"targetId"</code>> ; <code>showValidationLine?</code>: <code>boolean</code> ; <code>theme?</code>: <code>"round-black"</code> | <code>"round"</code> ; <code>trim?</code>: <code>boolean</code> ; <code>validators?</code>: <code>SingleOrMany</code>&lt;<a href="./#inputvalidator"><code>InputValidator</code></a>> ; <code>value?</code>: <code>string</code> ; <code>onChange?</code>: (<code>value</code>: <code>string</code>, <code>evt</code>: <code>ChangeEvent</code>&lt;<code>InputElement</code>>) =&gt; <code>void</code> ; <code>onSubmit?</code>: (<code>value</code>: <code>string</code>, <code>evt</code>: <code>KeyboardEvent</code>&lt;<code>InputElement</code>>) =&gt; <code>void</code>  }</p>
+<p>Ƭ <strong>InputProps</strong>: <code>Omit</code>&lt;<code>InputElementProps</code>, <code>"onChange"</code> | <code>"onSubmit"</code>&gt; &amp; { <code>autoSelectOnFocus?</code>: <code>boolean</code> ; <code>blurOnEnter?</code>: <code>boolean</code> ; <code>className?</code>: <code>string</code> ; <code>contentRight?</code>: <code>string</code> | <code>StrictReactNode</code> ; <code>defaultValue?</code>: <code>string</code> ; <code>dirty?</code>: <code>boolean</code> ; <code>iconLeft?</code>: <a href="./#icondata"><code>IconData</code></a> ; <code>iconRight?</code>: <a href="./#icondata"><code>IconData</code></a> ; <code>maxRows?</code>: <code>number</code> ; <code>multiLine?</code>: <code>boolean</code> ; <code>showErrorsAsTooltip?</code>: <code>boolean</code> | <code>Omit</code>&lt;<a href="../../interfaces/Renderer.Component.TooltipProps/"><code>TooltipProps</code></a>, <code>"targetId"</code>&gt; ; <code>showValidationLine?</code>: <code>boolean</code> ; <code>theme?</code>: <code>"round-black"</code> | <code>"round"</code> ; <code>trim?</code>: <code>boolean</code> ; <code>validators?</code>: <code>SingleOrMany</code>&lt;<a href="./#inputvalidator"><code>InputValidator</code></a>&gt; ; <code>value?</code>: <code>string</code> ; <code>onChange?</code>: (<code>value</code>: <code>string</code>, <code>evt</code>: <code>ChangeEvent</code>&lt;<code>InputElement</code>&gt;) =&gt; <code>void</code> ; <code>onSubmit?</code>: (<code>value</code>: <code>string</code>, <code>evt</code>: <code>KeyboardEvent</code>&lt;<code>InputElement</code>&gt;) =&gt; <code>void</code>  }</p>
 <hr />
 <h3 id="inputvalidation">InputValidation<a class="headerlink" href="#inputvalidation" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>InputValidation</strong>&lt;<code>IsAsync</code>>: (<code>value</code>: <code>string</code>, <code>props?</code>: <a href="./#inputprops"><code>InputProps</code></a>) =&gt; <a href="./#inputvalidationresult"><code>InputValidationResult</code></a>&lt;<code>IsAsync</code>></p>
+<p>Ƭ <strong>InputValidation</strong>&lt;<code>IsAsync</code>&gt;: (<code>value</code>: <code>string</code>, <code>props?</code>: <a href="./#inputprops"><code>InputProps</code></a>) =&gt; <a href="./#inputvalidationresult"><code>InputValidationResult</code></a>&lt;<code>IsAsync</code>&gt;</p>
 <h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>IsAsync</code></td>
-<td align="left">extends <code>boolean</code></td>
+<td style="text-align: left;"><code>IsAsync</code></td>
+<td style="text-align: left;">extends <code>boolean</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="type-declaration_1">Type declaration<a class="headerlink" href="#type-declaration_1" title="Permanent link">#</a></h4>
-<p>▸ (<code>value</code>, <code>props?</code>): <a href="./#inputvalidationresult"><code>InputValidationResult</code></a>&lt;<code>IsAsync</code>></p>
+<p>▸ (<code>value</code>, <code>props?</code>): <a href="./#inputvalidationresult"><code>InputValidationResult</code></a>&lt;<code>IsAsync</code>&gt;</p>
 <h5 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h5>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>value</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>value</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 <tr>
-<td align="left"><code>props?</code></td>
-<td align="left"><a href="./#inputprops"><code>InputProps</code></a></td>
+<td style="text-align: left;"><code>props?</code></td>
+<td style="text-align: left;"><a href="./#inputprops"><code>InputProps</code></a></td>
 </tr>
 </tbody>
 </table>
 <h5 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h5>
-<p><a href="./#inputvalidationresult"><code>InputValidationResult</code></a>&lt;<code>IsAsync</code>></p>
+<p><a href="./#inputvalidationresult"><code>InputValidationResult</code></a>&lt;<code>IsAsync</code>&gt;</p>
 <hr />
 <h3 id="inputvalidationresult">InputValidationResult<a class="headerlink" href="#inputvalidationresult" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>InputValidationResult</strong>&lt;<code>IsAsync</code>>: <code>IsAsync</code> extends <code>true</code> ? <code>Promise</code>&lt;<code>void</code>> : <code>boolean</code></p>
+<p>Ƭ <strong>InputValidationResult</strong>&lt;<code>IsAsync</code>&gt;: <code>IsAsync</code> extends <code>true</code> ? <code>Promise</code>&lt;<code>void</code>&gt; : <code>boolean</code></p>
 <h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>IsAsync</code></td>
-<td align="left">extends <code>boolean</code></td>
+<td style="text-align: left;"><code>IsAsync</code></td>
+<td style="text-align: left;">extends <code>boolean</code></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h3 id="inputvalidator">InputValidator<a class="headerlink" href="#inputvalidator" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>InputValidator</strong>&lt;<code>IsAsync</code>>: <code>SyncInputValidator</code> | <code>AsyncInputValidator</code> | <code>IsAsync</code> extends <code>boolean</code> ? <code>LegacyInputValidator</code> : <code>never</code></p>
+<p>Ƭ <strong>InputValidator</strong>&lt;<code>IsAsync</code>&gt;: <code>SyncInputValidator</code> | <code>AsyncInputValidator</code> | <code>IsAsync</code> extends <code>boolean</code> ? <code>LegacyInputValidator</code> : <code>never</code></p>
 <h4 id="type-parameters_2">Type parameters<a class="headerlink" href="#type-parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>IsAsync</code></td>
-<td align="left">extends <code>boolean</code> = <code>boolean</code></td>
+<td style="text-align: left;"><code>IsAsync</code></td>
+<td style="text-align: left;">extends <code>boolean</code> = <code>boolean</code></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h3 id="kubeitemliststore">KubeItemListStore<a class="headerlink" href="#kubeitemliststore" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>KubeItemListStore</strong>&lt;<code>K</code>>: <code>ItemListStore</code>&lt;<code>K</code>, <code>false</code>> &amp; <code>SubscribableStore</code> &amp; { <code>contextItems</code>: <code>K</code>[] ; <code>getByPath</code>: (<code>path</code>: <code>string</code>) =&gt; <code>K</code> | <code>undefined</code>  }</p>
+<p>Ƭ <strong>KubeItemListStore</strong>&lt;<code>K</code>&gt;: <code>ItemListStore</code>&lt;<code>K</code>, <code>false</code>&gt; &amp; <code>SubscribableStore</code> &amp; { <code>contextItems</code>: <code>K</code>[] ; <code>getByPath</code>: (<code>path</code>: <code>string</code>) =&gt; <code>K</code> | <code>undefined</code>  }</p>
 <h4 id="type-parameters_3">Type parameters<a class="headerlink" href="#type-parameters_3" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>K</code></td>
-<td align="left">extends <a href="../../classes/Main.K8sApi.KubeObject/"><code>KubeObject</code></a></td>
+<td style="text-align: left;"><code>K</code></td>
+<td style="text-align: left;">extends <a href="../../classes/Main.K8sApi.KubeObject/"><code>KubeObject</code></a></td>
 </tr>
 </tbody>
 </table>
@@ -1825,18 +1825,18 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>left</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>left</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 <tr>
-<td align="left"><code>right</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>right</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 </tbody>
 </table>
@@ -1857,18 +1857,18 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>message</code></td>
-<td align="left"><a href="./#notificationmessage"><code>NotificationMessage</code></a></td>
+<td style="text-align: left;"><code>message</code></td>
+<td style="text-align: left;"><a href="./#notificationmessage"><code>NotificationMessage</code></a></td>
 </tr>
 <tr>
-<td align="left"><code>opts?</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Component.CreateNotificationOptions/"><code>CreateNotificationOptions</code></a></td>
+<td style="text-align: left;"><code>opts?</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.Component.CreateNotificationOptions/"><code>CreateNotificationOptions</code></a></td>
 </tr>
 </tbody>
 </table>
@@ -1879,26 +1879,26 @@
 <p>Ƭ <strong>SyncValidationMessage</strong>: <code>StrictReactNode</code> | (<code>value</code>: <code>string</code>, <code>props?</code>: <a href="./#inputprops"><code>InputProps</code></a>) =&gt; <code>StrictReactNode</code></p>
 <hr />
 <h3 id="tablecellelem">TableCellElem<a class="headerlink" href="#tablecellelem" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>TableCellElem</strong>: <code>React.ReactElement</code>&lt;<code>TableCellProps</code>></p>
+<p>Ƭ <strong>TableCellElem</strong>: <code>React.ReactElement</code>&lt;<code>TableCellProps</code>&gt;</p>
 <hr />
 <h3 id="tableheadelem">TableHeadElem<a class="headerlink" href="#tableheadelem" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>TableHeadElem</strong>: <code>React.ReactElement</code>&lt;<a href="../../interfaces/Renderer.Component.TableHeadProps/"><code>TableHeadProps</code></a>></p>
+<p>Ƭ <strong>TableHeadElem</strong>: <code>React.ReactElement</code>&lt;<a href="../../interfaces/Renderer.Component.TableHeadProps/"><code>TableHeadProps</code></a>&gt;</p>
 <hr />
 <h3 id="tableorderby">TableOrderBy<a class="headerlink" href="#tableorderby" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>TableOrderBy</strong>: <code>"asc"</code> | <code>"desc"</code></p>
 <hr />
 <h3 id="tablerowelem">TableRowElem<a class="headerlink" href="#tablerowelem" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>TableRowElem</strong>&lt;<code>Item</code>>: <code>React.ReactElement</code>&lt;<a href="../../interfaces/Renderer.Component.TableRowProps/"><code>TableRowProps</code></a>&lt;<code>Item</code>>></p>
+<p>Ƭ <strong>TableRowElem</strong>&lt;<code>Item</code>&gt;: <code>React.ReactElement</code>&lt;<a href="../../interfaces/Renderer.Component.TableRowProps/"><code>TableRowProps</code></a>&lt;<code>Item</code>&gt;&gt;</p>
 <h4 id="type-parameters_4">Type parameters<a class="headerlink" href="#type-parameters_4" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
+<th style="text-align: left;">Name</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>Item</code></td>
+<td style="text-align: left;"><code>Item</code></td>
 </tr>
 </tbody>
 </table>
@@ -1907,17 +1907,17 @@
 <p>Ƭ <strong>TableSortBy</strong>: <code>string</code></p>
 <hr />
 <h3 id="tablesortcallback">TableSortCallback<a class="headerlink" href="#tablesortcallback" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>TableSortCallback</strong>&lt;<code>Item</code>>: (<code>data</code>: <code>Item</code>) =&gt; <code>undefined</code> | <code>string</code> | <code>number</code> | (<code>string</code> | <code>number</code>)[]</p>
+<p>Ƭ <strong>TableSortCallback</strong>&lt;<code>Item</code>&gt;: (<code>data</code>: <code>Item</code>) =&gt; <code>undefined</code> | <code>string</code> | <code>number</code> | (<code>string</code> | <code>number</code>)[]</p>
 <h4 id="type-parameters_5">Type parameters<a class="headerlink" href="#type-parameters_5" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
+<th style="text-align: left;">Name</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>Item</code></td>
+<td style="text-align: left;"><code>Item</code></td>
 </tr>
 </tbody>
 </table>
@@ -1927,14 +1927,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>data</code></td>
-<td align="left"><code>Item</code></td>
+<td style="text-align: left;"><code>data</code></td>
+<td style="text-align: left;"><code>Item</code></td>
 </tr>
 </tbody>
 </table>
@@ -1942,17 +1942,17 @@
 <p><code>undefined</code> | <code>string</code> | <code>number</code> | (<code>string</code> | <code>number</code>)[]</p>
 <hr />
 <h3 id="tablesortcallbacks">TableSortCallbacks<a class="headerlink" href="#tablesortcallbacks" title="Permanent link">#</a></h3>
-<p>Ƭ <strong>TableSortCallbacks</strong>&lt;<code>Item</code>>: <code>Record</code>&lt;<code>string</code>, <a href="./#tablesortcallback"><code>TableSortCallback</code></a>&lt;<code>Item</code>>></p>
+<p>Ƭ <strong>TableSortCallbacks</strong>&lt;<code>Item</code>&gt;: <code>Record</code>&lt;<code>string</code>, <a href="./#tablesortcallback"><code>TableSortCallback</code></a>&lt;<code>Item</code>&gt;&gt;</p>
 <h4 id="type-parameters_6">Type parameters<a class="headerlink" href="#type-parameters_6" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
+<th style="text-align: left;">Name</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>Item</code></td>
+<td style="text-align: left;"><code>Item</code></td>
 </tr>
 </tbody>
 </table>
@@ -1966,72 +1966,72 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>accountId</code></td>
-<td align="left"><code>Validators.SyncInputValidator</code></td>
+<td style="text-align: left;"><code>accountId</code></td>
+<td style="text-align: left;"><code>Validators.SyncInputValidator</code></td>
 </tr>
 <tr>
-<td align="left"><code>isEmail</code></td>
-<td align="left"><code>Validators.SyncInputValidator</code></td>
+<td style="text-align: left;"><code>isEmail</code></td>
+<td style="text-align: left;"><code>Validators.SyncInputValidator</code></td>
 </tr>
 <tr>
-<td align="left"><code>isExtensionNameInstall</code></td>
-<td align="left"><code>Validators.SyncInputValidator</code></td>
+<td style="text-align: left;"><code>isExtensionNameInstall</code></td>
+<td style="text-align: left;"><code>Validators.SyncInputValidator</code></td>
 </tr>
 <tr>
-<td align="left"><code>isExtensionNameInstallRegex</code></td>
-<td align="left">{ <code>captures</code>: (<code>val</code>: <code>string</code>) =&gt; <code>undefined</code> | { <code>name</code>: <code>string</code> ; <code>version?</code>: <code>string</code>  } ; <code>isMatch</code>: (<code>val</code>: <code>string</code>) =&gt; <code>boolean</code>  }</td>
+<td style="text-align: left;"><code>isExtensionNameInstallRegex</code></td>
+<td style="text-align: left;">{ <code>captures</code>: (<code>val</code>: <code>string</code>) =&gt; <code>undefined</code> | { <code>name</code>: <code>string</code> ; <code>version?</code>: <code>string</code>  } ; <code>isMatch</code>: (<code>val</code>: <code>string</code>) =&gt; <code>boolean</code>  }</td>
 </tr>
 <tr>
-<td align="left"><code>isExtensionNameInstallRegex.captures</code></td>
-<td align="left">[object Object]</td>
+<td style="text-align: left;"><code>isExtensionNameInstallRegex.captures</code></td>
+<td style="text-align: left;">[object Object]</td>
 </tr>
 <tr>
-<td align="left"><code>isExtensionNameInstallRegex.isMatch</code></td>
-<td align="left">[object Object]</td>
+<td style="text-align: left;"><code>isExtensionNameInstallRegex.isMatch</code></td>
+<td style="text-align: left;">[object Object]</td>
 </tr>
 <tr>
-<td align="left"><code>isNumber</code></td>
-<td align="left"><code>Validators.SyncInputValidator</code></td>
+<td style="text-align: left;"><code>isNumber</code></td>
+<td style="text-align: left;"><code>Validators.SyncInputValidator</code></td>
 </tr>
 <tr>
-<td align="left"><code>isPath</code></td>
-<td align="left"><code>Validators.AsyncInputValidator</code></td>
+<td style="text-align: left;"><code>isPath</code></td>
+<td style="text-align: left;"><code>Validators.AsyncInputValidator</code></td>
 </tr>
 <tr>
-<td align="left"><code>isRequired</code></td>
-<td align="left"><code>Validators.SyncInputValidator</code></td>
+<td style="text-align: left;"><code>isRequired</code></td>
+<td style="text-align: left;"><code>Validators.SyncInputValidator</code></td>
 </tr>
 <tr>
-<td align="left"><code>isUrl</code></td>
-<td align="left"><code>Validators.SyncInputValidator</code></td>
+<td style="text-align: left;"><code>isUrl</code></td>
+<td style="text-align: left;"><code>Validators.SyncInputValidator</code></td>
 </tr>
 <tr>
-<td align="left"><code>maxLength</code></td>
-<td align="left"><code>Validators.SyncInputValidator</code></td>
+<td style="text-align: left;"><code>maxLength</code></td>
+<td style="text-align: left;"><code>Validators.SyncInputValidator</code></td>
 </tr>
 <tr>
-<td align="left"><code>minLength</code></td>
-<td align="left"><code>Validators.SyncInputValidator</code></td>
+<td style="text-align: left;"><code>minLength</code></td>
+<td style="text-align: left;"><code>Validators.SyncInputValidator</code></td>
 </tr>
 <tr>
-<td align="left"><code>systemName</code></td>
-<td align="left"><code>Validators.SyncInputValidator</code></td>
+<td style="text-align: left;"><code>systemName</code></td>
+<td style="text-align: left;"><code>Validators.SyncInputValidator</code></td>
 </tr>
 <tr>
-<td align="left"><code>unionInputValidators</code></td>
-<td align="left">(<code>baseValidator</code>: <code>Pick</code>&lt;<code>SyncInputValidator</code>, <code>"message"</code> | <code>"condition"</code>>, ...<code>validators</code>: <code>SyncInputValidator</code>[]) =&gt; <code>SyncInputValidator</code></td>
+<td style="text-align: left;"><code>unionInputValidators</code></td>
+<td style="text-align: left;">(<code>baseValidator</code>: <code>Pick</code>&lt;<code>SyncInputValidator</code>, <code>"message"</code> | <code>"condition"</code>&gt;, ...<code>validators</code>: <code>SyncInputValidator</code>[]) =&gt; <code>SyncInputValidator</code></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h3 id="menucontext">MenuContext<a class="headerlink" href="#menucontext" title="Permanent link">#</a></h3>
-<p>• <code>Const</code> <strong>MenuContext</strong>: <code>React.Context</code>&lt;<a href="../../interfaces/Renderer.Component.MenuContextValue/"><code>MenuContextValue</code></a> | <code>null</code>></p>
+<p>• <code>Const</code> <strong>MenuContext</strong>: <code>React.Context</code>&lt;<a href="../../interfaces/Renderer.Component.MenuContextValue/"><code>MenuContextValue</code></a> | <code>null</code>&gt;</p>
 <hr />
 <h3 id="notifications">Notifications<a class="headerlink" href="#notifications" title="Permanent link">#</a></h3>
 <p>• <code>Const</code> <strong>Notifications</strong>: <code>Object</code></p>
@@ -2039,39 +2039,39 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>checkedError</code></td>
-<td align="left"><code>ShowCheckedErrorNotification</code></td>
+<td style="text-align: left;"><code>checkedError</code></td>
+<td style="text-align: left;"><code>ShowCheckedErrorNotification</code></td>
 </tr>
 <tr>
-<td align="left"><code>error</code></td>
-<td align="left"><code>ShowNotification</code></td>
+<td style="text-align: left;"><code>error</code></td>
+<td style="text-align: left;"><code>ShowNotification</code></td>
 </tr>
 <tr>
-<td align="left"><code>info</code></td>
-<td align="left"><code>ShowNotification</code></td>
+<td style="text-align: left;"><code>info</code></td>
+<td style="text-align: left;"><code>ShowNotification</code></td>
 </tr>
 <tr>
-<td align="left"><code>ok</code></td>
-<td align="left"><code>ShowNotification</code></td>
+<td style="text-align: left;"><code>ok</code></td>
+<td style="text-align: left;"><code>ShowNotification</code></td>
 </tr>
 <tr>
-<td align="left"><code>shortInfo</code></td>
-<td align="left"><code>ShowNotification</code></td>
+<td style="text-align: left;"><code>shortInfo</code></td>
+<td style="text-align: left;"><code>ShowNotification</code></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h3 id="resourcemetricscontext">ResourceMetricsContext<a class="headerlink" href="#resourcemetricscontext" title="Permanent link">#</a></h3>
-<p>• <code>Const</code> <strong>ResourceMetricsContext</strong>: <code>React.Context</code>&lt;<a href="../../interfaces/Renderer.Component.ResourceMetricsValue/"><code>ResourceMetricsValue</code></a> | <code>null</code>></p>
+<p>• <code>Const</code> <strong>ResourceMetricsContext</strong>: <code>React.Context</code>&lt;<a href="../../interfaces/Renderer.Component.ResourceMetricsValue/"><code>ResourceMetricsValue</code></a> | <code>null</code>&gt;</p>
 <hr />
 <h3 id="tooltip">Tooltip<a class="headerlink" href="#tooltip" title="Permanent link">#</a></h3>
-<p>• <code>Const</code> <strong>Tooltip</strong>: <code>React.ComponentClass</code>&lt;<a href="../../interfaces/Renderer.Component.TooltipProps/"><code>TooltipProps</code></a>, <code>any</code>></p>
+<p>• <code>Const</code> <strong>Tooltip</strong>: <code>React.ComponentClass</code>&lt;<a href="../../interfaces/Renderer.Component.TooltipProps/"><code>TooltipProps</code></a>, <code>any</code>&gt;</p>
 <hr />
 <h3 id="cpuoptions">cpuOptions<a class="headerlink" href="#cpuoptions" title="Permanent link">#</a></h3>
 <p>• <code>Const</code> <strong>cpuOptions</strong>: <code>ChartOptions</code></p>
@@ -2089,82 +2089,82 @@
 <p>• <code>Const</code> <strong>podMetricTabs</strong>: <a href="./#atleastonemetrictab"><code>AtLeastOneMetricTab</code></a></p>
 <hr />
 <h3 id="resizinganchorprops">resizingAnchorProps<a class="headerlink" href="#resizinganchorprops" title="Permanent link">#</a></h3>
-<p>• <code>Const</code> <strong>resizingAnchorProps</strong>: <code>Record</code>&lt;<a href="./#drawerposition"><code>DrawerPosition</code></a>, [<code>ResizeDirection</code>, <code>ResizeSide</code>, <code>ResizeGrowthDirection</code>]></p>
+<p>• <code>Const</code> <strong>resizingAnchorProps</strong>: <code>Record</code>&lt;<a href="./#drawerposition"><code>DrawerPosition</code></a>, [<code>ResizeDirection</code>, <code>ResizeSide</code>, <code>ResizeGrowthDirection</code>]&gt;</p>
 <hr />
 <h3 id="terminalstore">terminalStore<a class="headerlink" href="#terminalstore" title="Permanent link">#</a></h3>
 <p>• <code>Const</code> <strong>terminalStore</strong>: <code>TerminalStore</code> &amp; { <code>sendCommand</code>: <code>SendCommand</code>  }</p>
 <h2 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">#</a></h2>
 <h3 id="badge">Badge<a class="headerlink" href="#badge" title="Permanent link">#</a></h3>
-<p>▸ <strong>Badge</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p>▸ <strong>Badge</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <h4 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.BadgeProps/"><code>BadgeProps</code></a> &amp; <a href="../../interfaces/Renderer.Component.TooltipDecoratorProps/"><code>TooltipDecoratorProps</code></a>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.BadgeProps/"><code>BadgeProps</code></a> &amp; <a href="../../interfaces/Renderer.Component.TooltipDecoratorProps/"><code>TooltipDecoratorProps</code></a>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>context?</code></td>
-<td align="left"><code>any</code></td>
+<td style="text-align: left;"><code>context?</code></td>
+<td style="text-align: left;"><code>any</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
-<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <hr />
 <h3 id="barchart">BarChart<a class="headerlink" href="#barchart" title="Permanent link">#</a></h3>
-<p>▸ <strong>BarChart</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p>▸ <strong>BarChart</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <h4 id="parameters_6">Parameters<a class="headerlink" href="#parameters_6" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.BarChartProps/"><code>BarChartProps</code></a>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.BarChartProps/"><code>BarChartProps</code></a>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>context?</code></td>
-<td align="left"><code>any</code></td>
+<td style="text-align: left;"><code>context?</code></td>
+<td style="text-align: left;"><code>any</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
-<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <hr />
 <h3 id="button">Button<a class="headerlink" href="#button" title="Permanent link">#</a></h3>
-<p>▸ <strong>Button</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p>▸ <strong>Button</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <h4 id="parameters_7">Parameters<a class="headerlink" href="#parameters_7" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.ButtonProps/"><code>ButtonProps</code></a> &amp; <a href="../../interfaces/Renderer.Component.TooltipDecoratorProps/"><code>TooltipDecoratorProps</code></a>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.ButtonProps/"><code>ButtonProps</code></a> &amp; <a href="../../interfaces/Renderer.Component.TooltipDecoratorProps/"><code>TooltipDecoratorProps</code></a>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>context?</code></td>
-<td align="left"><code>any</code></td>
+<td style="text-align: left;"><code>context?</code></td>
+<td style="text-align: left;"><code>any</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
-<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <hr />
 <h3 id="checkbox">Checkbox<a class="headerlink" href="#checkbox" title="Permanent link">#</a></h3>
 <p>▸ <strong>Checkbox</strong>(<code>«destructured»</code>): <code>React.JSX.Element</code></p>
@@ -2172,14 +2172,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>«destructured»</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Component.CheckboxProps/"><code>CheckboxProps</code></a></td>
+<td style="text-align: left;"><code>«destructured»</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.Component.CheckboxProps/"><code>CheckboxProps</code></a></td>
 </tr>
 </tbody>
 </table>
@@ -2187,76 +2187,76 @@
 <p><code>React.JSX.Element</code></p>
 <hr />
 <h3 id="confirmdialog">ConfirmDialog<a class="headerlink" href="#confirmdialog" title="Permanent link">#</a></h3>
-<p>▸ <strong>ConfirmDialog</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p>▸ <strong>ConfirmDialog</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <h4 id="parameters_9">Parameters<a class="headerlink" href="#parameters_9" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.ConfirmDialogProps/"><code>ConfirmDialogProps</code></a>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.ConfirmDialogProps/"><code>ConfirmDialogProps</code></a>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>context?</code></td>
-<td align="left"><code>any</code></td>
+<td style="text-align: left;"><code>context?</code></td>
+<td style="text-align: left;"><code>any</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
-<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <hr />
 <h3 id="dialog">Dialog<a class="headerlink" href="#dialog" title="Permanent link">#</a></h3>
-<p>▸ <strong>Dialog</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p>▸ <strong>Dialog</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <h4 id="parameters_10">Parameters<a class="headerlink" href="#parameters_10" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.DialogProps/"><code>DialogProps</code></a>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.DialogProps/"><code>DialogProps</code></a>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>context?</code></td>
-<td align="left"><code>any</code></td>
+<td style="text-align: left;"><code>context?</code></td>
+<td style="text-align: left;"><code>any</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
-<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <hr />
 <h3 id="drawer">Drawer<a class="headerlink" href="#drawer" title="Permanent link">#</a></h3>
-<p>▸ <strong>Drawer</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p>▸ <strong>Drawer</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <h4 id="parameters_11">Parameters<a class="headerlink" href="#parameters_11" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.DrawerProps/"><code>DrawerProps</code></a>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.DrawerProps/"><code>DrawerProps</code></a>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>context?</code></td>
-<td align="left"><code>any</code></td>
+<td style="text-align: left;"><code>context?</code></td>
+<td style="text-align: left;"><code>any</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
-<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <hr />
 <h3 id="draweritem">DrawerItem<a class="headerlink" href="#draweritem" title="Permanent link">#</a></h3>
 <p>▸ <strong>DrawerItem</strong>(<code>«destructured»</code>): <code>React.JSX.Element</code> | <code>null</code></p>
@@ -2264,14 +2264,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>«destructured»</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Component.DrawerItemProps/"><code>DrawerItemProps</code></a></td>
+<td style="text-align: left;"><code>«destructured»</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.Component.DrawerItemProps/"><code>DrawerItemProps</code></a></td>
 </tr>
 </tbody>
 </table>
@@ -2284,14 +2284,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Component.DrawerItemLabelsProps/"><code>DrawerItemLabelsProps</code></a></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.Component.DrawerItemLabelsProps/"><code>DrawerItemLabelsProps</code></a></td>
 </tr>
 </tbody>
 </table>
@@ -2304,14 +2304,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>«destructured»</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Component.DrawerTitleProps/"><code>DrawerTitleProps</code></a></td>
+<td style="text-align: left;"><code>«destructured»</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.Component.DrawerTitleProps/"><code>DrawerTitleProps</code></a></td>
 </tr>
 </tbody>
 </table>
@@ -2319,121 +2319,121 @@
 <p><code>React.JSX.Element</code></p>
 <hr />
 <h3 id="formswitch">FormSwitch<a class="headerlink" href="#formswitch" title="Permanent link">#</a></h3>
-<p>▸ <strong>FormSwitch</strong>(<code>props</code>): <code>React.FunctionComponentElement</code>&lt;<code>any</code>></p>
+<p>▸ <strong>FormSwitch</strong>(<code>props</code>): <code>React.FunctionComponentElement</code>&lt;<code>any</code>&gt;</p>
 <p><strong><code>Deprecated</code></strong></p>
 <p>Use <Switch/> instead from "../switch.tsx".</p>
 <h4 id="parameters_15">Parameters<a class="headerlink" href="#parameters_15" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><code>FormControlLabelProps</code> &amp; { <code>children?</code>: <code>StrictReactNode</code>  }</td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><code>FormControlLabelProps</code> &amp; { <code>children?</code>: <code>StrictReactNode</code>  }</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
-<p><code>React.FunctionComponentElement</code>&lt;<code>any</code>></p>
+<p><code>React.FunctionComponentElement</code>&lt;<code>any</code>&gt;</p>
 <hr />
 <h3 id="icon">Icon<a class="headerlink" href="#icon" title="Permanent link">#</a></h3>
-<p>▸ <strong>Icon</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p>▸ <strong>Icon</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <h4 id="parameters_16">Parameters<a class="headerlink" href="#parameters_16" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.IconProps/"><code>IconProps</code></a> &amp; <a href="../../interfaces/Renderer.Component.TooltipDecoratorProps/"><code>TooltipDecoratorProps</code></a>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.IconProps/"><code>IconProps</code></a> &amp; <a href="../../interfaces/Renderer.Component.TooltipDecoratorProps/"><code>TooltipDecoratorProps</code></a>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>context?</code></td>
-<td align="left"><code>any</code></td>
+<td style="text-align: left;"><code>context?</code></td>
+<td style="text-align: left;"><code>any</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_16">Returns<a class="headerlink" href="#returns_16" title="Permanent link">#</a></h4>
-<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <hr />
 <h3 id="kubeeventdetails">KubeEventDetails<a class="headerlink" href="#kubeeventdetails" title="Permanent link">#</a></h3>
-<p>▸ <strong>KubeEventDetails</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p>▸ <strong>KubeEventDetails</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <h4 id="parameters_17">Parameters<a class="headerlink" href="#parameters_17" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.KubeEventDetailsProps/"><code>KubeEventDetailsProps</code></a>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.KubeEventDetailsProps/"><code>KubeEventDetailsProps</code></a>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>context?</code></td>
-<td align="left"><code>any</code></td>
+<td style="text-align: left;"><code>context?</code></td>
+<td style="text-align: left;"><code>any</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_17">Returns<a class="headerlink" href="#returns_17" title="Permanent link">#</a></h4>
-<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <hr />
 <h3 id="kubeobjectdetails">KubeObjectDetails<a class="headerlink" href="#kubeobjectdetails" title="Permanent link">#</a></h3>
-<p>▸ <strong>KubeObjectDetails</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p>▸ <strong>KubeObjectDetails</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <h4 id="parameters_18">Parameters<a class="headerlink" href="#parameters_18" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><code>Object</code></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><code>Object</code></td>
 </tr>
 <tr>
-<td align="left"><code>context?</code></td>
-<td align="left"><code>any</code></td>
+<td style="text-align: left;"><code>context?</code></td>
+<td style="text-align: left;"><code>any</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_18">Returns<a class="headerlink" href="#returns_18" title="Permanent link">#</a></h4>
-<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <hr />
 <h3 id="kubeobjectlistlayout">KubeObjectListLayout<a class="headerlink" href="#kubeobjectlistlayout" title="Permanent link">#</a></h3>
-<p>▸ <strong>KubeObjectListLayout</strong>&lt;<code>K</code>, <code>A</code>, <code>D</code>>(<code>props</code>): <code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
+<p>▸ <strong>KubeObjectListLayout</strong>&lt;<code>K</code>, <code>A</code>, <code>D</code>&gt;(<code>props</code>): <code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>&gt;&gt;</p>
 <h4 id="type-parameters_7">Type parameters<a class="headerlink" href="#type-parameters_7" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>K</code></td>
-<td align="left">extends <a href="../../classes/Main.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="../Main.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>K</code>></td>
+<td style="text-align: left;"><code>K</code></td>
+<td style="text-align: left;">extends <a href="../../classes/Main.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="../Main.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>&gt;, <code>unknown</code>, <code>unknown</code>, <code>K</code>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>A</code></td>
-<td align="left">extends <code>KubeApi</code>&lt;<code>K</code>, <code>D</code>, <code>A</code>></td>
+<td style="text-align: left;"><code>A</code></td>
+<td style="text-align: left;">extends <code>KubeApi</code>&lt;<code>K</code>, <code>D</code>, <code>A</code>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>D</code></td>
-<td align="left">extends <a href="../../interfaces/Main.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../Main.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>D</code>> = <a href="../Main.K8sApi/#kubejsonapidatafor"><code>KubeJsonApiDataFor</code></a>&lt;<code>K</code>></td>
+<td style="text-align: left;"><code>D</code></td>
+<td style="text-align: left;">extends <a href="../../interfaces/Main.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../Main.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>&gt;, <code>unknown</code>, <code>unknown</code>, <code>D</code>&gt; = <a href="../Main.K8sApi/#kubejsonapidatafor"><code>KubeJsonApiDataFor</code></a>&lt;<code>K</code>&gt;</td>
 </tr>
 </tbody>
 </table>
@@ -2441,34 +2441,34 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Component.KubeObjectListLayoutProps/"><code>KubeObjectListLayoutProps</code></a>&lt;<code>K</code>, <code>A</code>, <code>D</code>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.Component.KubeObjectListLayoutProps/"><code>KubeObjectListLayoutProps</code></a>&lt;<code>K</code>, <code>A</code>, <code>D</code>&gt;</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_19">Returns<a class="headerlink" href="#returns_19" title="Permanent link">#</a></h4>
-<p><code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
+<p><code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>&gt;&gt;</p>
 <hr />
 <h3 id="kubeobjectmenu">KubeObjectMenu<a class="headerlink" href="#kubeobjectmenu" title="Permanent link">#</a></h3>
-<p>▸ <strong>KubeObjectMenu</strong>&lt;<code>T</code>>(<code>props</code>): <code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
+<p>▸ <strong>KubeObjectMenu</strong>&lt;<code>T</code>&gt;(<code>props</code>): <code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>&gt;&gt;</p>
 <h4 id="type-parameters_8">Type parameters<a class="headerlink" href="#type-parameters_8" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>T</code></td>
-<td align="left">extends <a href="../../classes/Main.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="../Main.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>T</code>></td>
+<td style="text-align: left;"><code>T</code></td>
+<td style="text-align: left;">extends <a href="../../classes/Main.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="../Main.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>&gt;, <code>unknown</code>, <code>unknown</code>, <code>T</code>&gt;</td>
 </tr>
 </tbody>
 </table>
@@ -2476,175 +2476,175 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Component.KubeObjectMenuProps/"><code>KubeObjectMenuProps</code></a>&lt;<code>T</code>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.Component.KubeObjectMenuProps/"><code>KubeObjectMenuProps</code></a>&lt;<code>T</code>&gt;</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_20">Returns<a class="headerlink" href="#returns_20" title="Permanent link">#</a></h4>
-<p><code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
+<p><code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>&gt;&gt;</p>
 <hr />
 <h3 id="kubeobjectmeta">KubeObjectMeta<a class="headerlink" href="#kubeobjectmeta" title="Permanent link">#</a></h3>
-<p>▸ <strong>KubeObjectMeta</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p>▸ <strong>KubeObjectMeta</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <h4 id="parameters_21">Parameters<a class="headerlink" href="#parameters_21" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.KubeObjectMetaProps/"><code>KubeObjectMetaProps</code></a>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.KubeObjectMetaProps/"><code>KubeObjectMetaProps</code></a>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>context?</code></td>
-<td align="left"><code>any</code></td>
+<td style="text-align: left;"><code>context?</code></td>
+<td style="text-align: left;"><code>any</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_21">Returns<a class="headerlink" href="#returns_21" title="Permanent link">#</a></h4>
-<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <hr />
 <h3 id="lineprogress">LineProgress<a class="headerlink" href="#lineprogress" title="Permanent link">#</a></h3>
-<p>▸ <strong>LineProgress</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p>▸ <strong>LineProgress</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <h4 id="parameters_22">Parameters<a class="headerlink" href="#parameters_22" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.LineProgressProps/"><code>LineProgressProps</code></a> &amp; <a href="../../interfaces/Renderer.Component.TooltipDecoratorProps/"><code>TooltipDecoratorProps</code></a>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.LineProgressProps/"><code>LineProgressProps</code></a> &amp; <a href="../../interfaces/Renderer.Component.TooltipDecoratorProps/"><code>TooltipDecoratorProps</code></a>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>context?</code></td>
-<td align="left"><code>any</code></td>
+<td style="text-align: left;"><code>context?</code></td>
+<td style="text-align: left;"><code>any</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_22">Returns<a class="headerlink" href="#returns_22" title="Permanent link">#</a></h4>
-<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <hr />
 <h3 id="mainlayout">MainLayout<a class="headerlink" href="#mainlayout" title="Permanent link">#</a></h3>
-<p>▸ <strong>MainLayout</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p>▸ <strong>MainLayout</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <h4 id="parameters_23">Parameters<a class="headerlink" href="#parameters_23" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.MainLayoutProps/"><code>MainLayoutProps</code></a>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.MainLayoutProps/"><code>MainLayoutProps</code></a>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>context?</code></td>
-<td align="left"><code>any</code></td>
+<td style="text-align: left;"><code>context?</code></td>
+<td style="text-align: left;"><code>any</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_23">Returns<a class="headerlink" href="#returns_23" title="Permanent link">#</a></h4>
-<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <hr />
 <h3 id="menu">Menu<a class="headerlink" href="#menu" title="Permanent link">#</a></h3>
-<p>▸ <strong>Menu</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p>▸ <strong>Menu</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <h4 id="parameters_24">Parameters<a class="headerlink" href="#parameters_24" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.MenuProps/"><code>MenuProps</code></a>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.MenuProps/"><code>MenuProps</code></a>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>context?</code></td>
-<td align="left"><code>any</code></td>
+<td style="text-align: left;"><code>context?</code></td>
+<td style="text-align: left;"><code>any</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_24">Returns<a class="headerlink" href="#returns_24" title="Permanent link">#</a></h4>
-<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <hr />
 <h3 id="menuactions">MenuActions<a class="headerlink" href="#menuactions" title="Permanent link">#</a></h3>
-<p>▸ <strong>MenuActions</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p>▸ <strong>MenuActions</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <h4 id="parameters_25">Parameters<a class="headerlink" href="#parameters_25" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.MenuActionsProps/"><code>MenuActionsProps</code></a>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.MenuActionsProps/"><code>MenuActionsProps</code></a>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>context?</code></td>
-<td align="left"><code>any</code></td>
+<td style="text-align: left;"><code>context?</code></td>
+<td style="text-align: left;"><code>any</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_25">Returns<a class="headerlink" href="#returns_25" title="Permanent link">#</a></h4>
-<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <hr />
 <h3 id="monacoeditor">MonacoEditor<a class="headerlink" href="#monacoeditor" title="Permanent link">#</a></h3>
-<p>▸ <strong>MonacoEditor</strong>(<code>props</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
+<p>▸ <strong>MonacoEditor</strong>(<code>props</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>&gt;&gt;</p>
 <p><strong>NOTE</strong>: Exotic components are not callable.</p>
 <h4 id="parameters_26">Parameters<a class="headerlink" href="#parameters_26" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Component.MonacoEditorProps/"><code>MonacoEditorProps</code></a> &amp; <code>RefAttributes</code>&lt;<code>MonacoEditorRef</code>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.Component.MonacoEditorProps/"><code>MonacoEditorProps</code></a> &amp; <code>RefAttributes</code>&lt;<code>MonacoEditorRef</code>&gt;</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_26">Returns<a class="headerlink" href="#returns_26" title="Permanent link">#</a></h4>
-<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
+<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>&gt;&gt;</p>
 <hr />
 <h3 id="namespaceselect">NamespaceSelect<a class="headerlink" href="#namespaceselect" title="Permanent link">#</a></h3>
-<p>▸ <strong>NamespaceSelect</strong>&lt;<code>IsMulti</code>>(<code>props</code>): <code>JSX.Element</code></p>
+<p>▸ <strong>NamespaceSelect</strong>&lt;<code>IsMulti</code>&gt;(<code>props</code>): <code>JSX.Element</code></p>
 <h4 id="type-parameters_9">Type parameters<a class="headerlink" href="#type-parameters_9" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>IsMulti</code></td>
-<td align="left">extends <code>boolean</code> = <code>false</code></td>
+<td style="text-align: left;"><code>IsMulti</code></td>
+<td style="text-align: left;">extends <code>boolean</code> = <code>false</code></td>
 </tr>
 </tbody>
 </table>
@@ -2652,14 +2652,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Component.NamespaceSelectProps/"><code>NamespaceSelectProps</code></a>&lt;<code>IsMulti</code>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.Component.NamespaceSelectProps/"><code>NamespaceSelectProps</code></a>&lt;<code>IsMulti</code>&gt;</td>
 </tr>
 </tbody>
 </table>
@@ -2667,52 +2667,52 @@
 <p><code>JSX.Element</code></p>
 <hr />
 <h3 id="namespaceselectfilter">NamespaceSelectFilter<a class="headerlink" href="#namespaceselectfilter" title="Permanent link">#</a></h3>
-<p>▸ <strong>NamespaceSelectFilter</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p>▸ <strong>NamespaceSelectFilter</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <h4 id="parameters_28">Parameters<a class="headerlink" href="#parameters_28" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><code>PropsWithChildren</code>&lt;<code>NamespaceSelectFilterProps</code>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><code>PropsWithChildren</code>&lt;<code>NamespaceSelectFilterProps</code>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>context?</code></td>
-<td align="left"><code>any</code></td>
+<td style="text-align: left;"><code>context?</code></td>
+<td style="text-align: left;"><code>any</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_28">Returns<a class="headerlink" href="#returns_28" title="Permanent link">#</a></h4>
-<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <hr />
 <h3 id="piechart">PieChart<a class="headerlink" href="#piechart" title="Permanent link">#</a></h3>
-<p>▸ <strong>PieChart</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p>▸ <strong>PieChart</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <h4 id="parameters_29">Parameters<a class="headerlink" href="#parameters_29" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.PieChartProps/"><code>PieChartProps</code></a>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.PieChartProps/"><code>PieChartProps</code></a>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>context?</code></td>
-<td align="left"><code>any</code></td>
+<td style="text-align: left;"><code>context?</code></td>
+<td style="text-align: left;"><code>any</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_29">Returns<a class="headerlink" href="#returns_29" title="Permanent link">#</a></h4>
-<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <hr />
 <h3 id="podcharts">PodCharts<a class="headerlink" href="#podcharts" title="Permanent link">#</a></h3>
 <p>▸ <strong>PodCharts</strong>(): <code>null</code> | <code>Element</code></p>
@@ -2720,41 +2720,41 @@
 <p><code>null</code> | <code>Element</code></p>
 <hr />
 <h3 id="poddetailslist">PodDetailsList<a class="headerlink" href="#poddetailslist" title="Permanent link">#</a></h3>
-<p>▸ <strong>PodDetailsList</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p>▸ <strong>PodDetailsList</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <h4 id="parameters_30">Parameters<a class="headerlink" href="#parameters_30" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.PodDetailsListProps/"><code>PodDetailsListProps</code></a>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.PodDetailsListProps/"><code>PodDetailsListProps</code></a>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>context?</code></td>
-<td align="left"><code>any</code></td>
+<td style="text-align: left;"><code>context?</code></td>
+<td style="text-align: left;"><code>any</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_31">Returns<a class="headerlink" href="#returns_31" title="Permanent link">#</a></h4>
-<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <hr />
 <h3 id="radio">Radio<a class="headerlink" href="#radio" title="Permanent link">#</a></h3>
-<p>▸ <strong>Radio</strong>&lt;<code>T</code>>(<code>«destructured»</code>): <code>React.JSX.Element</code></p>
+<p>▸ <strong>Radio</strong>&lt;<code>T</code>&gt;(<code>«destructured»</code>): <code>React.JSX.Element</code></p>
 <h4 id="type-parameters_10">Type parameters<a class="headerlink" href="#type-parameters_10" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
+<th style="text-align: left;">Name</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>T</code></td>
+<td style="text-align: left;"><code>T</code></td>
 </tr>
 </tbody>
 </table>
@@ -2762,14 +2762,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>«destructured»</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Component.RadioProps/"><code>RadioProps</code></a>&lt;<code>T</code>></td>
+<td style="text-align: left;"><code>«destructured»</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.Component.RadioProps/"><code>RadioProps</code></a>&lt;<code>T</code>&gt;</td>
 </tr>
 </tbody>
 </table>
@@ -2777,17 +2777,17 @@
 <p><code>React.JSX.Element</code></p>
 <hr />
 <h3 id="radiogroup">RadioGroup<a class="headerlink" href="#radiogroup" title="Permanent link">#</a></h3>
-<p>▸ <strong>RadioGroup</strong>&lt;<code>T</code>>(<code>«destructured»</code>): <code>React.JSX.Element</code></p>
+<p>▸ <strong>RadioGroup</strong>&lt;<code>T</code>&gt;(<code>«destructured»</code>): <code>React.JSX.Element</code></p>
 <h4 id="type-parameters_11">Type parameters<a class="headerlink" href="#type-parameters_11" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
+<th style="text-align: left;">Name</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>T</code></td>
+<td style="text-align: left;"><code>T</code></td>
 </tr>
 </tbody>
 </table>
@@ -2795,14 +2795,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>«destructured»</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Component.RadioGroupProps/"><code>RadioGroupProps</code></a>&lt;<code>T</code>></td>
+<td style="text-align: left;"><code>«destructured»</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.Component.RadioGroupProps/"><code>RadioGroupProps</code></a>&lt;<code>T</code>&gt;</td>
 </tr>
 </tbody>
 </table>
@@ -2810,19 +2810,19 @@
 <p><code>React.JSX.Element</code></p>
 <hr />
 <h3 id="resourcemetrics">ResourceMetrics<a class="headerlink" href="#resourcemetrics" title="Permanent link">#</a></h3>
-<p>▸ <strong>ResourceMetrics</strong>&lt;<code>Keys</code>>(<code>«destructured»</code>): <code>Element</code></p>
+<p>▸ <strong>ResourceMetrics</strong>&lt;<code>Keys</code>&gt;(<code>«destructured»</code>): <code>Element</code></p>
 <h4 id="type-parameters_12">Type parameters<a class="headerlink" href="#type-parameters_12" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>Keys</code></td>
-<td align="left">extends <code>string</code></td>
+<td style="text-align: left;"><code>Keys</code></td>
+<td style="text-align: left;">extends <code>string</code></td>
 </tr>
 </tbody>
 </table>
@@ -2830,14 +2830,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>«destructured»</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Component.ResourceMetricsProps/"><code>ResourceMetricsProps</code></a>&lt;<code>Keys</code>></td>
+<td style="text-align: left;"><code>«destructured»</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.Component.ResourceMetricsProps/"><code>ResourceMetricsProps</code></a>&lt;<code>Keys</code>&gt;</td>
 </tr>
 </tbody>
 </table>
@@ -2845,55 +2845,55 @@
 <p><code>Element</code></p>
 <hr />
 <h3 id="searchinput">SearchInput<a class="headerlink" href="#searchinput" title="Permanent link">#</a></h3>
-<p>▸ <strong>SearchInput</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p>▸ <strong>SearchInput</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <h4 id="parameters_34">Parameters<a class="headerlink" href="#parameters_34" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.SearchInputProps/"><code>SearchInputProps</code></a>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.SearchInputProps/"><code>SearchInputProps</code></a>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>context?</code></td>
-<td align="left"><code>any</code></td>
+<td style="text-align: left;"><code>context?</code></td>
+<td style="text-align: left;"><code>any</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_35">Returns<a class="headerlink" href="#returns_35" title="Permanent link">#</a></h4>
-<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <hr />
 <h3 id="select">Select<a class="headerlink" href="#select" title="Permanent link">#</a></h3>
-<p>▸ <strong>Select</strong>&lt;<code>Value</code>, <code>Option</code>, <code>IsMulti</code>, <code>Group</code>>(<code>props</code>): <code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
+<p>▸ <strong>Select</strong>&lt;<code>Value</code>, <code>Option</code>, <code>IsMulti</code>, <code>Group</code>&gt;(<code>props</code>): <code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>&gt;&gt;</p>
 <h4 id="type-parameters_13">Type parameters<a class="headerlink" href="#type-parameters_13" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>Value</code></td>
-<td align="left"><code>Value</code></td>
+<td style="text-align: left;"><code>Value</code></td>
+<td style="text-align: left;"><code>Value</code></td>
 </tr>
 <tr>
-<td align="left"><code>Option</code></td>
-<td align="left">extends <a href="../../interfaces/Renderer.Component.SelectOption/"><code>SelectOption</code></a>&lt;<code>Value</code>, <code>Option</code>></td>
+<td style="text-align: left;"><code>Option</code></td>
+<td style="text-align: left;">extends <a href="../../interfaces/Renderer.Component.SelectOption/"><code>SelectOption</code></a>&lt;<code>Value</code>, <code>Option</code>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>IsMulti</code></td>
-<td align="left">extends <code>boolean</code> = <code>false</code></td>
+<td style="text-align: left;"><code>IsMulti</code></td>
+<td style="text-align: left;">extends <code>boolean</code> = <code>false</code></td>
 </tr>
 <tr>
-<td align="left"><code>Group</code></td>
-<td align="left">extends <code>GroupBase</code>&lt;<code>Option</code>, <code>Group</code>> = <code>GroupBase</code>&lt;<code>Option</code>></td>
+<td style="text-align: left;"><code>Group</code></td>
+<td style="text-align: left;">extends <code>GroupBase</code>&lt;<code>Option</code>, <code>Group</code>&gt; = <code>GroupBase</code>&lt;<code>Option</code>&gt;</td>
 </tr>
 </tbody>
 </table>
@@ -2901,43 +2901,43 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Component.SelectProps/"><code>SelectProps</code></a>&lt;<code>Value</code>, <code>Option</code>, <code>IsMulti</code>, <code>Group</code>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.Component.SelectProps/"><code>SelectProps</code></a>&lt;<code>Value</code>, <code>Option</code>, <code>IsMulti</code>, <code>Group</code>&gt;</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_36">Returns<a class="headerlink" href="#returns_36" title="Permanent link">#</a></h4>
-<p><code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
+<p><code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>&gt;&gt;</p>
 <hr />
 <h3 id="statusbrick">StatusBrick<a class="headerlink" href="#statusbrick" title="Permanent link">#</a></h3>
-<p>▸ <strong>StatusBrick</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p>▸ <strong>StatusBrick</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <h4 id="parameters_36">Parameters<a class="headerlink" href="#parameters_36" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.StatusBrickProps/"><code>StatusBrickProps</code></a> &amp; <a href="../../interfaces/Renderer.Component.TooltipDecoratorProps/"><code>TooltipDecoratorProps</code></a>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.StatusBrickProps/"><code>StatusBrickProps</code></a> &amp; <a href="../../interfaces/Renderer.Component.TooltipDecoratorProps/"><code>TooltipDecoratorProps</code></a>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>context?</code></td>
-<td align="left"><code>any</code></td>
+<td style="text-align: left;"><code>context?</code></td>
+<td style="text-align: left;"><code>any</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_37">Returns<a class="headerlink" href="#returns_37" title="Permanent link">#</a></h4>
-<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <hr />
 <h3 id="submenu">SubMenu<a class="headerlink" href="#submenu" title="Permanent link">#</a></h3>
 <p>▸ <strong>SubMenu</strong>(<code>props</code>): <code>React.JSX.Element</code></p>
@@ -2945,14 +2945,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><code>Partial</code>&lt;<a href="../../interfaces/Renderer.Component.MenuProps/"><code>MenuProps</code></a>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><code>Partial</code>&lt;<a href="../../interfaces/Renderer.Component.MenuProps/"><code>MenuProps</code></a>&gt;</td>
 </tr>
 </tbody>
 </table>
@@ -2965,14 +2965,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>«destructured»</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Component.SwitchProps/"><code>SwitchProps</code></a></td>
+<td style="text-align: left;"><code>«destructured»</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.Component.SwitchProps/"><code>SwitchProps</code></a></td>
 </tr>
 </tbody>
 </table>
@@ -2987,14 +2987,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>«destructured»</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Component.SwitcherProps/"><code>SwitcherProps</code></a></td>
+<td style="text-align: left;"><code>«destructured»</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.Component.SwitcherProps/"><code>SwitcherProps</code></a></td>
 </tr>
 </tbody>
 </table>
@@ -3002,41 +3002,41 @@
 <p><code>React.JSX.Element</code></p>
 <hr />
 <h3 id="tablayout">TabLayout<a class="headerlink" href="#tablayout" title="Permanent link">#</a></h3>
-<p>▸ <strong>TabLayout</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p>▸ <strong>TabLayout</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <h4 id="parameters_40">Parameters<a class="headerlink" href="#parameters_40" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.TabLayoutProps/"><code>TabLayoutProps</code></a>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.TabLayoutProps/"><code>TabLayoutProps</code></a>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>context?</code></td>
-<td align="left"><code>any</code></td>
+<td style="text-align: left;"><code>context?</code></td>
+<td style="text-align: left;"><code>any</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_41">Returns<a class="headerlink" href="#returns_41" title="Permanent link">#</a></h4>
-<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>&gt;</p>
 <hr />
 <h3 id="table">Table<a class="headerlink" href="#table" title="Permanent link">#</a></h3>
-<p>▸ <strong>Table</strong>&lt;<code>Item</code>>(<code>props</code>): <code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
+<p>▸ <strong>Table</strong>&lt;<code>Item</code>&gt;(<code>props</code>): <code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>&gt;&gt;</p>
 <h4 id="type-parameters_14">Type parameters<a class="headerlink" href="#type-parameters_14" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
+<th style="text-align: left;">Name</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>Item</code></td>
+<td style="text-align: left;"><code>Item</code></td>
 </tr>
 </tbody>
 </table>
@@ -3044,19 +3044,19 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>props</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Component.TableProps/"><code>TableProps</code></a>&lt;<code>Item</code>></td>
+<td style="text-align: left;"><code>props</code></td>
+<td style="text-align: left;"><a href="../../interfaces/Renderer.Component.TableProps/"><code>TableProps</code></a>&lt;<code>Item</code>&gt;</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_42">Returns<a class="headerlink" href="#returns_42" title="Permanent link">#</a></h4>
-<p><code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
+<p><code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>&gt;&gt;</p>
 <hr />
 <h3 id="asyncinputvalidator">asyncInputValidator<a class="headerlink" href="#asyncinputvalidator" title="Permanent link">#</a></h3>
 <p>▸ <strong>asyncInputValidator</strong>(<code>validator</code>): <code>AsyncInputValidator</code></p>
@@ -3065,14 +3065,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>validator</code></td>
-<td align="left"><code>AsyncInputValidator</code></td>
+<td style="text-align: left;"><code>validator</code></td>
+<td style="text-align: left;"><code>AsyncInputValidator</code></td>
 </tr>
 </tbody>
 </table>
@@ -3080,24 +3080,24 @@
 <p><code>AsyncInputValidator</code></p>
 <hr />
 <h3 id="createterminaltab">createTerminalTab<a class="headerlink" href="#createterminaltab" title="Permanent link">#</a></h3>
-<p>▸ <strong>createTerminalTab</strong>(<code>tabParams?</code>): <code>Required</code>&lt;<code>DockTabCreate</code>></p>
+<p>▸ <strong>createTerminalTab</strong>(<code>tabParams?</code>): <code>Required</code>&lt;<code>DockTabCreate</code>&gt;</p>
 <h4 id="parameters_43">Parameters<a class="headerlink" href="#parameters_43" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>tabParams?</code></td>
-<td align="left"><code>DockTabCreateSpecific</code></td>
+<td style="text-align: left;"><code>tabParams?</code></td>
+<td style="text-align: left;"><code>DockTabCreateSpecific</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_44">Returns<a class="headerlink" href="#returns_44" title="Permanent link">#</a></h4>
-<p><code>Required</code>&lt;<code>DockTabCreate</code>></p>
+<p><code>Required</code>&lt;<code>DockTabCreate</code>&gt;</p>
 <hr />
 <h3 id="getdetailsurl">getDetailsUrl<a class="headerlink" href="#getdetailsurl" title="Permanent link">#</a></h3>
 <p>▸ <strong>getDetailsUrl</strong>(<code>selfLink</code>, <code>resetSelected?</code>, <code>mergeGlobals?</code>): <code>string</code></p>
@@ -3107,22 +3107,22 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>selfLink</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>selfLink</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 <tr>
-<td align="left"><code>resetSelected?</code></td>
-<td align="left"><code>boolean</code></td>
+<td style="text-align: left;"><code>resetSelected?</code></td>
+<td style="text-align: left;"><code>boolean</code></td>
 </tr>
 <tr>
-<td align="left"><code>mergeGlobals?</code></td>
-<td align="left"><code>boolean</code></td>
+<td style="text-align: left;"><code>mergeGlobals?</code></td>
+<td style="text-align: left;"><code>boolean</code></td>
 </tr>
 </tbody>
 </table>
@@ -3136,14 +3136,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>validator</code></td>
-<td align="left"><code>SyncInputValidator</code></td>
+<td style="text-align: left;"><code>validator</code></td>
+<td style="text-align: left;"><code>SyncInputValidator</code></td>
 </tr>
 </tbody>
 </table>
@@ -3156,14 +3156,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>validator</code></td>
-<td align="left"><a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>boolean</code>></td>
+<td style="text-align: left;"><code>validator</code></td>
+<td style="text-align: left;"><a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>boolean</code>&gt;</td>
 </tr>
 </tbody>
 </table>
@@ -3176,14 +3176,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>content</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>content</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 </tbody>
 </table>
@@ -3191,27 +3191,27 @@
 <p><code>boolean</code></p>
 <hr />
 <h3 id="onmultiselectfor">onMultiSelectFor<a class="headerlink" href="#onmultiselectfor" title="Permanent link">#</a></h3>
-<p>▸ <strong>onMultiSelectFor</strong>&lt;<code>Value</code>, <code>Option</code>, <code>Group</code>>(<code>collection</code>): <a href="../../interfaces/Renderer.Component.SelectProps/"><code>SelectProps</code></a>&lt;<code>Value</code>, <code>Option</code>, <code>true</code>, <code>Group</code>>[<code>"onChange"</code>]</p>
+<p>▸ <strong>onMultiSelectFor</strong>&lt;<code>Value</code>, <code>Option</code>, <code>Group</code>&gt;(<code>collection</code>): <a href="../../interfaces/Renderer.Component.SelectProps/"><code>SelectProps</code></a>&lt;<code>Value</code>, <code>Option</code>, <code>true</code>, <code>Group</code>&gt;[<code>"onChange"</code>]</p>
 <h4 id="type-parameters_15">Type parameters<a class="headerlink" href="#type-parameters_15" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>Value</code></td>
-<td align="left"><code>Value</code></td>
+<td style="text-align: left;"><code>Value</code></td>
+<td style="text-align: left;"><code>Value</code></td>
 </tr>
 <tr>
-<td align="left"><code>Option</code></td>
-<td align="left">extends <a href="../../interfaces/Renderer.Component.SelectOption/"><code>SelectOption</code></a>&lt;<code>Value</code>, <code>Option</code>></td>
+<td style="text-align: left;"><code>Option</code></td>
+<td style="text-align: left;">extends <a href="../../interfaces/Renderer.Component.SelectOption/"><code>SelectOption</code></a>&lt;<code>Value</code>, <code>Option</code>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>Group</code></td>
-<td align="left">extends <code>GroupBase</code>&lt;<code>Option</code>, <code>Group</code>> = <code>GroupBase</code>&lt;<code>Option</code>></td>
+<td style="text-align: left;"><code>Group</code></td>
+<td style="text-align: left;">extends <code>GroupBase</code>&lt;<code>Option</code>, <code>Group</code>&gt; = <code>GroupBase</code>&lt;<code>Option</code>&gt;</td>
 </tr>
 </tbody>
 </table>
@@ -3219,19 +3219,19 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>collection</code></td>
-<td align="left"><code>Set</code>&lt;<code>Value</code>> | <code>ObservableSet</code>&lt;<code>Value</code>></td>
+<td style="text-align: left;"><code>collection</code></td>
+<td style="text-align: left;"><code>Set</code>&lt;<code>Value</code>&gt; | <code>ObservableSet</code>&lt;<code>Value</code>&gt;</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_49">Returns<a class="headerlink" href="#returns_49" title="Permanent link">#</a></h4>
-<p><a href="../../interfaces/Renderer.Component.SelectProps/"><code>SelectProps</code></a>&lt;<code>Value</code>, <code>Option</code>, <code>true</code>, <code>Group</code>>[<code>"onChange"</code>]</p>
+<p><a href="../../interfaces/Renderer.Component.SelectProps/"><code>SelectProps</code></a>&lt;<code>Value</code>, <code>Option</code>, <code>true</code>, <code>Group</code>&gt;[<code>"onChange"</code>]</p>
 <hr />
 <h3 id="showdetails">showDetails<a class="headerlink" href="#showdetails" title="Permanent link">#</a></h3>
 <p>▸ <strong>showDetails</strong>(<code>selfLink</code>, <code>resetSelected?</code>): <code>void</code></p>
@@ -3241,18 +3241,18 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>selfLink</code></td>
-<td align="left"><code>undefined</code> | <code>string</code></td>
+<td style="text-align: left;"><code>selfLink</code></td>
+<td style="text-align: left;"><code>undefined</code> | <code>string</code></td>
 </tr>
 <tr>
-<td align="left"><code>resetSelected?</code></td>
-<td align="left"><code>boolean</code></td>
+<td style="text-align: left;"><code>resetSelected?</code></td>
+<td style="text-align: left;"><code>boolean</code></td>
 </tr>
 </tbody>
 </table>
@@ -3267,26 +3267,26 @@ valid if one of the input validators matches the input</p>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>baseValidator</code></td>
-<td align="left"><code>Object</code></td>
+<td style="text-align: left;"><code>baseValidator</code></td>
+<td style="text-align: left;"><code>Object</code></td>
 </tr>
 <tr>
-<td align="left"><code>baseValidator.condition</code></td>
-<td align="left"><code>undefined</code> | (<code>props</code>: <a href="./#inputprops"><code>InputProps</code></a>) =&gt; <code>any</code> | (<code>props</code>: <a href="./#inputprops"><code>InputProps</code></a>) =&gt; <code>any</code> | (<code>props</code>: <a href="./#inputprops"><code>InputProps</code></a>) =&gt; <code>any</code></td>
+<td style="text-align: left;"><code>baseValidator.condition</code></td>
+<td style="text-align: left;"><code>undefined</code> | (<code>props</code>: <a href="./#inputprops"><code>InputProps</code></a>) =&gt; <code>any</code> | (<code>props</code>: <a href="./#inputprops"><code>InputProps</code></a>) =&gt; <code>any</code> | (<code>props</code>: <a href="./#inputprops"><code>InputProps</code></a>) =&gt; <code>any</code></td>
 </tr>
 <tr>
-<td align="left"><code>baseValidator.message</code></td>
-<td align="left"><code>null</code> | <code>string</code> | <code>number</code> | <code>boolean</code> | <code>ReactPortal</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>> | <code>StrictReactFragment</code> | <code>Iterable</code>&lt;<code>StrictReactNode</code>> | (<code>value</code>: <code>string</code>, <code>props?</code>: <a href="./#inputprops"><code>InputProps</code></a>) =&gt; <code>StrictReactNode</code></td>
+<td style="text-align: left;"><code>baseValidator.message</code></td>
+<td style="text-align: left;"><code>null</code> | <code>string</code> | <code>number</code> | <code>boolean</code> | <code>ReactPortal</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>&gt;&gt; | <code>StrictReactFragment</code> | <code>Iterable</code>&lt;<code>StrictReactNode</code>&gt; | (<code>value</code>: <code>string</code>, <code>props?</code>: <a href="./#inputprops"><code>InputProps</code></a>) =&gt; <code>StrictReactNode</code></td>
 </tr>
 <tr>
-<td align="left"><code>...validators</code></td>
-<td align="left"><a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>boolean</code>>[]</td>
+<td style="text-align: left;"><code>...validators</code></td>
+<td style="text-align: left;"><a href="./#inputvalidator"><code>InputValidator</code></a>&lt;<code>boolean</code>&gt;[]</td>
 </tr>
 </tbody>
 </table>
@@ -3294,17 +3294,17 @@ valid if one of the input validators matches the input</p>
 <p><code>AsyncInputValidator</code></p>
 <hr />
 <h3 id="withtooltip">withTooltip<a class="headerlink" href="#withtooltip" title="Permanent link">#</a></h3>
-<p>▸ <strong>withTooltip</strong>&lt;<code>TargetProps</code>>(<code>Target</code>): <code>React.FunctionComponent</code>&lt;<code>TargetProps</code> &amp; <a href="../../interfaces/Renderer.Component.TooltipDecoratorProps/"><code>TooltipDecoratorProps</code></a>></p>
+<p>▸ <strong>withTooltip</strong>&lt;<code>TargetProps</code>&gt;(<code>Target</code>): <code>React.FunctionComponent</code>&lt;<code>TargetProps</code> &amp; <a href="../../interfaces/Renderer.Component.TooltipDecoratorProps/"><code>TooltipDecoratorProps</code></a>&gt;</p>
 <h4 id="type-parameters_16">Type parameters<a class="headerlink" href="#type-parameters_16" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
+<th style="text-align: left;">Name</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>TargetProps</code></td>
+<td style="text-align: left;"><code>TargetProps</code></td>
 </tr>
 </tbody>
 </table>
@@ -3312,19 +3312,19 @@ valid if one of the input validators matches the input</p>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>Target</code></td>
-<td align="left"><code>TargetProps</code> extends <code>Pick</code>&lt;<a href="../../interfaces/Renderer.Component.TooltipDecoratorProps/"><code>TooltipDecoratorProps</code></a>, <code>"id"</code> | <code>"children"</code>> ? <code>FunctionComponent</code>&lt;<code>TargetProps</code>> : <code>never</code></td>
+<td style="text-align: left;"><code>Target</code></td>
+<td style="text-align: left;"><code>TargetProps</code> extends <code>Pick</code>&lt;<a href="../../interfaces/Renderer.Component.TooltipDecoratorProps/"><code>TooltipDecoratorProps</code></a>, <code>"id"</code> | <code>"children"</code>&gt; ? <code>FunctionComponent</code>&lt;<code>TargetProps</code>&gt; : <code>never</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_52">Returns<a class="headerlink" href="#returns_52" title="Permanent link">#</a></h4>
-<p><code>React.FunctionComponent</code>&lt;<code>TargetProps</code> &amp; <a href="../../interfaces/Renderer.Component.TooltipDecoratorProps/"><code>TooltipDecoratorProps</code></a>></p>
+<p><code>React.FunctionComponent</code>&lt;<code>TargetProps</code> &amp; <a href="../../interfaces/Renderer.Component.TooltipDecoratorProps/"><code>TooltipDecoratorProps</code></a>&gt;</p>
 
 
   
@@ -3399,10 +3399,10 @@ valid if one of the input validators matches the input</p>
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../../../..", "features": ["toc.autohide", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["toc.autohide", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../../assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.b4d07000.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.220ee61c.min.js"></script>
       
     
   </body>

@@ -17,7 +17,7 @@
       
       
       <link rel="icon" href="../../../../img/favicon.ico">
-      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.15">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.21">
     
     
       
@@ -25,7 +25,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.26e3688c.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.eebd395e.min.css">
       
         
         <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ecc896b0.min.css">
@@ -1051,14 +1051,14 @@
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>extension</code></td>
-<td align="left"><a href="../../modules/Common/#installedextension"><code>InstalledExtension</code></a></td>
+<td style="text-align: left;"><code>extension</code></td>
+<td style="text-align: left;"><a href="../../modules/Common/#installedextension"><code>InstalledExtension</code></a></td>
 </tr>
 </tbody>
 </table>
@@ -1066,7 +1066,7 @@
 <p><a href="../Common.LensExtension/">LensExtension</a>.<a href="../Common.LensExtension/#constructor">constructor</a></p>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="appmenus">appMenus<a class="headerlink" href="#appmenus" title="Permanent link">#</a></h3>
-<p>• <strong>appMenus</strong>: <a href="../../modules/Common.Types/#menuregistration"><code>MenuRegistration</code></a>[] | <code>IComputedValue</code>&lt;<a href="../../modules/Common.Types/#menuregistration"><code>MenuRegistration</code></a>[]></p>
+<p>• <strong>appMenus</strong>: <a href="../../modules/Common.Types/#menuregistration"><code>MenuRegistration</code></a>[] | <code>IComputedValue</code>&lt;<a href="../../modules/Common.Types/#menuregistration"><code>MenuRegistration</code></a>[]&gt;</p>
 <hr />
 <h3 id="id">id<a class="headerlink" href="#id" title="Permanent link">#</a></h3>
 <p>• <code>Readonly</code> <strong>id</strong>: <code>string</code></p>
@@ -1104,7 +1104,7 @@ cluster-specific information that can be made available in the shell environment
 <p>the current shell environment that the terminal will be opened with. The implementation should modify this as desired.</p>
 <hr />
 <h3 id="traymenus">trayMenus<a class="headerlink" href="#traymenus" title="Permanent link">#</a></h3>
-<p>• <strong>trayMenus</strong>: <a href="../../interfaces/Common.Types.TrayMenuRegistration/"><code>TrayMenuRegistration</code></a>[] | <code>IComputedValue</code>&lt;<a href="../../interfaces/Common.Types.TrayMenuRegistration/"><code>TrayMenuRegistration</code></a>[]></p>
+<p>• <strong>trayMenus</strong>: <a href="../../interfaces/Common.Types.TrayMenuRegistration/"><code>TrayMenuRegistration</code></a>[] | <code>IComputedValue</code>&lt;<a href="../../interfaces/Common.Types.TrayMenuRegistration/"><code>TrayMenuRegistration</code></a>[]&gt;</p>
 <h2 id="accessors_1">Accessors<a class="headerlink" href="#accessors_1" title="Permanent link">#</a></h2>
 <h3 id="description">description<a class="headerlink" href="#description" title="Permanent link">#</a></h3>
 <p>• <code>get</code> <strong>description</strong>(): <code>undefined</code> | <code>string</code></p>
@@ -1149,9 +1149,9 @@ cluster-specific information that can be made available in the shell environment
 <p>LensExtension.version</p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="activate">activate<a class="headerlink" href="#activate" title="Permanent link">#</a></h3>
-<p>▸ <strong>activate</strong>(): <code>Promise</code>&lt;<code>void</code>></p>
+<p>▸ <strong>activate</strong>(): <code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code>></p>
+<p><code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="inherited-from_11">Inherited from<a class="headerlink" href="#inherited-from_11" title="Permanent link">#</a></h4>
 <p><a href="../Common.LensExtension/">LensExtension</a>.<a href="../Common.LensExtension/#activate">activate</a></p>
 <hr />
@@ -1161,18 +1161,18 @@ cluster-specific information that can be made available in the shell environment
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>id</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>id</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 <tr>
-<td align="left"><code>source</code></td>
-<td align="left"><code>IObservableArray</code>&lt;<a href="../Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../../interfaces/Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../../interfaces/Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>>> | <code>IComputedValue</code>&lt;<a href="../Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../../interfaces/Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../../interfaces/Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>>[]></td>
+<td style="text-align: left;"><code>source</code></td>
+<td style="text-align: left;"><code>IObservableArray</code>&lt;<a href="../Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../../interfaces/Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../../interfaces/Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>&gt;&gt; | <code>IComputedValue</code>&lt;<a href="../Common.Catalog.CatalogEntity/"><code>CatalogEntity</code></a>&lt;<a href="../../interfaces/Common.Catalog.CatalogEntityMetadata/"><code>CatalogEntityMetadata</code></a>, <a href="../../interfaces/Common.Catalog.CatalogEntityStatus/"><code>CatalogEntityStatus</code></a>, <a href="../../modules/Common.Catalog/#catalogentityspec"><code>CatalogEntitySpec</code></a>&gt;[]&gt;</td>
 </tr>
 </tbody>
 </table>
@@ -1180,69 +1180,69 @@ cluster-specific information that can be made available in the shell environment
 <p><code>void</code></p>
 <hr />
 <h3 id="disable">disable<a class="headerlink" href="#disable" title="Permanent link">#</a></h3>
-<p>▸ <strong>disable</strong>(): <code>Promise</code>&lt;<code>void</code>></p>
+<p>▸ <strong>disable</strong>(): <code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code>></p>
+<p><code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="inherited-from_12">Inherited from<a class="headerlink" href="#inherited-from_12" title="Permanent link">#</a></h4>
 <p><a href="../Common.LensExtension/">LensExtension</a>.<a href="../Common.LensExtension/#disable">disable</a></p>
 <hr />
 <h3 id="enable">enable<a class="headerlink" href="#enable" title="Permanent link">#</a></h3>
-<p>▸ <strong>enable</strong>(): <code>Promise</code>&lt;<code>void</code>></p>
+<p>▸ <strong>enable</strong>(): <code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="returns_9">Returns<a class="headerlink" href="#returns_9" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code>></p>
+<p><code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="inherited-from_13">Inherited from<a class="headerlink" href="#inherited-from_13" title="Permanent link">#</a></h4>
 <p><a href="../Common.LensExtension/">LensExtension</a>.<a href="../Common.LensExtension/#enable">enable</a></p>
 <hr />
 <h3 id="getextensionfilefolder">getExtensionFileFolder<a class="headerlink" href="#getextensionfilefolder" title="Permanent link">#</a></h3>
-<p>▸ <strong>getExtensionFileFolder</strong>(): <code>Promise</code>&lt;<code>string</code>></p>
+<p>▸ <strong>getExtensionFileFolder</strong>(): <code>Promise</code>&lt;<code>string</code>&gt;</p>
 <p>getExtensionFileFolder returns the path to an already created folder. This
 folder is for the sole use of this extension.</p>
 <p>Note: there is no security done on this folder, only obfuscation of the
 folder name.</p>
 <h4 id="returns_10">Returns<a class="headerlink" href="#returns_10" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>string</code>></p>
+<p><code>Promise</code>&lt;<code>string</code>&gt;</p>
 <h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
 <p><a href="../Common.LensExtension/">LensExtension</a>.<a href="../Common.LensExtension/#getextensionfilefolder">getExtensionFileFolder</a></p>
 <hr />
 <h3 id="navigate">navigate<a class="headerlink" href="#navigate" title="Permanent link">#</a></h3>
-<p>▸ <strong>navigate</strong>(<code>pageId?</code>, <code>params?</code>, <code>frameId?</code>): <code>Promise</code>&lt;<code>void</code>></p>
+<p>▸ <strong>navigate</strong>(<code>pageId?</code>, <code>params?</code>, <code>frameId?</code>): <code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>pageId?</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>pageId?</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 <tr>
-<td align="left"><code>params?</code></td>
-<td align="left"><code>Record</code>&lt;<code>string</code>, <code>any</code>></td>
+<td style="text-align: left;"><code>params?</code></td>
+<td style="text-align: left;"><code>Record</code>&lt;<code>string</code>, <code>any</code>&gt;</td>
 </tr>
 <tr>
-<td align="left"><code>frameId?</code></td>
-<td align="left"><code>number</code></td>
+<td style="text-align: left;"><code>frameId?</code></td>
+<td style="text-align: left;"><code>number</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
-<p><code>Promise</code>&lt;<code>void</code>></p>
+<p><code>Promise</code>&lt;<code>void</code>&gt;</p>
 <hr />
 <h3 id="onactivate">onActivate<a class="headerlink" href="#onactivate" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>onActivate</strong>(): <code>void</code> | <code>Promise</code>&lt;<code>void</code>></p>
+<p>▸ <code>Protected</code> <strong>onActivate</strong>(): <code>void</code> | <code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
-<p><code>void</code> | <code>Promise</code>&lt;<code>void</code>></p>
+<p><code>void</code> | <code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
 <p><a href="../Common.LensExtension/">LensExtension</a>.<a href="../Common.LensExtension/#onactivate">onActivate</a></p>
 <hr />
 <h3 id="ondeactivate">onDeactivate<a class="headerlink" href="#ondeactivate" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <strong>onDeactivate</strong>(): <code>void</code> | <code>Promise</code>&lt;<code>void</code>></p>
+<p>▸ <code>Protected</code> <strong>onDeactivate</strong>(): <code>void</code> | <code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="returns_13">Returns<a class="headerlink" href="#returns_13" title="Permanent link">#</a></h4>
-<p><code>void</code> | <code>Promise</code>&lt;<code>void</code>></p>
+<p><code>void</code> | <code>Promise</code>&lt;<code>void</code>&gt;</p>
 <h4 id="inherited-from_16">Inherited from<a class="headerlink" href="#inherited-from_16" title="Permanent link">#</a></h4>
 <p><a href="../Common.LensExtension/">LensExtension</a>.<a href="../Common.LensExtension/#ondeactivate">onDeactivate</a></p>
 <hr />
@@ -1252,14 +1252,14 @@ folder name.</p>
 <table>
 <thead>
 <tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>id</code></td>
-<td align="left"><code>string</code></td>
+<td style="text-align: left;"><code>id</code></td>
+<td style="text-align: left;"><code>string</code></td>
 </tr>
 </tbody>
 </table>
@@ -1339,10 +1339,10 @@ folder name.</p>
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../../../..", "features": ["toc.autohide", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["toc.autohide", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../../assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.b4d07000.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.220ee61c.min.js"></script>
       
     
   </body>
