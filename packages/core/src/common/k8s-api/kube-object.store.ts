@@ -9,7 +9,7 @@ import { waitUntilDefined, includes, rejectPromiseBy, object } from "@k8slens/ut
 import type { KubeJsonApiDataFor, KubeObject } from "@k8slens/kube-object";
 import { KubeStatus } from "@k8slens/kube-object";
 import type { IKubeWatchEvent, KubeApiQueryParams, KubeApi, KubeApiWatchCallback } from "@k8slens/kube-api";
-import { ItemStore } from "../item.store";
+import { ItemStore } from "@k8slens/item-store";
 import { parseKubeApi } from "@k8slens/kube-api";
 import type { RequestInit } from "@k8slens/node-fetch";
 import type { Patch } from "rfc6902";
