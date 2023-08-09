@@ -27,7 +27,7 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     ({ window, cleanup } = await utils.start());
     await utils.clickWelcomeButton(window);
 
-    frame = await utils.launchMinikubeClusterFromCatalog(window);
+    frame = await utils.launchClusterFromCatalog(window);
   }, 10 * 60 * 1000);
 
   afterEach(async () => {
