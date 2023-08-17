@@ -233,6 +233,48 @@ class NonInjectedItemListLayout<I extends ItemObject, PreLoadStores extends bool
     return <PageFiltersList filters={filters} />;
   }
 
+  private fuzzyMatch(search: string, itemText: string): boolean {
+    const score = this.calculateSimilarityScore(search, itemText);
+
+    return score >= 0.5; // Adjust the threshold as needed
+  }
+
+  private calculateSimilarityScore(search: string, itemText: string): number {
+    const searchLength = search.length;
+    const itemLength = itemText.length;
+    const distanceMatrix: number[][] = [];
+
+    if (searchLength === 0) return itemLength;
+    if (itemLength === 0) return searchLength;
+
+    // Initialize the distance matrix
+    for (let i = 0; i <= searchLength; i++) {
+      distanceMatrix[i] = [i];
+    }
+
+    for (let j = 0; j <= itemLength; j++) {
+      distanceMatrix[0][j] = j;
+    }
+
+    // Calculate the Levenshtein distance
+    for (let i = 1; i <= searchLength; i++) {
+      for (let j = 1; j <= itemLength; j++) {
+        const cost = search[i - 1] === itemText[j - 1] ? 0 : 1;
+
+        distanceMatrix[i][j] = Math.min(
+          distanceMatrix[i - 1][j] + 1, // Deletion
+          distanceMatrix[i][j - 1] + 1, // Insertion
+          distanceMatrix[i - 1][j - 1] + cost, // Substitution
+        );
+      }
+    }
+
+    const distance = distanceMatrix[searchLength][itemLength];
+    const maxLength = Math.max(searchLength, itemLength);
+
+    return 1 - distance / maxLength; // Calculate similarity score
+  }
+
   private filterCallbacks: ItemsFilters<I> = {
     [FilterType.SEARCH]: items => {
       const { searchFilters = [] } = this.props;
@@ -241,13 +283,12 @@ class NonInjectedItemListLayout<I extends ItemObject, PreLoadStores extends bool
       if (search && searchFilters.length) {
         const searchTexts = [search].map(normalizeText);
 
-        return items.filter(item => (
-          searchFilters.some(getTexts => (
-            [getTexts(item)]
-              .flat()
-              .map(normalizeText)
-              .some(source => searchTexts.some(search => source.includes(search)))
-          ))
+        return items.filter(item =>
+          searchFilters.some(getTexts => {
+            const itemTexts = [getTexts(item)].flat().map(normalizeText);
+
+            return itemTexts.some(source => searchTexts.some(search => source.includes(search) || this.fuzzyMatch(search, source)));
+          },
         ));
       }
 
