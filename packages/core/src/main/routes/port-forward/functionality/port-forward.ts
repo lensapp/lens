@@ -52,7 +52,7 @@ export class PortForward {
   public forwardPort: number;
   public httpsProxy?: string;
 
-  constructor(private dependencies: PortForwardDependencies, public pathToKubeConfig: string, args: PortForwardArgs) {
+  constructor(private dependencies: PortForwardDependencies, public pathToKubeConfig: string, public kubeContext: string, args: PortForwardArgs) {
     this.clusterId = args.clusterId;
     this.kind = args.kind;
     this.namespace = args.namespace;
@@ -66,6 +66,7 @@ export class PortForward {
     const kubectlBin = await this.dependencies.getKubectlBinPath(true);
     const args = [
       "--kubeconfig", this.pathToKubeConfig,
+      "--context", this.kubeContext,
       "port-forward",
       "-n", this.namespace,
       `${this.kind}/${this.name}`,

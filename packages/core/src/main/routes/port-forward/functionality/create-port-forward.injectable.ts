@@ -9,7 +9,7 @@ import bundledKubectlInjectable from "../../../kubectl/bundled-kubectl.injectabl
 import getPortFromStreamInjectable from "../../../utils/get-port-from-stream.injectable";
 import { loggerInjectionToken } from "@k8slens/logger";
 
-export type CreatePortForward = (pathToKubeConfig: string, args: PortForwardArgs) => PortForward;
+export type CreatePortForward = (pathToKubeConfig: string, kubeContext:string, args: PortForwardArgs) => PortForward;
 
 const createPortForwardInjectable = getInjectable({
   id: "create-port-forward",
@@ -21,7 +21,7 @@ const createPortForwardInjectable = getInjectable({
       logger: di.inject(loggerInjectionToken),
     };
 
-    return (pathToKubeConfig, args) => new PortForward(dependencies, pathToKubeConfig, args);
+    return (pathToKubeConfig, kubeContext, args) => new PortForward(dependencies, pathToKubeConfig, kubeContext, args);
   },
 });
 
