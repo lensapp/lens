@@ -35,6 +35,7 @@ const startPortForwardRouteInjectable = getRouteInjectable({
           namespace,
           port,
           forwardPort,
+          httpsProxy: cluster.preferences.httpsProxy,
         });
 
         if (!portForward) {
@@ -54,6 +55,7 @@ const startPortForwardRouteInjectable = getRouteInjectable({
             name: resourceName,
             port,
             forwardPort: thePort,
+            httpsProxy: cluster.preferences.httpsProxy,
           });
 
           const started = await portForward.start();

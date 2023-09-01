@@ -21,6 +21,7 @@ export interface PortForwardArgs {
   name: string;
   port: number;
   forwardPort: number;
+  httpsProxy?: string;
 }
 
 export interface PortForwardDependencies {
@@ -49,6 +50,7 @@ export class PortForward {
   public name: string;
   public port: number;
   public forwardPort: number;
+  public httpsProxy?: string;
 
   constructor(private dependencies: PortForwardDependencies, public pathToKubeConfig: string, args: PortForwardArgs) {
     this.clusterId = args.clusterId;
@@ -57,6 +59,7 @@ export class PortForward {
     this.name = args.name;
     this.port = args.port;
     this.forwardPort = args.forwardPort;
+    this.httpsProxy = args.httpsProxy;
   }
 
   public async start() {
@@ -70,7 +73,10 @@ export class PortForward {
     ];
 
     this.process = spawn(kubectlBin, args, {
-      env: process.env,
+      env: {
+        ...process.env,
+        HTTPS_PROXY: this.httpsProxy,
+      },
     });
     PortForward.portForwards.push(this);
     this.process.on("exit", () => {
