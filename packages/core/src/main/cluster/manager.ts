@@ -88,7 +88,10 @@ export class ClusterManager {
   protected updateCatalog(clusters: Cluster[]) {
     this.dependencies.logger.debug("[CLUSTER-MANAGER]: updating catalog from cluster store");
 
-    for (const cluster of clusters) {
+    // Sort clusters based on the path of the kubeconfig file
+    const sortedClusters = [...clusters].sort((a, b) => a.kubeConfigPath.get().localeCompare(b.kubeConfigPath.get()));
+    
+    for (const cluster of sortedClusters) {
       this.updateEntityFromCluster(cluster);
     }
   }
