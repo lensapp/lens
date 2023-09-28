@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { navigateToRouteInjectionToken } from "../../../../navigate-to-route-injection-token";
 import ingressClassesRouteInjectable from "./ingress-classes-route.injectable";
 
-const navigateToIngressesInjectable = getInjectable({
+const navigateToIngressClassesInjectable = getInjectable({
   id: "navigate-to-ingress-classes",
 
   instantiate: (di) => {
@@ -17,4 +17,4 @@ const navigateToIngressesInjectable = getInjectable({
   },
 });
 
-export default navigateToIngressesInjectable;
+export default navigateToIngressClassesInjectable;
