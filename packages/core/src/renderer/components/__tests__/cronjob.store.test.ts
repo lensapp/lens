@@ -20,7 +20,7 @@ const scheduledCronJob = new CronJob({
     resourceVersion: "scheduledCronJob",
     uid: "scheduledCronJob",
     namespace: "default",
-    selfLink: "/apis/batch/v1beta1/cronjobs/default/scheduledCronJob",
+    selfLink: "/apis/batch/v1/cronjobs/default/scheduledCronJob",
   },
   spec: {
     schedule: "test",
@@ -55,7 +55,7 @@ const suspendedCronJob = new CronJob({
     resourceVersion: "suspendedCronJob",
     uid: "suspendedCronJob",
     namespace: "default",
-    selfLink: "/apis/batch/v1beta1/cronjobs/default/suspendedCronJob",
+    selfLink: "/apis/batch/v1/cronjobs/default/suspendedCronJob",
   },
   spec: {
     schedule: "test",
@@ -90,7 +90,7 @@ const otherSuspendedCronJob = new CronJob({
     resourceVersion: "otherSuspendedCronJob",
     uid: "otherSuspendedCronJob",
     namespace: "default",
-    selfLink: "/apis/batch/v1beta1/cronjobs/default/otherSuspendedCronJob",
+    selfLink: "/apis/batch/v1/cronjobs/default/otherSuspendedCronJob",
   },
   spec: {
     schedule: "test",

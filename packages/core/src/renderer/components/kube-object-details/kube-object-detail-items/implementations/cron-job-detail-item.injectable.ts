@@ -28,5 +28,5 @@ const cronJobDetailItemInjectable = getInjectable({
 export default cronJobDetailItemInjectable;
 
 export const isCronJob = kubeObjectMatchesToKindAndApiVersion("CronJob", [
-  "batch/v1beta1",
+  "batch/v1",
 ]);
