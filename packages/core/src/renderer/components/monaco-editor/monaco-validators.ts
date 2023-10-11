@@ -27,4 +27,5 @@ export function jsonValidator(value: string) {
 export const monacoValidators = {
   yaml: yamlValidator,
   json: jsonValidator,
+  
 };

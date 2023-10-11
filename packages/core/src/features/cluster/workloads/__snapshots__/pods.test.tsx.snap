@@ -290,6 +290,7 @@ exports[`workloads / pods when navigating to workloads / pods view given a names
                 Pods
               </div>
             </div>
+            
           </div>
           <main
             class=""

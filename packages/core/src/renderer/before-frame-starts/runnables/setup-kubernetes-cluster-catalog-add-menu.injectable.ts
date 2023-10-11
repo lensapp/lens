@@ -11,6 +11,7 @@ import openPathPickingDialogInjectable from "../../../features/path-picking-dial
 import addSyncEntriesInjectable from "../../initializers/add-sync-entries.injectable";
 import { beforeFrameStartsSecondInjectionToken } from "../tokens";
 
+
 const setupKubernetesClusterCatalogAddMenuListenerInjectable = getInjectable({
   id: "setup-kubernetes-cluster-catalog-add-menu-listener",
   instantiate: (di) => ({
@@ -51,9 +52,14 @@ const setupKubernetesClusterCatalogAddMenuListenerInjectable = getInjectable({
                 message: "Sync file(s)",
                 buttonLabel: "Sync",
                 properties: ["showHiddenFiles", "multiSelections", "openFile"],
+                filters: [
+                  { name: 'Kubeconfig and YAML Files', extensions: ['conf', 'yaml', 'yml'] },
+                  { name: 'All Files', extensions: ['*'] }
+                ],
                 onPick: addSyncEntries,
               }),
             },
+
           );
         } else {
           ctx.menuItems.push(
