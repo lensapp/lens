@@ -37,6 +37,9 @@
 
     &.namespace {
       flex-grow: 1.2;
+      //Auto Width: Allow the dropdown to expand horizontally to accommodate the text.
+      white-space: nowrap;
+      min-width: min-content;
     }
 
     &.cpu {

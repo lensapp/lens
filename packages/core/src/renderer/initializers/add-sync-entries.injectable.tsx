@@ -9,7 +9,9 @@ import { runInAction } from "mobx";
 import { showSuccessNotificationInjectable } from "@k8slens/notifications";
 import userPreferencesStateInjectable from "../../features/user-preferences/common/state.injectable";
 
-const addSyncEntriesInjectable = getInjectable({
+const 
+
+addSyncEntriesInjectable = getInjectable({
   id: "add-sync-entries",
 
   instantiate: (di) => {
