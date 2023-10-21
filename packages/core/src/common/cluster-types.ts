@@ -125,6 +125,7 @@ export interface ClusterPrometheusPreferences {
   prometheusProvider?: {
     type: string;
   };
+  filesystemMountpoints?: string;
 }
 
 /**

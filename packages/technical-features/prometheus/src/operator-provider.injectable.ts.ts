@@ -50,9 +50,9 @@ export const getOperatorLikeQueryFor =
           case "podAllocatableCapacity":
             return `sum(kube_node_status_allocatable{node=~"${opts.nodes}", resource="pods"})`;
           case "fsSize":
-            return `sum(node_filesystem_size_bytes{mountpoint="/"} * on (pod,namespace) group_left(node) kube_pod_info{node=~"${opts.nodes}"})`;
+            return `sum(node_filesystem_size_bytes{mountpoint=~"${opts.mountpoints}"} * on (pod,namespace) group_left(node) kube_pod_info{node=~"${opts.nodes}"})`;
           case "fsUsage":
-            return `sum(node_filesystem_size_bytes{mountpoint="/"} * on (pod,namespace) group_left(node) kube_pod_info{node=~"${opts.nodes}"} - node_filesystem_avail_bytes{mountpoint="/"} * on (pod,namespace) group_left(node) kube_pod_info{node=~"${opts.nodes}"})`;
+            return `sum(node_filesystem_size_bytes{mountpoint=~"${opts.mountpoints}"} * on (pod,namespace) group_left(node) kube_pod_info{node=~"${opts.nodes}"} - node_filesystem_avail_bytes{mountpoint=~"${opts.mountpoints}"} * on (pod,namespace) group_left(node) kube_pod_info{node=~"${opts.nodes}"})`;
         }
         break;
       case "nodes":
@@ -72,9 +72,9 @@ export const getOperatorLikeQueryFor =
           case "cpuAllocatableCapacity":
             return `sum(kube_node_status_allocatable{resource="cpu"}) by (node)`;
           case "fsSize":
-            return `sum(node_filesystem_size_bytes{mountpoint="/"} * on (pod,namespace) group_left(node) kube_pod_info) by (node)`;
+            return `sum(node_filesystem_size_bytes{mountpoint=~"${opts.mountpoints}"} * on (pod,namespace) group_left(node) kube_pod_info) by (node)`;
           case "fsUsage":
-            return `sum((node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_avail_bytes{mountpoint="/"}) * on (pod, namespace) group_left(node) kube_pod_info) by (node)`;
+            return `sum((node_filesystem_size_bytes{mountpoint=~"${opts.mountpoints}"} - node_filesystem_avail_bytes{mountpoint=~"${opts.mountpoints}"}) * on (pod, namespace) group_left(node) kube_pod_info) by (node)`;
         }
         break;
       case "pods":
