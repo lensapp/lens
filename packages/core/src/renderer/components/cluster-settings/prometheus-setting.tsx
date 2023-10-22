@@ -6,6 +6,7 @@
 import React from "react";
 import { observer, disposeOnUnmount } from "mobx-react";
 import type { Cluster } from "../../../common/cluster/cluster";
+import { initialFilesystemMountpoints } from "../../../common/cluster-types";
 import { SubTitle } from "../layout/sub-title";
 import type { SelectOption } from "../select";
 import { Select } from "../select";
@@ -32,9 +33,11 @@ interface Dependencies {
 
 @observer
 class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometheusSettingProps & Dependencies> {
+  @observable mountpoints = "";
   @observable path = "";
   @observable selectedOption: ProviderValue = autoDetectPrometheus;
   @observable loading = true;
+  readonly initialFilesystemMountpoints = initialFilesystemMountpoints;
   readonly loadedOptions = observable.map<string, MetricProviderInfo>();
 
   @computed get options(): SelectOption<ProviderValue>[] {
@@ -68,7 +71,7 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
   componentDidMount() {
     disposeOnUnmount(this,
       autorun(() => {
-        const { prometheus, prometheusProvider } = this.props.cluster.preferences;
+        const { prometheus, prometheusProvider, filesystemMountpoints } = this.props.cluster.preferences;
 
         if (prometheus) {
           const prefix = prometheus.prefix || "";
@@ -82,6 +85,10 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
           this.selectedOption = this.options.find(opt => opt.value === prometheusProvider.type)?.value ?? autoDetectPrometheus;
         } else {
           this.selectedOption = autoDetectPrometheus;
+        }
+
+        if (filesystemMountpoints) {
+          this.mountpoints = filesystemMountpoints;
         }
       }),
     );
@@ -120,6 +127,10 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
 
   onSavePath = () => {
     this.props.cluster.preferences.prometheus = this.parsePrometheusPath();
+  };
+
+  onSaveMountpoints = () => {
+    this.props.cluster.preferences.filesystemMountpoints = this.mountpoints;
   };
 
   render() {
@@ -165,6 +176,22 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
             </section>
           </>
         )}
+        <>
+          <hr />
+          <section>
+            <SubTitle title="Filesystem mountpoints" />
+            <Input
+              theme="round-black"
+              value={this.mountpoints}
+              onChange={(value) => this.mountpoints = value}
+              onBlur={this.onSaveMountpoints}
+              placeholder={this.initialFilesystemMountpoints}
+            />
+            <small className="hint">
+              {`A regexp for the label with the filesystem mountpoints that will create a graph for disk usage. For the root disk only use "/" and for all disks use ".*".`}
+            </small>
+          </section>
+        </>
       </>
     );
   }

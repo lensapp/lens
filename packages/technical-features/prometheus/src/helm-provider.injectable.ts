@@ -50,9 +50,9 @@ export const getHelmLikeQueryFor =
           case "podAllocatableCapacity":
             return `sum(kube_node_status_allocatable{node=~"${opts.nodes}", resource="pods"}) by (component)`;
           case "fsSize":
-            return `sum(node_filesystem_size_bytes{node=~"${opts.nodes}", mountpoint="/"}) by (node)`;
+            return `sum(node_filesystem_size_bytes{node=~"${opts.nodes}", mountpoint=~"${opts.mountpoints}"}) by (node)`;
           case "fsUsage":
-            return `sum(node_filesystem_size_bytes{node=~"${opts.nodes}", mountpoint="/"} - node_filesystem_avail_bytes{node=~"${opts.nodes}", mountpoint="/"}) by (node)`;
+            return `sum(node_filesystem_size_bytes{node=~"${opts.nodes}", mountpoint=~"${opts.mountpoints}"} - node_filesystem_avail_bytes{node=~"${opts.nodes}", mountpoint=~"${opts.mountpoints}"}) by (node)`;
         }
         break;
       case "nodes":
@@ -72,9 +72,9 @@ export const getHelmLikeQueryFor =
           case "cpuAllocatableCapacity":
             return `sum(kube_node_status_allocatable{resource="cpu"}) by (node)`;
           case "fsSize":
-            return `sum(node_filesystem_size_bytes{mountpoint="/"}) by (node)`;
+            return `sum(node_filesystem_size_bytes{mountpoint=~"${opts.mountpoints}"}) by (node)`;
           case "fsUsage":
-            return `sum(node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_avail_bytes{mountpoint="/"}) by (node)`;
+            return `sum(node_filesystem_size_bytes{mountpoint=~"${opts.mountpoints}"} - node_filesystem_avail_bytes{mountpoint=~"${opts.mountpoints}"}) by (node)`;
         }
         break;
       case "pods":

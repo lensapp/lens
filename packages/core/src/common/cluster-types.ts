@@ -125,6 +125,7 @@ export interface ClusterPrometheusPreferences {
   prometheusProvider?: {
     type: string;
   };
+  filesystemMountpoints?: string;
 }
 
 /**
@@ -173,6 +174,11 @@ export enum ClusterMetricsResourceType {
   Job = "Job",
   Namespace = "Namespace",
 }
+
+/**
+ * The default filesystem mountpoints for metrics
+ */
+export const initialFilesystemMountpoints = "/";
 
 /**
  * The default node shell image

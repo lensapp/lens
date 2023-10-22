@@ -50,9 +50,9 @@ export const getLensLikeQueryFor =
           case "podAllocatableCapacity":
             return `sum(kube_node_status_allocatable{node=~"${opts.nodes}", resource="pods"}) by (component)`;
           case "fsSize":
-            return `sum(node_filesystem_size_bytes{kubernetes_node=~"${opts.nodes}", mountpoint="/"}) by (kubernetes_node)`;
+            return `sum(node_filesystem_size_bytes{kubernetes_node=~"${opts.nodes}", mountpoint=~"${opts.mountpoints}"}) by (kubernetes_node)`;
           case "fsUsage":
-            return `sum(node_filesystem_size_bytes{kubernetes_node=~"${opts.nodes}", mountpoint="/"} - node_filesystem_avail_bytes{kubernetes_node=~"${opts.nodes}", mountpoint="/"}) by (kubernetes_node)`;
+            return `sum(node_filesystem_size_bytes{kubernetes_node=~"${opts.nodes}", mountpoint=~"${opts.mountpoints}"} - node_filesystem_avail_bytes{kubernetes_node=~"${opts.nodes}", mountpoint=~"${opts.mountpoints}"}) by (kubernetes_node)`;
         }
         break;
       case "nodes":
@@ -72,9 +72,9 @@ export const getLensLikeQueryFor =
           case "cpuAllocatableCapacity":
             return `sum(kube_node_status_allocatable{resource="cpu"}) by (node)`;
           case "fsSize":
-            return `sum(node_filesystem_size_bytes{mountpoint="/"}) by (kubernetes_node)`;
+            return `sum(node_filesystem_size_bytes{mountpoint=~"${opts.mountpoints}"}) by (kubernetes_node)`;
           case "fsUsage":
-            return `sum(node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_avail_bytes{mountpoint="/"}) by (kubernetes_node)`;
+            return `sum(node_filesystem_size_bytes{mountpoint=~"${opts.mountpoints}"} - node_filesystem_avail_bytes{mountpoint=~"${opts.mountpoints}"}) by (kubernetes_node)`;
         }
         break;
       case "pods":
