@@ -176,6 +176,11 @@ export enum ClusterMetricsResourceType {
 }
 
 /**
+ * The default filesystem mountpoints for metrics
+ */
+export const initialFilesystemMountpoints = "/";
+
+/**
  * The default node shell image
  */
 export const initialNodeShellImage = "docker.io/alpine:3.13";

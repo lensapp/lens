@@ -6,7 +6,7 @@
 import { apiPrefix } from "../../../common/vars";
 import { getRouteInjectable } from "../../router/router.injectable";
 import type { ClusterPrometheusMetadata } from "../../../common/cluster-types";
-import { ClusterMetadataKey } from "../../../common/cluster-types";
+import { ClusterMetadataKey, initialFilesystemMountpoints } from "../../../common/cluster-types";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { clusterRoute } from "../../router/route";
 import { isObject } from "lodash";
@@ -69,7 +69,7 @@ const addMetricsRouteInjectable = getRouteInjectable({
       const queryParams: Partial<Record<string, string>> = Object.fromEntries(query.entries());
       const prometheusMetadata: ClusterPrometheusMetadata = {};
       const prometheusHandler = di.inject(prometheusHandlerInjectable, cluster);
-      const mountpoints = cluster.preferences.filesystemMountpoints || "/";
+      const mountpoints = cluster.preferences.filesystemMountpoints || initialFilesystemMountpoints;
 
       try {
         const { prometheusPath, provider } = await prometheusHandler.getPrometheusDetails();

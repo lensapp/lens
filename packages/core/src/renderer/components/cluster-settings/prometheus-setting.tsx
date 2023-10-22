@@ -6,6 +6,7 @@
 import React from "react";
 import { observer, disposeOnUnmount } from "mobx-react";
 import type { Cluster } from "../../../common/cluster/cluster";
+import { initialFilesystemMountpoints } from "../../../common/cluster-types";
 import { SubTitle } from "../layout/sub-title";
 import type { SelectOption } from "../select";
 import { Select } from "../select";
@@ -36,6 +37,7 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
   @observable path = "";
   @observable selectedOption: ProviderValue = autoDetectPrometheus;
   @observable loading = true;
+  readonly initialFilesystemMountpoints = initialFilesystemMountpoints;
   readonly loadedOptions = observable.map<string, MetricProviderInfo>();
 
   @computed get options(): SelectOption<ProviderValue>[] {
@@ -183,7 +185,7 @@ class NonInjectedClusterPrometheusSetting extends React.Component<ClusterPrometh
               value={this.mountpoints}
               onChange={(value) => this.mountpoints = value}
               onBlur={this.onSaveMountpoints}
-              placeholder="/"
+              placeholder={this.initialFilesystemMountpoints}
             />
             <small className="hint">
               {`A regexp for the label with the filesystem mountpoints that will create a graph for disk usage. For the root disk only use "/" and for all disks use ".*".`}
