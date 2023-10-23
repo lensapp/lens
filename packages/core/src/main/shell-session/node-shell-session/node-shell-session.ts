@@ -99,7 +99,6 @@ export class NodeShellSession extends ShellSession {
 
     const nodeOs = node.getOperatingSystem();
     const nodeOsImage = node.getOperatingSystemImage();
-    const nodeKernelVersion = node.getKernelVersion();
 
     let image: string;
     let command: string[]; 
@@ -125,11 +124,7 @@ export class NodeShellSession extends ShellSession {
         };
         break;
       case "windows":
-        if (nodeKernelVersion) {
-          image = nodeShellImage || initialNodeShellWindowsImage;
-        } else {
-          throw new Error(`No status with kernel version for node ${this.nodeName} found`);
-        }
+        image = nodeShellImage || initialNodeShellWindowsImage;
         command = ["cmd.exe"];
         args = ["/c", "%CONTAINER_SANDBOX_MOUNT_POINT%\\Program Files\\PowerShell\\latest\\pwsh.exe", "-nol", "-wd", "C:\\"];
         securityContext = {
