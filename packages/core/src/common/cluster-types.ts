@@ -108,6 +108,7 @@ export interface ClusterPreferences extends ClusterPrometheusPreferences {
   httpsProxy?: string;
   hiddenMetrics?: string[];
   nodeShellImage?: string;
+  nodeShellWindowsImage?: string;
   imagePullSecret?: string;
   defaultNamespace?: string;
 }
@@ -177,7 +178,12 @@ export enum ClusterMetricsResourceType {
 /**
  * The default node shell image
  */
-export const initialNodeShellImage = "docker.io/alpine:3.13";
+export const initialNodeShellImage = "docker.io/library/alpine";
+
+/**
+ * The default node shell image for Windows
+ */
+export const initialNodeShellWindowsImage = "mcr.microsoft.com/powershell";
 
 /**
  * The data representing a cluster's state, for passing between main and renderer
