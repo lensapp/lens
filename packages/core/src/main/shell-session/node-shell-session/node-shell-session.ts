@@ -13,7 +13,7 @@ import { NodeApi } from "@k8slens/kube-api";
 import { TerminalChannels } from "../../../common/terminal/channels";
 import type { CreateKubeJsonApiForCluster } from "../../../common/k8s-api/create-kube-json-api-for-cluster.injectable";
 import type { CreateKubeApi } from "../../../common/k8s-api/create-kube-api.injectable";
-import { initialNodeShellImage } from "../../../common/cluster-types";
+import { initialNodeShellImage, initialNodeShellWindowsImage } from "../../../common/cluster-types";
 import type { LoadProxyKubeconfig } from "../../cluster/load-proxy-kubeconfig.injectable";
 import type { Pod } from "@k8slens/kube-object";
 
@@ -71,34 +71,12 @@ export class NodeShellSession extends ShellSession {
     }
 
     const env = await this.getCachedShellEnv();
-    const args = ["exec", "-i", "-t", "-n", "kube-system", this.podName, "--"];
-    const nodeApi = this.dependencies.createKubeApi(NodeApi, {
-      request: this.dependencies.createKubeJsonApiForCluster(this.cluster.id),
-    });
-    const node = await nodeApi.get({ name: this.nodeName });
-
-    if (!node) {
-      throw new Error(`No node with name=${this.nodeName} found`);
-    }
-
-    const nodeOs = node.getOperatingSystem();
-
-    switch (nodeOs) {
-      default:
-        this.dependencies.logger.warn(`[NODE-SHELL-SESSION]: could not determine node OS, falling back with assumption of linux`);
-        // fallthrough
-      case "linux":
-        args.push("sh", "-c", "((clear && bash) || (clear && ash) || (clear && sh))");
-        break;
-      case "windows":
-        args.push("powershell");
-        break;
-    }
+    const args = ["attach", "-q", "-i", "-t", "-n", "kube-system", this.podName];
 
     await this.openShellProcess(await this.kubectl.getPath(), args, env);
   }
 
-  protected createNodeShellPod(coreApi: CoreV1Api) {
+  protected async createNodeShellPod(coreApi: CoreV1Api) {
     const {
       imagePullSecret,
       nodeShellImage,
@@ -109,6 +87,60 @@ export class NodeShellSession extends ShellSession {
         name: imagePullSecret,
       }]
       : undefined;
+
+    const nodeApi = this.dependencies.createKubeApi(NodeApi, {
+      request: this.dependencies.createKubeJsonApiForCluster(this.cluster.id),
+    });
+    const node = await nodeApi.get({ name: this.nodeName });
+
+    if (!node) {
+      throw new Error(`No node with name=${this.nodeName} found`);
+    }
+
+    const nodeOs = node.getOperatingSystem();
+    const nodeOsImage = node.getOperatingSystemImage();
+    const nodeKernelVersion = node.getKernelVersion();
+
+    let image: string;
+    let command: string[]; 
+    let args: string[];
+    let securityContext: any;
+
+    switch (nodeOs) {
+      default:
+        this.dependencies.logger.warn(`[NODE-SHELL-SESSION]: could not determine node OS, falling back with assumption of linux`);
+        // fallthrough
+      case "linux":
+        image = nodeShellImage || initialNodeShellImage;
+        command = ["nsenter"];
+
+        if (nodeOsImage && nodeOsImage.startsWith("Bottlerocket OS")) {
+          args = ["-t", "1", "-m", "-u", "-i", "-n", "-p", "--", "apiclient", "exec", "admin", "bash", "-l"];
+        } else {
+          args = ["-t", "1", "-m", "-u", "-i", "-n", "-p", "--", "bash", "-l"];
+        }
+
+        securityContext = {
+          privileged: true,
+        };
+        break;
+      case "windows":
+        if (nodeKernelVersion) {
+          image = nodeShellImage || initialNodeShellWindowsImage;
+        } else {
+          throw new Error(`No status with kernel version for node ${this.nodeName} found`);
+        }
+        command = ["cmd.exe"];
+        args = ["/c", "%CONTAINER_SANDBOX_MOUNT_POINT%\\Program Files\\PowerShell\\latest\\pwsh.exe", "-nol", "-wd", "C:\\"];
+        securityContext = {
+          privileged: true,
+          windowsOptions: {
+            hostProcess: true,
+            runAsUserName: "NT AUTHORITY\\SYSTEM",
+          },
+        };
+        break;
+    }
 
     return coreApi
       .createNamespacedPod("kube-system", {
@@ -129,12 +161,13 @@ export class NodeShellSession extends ShellSession {
           priorityClassName: "system-node-critical",
           containers: [{
             name: "shell",
-            image: nodeShellImage || initialNodeShellImage,
-            securityContext: {
-              privileged: true,
-            },
-            command: ["nsenter"],
-            args: ["-t", "1", "-m", "-u", "-i", "-n", "sleep", "14000"],
+            image,
+            securityContext,
+            command,
+            args,
+            stdin: true,
+            stdinOnce: true,
+            tty: true,
           }],
           imagePullSecrets,
         },

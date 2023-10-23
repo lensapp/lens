@@ -247,6 +247,14 @@ export class Node extends KubeObject<ClusterScopedMetadata, NodeStatus, NodeSpec
     );
   }
 
+  getOperatingSystemImage(): string | undefined {
+    return this.status?.nodeInfo?.osImage;
+  }
+
+  getKernelVersion(): string | undefined {
+    return this.status?.nodeInfo?.kernelVersion;
+  }
+
   isUnschedulable() {
     return this.spec.unschedulable;
   }

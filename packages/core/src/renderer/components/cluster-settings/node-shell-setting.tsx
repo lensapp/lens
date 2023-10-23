@@ -10,7 +10,7 @@ import React from "react";
 import { Input } from "../input/input";
 import { observer } from "mobx-react";
 import { Icon } from "@k8slens/icon";
-import { initialNodeShellImage } from "../../../common/cluster-types";
+import { initialNodeShellImage, initialNodeShellWindowsImage } from "../../../common/cluster-types";
 import Gutter from "../gutter/gutter";
 
 export interface ClusterNodeShellSettingProps {
@@ -20,6 +20,7 @@ export interface ClusterNodeShellSettingProps {
 @observer
 export class ClusterNodeShellSetting extends React.Component<ClusterNodeShellSettingProps> {
   @observable nodeShellImage = this.props.cluster.preferences?.nodeShellImage || "";
+  @observable nodeShellWindowsImage = this.props.cluster.preferences?.nodeShellWindowsImage || "";
   @observable imagePullSecret = this.props.cluster.preferences?.imagePullSecret || "";
 
   constructor(props: ClusterNodeShellSettingProps) {
@@ -30,6 +31,7 @@ export class ClusterNodeShellSetting extends React.Component<ClusterNodeShellSet
   componentWillUnmount() {
     runInAction(() => {
       this.props.cluster.preferences.nodeShellImage = this.nodeShellImage || undefined;
+      this.props.cluster.preferences.nodeShellWindowsImage = this.nodeShellWindowsImage || undefined;
       this.props.cluster.preferences.imagePullSecret = this.imagePullSecret || undefined;
     });
   }
@@ -38,7 +40,7 @@ export class ClusterNodeShellSetting extends React.Component<ClusterNodeShellSet
     return (
       <>
         <section>
-          <SubTitle title="Node shell image" id="node-shell-image"/>
+          <SubTitle title="Node shell image for Linux" id="node-shell-image"/>
           <Input
             theme="round-black"
             placeholder={`Default image: ${initialNodeShellImage}`}
@@ -58,7 +60,32 @@ export class ClusterNodeShellSetting extends React.Component<ClusterNodeShellSet
             }
           />
           <small className="hint">
-            Node shell image. Used for creating node shell pod.
+            Node shell image. Used for creating node shell pod on Linux nodes.
+          </small>
+        </section>
+        <Gutter />
+        <section>
+          <SubTitle title="Node shell image for Windows" id="node-shell-windows-image"/>
+          <Input
+            theme="round-black"
+            placeholder={`Default image: ${initialNodeShellWindowsImage}`}
+            value={this.nodeShellWindowsImage}
+            onChange={value => this.nodeShellWindowsImage = value}
+            iconRight={
+              this.nodeShellWindowsImage
+                ? (
+                  <Icon
+                    smallest
+                    material="close"
+                    onClick={() => this.nodeShellWindowsImage = ""}
+                    tooltip="Reset"
+                  />
+                )
+                : undefined
+            }
+          />
+          <small className="hint">
+            Node shell image. Used for creating node shell pod on Windows nodes.
           </small>
         </section>
         <Gutter />
