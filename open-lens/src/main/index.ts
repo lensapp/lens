@@ -15,6 +15,19 @@ import { loggerFeature } from "@k8slens/logger";
 import { randomFeature } from "@k8slens/random";
 import { kubeApiSpecificsFeature } from "@k8slens/kube-api-specifics";
 import { prometheusFeature } from "@k8slens/prometheus";
+import app from 'electron';
+
+
+
+console.log(__dirname);
+
+console.log(process.cwd());
+
+
+var zebi = process.cwd();
+app.app.setPath('userData', zebi + "/roberta")
+app.app.setPath('appData', zebi + "/roberto")
+app.app.setPath('sessionData', zebi + "/roberti")
 
 const environment = "main";
 

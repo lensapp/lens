@@ -59,11 +59,11 @@ function setTimeoutFor(controller: AbortController, timeout: number): void {
 const pipeline = promisify(_pipeline);
 
 const getBinaryName = (binaryName: string, { forPlatform }: { forPlatform : string }) => {
-  if (forPlatform === "windows") {
-    return `${binaryName}.exe`;
-  }
 
-  return binaryName;
+    return `${binaryName}.exe`;
+
+
+
 };
 
 interface BinaryDownloaderArgs {
@@ -226,18 +226,7 @@ const PackageInfo = z.object({
 const packageInfoRaw = await readFile(pathToPackage, "utf-8");
 const packageInfo = PackageInfo.parse(JSON.parse(packageInfoRaw));
 
-const normalizedPlatform = (() => {
-  switch (process.platform) {
-    case "darwin":
-      return "darwin";
-    case "linux":
-      return "linux";
-    case "win32":
-      return "windows";
-    default:
-      throw new Error(`platform=${process.platform} is unsupported`);
-  }
-})();
+const normalizedPlatform = "windows";
 const multiBar = new MultiBar({
   align: "left",
   clearOnComplete: false,

@@ -75,7 +75,7 @@ const NonInjectedWelcome = observer(({
             svg="logo-lens"
             className="logo"
             data-testid="no-welcome-banners-icon"
-          />
+          />          
         )}
 
         <div className="flex justify-center">
@@ -84,7 +84,7 @@ const NonInjectedWelcome = observer(({
             data-testid="welcome-text-container"
           >
             <h2>
-              {`Welcome to ${productName}!`}
+              {`Welcome to ${productName}! DevX build`}
             </h2>
 
             <p>

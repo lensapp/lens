@@ -21,7 +21,7 @@
     "clean": "rimraf binaries/ dist/ static/build",
     "build": "cross-env NODE_ENV=production webpack --config webpack/webpack.ts --progress",
     "postbuild": "npm run build:tray-icons && npm run download:binaries",
-    "build:app": "electron-builder --publish onTag",
+    "build:app": "electron-builder --win --publish onTag",
     "prebuild:app": "run-script-os",
     "prebuild:app:default": "exit 0",
     "prebuild:app:win32": "rimraf node_modules/win-ca/pem",

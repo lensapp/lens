@@ -6,6 +6,9 @@ import { iconsAndImagesWebpackRules } from "./renderer";
 import { buildDir, isDevelopment, mainDir } from "./vars";
 import { platform } from "process";
 
+
+
+
 const main: webpack.Configuration = ({
   name: "lens-app-main",
   context: __dirname,
