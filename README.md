@@ -27,7 +27,7 @@
   Meet the new standard for cloud native software development & operations. <br />
   With over 1 million users, Lens is the most popular Kubernetes IDE in the world.
   </p>
-  <img style="margin-top:20px" src="https://lens-website.lc-staging1.staging-k8slens.cloud/_next/image?url=%2Fimages%2Fhero-home.png&w=1200&q=75" alt="lens-product-image" />
+  <img style="margin-top:20px" src="assets/hero-home.png" alt="lens-product-image" />
 </div>
 <!-- TEXT_SECTION:header:END -->
 
