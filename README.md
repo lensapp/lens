@@ -1,11 +1,15 @@
 <!-- TEXT_SECTION:header:START -->
 <div>
-    <div style="background-image:radial-gradient(ellipse 100% 60%, rgba(61,144,206,0.8) 0%, transparent 40%)">
-    <div>
+    <!-- glow seems to be not supported by GH
+    <div style="background-image:radial-gradient(ellipse 100% 60%, rgba(61,144,206,0.8) 0%, transparent 40%)"></div>
+    -->
     <p align="center">
     <a href="https://k8slens.dev" target="_blank" rel="noopener noreferrer">
-      <!--<img width="64" src="https://raw.githubusercontent.com/lensapp/lens/lens-desktop/assets/lens-logo.svg" alt="Lens logo"> -->
-      <img width="512" src="https://cdn.sanity.io/images/67awagrd/production/eed2d76ede05ab9f7cf6dd79276d65558ac434ae-143x22.svg" alt="Lens logo">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="assets/lens-mirantis-logo.svg">
+        <source media="(prefers-color-scheme: light)" srcset="assets/lens-mirantis-logo-black.svg">
+        <img alt="Lens Logo" src="assets/lens-mirantis-logos.svg">
+      </picture>
     </a> 
   </p>
   <p align="center">
