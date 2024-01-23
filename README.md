@@ -8,7 +8,7 @@
       <picture>
         <source media="(prefers-color-scheme: dark)" srcset="assets/lens-mirantis-logo.svg">
         <source media="(prefers-color-scheme: light)" srcset="assets/lens-mirantis-logo-black.svg">
-        <img alt="Lens Logo" src="assets/lens-mirantis-logos.svg">
+        <img width="300px" alt="Lens Logo" src="assets/lens-mirantis-logos.svg">
       </picture>
     </a> 
   </p>
