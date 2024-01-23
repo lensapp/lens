@@ -22,9 +22,9 @@
     <a href="https://app.k8slens.dev/" target="_blank">Login</a>&nbsp;&#8226;&nbsp;
     <a href="https://k8slens.dev/" target="_blank">Download</a>
   </p>
-  <p style="font-size:3.5rem; line-height: normal" align="center">
-    The Way The World <br /> Runs Kubernetes
-  </p>
+  <h3 align="center">
+    The Way The World Runs Kubernetes
+  </h3>
   <p align="center">
   Meet the new standard for cloud native software development & operations. <br />
   With over 1 million users, Lens is the most popular Kubernetes IDE in the world.
