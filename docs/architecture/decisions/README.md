@@ -1,2 +1,0 @@
-# Architecture Decision Records
-

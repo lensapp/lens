@@ -1,8 +1,0 @@
-open-lens/dist
-open-lens/static/build
-open-lens/static/webpack
-open-lens/binaries
-packages/**/dist
-packages/**/static/build
-packages/**/build/webpack
-packages/**/binaries

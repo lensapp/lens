@@ -1,34 +1,32 @@
-# Lens Desktop Core ("OpenLens")
+<!-- TEXT_SECTION:header:START -->
+<div>
+    <div style="background-image:radial-gradient(ellipse 100% 60%, rgba(61,144,206,0.8) 0%, transparent 40%)">
+    <div>
+    <p align="center">
+    <a href="https://k8slens.dev" target="_blank" rel="noopener noreferrer">
+      <!--<img width="64" src="https://raw.githubusercontent.com/lensapp/lens/lens-desktop/assets/lens-logo.svg" alt="Lens logo"> -->
+      <img width="512" src="https://cdn.sanity.io/images/67awagrd/production/eed2d76ede05ab9f7cf6dd79276d65558ac434ae-143x22.svg" alt="Lens logo">
+    </a> 
+  </p>
+  <p align="center">
+    <a href="https://k8slens.dev" target="_blank">Lens Website</a>&nbsp;&#8226;&nbsp;
+    <a href="https://store.k8slens.dev/products/lens-desktop-pro?plan=pro-monthly" target="_blank">Pricing</a>&nbsp;&#8226;&nbsp;
+    <a href="https://forums.k8slens.dev" target="_blank">Forums</a>&nbsp;&#8226;&nbsp;
+    <a href="https://docs.k8slens.dev" target="_blank">Docs</a>&nbsp;&#8226;&nbsp;
+    <a href="https://www.mirantis.com/about/" target="_blank">Company</a>&nbsp;&#8226;&nbsp;
+    <a href="https://k8slens.dev/purchase-request.html" target="_blank">Contact</a>
+  </p>
+  <h3 align="center">
+    The Way The World Runs Kubernetes
+  </h3>
+  <p align="center">
+  Meet the new standard for cloud native software development & operations. <br />
+  With over 1 million users, Lens is the most popular Kubernetes IDE in the world.
+  </p>
+  <img style="margin-top:20px" src="https://lens-website.lc-staging1.staging-k8slens.cloud/_next/image?url=%2Fimages%2Fhero-home.png&w=1200&q=75" alt="lens-product-image" />
+</div>
+<!-- TEXT_SECTION:header:END -->
 
-[![Build Status](https://github.com/lensapp/lens/actions/workflows/test.yml/badge.svg)](https://github.com/lensapp/lens/actions/workflows/test.yml)
-<img src="https://upload.wikimedia.org/wikipedia/commons/1/17/Discourse_icon.svg" width=25>[Explore our Forums](https://forums.k8slens.dev)
+## This Repository
 
-## The Repository
-
-This repository is where Team Lens develops the core of the [Lens Desktop](https://k8slens.dev) product together with the community.
-
-The core is a library, powered by [Electron](https://www.electronjs.org/) and [React](https://reactjs.org/). Unlike generic Electron + React frameworks / boilerplates, it is very opinionated for creating Lens Desktop-like applications and has support for Lens Extensions.
-
-In the future, this library will be streamlined to become more customizable and pluggable with easy to use tooling for Lens Extension developers.
-
-This source code is available to everyone under the [MIT license](./LICENSE).
-
-## Lens Desktop
-
-[Lens Desktop](https://k8slens.dev) is built on top of the Lens Desktop Core with Team Lens built extensions released under a traditional [Terms Of Service](https://k8slens.dev/licenses/tos).
-
-Lens Desktop is a standalone application for MacOS, Windows and Linux operating systems. Get started by downloading it from [Lens website](https://k8slens.dev).
-
-[![Screenshot](.github/screenshot.png)](https://www.youtube.com/watch?v=eeDwdVXattc)
-
-## Development
-
-See [Development](https://docs.k8slens.dev/contributing/development/) page.
-
-## Contributing
-
-See [Contributing](https://docs.k8slens.dev/contributing/contribute-to-lens/) page.
-
-## License
-
-See [License](LICENSE).
+Lorem Ipsum... 

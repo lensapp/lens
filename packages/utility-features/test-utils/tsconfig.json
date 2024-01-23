@@ -1,3 +1,0 @@
-{
-  "extends": "@k8slens/typescript/config/base.json"
-}
