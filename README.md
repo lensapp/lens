@@ -18,8 +18,8 @@
     <a href="https://forums.k8slens.dev" target="_blank">Forums</a>&nbsp;&#8226;&nbsp;
     <a href="https://docs.k8slens.dev" target="_blank">Docs</a>&nbsp;&#8226;&nbsp;
     <a href="https://www.mirantis.com/about/" target="_blank">Company</a>&nbsp;&#8226;&nbsp;
-    <a href="https://k8slens.dev/purchase-request.html" target="_blank">Contact</a>
-    <a href="https://app.k8slens.dev/" target="_blank">Login</a>
+    <a href="https://k8slens.dev/purchase-request.html" target="_blank">Contact</a>&nbsp;&#8226;&nbsp;
+    <a href="https://app.k8slens.dev/" target="_blank">Login</a>&nbsp;&#8226;&nbsp;
     <a href="https://k8slens.dev/" target="_blank">Download</a>
   </p>
   <h3 align="center">
