@@ -55,7 +55,7 @@ To stay up to date with all the latest news and product updates, make sure you s
 
 ## History of this Repository
 
-Previously, this repository contained the source code for the open source version of Lens Desktop product. The open source version of Lens Desktop has been retired and is no longer maintained. The Lens Desktop product by Mirantis is still actively developed and supported by Mirantis, but contributions are now made through extensions using the Lens extension API, rather than directly to the core product. The legacy source code for the open source version is still available in the repository's history.
+Previously, this repository contained the source code for the open source version of Lens Desktop product. The open source version of Lens Desktop has been retired and is no longer maintained. The Lens Desktop product by Mirantis is still actively developed and supported by Mirantis, but contributions are now made through extensions using the Lens extension API, rather than directly to the core product. The legacy source code for the open source version is still available in the repository's 'master'-branch.
 
 ## Copyright & License
 
