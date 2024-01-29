@@ -33,8 +33,24 @@ Examples of unacceptable behavior include:
 * Public or private harassment
 * Publishing others' private information, such as a physical or email
   address, without their explicit permission
-* Other conduct which could reasonably be considered inappropriate in a
-  professional setting
+* Other conduct which could reasonably be considered inappropriate in a professional setting
+
+## Guidelines for Community Engagement
+
+### Respect and Professionalism
+All interactions should be conducted with respect and professionalism. Personal attacks, harassment, and disrespectful behavior will not be tolerated.
+
+### Relevance and Constructiveness
+Issues and comments should be relevant to the project and contribute constructively to the discussion. Off-topic comments may be removed.
+
+### Handling Complaints and Criticism
+We welcome constructive criticism and feedback regarding Lens. However, repetitive or unconstructive complaints, especially those that do not offer actionable insights, may be moderated.
+
+### Promotion of Alternative Products
+While we acknowledge the existence of alternative products, this GitHub Repository is not a venue for promoting them. Comments primarily aimed at promoting alternatives may be removed.
+
+### Misleading Information
+Spreading false or misleading information is strictly prohibited. Comments found to be disseminating misleading information will be subject to removal and the poster may face further actions.
 
 ## Enforcement Responsibilities
 
@@ -61,6 +77,7 @@ representative at an online or offline event.
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
 reported to the community leaders responsible for enforcement at
 info@k8slens.dev.
+
 All complaints will be reviewed and investigated promptly and fairly.
 
 All community leaders are obligated to respect the privacy and security of the
