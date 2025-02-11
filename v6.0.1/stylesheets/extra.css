@@ -25,6 +25,12 @@
   --md-default-bg-color:        #1e2124;
 }
 
+.md-banner {
+  background-image:linear-gradient(270deg, rgba(84,142,201,1) 0%, rgba(77,27,101,1) 100%);
+  color: #ffffff;
+  font-weight: bold;
+}
+
 .md-version__list {
   overflow: auto;
 }
