@@ -1,0 +1,10 @@
+# Binaries
+*.exe
+*.dll
+*.so
+*.dylib
+terraform-provider-lens
+
+# Go definitions
+.idea/
+vendor/
