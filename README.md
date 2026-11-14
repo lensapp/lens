@@ -15,7 +15,7 @@ This source code is available to everyone under the [MIT license](./LICENSE).
 
 ## Lens Desktop
 
-[Lens Desktop](https://k8slens.dev) is built on top of the Lens Desktop Core with Team Lens built extensions released under a traditional [Terms Of Service](https://k8slens.dev/licenses/tos).
+[Lens Desktop](https://k8slens.dev) is built on top of the Lens Desktop Core with Team Lens built extensions released under a traditional Terms Of Service.
 
 Lens Desktop is a standalone application for MacOS, Windows and Linux operating systems. Get started by downloading it from [Lens website](https://k8slens.dev).
 
@@ -23,11 +23,11 @@ Lens Desktop is a standalone application for MacOS, Windows and Linux operating 
 
 ## Development
 
-See [Development](https://docs.k8slens.dev/contributing/development/) page.
+See Development page.
 
 ## Contributing
 
-See [Contributing](https://docs.k8slens.dev/contributing/contribute-to-lens/) page.
+See Contributing page.
 
 ## License
 
