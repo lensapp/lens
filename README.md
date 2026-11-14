@@ -23,7 +23,7 @@ Lens Desktop is a standalone application for MacOS, Windows and Linux operating 
 
 ## Development
 
-See [Development](https://docs.k8slens.dev/contributing/development/) page.
+See Development page.
 
 ## Contributing
 
